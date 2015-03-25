@@ -48,6 +48,17 @@ namespace Liquid.NET.Tests.Constants
 
         }
 
+        [Test]
+        public void String_Should_Be_Enumerable()
+        {
+            // Arrange
+
+            // Act
+
+            // Assert
+            Assert.Fail("Not Implemented Yet");
+
+        }
 
     }
 }

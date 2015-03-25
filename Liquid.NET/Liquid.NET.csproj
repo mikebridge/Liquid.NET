@@ -94,6 +94,7 @@
     <Compile Include="src\Filters\Array\FirstFilter.cs" />
     <Compile Include="src\Filters\Array\JoinFilter.cs" />
     <Compile Include="src\Filters\Array\LastFilter.cs" />
+    <Compile Include="src\Filters\Array\MapFilter.cs" />
     <Compile Include="src\Filters\Array\PositionFilter.cs" />
     <Compile Include="src\Filters\Array\SizeFilter.cs" />
     <Compile Include="src\Filters\FilterChain.cs" />

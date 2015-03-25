@@ -5,6 +5,7 @@ using Liquid.NET.Symbols;
 
 namespace Liquid.NET.Constants
 {
+    // TODO: determine whether the keys should be case insensitive or not.
     public class DictionaryValue : ExpressionConstant
     {
         private readonly IDictionary<String, IExpressionConstant> _value;

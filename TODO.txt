@@ -1,0 +1,25 @@
+
+- Better error handling
+
+- Check the pipeline for nulls, undefined, etc.
+
+- Move the Casting to the Monadic bind
+
+- Write the filters
+
+- WRite the std tags
+
+- Write the std blocks
+
+- Add the -%} to eat chars
+
+- Set up custom blocks/filters
+
+- add more concise comments
+
+- Add math expressions (either as filter or natively)
+
+- macros?
+
+TAGS:
+- for: iterate through dictionary

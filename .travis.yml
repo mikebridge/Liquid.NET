@@ -1,0 +1,9 @@
+language: csharp
+solution: Liquid.NET.sln
+
+install:
+  - nuget restore Liquid.NET.sln
+  - nuget install NUnit.Runners -Version 2.6.4 -OutputDirectory testrunner
+script:
+  - xbuild /p:Configuration=Debug Liquid.NET.sln
+  - mono ./testrunner/NUnit.Runners.2.6.4/tools/nunit-console.exe ./Liquid.NET.Tests/bin/Debug/Liquid.NET.Tests.dll

@@ -1,0 +1,9 @@
+GEM
+  specs:
+    liquid (3.0.1)
+
+PLATFORMS
+  java
+
+DEPENDENCIES
+  liquid

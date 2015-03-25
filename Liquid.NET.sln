@@ -1,0 +1,47 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Liquid.NET", "Liquid.NET\Liquid.NET.csproj", "{00128464-3F55-4C96-9445-F829DE49FBBA}"
+	ProjectSection(ProjectDependencies) = postProject
+		{30C05176-BCAF-4694-9696-634CCDCB33EC} = {30C05176-BCAF-4694-9696-634CCDCB33EC}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Liquid.NET.Tests", "Liquid.NET.Tests\Liquid.NET.Tests.csproj", "{49855817-BC43-4400-95C4-C7BA52A6816D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{30C05176-BCAF-4694-9696-634CCDCB33EC} = {30C05176-BCAF-4694-9696-634CCDCB33EC}
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{5F8139A0-750E-45D4-BA82-5D8D7ED4D277}"
+	ProjectSection(SolutionItems) = preProject
+		.travis.yml = .travis.yml
+		README.md = README.md
+		TODO.txt = TODO.txt
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Liquid.NET.Grammar", "Liquid.NET.Grammar\Liquid.NET.Grammar.csproj", "{30C05176-BCAF-4694-9696-634CCDCB33EC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{00128464-3F55-4C96-9445-F829DE49FBBA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{00128464-3F55-4C96-9445-F829DE49FBBA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{00128464-3F55-4C96-9445-F829DE49FBBA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{00128464-3F55-4C96-9445-F829DE49FBBA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{49855817-BC43-4400-95C4-C7BA52A6816D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{49855817-BC43-4400-95C4-C7BA52A6816D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{49855817-BC43-4400-95C4-C7BA52A6816D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{49855817-BC43-4400-95C4-C7BA52A6816D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{30C05176-BCAF-4694-9696-634CCDCB33EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{30C05176-BCAF-4694-9696-634CCDCB33EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{30C05176-BCAF-4694-9696-634CCDCB33EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{30C05176-BCAF-4694-9696-634CCDCB33EC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

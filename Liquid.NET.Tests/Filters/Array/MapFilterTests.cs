@@ -47,7 +47,7 @@ namespace Liquid.NET.Tests.Filters.Array
             var expected = array.ArrValue.Cast<DictionaryValue>().Select(
                 x => x.DictValue.ContainsKey(field) ?
                     x.DictValue[field].Value.ToString() :
-                    Undefined.CreateUndefinedMessage(field).ToString()).ToList();
+                    UndefinedMessage(field)).ToList();
 
             Console.WriteLine("EXPECTED: " + String.Join(",", expected));
             var actual = result.Select(x => x.Value.ToString());
@@ -58,17 +58,30 @@ namespace Liquid.NET.Tests.Filters.Array
         }
 
 
+
+
         [Test]
-        public void It_Should_Return_An_Error_When_Trying_To_Map_A_Non_Array()
+        public void It_Should_Return_An_Error_When_Trying_To_Map_A_Non_Dictionary()
         {
             // Arrange
             var mapFilter = new MapFilter(new StringValue("field1"));
-
+            IList<IExpressionConstant> objlist = new List<IExpressionConstant>
+            {
+                new NumericValue(123),
+                new StringValue("Test")
+            };
             // Act
-            var result = mapFilter.Apply(new NumericValue(123));
+            var result = mapFilter.Apply(new ArrayValue(objlist));
 
             // Assert
-            Assert.That(result.HasError);
+            Assert.That(result.ArrValue.Count, Is.EqualTo(objlist.Count()));
+            Assert.That(result.ArrValue[0].Value.ToString(), Is.EqualTo(UndefinedMessage("field1")));
+            Assert.That(result.ArrValue[0].Value.ToString(), Is.EqualTo(UndefinedMessage("field1")));
+        }
+
+        private static string UndefinedMessage(string field)
+        {
+            return Undefined.CreateUndefinedMessage(field).ToString();
         }
 
         public ArrayValue CreateArray()

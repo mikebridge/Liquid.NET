@@ -76,7 +76,7 @@ namespace Liquid.NET.Tests.Filters.Array
             // Assert
             Assert.That(result.ArrValue.Count, Is.EqualTo(objlist.Count()));
             Assert.That(result.ArrValue[0].Value.ToString(), Is.EqualTo(UndefinedMessage("field1")));
-            Assert.That(result.ArrValue[0].Value.ToString(), Is.EqualTo(UndefinedMessage("field1")));
+            Assert.That(result.ArrValue[1].Value.ToString(), Is.EqualTo(UndefinedMessage("field1")));
         }
 
         private static string UndefinedMessage(string field)

@@ -52,6 +52,7 @@
     <Compile Include="ASTWalker.cs" />
     <Compile Include="Constants\ArrayValueTests.cs" />
     <Compile Include="Constants\BooleanValueTests.cs" />
+    <Compile Include="Constants\ConstantFactoryTests.cs" />
     <Compile Include="Constants\DictionaryValueTests.cs" />
     <Compile Include="Constants\ExpressionConstantTests.cs" />
     <Compile Include="Constants\GeneratorValueTests.cs" />

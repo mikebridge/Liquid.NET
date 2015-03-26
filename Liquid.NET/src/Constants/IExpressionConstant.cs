@@ -9,6 +9,10 @@ namespace Liquid.NET.Constants
 
         bool IsTrue { get; }
 
+        bool IsUndefined { get; set; }
+
+        bool IsNil { get; }
+
         IExpressionConstant Bind(Func<IExpressionConstant, IExpressionConstant> f);
     }
 }

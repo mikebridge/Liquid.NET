@@ -25,7 +25,7 @@ namespace Liquid.NET.Expressions
             {
                 // This shouldn't happen if the parser is correct.
                 //return new ExpressionError("Equals is a binary expression but received " + exprList.Count() + "."); 
-                return ExpressionConstant.CreateError<BooleanValue>("Equals is a binary expression but received " + exprList.Count() + "."); 
+                return ConstantFactory.CreateError<BooleanValue>("Equals is a binary expression but received " + exprList.Count() + "."); 
             }
             if (exprList[0].GetType() == exprList[1].GetType())
             {
@@ -37,7 +37,7 @@ namespace Liquid.NET.Expressions
             }
             Console.WriteLine("COmparing " + exprList[0].GetType() +" TO " + exprList[1].GetType());
 
-            return ExpressionConstant.CreateError<BooleanValue>("\"Equals\" implementation can't cast yet"); 
+            return ConstantFactory.CreateError<BooleanValue>("\"Equals\" implementation can't cast yet"); 
         }
 
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using Liquid.NET.Filters;
 
 namespace Liquid.NET.Constants
 {
@@ -37,7 +38,7 @@ namespace Liquid.NET.Constants
                 return new StringValue(num.Value.ToString());
             }
 
-            return ExpressionConstant.CreateError<TDest>("Can't convert from numeric to " + destType);
+            return ConstantFactory.CreateError<TDest>("Can't convert from numeric to " + destType);
         }
 
         private static IExpressionConstant Convert<TDest>(BooleanValue boolean)
@@ -53,7 +54,7 @@ namespace Liquid.NET.Constants
             {
                 return new StringValue(boolean.Value.ToString().ToLower());
             }
-            return ExpressionConstant.CreateError<TDest>("Can't convert from boolean to " + destType);
+            return ConstantFactory.CreateError<TDest>("Can't convert from boolean to " + destType);
 
         }
 
@@ -71,7 +72,7 @@ namespace Liquid.NET.Constants
                 return new StringValue(undef.Value.ToString());
             }           
             // TODO: Should this return the default value for whatever TDest is requested?
-            return ExpressionConstant.CreateError<TDest>("Can't convert from an undefined ("+undef.Value+") to " + destType);
+            return ConstantFactory.CreateError<TDest>("Can't convert from an undefined ("+undef.Value+") to " + destType);
             //return ExpressionConstant.CreateError<TDest>("Can't convert from an undefined to " + destType);
         }
 
@@ -111,7 +112,7 @@ namespace Liquid.NET.Constants
                 return new ArrayValue(dictarray);
             }
             // TODO: Should this return the default value for whatever TDest is requested?
-            return ExpressionConstant.CreateError<TDest>("Can't convert from a DictionaryValue to " + destType);
+            return ConstantFactory.CreateError<TDest>("Can't convert from a DictionaryValue to " + destType);
         }
 
         private static IExpressionConstant Convert<TDest>(ArrayValue arrayValue)
@@ -127,7 +128,7 @@ namespace Liquid.NET.Constants
                 return new StringValue(FormatArray(arrayValue));
             }
             // TODO: Should this return the default value for whatever TDest is requested?
-            return ExpressionConstant.CreateError<TDest>("Can't convert from an ArrayValue to " + destType);
+            return ConstantFactory.CreateError<TDest>("Can't convert from an ArrayValue to " + destType);
         }
 
         private static string FormatArray(ArrayValue arrayValue)
@@ -174,7 +175,7 @@ namespace Liquid.NET.Constants
                 // TODO: return error if fail
                 return NumericValue.Parse(str.StringVal);
             }
-            return ExpressionConstant.CreateError<TDest>("Can't convert from string to " + destType);
+            return ConstantFactory.CreateError<TDest>("Can't convert from string to " + destType);
            
         }
 
@@ -191,7 +192,7 @@ namespace Liquid.NET.Constants
                 return Convert<TDest>((dynamic) source.Value);
             }
             //source.
-            return ExpressionConstant.CreateError<TDest>("Can't convert from " + source.GetType() + " to " + destType);
+            return ConstantFactory.CreateError<TDest>("Can't convert from " + source.GetType() + " to " + destType);
 
         }
 
@@ -205,7 +206,7 @@ namespace Liquid.NET.Constants
                 return new StringValue(source.ToString());
             }
 
-            return ExpressionConstant.CreateError<TDest>("Can't convert from " + source.GetType() + " to " + destType);
+            return ConstantFactory.CreateError<TDest>("Can't convert from " + source.GetType() + " to " + destType);
 
         }
 
@@ -218,5 +219,48 @@ namespace Liquid.NET.Constants
         {
             return (int) Math.Round(val, MidpointRounding.AwayFromZero);
         }
+
+        // Not sure where to put these yet
+        /// <summary>
+        /// Make a list of functions, each of which has the input of the previous function.  Interpolate a casting
+        /// function if the input of one doesn't fit with the value of the next.
+        /// 
+        /// TODO: I think this should be part of the bind function.
+        /// </summary>
+        /// <param name="filterExpressions"></param>
+        /// <returns></returns>
+        public static IEnumerable<IFilterExpression> InterpolateCastFilters(IEnumerable<IFilterExpression> filterExpressions)
+        {
+
+            var result = new List<IFilterExpression>();
+
+            Type expectedInputType = null;
+            foreach (var filterExpression in filterExpressions)
+            {
+                // TODO: The expectedInputType might be a superclass of the output (not just equal type)
+                //if (expectedInputType != null && filterExpression.SourceType != expectedInputType)
+                if (expectedInputType != null && !filterExpression.SourceType.IsAssignableFrom(expectedInputType))
+                {
+                    Console.WriteLine("Creating cast from " + filterExpression + " TO " + expectedInputType);
+                    result.Add(CreateCastFilter(expectedInputType, filterExpression.SourceType));
+                }
+                result.Add(filterExpression);
+                expectedInputType = filterExpression.ResultType;
+            }
+
+            return result;
+        }
+
+        public static IFilterExpression CreateCastFilter(Type sourceType, Type resultType)
+        {
+            // TODO: Move this to FilterFactory.Instantiate
+            Type genericClass = typeof(CastFilter<,>);
+            // MakeGenericType is badly named
+            Console.WriteLine("FilterChain Creating Converter from " + sourceType + " to " + resultType);
+            Type constructedClass = genericClass.MakeGenericType(sourceType, resultType);
+            return (IFilterExpression)Activator.CreateInstance(constructedClass);
+        }
+
+
     }
 }

@@ -20,7 +20,7 @@ namespace Liquid.NET.Expressions
             IList<IExpressionConstant> exprList = expressions.ToList();
             if (exprList.Count() != 1)
             {
-                return ExpressionConstant.CreateError<BooleanValue>("\"Not\" is a unary expression but received " + exprList.Count() + " arguments.");
+                return ConstantFactory.CreateError<BooleanValue>("\"Not\" is a unary expression but received " + exprList.Count() + " arguments.");
             }
             return new BooleanValue(! exprList[0].IsTrue);
         }

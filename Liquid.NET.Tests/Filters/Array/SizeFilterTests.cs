@@ -119,7 +119,7 @@ namespace Liquid.NET.Tests.Filters.Array
         public void An_Undefined_Value_Should_Have_Zero_Length()
         {
             // Arrange
-            var strVal = new Undefined("test");
+            var strVal = new StringValue(null) {IsUndefined = true};
             var filter = new SizeFilter();
 
             // Act

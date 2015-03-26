@@ -19,7 +19,7 @@ namespace Liquid.NET.Filters.Array
 
         public IExpressionConstant ApplyTo(IExpressionConstant objectExpression)
         {
-            return ExpressionConstant.CreateError<ArrayValue>("Can't ask for an element at that index.  This is not an array or a string.");
+            return ConstantFactory.CreateError<ArrayValue>("Can't ask for an element at that index.  This is not an array or a string.");
 
         }
 
@@ -27,7 +27,7 @@ namespace Liquid.NET.Filters.Array
         {
             if (objectExpression == null || objectExpression.Value == null)
             {
-                return ExpressionConstant.CreateError<ArrayValue>("Array is nil");
+                return ConstantFactory.CreateError<ArrayValue>("Array is nil");
             }
             var positionFilter = new PositionFilter(new NumericValue(objectExpression.ArrValue.Count - 1));
             return positionFilter.ApplyTo(objectExpression);
@@ -37,7 +37,7 @@ namespace Liquid.NET.Filters.Array
         {
             if (objectExpression == null || String.IsNullOrEmpty(objectExpression.StringVal))
             {
-                return ExpressionConstant.CreateError<StringValue>("String is nil");
+                return ConstantFactory.CreateError<StringValue>("String is nil");
             }
             var positionFilter = new PositionFilter(new NumericValue(objectExpression.StringVal.Length - 1));
             return positionFilter.ApplyTo(objectExpression);

@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Runtime.Remoting.Messaging;
 using Liquid.NET.Constants;
+using Liquid.NET.Filters.Math;
 using NUnit.Framework;
 
 namespace Liquid.NET.Tests.Constants
@@ -45,7 +47,23 @@ namespace Liquid.NET.Tests.Constants
 
         }
 
-          private Func<NumericValue, NumericValue, NumericValue> Add = (x, y) => new NumericValue((decimal)x.Value + (Decimal)y.Value);
+        [Test]
+        public void It_Should_Return_Error_If_Passed_Unknown()
+        {
+            // Arrange
+            var undefinedNumber = ConstantFactory.CreateUndefined<NumericValue>("Undefined test");
+                  
+            // Act
+            var result = undefinedNumber.Bind(x => _testToString((NumericValue) x));
+
+            // Assert
+            Assert.That(result.IsUndefined, Is.True);
+
+        }
+
+          //private Func<NumericValue, NumericValue, NumericValue> Add = (x, y) => new NumericValue((decimal)x.Value + (Decimal)y.Value);
+
+          private readonly Func<NumericValue, StringValue> _testToString = num => new StringValue(num.Value.ToString());
 
 
     }

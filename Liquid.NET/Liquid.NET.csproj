@@ -64,6 +64,7 @@
     </Compile>
     <Compile Include="src\Constants\ArrayValue.cs" />
     <Compile Include="src\Constants\BooleanValue.cs" />
+    <Compile Include="src\Constants\ConstantFactory.cs" />
     <Compile Include="src\Constants\DictionaryValue.cs" />
     <Compile Include="src\Constants\ExpressionConstant.cs" />
     <Compile Include="src\Constants\GeneratorValue.cs" />

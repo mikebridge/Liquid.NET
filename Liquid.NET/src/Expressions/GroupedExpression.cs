@@ -17,7 +17,7 @@ namespace Liquid.NET.Expressions
         {            
             var childExpressions = expressions.ToList();
             Console.WriteLine("Evaluating children ");
-            return childExpressions.Count != 1 ? ExpressionConstant.CreateError<BooleanValue>("Unable to parse expression in parentheses") : childExpressions.First();
+            return childExpressions.Count != 1 ? ConstantFactory.CreateError<BooleanValue>("Unable to parse expression in parentheses") : childExpressions.First();
         }
     }
 }

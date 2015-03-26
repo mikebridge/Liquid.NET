@@ -1,4 +1,5 @@
-﻿using Liquid.NET.Constants;
+﻿using System;
+using Liquid.NET.Constants;
 
 namespace Liquid.NET.Filters.Array
 {
@@ -7,11 +8,15 @@ namespace Liquid.NET.Filters.Array
 
         public override NumericValue Apply(ExpressionConstant objectExpression)
         {
-            return ApplyTo((dynamic) objectExpression);
+            //Func<StringValue, NumericValue> func = x => ApplyTo((dynamic)x);
+            return (NumericValue)objectExpression.Bind(x => ApplyTo(x));
+            //return (NumericValue) objectExpression.Bind(x => ApplyTo((dynamic) objectExpression));
+            //return ApplyTo((dynamic) objectExpression);
         }
 
-        public IExpressionConstant ApplyTo(IExpressionConstant objectExpression)
+        public NumericValue ApplyTo(IExpressionConstant objectExpression)
         {
+            
             if (objectExpression == null || objectExpression.Value == null)
             {
                 return new NumericValue(0);
@@ -19,7 +24,7 @@ namespace Liquid.NET.Filters.Array
             return new NumericValue(1); // if it's not an enumerable, it must be of length 1.
         }
 
-        public IExpressionConstant ApplyTo(ArrayValue objectExpression)
+        public NumericValue ApplyTo(ArrayValue objectExpression)
         {
             if (objectExpression == null || objectExpression.Value == null)
             {
@@ -28,7 +33,7 @@ namespace Liquid.NET.Filters.Array
             return new NumericValue(objectExpression.ArrValue.Count);
         }
 
-        public IExpressionConstant ApplyTo(StringValue objectExpression)
+        public NumericValue ApplyTo(StringValue objectExpression)
         {
             if (objectExpression == null || objectExpression.Value == null)
             {
@@ -37,7 +42,7 @@ namespace Liquid.NET.Filters.Array
             return new NumericValue(objectExpression.StringVal.Length);
         }
 
-        public IExpressionConstant ApplyTo(DictionaryValue objectExpression)
+        public NumericValue ApplyTo(DictionaryValue objectExpression)
         {
             if (objectExpression == null || objectExpression.Value == null)
             {
@@ -46,12 +51,7 @@ namespace Liquid.NET.Filters.Array
             return new NumericValue(objectExpression.DictValue.Keys.Count);
         }
 
-        public IExpressionConstant ApplyTo(Undefined objectExpression)
-        {
-            return new NumericValue(0);
-        }
-
-        public IExpressionConstant ApplyTo(GeneratorValue objectExpression)
+        public NumericValue ApplyTo(GeneratorValue objectExpression)
         {
             return new NumericValue(objectExpression.Length);            
         }

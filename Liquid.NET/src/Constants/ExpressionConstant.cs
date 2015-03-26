@@ -17,6 +17,9 @@ namespace Liquid.NET.Constants
             get;
         }
 
+        public bool IsUndefined { get; set; }
+
+        public bool IsNil { get; set; }
 
         /// <summary>
         /// Monadic bind: don't execute the function if there's an error.
@@ -29,22 +32,36 @@ namespace Liquid.NET.Constants
             {
                 Console.WriteLine("Bind Sees an error: " + ErrorMessage);
             }
-            if (GetType() == typeof (Undefined))
+            if (IsUndefined || GetType() == typeof (Undefined))
             {
                 Console.WriteLine("Undefined---ignoring the rest.");
-                return this;
+                //return this;
+                return ConstantFactory.CreateUndefined(f, "Undefined field");
             }
             return HasError ? this : f(this);
         }
 
-
-        public static T CreateError<T>(String errorMessage)
-            where T : IExpressionConstant
+        /// <summary>
+        /// Monadic bind: don't execute the function if there's an error.
+        /// </summary>
+        /// <param name="f"></param>
+        /// <returns></returns>
+        public IExpressionConstant Bind<TOut>(Func<IExpressionConstant, TOut> f)
+            where TOut : ExpressionConstant
         {
-            Console.WriteLine("Creating error "+ errorMessage);
-            var error = (T) Activator.CreateInstance(typeof(T), default(T));
-            error.ErrorMessage = errorMessage;
-            return error;
+            if (HasError)
+            {
+                Console.WriteLine("Bind Sees an error: " + ErrorMessage);
+            }
+            if (IsUndefined || GetType() == typeof(Undefined))
+            {
+                Console.WriteLine("Undefined---ignoring the rest.");
+                //return this;
+                return ConstantFactory.CreateUndefined(f, "Undefined field");
+            }
+            
+            return HasError ? this : f(this);
         }
+
     }
 }

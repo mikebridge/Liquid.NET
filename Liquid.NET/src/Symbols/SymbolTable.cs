@@ -65,7 +65,7 @@ namespace Liquid.NET.Symbols
             {
                 // TODO: REturn undefined reference
                 //return new Undefined();
-                return ExpressionConstant.CreateError<StringValue>("Undefined variable: " + key);
+                return ConstantFactory.CreateError<StringValue>("Undefined variable: " + key);
             }
         }
 

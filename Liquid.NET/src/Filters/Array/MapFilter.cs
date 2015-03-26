@@ -20,7 +20,7 @@ namespace Liquid.NET.Filters.Array
         {
             if (objectExpression == null || objectExpression.Value == null)
             {
-                return ExpressionConstant.CreateError<ArrayValue>("Array is nil");
+                return ConstantFactory.CreateError<ArrayValue>("Array is nil");
             }
             var list = objectExpression.ArrValue.Select(x => TryField(x, _selector.StringVal)).ToList();
             return new ArrayValue(list);

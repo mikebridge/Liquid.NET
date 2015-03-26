@@ -28,11 +28,11 @@ namespace Liquid.NET.Expressions
 
 
         public string WarningMessage { get; set; }
-
-        public IExpressionDescription Bind(Func<IExpressionDescription, IExpressionDescription> f)
-        {
-            return HasError ? this : f(this);
-        }
+//
+//        public IExpressionDescription Bind(Func<IExpressionDescription, IExpressionDescription> f)
+//        {
+//            return HasError ? this : f(this);
+//        }
         
     }
 }

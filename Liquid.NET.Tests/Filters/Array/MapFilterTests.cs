@@ -89,24 +89,10 @@ namespace Liquid.NET.Tests.Filters.Array
             // Arrange
             IList<IExpressionConstant> objlist = new List<IExpressionConstant>
             {
-                CreateDictionary(1, "Value 1 A", "Value 1 B"),
-                CreateDictionary(2, "Value 2 A", "Value 2 B"),
-                CreateDictionary(3, "Value 3 A", "Value 3 B"),
-                CreateDictionary(4, "Value 4 A", "Value 4 B"),
+                DataFixtures.CreateDictionary(1, "Value 1 A", "Value 1 B"), DataFixtures.CreateDictionary(2, "Value 2 A", "Value 2 B"), DataFixtures.CreateDictionary(3, "Value 3 A", "Value 3 B"), DataFixtures.CreateDictionary(4, "Value 4 A", "Value 4 B"),
             };
             return new ArrayValue(objlist);
 
-        }
-
-        private DictionaryValue CreateDictionary(int id, string field1, string field2)
-        {
-            return new DictionaryValue(new Dictionary<string, IExpressionConstant>
-            {
-                {"id", new NumericValue(id)},
-                {"field1", new StringValue(field1)},
-                {"field2", new StringValue(field2)},
-
-            });
         }
     }
 }

@@ -8,6 +8,12 @@ using Liquid.NET.Constants;
 
 namespace Liquid.NET.Filters.Array
 {
+
+    /// <summary>
+    /// Sort an array based on the raw "rendered" value of the string.
+    /// TODO: specify an expression as a filter to use to sort, instead
+    ///  of the default "render as string".
+    /// </summary>
     public class SortFilter : FilterExpression<ArrayValue, ArrayValue>
     {
         private readonly StringValue _sortField;
@@ -18,14 +24,35 @@ namespace Liquid.NET.Filters.Array
         }
 
         public override ArrayValue ApplyTo(ArrayValue val)
-        {
-            return val;
+        {            
+            var sortfield = _sortField.StringVal;
+
+            if (String.IsNullOrWhiteSpace(sortfield)) // try to sort as an array
+            {
+                return SortAsArrayOfStrings(val);
+            }
+            else
+            {
+                return SortByProperty(val, sortfield);
+            }
         }
 
-        public override ArrayValue ApplyTo(DictionaryValue val)
+        private ArrayValue SortByProperty(ArrayValue val, string sortfield)
         {
-            var dict = val.DictValue;
-            return dict.Keys.Select(key => dict[key]).Sort()
+            var ordered = val.ArrValue.OrderBy(x => AsString(x, sortfield));
+            // TODO: ThenBy
+            return new ArrayValue(ordered.ToList());
+        }
+
+        private static ArrayValue SortAsArrayOfStrings(ArrayValue val)
+        {
+            var result = val.ArrValue.OrderBy(ValueCaster.RenderAsString);
+            return new ArrayValue(result.ToList());
+        }
+
+        private String AsString(IExpressionConstant x, string field)
+        {
+            return ValueCaster.RenderAsString(FieldAccessor.TryField(x, field));
         }
     }
 

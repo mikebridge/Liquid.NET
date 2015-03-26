@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
 using Liquid.NET.Constants;
@@ -28,7 +29,7 @@ namespace Liquid.NET.Tests.Filters.Array
 
             // Act            
             var result = filter.Apply(arrayValue);
-            var resultStrings = result.Select(x => x.Value.ToString());
+            var resultStrings = result.Select(ValueCaster.RenderAsString);
             
             // Assert
             Assert.That(resultStrings, Is.EqualTo(new List<String>{"123", "456", "a string", "false"}));
@@ -37,24 +38,33 @@ namespace Liquid.NET.Tests.Filters.Array
 
 
         [Test]
-        public void It_Should_Srt_Keys_The_Size_Of_A_Dictionary()
+        public void It_Should_Sort_Dictionaries_By_Field()
         {
             // Arrange
-            var dict = new Dictionary<String, IExpressionConstant>
+            IList<IExpressionConstant> objlist = new List<IExpressionConstant>
             {
-                {"string1", new StringValue("a string")},
-                {"string2", new NumericValue(123)},
-                {"string3", new NumericValue(456m)}
+                DataFixtures.CreateDictionary(1, "Aa", "Value 1 B"), 
+                DataFixtures.CreateDictionary(2, "Z", "Value 2 B"), 
+                DataFixtures.CreateDictionary(3, "ab", "Value 3 B"), 
+                DataFixtures.CreateDictionary(4, "b", "Value 4 B"),
             };
-            DictionaryValue dictValue = new DictionaryValue(dict);
-            SizeFilter sizeFilter = new SizeFilter();
+            ArrayValue arrayValue = new ArrayValue(objlist);
+            SortFilter sizeFilter = new SortFilter(new StringValue("field1"));
 
             // Act
-            var result = sizeFilter.Apply(dictValue);
+            var result = sizeFilter.Apply(arrayValue);
 
             // Assert
-            Assert.That(result.Value, Is.EqualTo(dict.Keys.Count()));
+            Assert.That(IdAt(result, 0, "field1").Value, Is.EqualTo("Aa"));
+            Assert.That(IdAt(result, 1, "field1").Value, Is.EqualTo("ab"));
+            Assert.That(IdAt(result, 2, "field1").Value, Is.EqualTo("b"));
+            Assert.That(IdAt(result, 3, "field1").Value, Is.EqualTo("Z"));
 
+        }
+
+        private static IExpressionConstant IdAt(ArrayValue result, int index, String field)
+        {
+            return ((DictionaryValue)result.ArrValue[index]).DictValue[field];
         }
     }
 }

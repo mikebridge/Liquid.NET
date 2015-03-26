@@ -230,8 +230,9 @@ namespace Liquid.NET
             {
                 return result.ErrorMessage;
             }
-            var stringResult = ValueCaster.Cast<IExpressionConstant, StringValue>(result);
-            return stringResult.Value.ToString();
+            //var stringResult = ValueCaster.Cast<IExpressionConstant, StringValue>(result);
+            //return stringResult.Value.ToString();
+            return ValueCaster.RenderAsString(result);
         }
 
 

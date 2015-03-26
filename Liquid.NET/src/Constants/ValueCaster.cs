@@ -262,5 +262,11 @@ namespace Liquid.NET.Constants
         }
 
 
+        public static string RenderAsString(IExpressionConstant val)
+        {
+            var stringResult = Cast<IExpressionConstant, StringValue>(val);
+            return stringResult.Value.ToString();
+        }
+
     }
 }

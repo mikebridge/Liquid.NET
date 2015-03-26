@@ -67,6 +67,7 @@
     <Compile Include="src\Constants\ConstantFactory.cs" />
     <Compile Include="src\Constants\DictionaryValue.cs" />
     <Compile Include="src\Constants\ExpressionConstant.cs" />
+    <Compile Include="src\Constants\FieldAccessor.cs" />
     <Compile Include="src\Constants\GeneratorValue.cs" />
     <Compile Include="src\Constants\IExpressionConstant.cs" />
     <Compile Include="src\Constants\IIndexable.cs" />

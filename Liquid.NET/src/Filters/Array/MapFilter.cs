@@ -22,25 +22,8 @@ namespace Liquid.NET.Filters.Array
             {
                 return ConstantFactory.CreateError<ArrayValue>("Array is nil");
             }
-            var list = objectExpression.ArrValue.Select(x => TryField(x, _selector.StringVal)).ToList();
+            var list = objectExpression.ArrValue.Select(x => FieldAccessor.TryField(x, _selector.StringVal)).ToList();
             return new ArrayValue(list);
-        }
-
-        private IExpressionConstant TryField(IExpressionConstant expressionConstant, string stringVal)
-        {
-            var dict = expressionConstant as DictionaryValue;
-            if (dict == null)
-            {
-                return new Undefined(stringVal);
-            }
-            if (!dict.DictValue.ContainsKey(stringVal))
-            {
-                return new Undefined(stringVal);
-            }
-            else
-            {
-                return dict.DictValue[stringVal];
-            }
         }
     }
 }

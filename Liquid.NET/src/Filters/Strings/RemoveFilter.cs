@@ -1,15 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Antlr4.Runtime.Misc;
 using Liquid.NET.Constants;
-using Liquid.NET.Expressions;
-using Microsoft.SqlServer.Server;
 
-
-namespace Liquid.NET.Filters
+namespace Liquid.NET.Filters.Strings
 {
     public class RemoveFilter : FilterExpression<StringValue, StringValue>
     {

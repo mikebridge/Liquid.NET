@@ -46,7 +46,7 @@ namespace Liquid.NET
 
         public LiquidAST Generate(String template)
         {
-            Console.WriteLine("Parsing Template \r\n" + template);
+            //Console.WriteLine("Parsing Template \r\n" + template);
 
             //BufferedTokenStream tokenStream
             LiquidAST liquidAst = new LiquidAST();

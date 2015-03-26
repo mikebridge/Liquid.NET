@@ -6,6 +6,7 @@ using System.Xml.XPath;
 using Liquid.NET.Constants;
 using Liquid.NET.Expressions;
 using Liquid.NET.Filters.Math;
+using Liquid.NET.Filters.Strings;
 
 namespace Liquid.NET.Filters
 {

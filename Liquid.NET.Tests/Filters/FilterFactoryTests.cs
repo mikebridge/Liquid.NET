@@ -1,17 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net.Security;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using Liquid.NET.Constants;
-using Liquid.NET.Expressions;
 using Liquid.NET.Filters;
 using Liquid.NET.Filters.Math;
+using Liquid.NET.Filters.Strings;
 using Liquid.NET.Symbols;
 using NUnit.Framework;
-using NUnit.Framework.Constraints;
 
 namespace Liquid.NET.Tests.Filters
 {

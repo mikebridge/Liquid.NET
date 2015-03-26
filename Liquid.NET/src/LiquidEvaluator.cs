@@ -2,6 +2,7 @@
 using System.Linq;
 using Liquid.NET.Filters;
 using Liquid.NET.Filters.Math;
+using Liquid.NET.Filters.Strings;
 using Liquid.NET.Symbols;
 using Liquid.NET.Utils;
 
@@ -31,6 +32,7 @@ namespace Liquid.NET
             globalScope.DefineFilter<PlusFilter>("plus");
             globalScope.DefineFilter<RemoveFilter>("remove");
             globalScope.DefineFilter<LookupFilter>("lookup");
+            globalScope.DefineFilter<AppendFilter>("append");
         }
 
         private string EvalTree(SymbolTableStack symbolStack, LiquidAST liquidAst)

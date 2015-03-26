@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Net.NetworkInformation;
-using System.Text;
-using System.Threading.Tasks;
 using Liquid.NET.Constants;
-using Liquid.NET.Expressions;
 using Liquid.NET.Filters;
 using Liquid.NET.Filters.Math;
+using Liquid.NET.Filters.Strings;
 using NUnit.Framework;
 
 namespace Liquid.NET.Tests.Filters

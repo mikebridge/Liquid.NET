@@ -17,7 +17,7 @@ namespace Liquid.NET.Filters.Array
 
         }
 
-        public IExpressionConstant ApplyTo(IExpressionConstant objectExpression)
+        public override IExpressionConstant ApplyTo(IExpressionConstant objectExpression)
         {
             return ConstantFactory.CreateError<ArrayValue>("Can't ask for an element at that index.  This is not an array or a string.");
 

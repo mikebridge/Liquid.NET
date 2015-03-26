@@ -25,6 +25,7 @@ namespace Liquid.NET.Filters
     {
 
         //public abstract TResult Apply(TSource objectExpression);
+        // TODO: I don't think this should be virtual
         public virtual TResult Apply(TSource objectExpression)
         {
             return objectExpression.Bind<TResult>(x => ApplyTo((dynamic)x));
@@ -42,29 +43,29 @@ namespace Liquid.NET.Filters
         }
         public virtual TResult ApplyTo(NumericValue val) 
         {
-            throw new NotImplementedException();
+            return ApplyTo((IExpressionConstant)val);
         }
         public virtual TResult ApplyTo(StringValue val)
         {
-            throw new NotImplementedException();
+            return ApplyTo((IExpressionConstant)val);
         }
         public virtual TResult ApplyTo(DictionaryValue val)
         {
-            throw new NotImplementedException();
+            return ApplyTo((IExpressionConstant)val);
         }
         public virtual TResult ApplyTo(ArrayValue val)
         {
-            throw new NotImplementedException();
+            return ApplyTo((IExpressionConstant)val);
         }
 
         public virtual TResult ApplyTo(BooleanValue val)
         {
-            throw new NotImplementedException();
+            return ApplyTo((IExpressionConstant)val);
         }
 
         public virtual TResult ApplyTo(GeneratorValue val)
         {
-            throw new NotImplementedException();
+            return ApplyTo((IExpressionConstant)val);
         }
 
         public Type SourceType

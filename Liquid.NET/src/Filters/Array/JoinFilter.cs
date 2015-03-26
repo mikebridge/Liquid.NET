@@ -14,12 +14,12 @@ namespace Liquid.NET.Filters.Array
             _separator = separator;
         }
 
-        public override StringValue Apply(ExpressionConstant objectExpression)
-        {
-            return ApplyTo((dynamic)objectExpression);
-        }
+//        public override StringValue Apply(ExpressionConstant objectExpression)
+//        {
+//            return ApplyTo((dynamic)objectExpression);
+//        }
 
-        private StringValue ApplyTo(ArrayValue objectExpression)
+        public override StringValue ApplyTo(ArrayValue objectExpression)
         {
             var vals = objectExpression
                 .ArrValue
@@ -28,7 +28,7 @@ namespace Liquid.NET.Filters.Array
             return new StringValue(String.Join(_separator.StringVal, vals));
         }
 
-        private StringValue ApplyTo(StringValue objectExpression)
+        public override StringValue ApplyTo(StringValue objectExpression)
         {
             if (String.IsNullOrEmpty(objectExpression.StringVal))
             {

@@ -28,6 +28,7 @@ namespace Liquid.NET.Constants
         /// <returns></returns>
         public IExpressionConstant Bind(Func<IExpressionConstant, IExpressionConstant> f)
         {
+            Console.WriteLine("Old Bind");
             if (HasError)
             {
                 Console.WriteLine("Bind Sees an error: " + ErrorMessage);
@@ -46,9 +47,10 @@ namespace Liquid.NET.Constants
         /// </summary>
         /// <param name="f"></param>
         /// <returns></returns>
-        public IExpressionConstant Bind<TOut>(Func<IExpressionConstant, TOut> f)
-            where TOut : ExpressionConstant
+        public TOut Bind<TOut>(Func<IExpressionConstant, TOut> f)
+            where TOut : IExpressionConstant
         {
+            Console.WriteLine("New Bind");
             if (HasError)
             {
                 Console.WriteLine("Bind Sees an error: " + ErrorMessage);
@@ -59,8 +61,8 @@ namespace Liquid.NET.Constants
                 //return this;
                 return ConstantFactory.CreateUndefined(f, "Undefined field");
             }
-            
-            return HasError ? this : f(this);
+            return HasError ? ConstantFactory.CreateError<TOut>(this.ErrorMessage) : f(this);
+
         }
 
     }

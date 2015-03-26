@@ -16,7 +16,6 @@ namespace Liquid.NET.Filters.Array
             _positionFilter = new PositionFilter(new NumericValue(0));
         }
         
-        // TODO: What does this do when there are no elements?
         public override IExpressionConstant Apply(ExpressionConstant objectExpression)
         {
             return _positionFilter.Apply(objectExpression);

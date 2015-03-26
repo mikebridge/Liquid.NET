@@ -14,5 +14,8 @@ namespace Liquid.NET.Constants
         bool IsNil { get; }
 
         IExpressionConstant Bind(Func<IExpressionConstant, IExpressionConstant> f);
+
+        TOut Bind<TOut>(Func<IExpressionConstant, TOut> f)
+            where TOut : IExpressionConstant;
     }
 }

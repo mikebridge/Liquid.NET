@@ -17,20 +17,18 @@ namespace Liquid.NET.Filters.Array
             _index = index;
         }
 
-        public override IExpressionConstant Apply(ExpressionConstant objectExpression)
-        {
-            return ApplyTo((dynamic)objectExpression);
+//        public override IExpressionConstant Apply(ExpressionConstant objectExpression)
+//        {
+//            return ApplyTo((dynamic)objectExpression);
+//        }
 
-
-        }
-
-        public IExpressionConstant ApplyTo(IExpressionConstant objectExpression)
+        public override IExpressionConstant ApplyTo(IExpressionConstant objectExpression)
         {
             return ConstantFactory.CreateError<ArrayValue>("Can't ask for an element at that.  This is not an array or a string.");
 
         }
 
-        public IExpressionConstant ApplyTo(ArrayValue objectExpression)
+        public override IExpressionConstant ApplyTo(ArrayValue objectExpression)
         {
             if (objectExpression == null || objectExpression.Value == null)
             {
@@ -44,7 +42,7 @@ namespace Liquid.NET.Filters.Array
                 ConstantFactory.CreateError<ArrayValue>("Array has no element at position " + _index.IntValue);
         }
 
-        public IExpressionConstant ApplyTo(StringValue objectExpression)
+        public override IExpressionConstant ApplyTo(StringValue objectExpression)
         {
             if (objectExpression == null || objectExpression.Value == null)
             {

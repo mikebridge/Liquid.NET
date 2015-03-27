@@ -49,6 +49,21 @@ namespace Liquid.NET.Tests.Constants
         }
 
         [Test]
+        public void It_ShouldJ_Join_Two_Values()
+        {
+            // Arrange
+            var stringSymbol = new StringValue("Hello");
+            
+            // Act
+            StringValue result = stringSymbol.Join(new StringValue("World"));
+
+            // Assert
+            Assert.That(result.StringVal, Is.EqualTo("HelloWorld"));
+
+        }
+
+        [Test]
+        [Ignore]
         public void String_Should_Be_Enumerable()
         {
             // Arrange

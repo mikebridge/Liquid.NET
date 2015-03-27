@@ -20,7 +20,7 @@ namespace Liquid.NET.Expressions
         {
             IList<IExpressionConstant> exprList = expressions.ToList();
 
-            Console.WriteLine("EqualsExpression is Eval-ing expressions ");
+            //Console.WriteLine("EqualsExpression is Eval-ing expressions ");
             if (exprList.Count() != 2)
             {
                 // This shouldn't happen if the parser is correct.
@@ -29,13 +29,13 @@ namespace Liquid.NET.Expressions
             }
             if (exprList[0].GetType() == exprList[1].GetType())
             {
-                Console.WriteLine("Comparing "+exprList[0].Value +" to "+exprList[1].Value);
-                Console.WriteLine(" comparison result " + exprList[0].Value.Equals(exprList[1].Value));
+                //Console.WriteLine("Comparing "+exprList[0].Value +" to "+exprList[1].Value);
+                //Console.WriteLine(" comparison result " + exprList[0].Value.Equals(exprList[1].Value));
                 return  new BooleanValue(exprList[0].Value.Equals(exprList[1].Value));
                 //Console.WriteLine("RESULT OF EQUALS: "+result.Value);
 
             }
-            Console.WriteLine("COmparing " + exprList[0].GetType() +" TO " + exprList[1].GetType());
+            //Console.WriteLine("COmparing " + exprList[0].GetType() +" TO " + exprList[1].GetType());
 
             return ConstantFactory.CreateError<BooleanValue>("\"Equals\" implementation can't cast yet"); 
         }

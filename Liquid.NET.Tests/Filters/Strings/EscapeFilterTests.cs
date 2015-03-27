@@ -17,7 +17,7 @@ namespace Liquid.NET.Tests.Filters.Strings
             var result = RenderingHelper.RenderTemplate("Result : {{ \"<p>test</p>\" | escape }}");
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : &lt;p&gt;ptest&lt;p&gt;"));
+            Assert.That(result, Is.EqualTo("Result : &lt;p&gt;test&lt;/p&gt;"));
 
         }
         //

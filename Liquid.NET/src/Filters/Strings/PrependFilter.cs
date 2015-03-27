@@ -9,12 +9,16 @@ namespace Liquid.NET.Filters.Strings
 {
     public class PrependFilter : FilterExpression<IExpressionConstant, StringValue>
     {
+        private readonly StringValue _prependedStr;
+
+        public PrependFilter(StringValue prependedStr)
+        {
+            _prependedStr = prependedStr;
+        }
 
         public override StringValue ApplyTo(IExpressionConstant objectExpression)
         {
-            //return StringResult.Eval(objectExpression, x => );
-            throw new NotImplementedException();
+            return StringUtils.Eval(objectExpression, x => _prependedStr.StringVal + x );
         }
-
     }
 }

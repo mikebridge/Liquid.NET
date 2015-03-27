@@ -56,6 +56,7 @@ namespace Liquid.NET
             globalScope.DefineFilter<LStripFilter>("lstrip");
             globalScope.DefineFilter<StripFilter>("strip");
             globalScope.DefineFilter<TruncateWordsFilter>("truncate_words");
+            globalScope.DefineFilter<SliceFilter>("slice");
         }
 
         private string EvalTree(SymbolTableStack symbolStack, LiquidAST liquidAst)

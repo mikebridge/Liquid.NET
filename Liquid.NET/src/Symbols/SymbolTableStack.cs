@@ -52,9 +52,8 @@ namespace Liquid.NET.Symbols
 
         public void Define(string reference, IExpressionConstant obj)
         {
-            Console.WriteLine("Adding " + reference + " to current scope");
+            //Console.WriteLine("Adding " + reference + " to current scope");
             _symbolTables.Last().DefineVariable(reference, obj);
-            //throw new NotImplementedException();
         }
 
         public IFilterExpression ReferenceFunction(string filterName, IEnumerable<IExpressionConstant> args)

@@ -14,7 +14,7 @@ namespace Liquid.NET.Constants
         public ObjectValue(Object val)
         {
             //_val = val;
-            Console.WriteLine("REFLECTING " + val);
+            //Console.WriteLine("REFLECTING " + val);
             _dictionaryValue = _reflector.GenerateExpressionConstant(val);
         }
 

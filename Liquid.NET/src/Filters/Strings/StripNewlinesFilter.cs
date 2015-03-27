@@ -13,7 +13,7 @@ namespace Liquid.NET.Filters.Strings
 
         public override StringValue ApplyTo(IExpressionConstant objectExpression)
         {
-            return StringResult.Eval(objectExpression, x => Regex.Replace(x, @"[\u000A\u000B\u000C\u000D\u2028\u2029\u0085]+", " ").Trim());
+            return StringUtils.Eval(objectExpression, x => Regex.Replace(x, @"[\u000A\u000B\u000C\u000D\u2028\u2029\u0085]+", " ").Trim());
         }
         
     }

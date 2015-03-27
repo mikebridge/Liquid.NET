@@ -77,6 +77,7 @@ TEXT1 :					.+?  -> channel(HIDDEN);
 mode INLIQUIDFILTER ;
 
 OUTPUTMKUPEND :			'}}'            -> popMode ;
+
 FILTERPIPE1 :			FILTERPIPE -> type(FILTERPIPE) ;
 FILTERCOLON1 :			FILTERCOLON -> type(FILTERCOLON) ;
 
@@ -93,9 +94,9 @@ LABEL1:					LABEL -> type(LABEL);
 ARRAYSTART1 :			'[' -> pushMode(INARRAYINDEX), type(ARRAYSTART) ;
 ARRAYEND1 :				']' -> type(ARRAYEND);
 
+COMMA :					',' ;
 
-
-WS :					[ \t]+ -> skip ;
+WS :					[ \t\r\n]+ -> skip ;
 
 
 mode INARRAYINDEX ;
@@ -141,7 +142,7 @@ INCREMENT_TAG :			'increment';
 DECREMENT_TAG :			'decrement';
 
 COLON :					':' ;
-COMMA :					',' ;
+COMMA1 :				',' -> type(COMMA);
 ARRAYSTART3 :			'[' -> pushMode(INARRAYINDEX), type(ARRAYSTART) ;
 ARRAYEND3 :				']' -> type(ARRAYEND);
 
@@ -189,4 +190,4 @@ LABEL2:					LABEL -> type(LABEL);
 GENERATORRANGE1:		GENERATORRANGE -> type(GENERATORRANGE) ;
 //INT1:					INT -> type(INT) ;
 
-WS2 :					[ \t]+ -> skip ;
+WS2 :					[ \t\r\n]+ -> skip ;

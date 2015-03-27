@@ -35,9 +35,9 @@ namespace Liquid.NET.Constants
 
         public IExpressionConstant ValueAt(String key)
         {
-            Console.WriteLine("VALUE AT " + key);
+            //Console.WriteLine("VALUE AT " + key);
             var result = _value.ContainsKey(key) ? _value[key] : new Undefined(key);
-            Console.WriteLine("IS " + result);
+            //Console.WriteLine("IS " + result);
             return result;
         }
     }

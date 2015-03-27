@@ -17,7 +17,7 @@ namespace Liquid.NET.Constants
             //if (src.GetType().IsAssignableFrom(typeof(TDest))) {
             if (src is TDest)
             {
-                Console.WriteLine("Cast return returning "+src+" as a "+typeof(TDest));
+                //Console.WriteLine("Cast return returning "+src+" as a "+typeof(TDest));
                 return (TDest) ((dynamic) src);
             }
 
@@ -79,7 +79,7 @@ namespace Liquid.NET.Constants
         private static IExpressionConstant Convert<TDest>(DictionaryValue dictionaryValue)
            where TDest : IExpressionConstant
         {
-            Console.WriteLine("Rendering dictionary");
+            //Console.WriteLine("Rendering dictionary");
             var destType = typeof(TDest);
             if (destType == typeof(Undefined))
             {
@@ -88,11 +88,11 @@ namespace Liquid.NET.Constants
 
             if (destType == typeof(StringValue))
             {
-                Console.WriteLine("Converting dict to string");
-                foreach (var key in dictionaryValue.DictValue.Keys)
-                {
-                    Console.WriteLine("KEY " + key + "=" + dictionaryValue.DictValue[key]);
-                }
+                //Console.WriteLine("Converting dict to string");
+//                foreach (var key in dictionaryValue.DictValue.Keys)
+//                {
+//                    Console.WriteLine("KEY " + key + "=" + dictionaryValue.DictValue[key]);
+//                }
 
                 return new StringValue(
                     dictionaryValue.DictValue
@@ -118,12 +118,12 @@ namespace Liquid.NET.Constants
         private static IExpressionConstant Convert<TDest>(ArrayValue arrayValue)
               where TDest : IExpressionConstant
         {
-            Console.WriteLine("Rendering array");
+            //Console.WriteLine("Rendering array");
             var destType = typeof(TDest);
 
             if (destType == typeof(StringValue))
             {
-                Console.WriteLine("Converting array to string");
+                //Console.WriteLine("Converting array to string");
 
                 return new StringValue(FormatArray(arrayValue));
             }
@@ -256,7 +256,7 @@ namespace Liquid.NET.Constants
             // TODO: Move this to FilterFactory.Instantiate
             Type genericClass = typeof(CastFilter<,>);
             // MakeGenericType is badly named
-            Console.WriteLine("FilterChain Creating Converter from " + sourceType + " to " + resultType);
+            //Console.WriteLine("FilterChain Creating Converter from " + sourceType + " to " + resultType);
             Type constructedClass = genericClass.MakeGenericType(sourceType, resultType);
             return (IFilterExpression)Activator.CreateInstance(constructedClass);
         }
@@ -265,7 +265,15 @@ namespace Liquid.NET.Constants
         public static string RenderAsString(IExpressionConstant val)
         {
             var stringResult = Cast<IExpressionConstant, StringValue>(val);
-            return stringResult.Value.ToString();
+
+            if (stringResult.StringVal == null)
+            {
+                return "";
+            }
+            else
+            {
+                return stringResult.StringVal;
+            }
         }
 
     }

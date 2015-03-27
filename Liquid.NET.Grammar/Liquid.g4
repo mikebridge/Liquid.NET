@@ -106,7 +106,7 @@ outputexpression:	object (FILTERPIPE filter)* ;
 	
 filter:				(filtername (FILTERCOLON filterargs)?) ;
 
-filterargs:			filterarg* ;
+filterargs:			filterarg (COMMA filterarg)* ;
 
 object:				STRING									# StringObject
 					| NUMBER								# NumberObject

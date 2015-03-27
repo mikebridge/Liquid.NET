@@ -11,6 +11,7 @@ namespace Liquid.NET.Tests.Tags
     public class IncludeTagTests
     {
         [Test]
+        [Ignore]
         public void It_Should_Include_A_Virtual_File()
         {
             // Arrange

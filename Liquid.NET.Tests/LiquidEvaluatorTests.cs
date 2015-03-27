@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Liquid.NET.Constants;
 using Liquid.NET.Symbols;
 using Liquid.NET.Tags;
+using Liquid.NET.Tests.Filters.Array;
 using Liquid.NET.Utils;
 using NUnit.Framework;
 
@@ -301,6 +302,7 @@ namespace Liquid.NET.Tests
         }
 
         [Test]
+        [Ignore]
         public void It_Should_Return_Unknown_When_Nested_Dictionaries_Pipe_Into_Each_Other_But_Have_Missing_Key()
         {
             // Arrange
@@ -478,6 +480,45 @@ namespace Liquid.NET.Tests
             Assert.That(result, Is.EqualTo("123 : HELLO"));
 
         }
+
+        [Test]
+        public void It_Should_Allow_Tags_To_Span_Lines()
+        {
+            // Arrange
+            var templateContext = new TemplateContext();
+            IList<IExpressionConstant> objlist = new List<IExpressionConstant>
+            {
+                DataFixtures.CreateDictionary(1, "Title 1", "Value 1 B"), 
+                DataFixtures.CreateDictionary(2, "Title 2", "Value 2 B"), 
+                DataFixtures.CreateDictionary(3, "Title 3", "Value 3 B"), 
+                DataFixtures.CreateDictionary(4, "Title 4", "Value 4 B"),
+            };
+            ArrayValue arrayValue = new ArrayValue(objlist);
+            templateContext.Define("posts", arrayValue);
+            const string tmpl = @"{%
+               for post in posts %}{{
+                     post.field1 }}{%
+                endfor
+              %}";
+
+//            const string tmpl = @"{%
+//  for post in posts %}{%
+//    if post.title %}{{
+//      post.title }}{%
+//    endif %}{%
+//  endfor
+//%}";
+            var ast = _generator.Generate(tmpl);
+
+            // Act
+            String result = new LiquidEvaluator().Render(templateContext, ast);
+            Console.WriteLine("result is " + result);
+
+            // Assert
+            Assert.That(result, Is.EqualTo("Title 1Title 2Title 3Title 4"));
+
+        }
+
     }
 
 }

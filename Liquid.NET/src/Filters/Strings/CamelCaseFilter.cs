@@ -19,7 +19,7 @@ namespace Liquid.NET.Filters.Strings
         public override StringValue ApplyTo(IExpressionConstant objectExpression)
         {
 
-            return StringResult.Eval(objectExpression, before =>
+            return StringUtils.Eval(objectExpression, before =>
             {
                 return String.Concat(before.Split(new[] {' ', '-', '_'}, StringSplitOptions.RemoveEmptyEntries)
                     .Select(x => char.ToUpper(x[0]) + x.Substring(1).ToLower()));

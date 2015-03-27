@@ -121,7 +121,7 @@
     <Compile Include="src\Filters\Strings\ReplaceFirstFilter.cs" />
     <Compile Include="src\Filters\Strings\RStripFilter.cs" />
     <Compile Include="src\Filters\Strings\SliceFilter.cs" />
-    <Compile Include="src\Filters\Strings\StringResult.cs" />
+    <Compile Include="src\Filters\Strings\StringUtils.cs" />
     <Compile Include="src\Filters\Strings\StripFilter.cs" />
     <Compile Include="src\Filters\Strings\StripHtmlFilter.cs" />
     <Compile Include="src\Filters\Strings\StripNewlinesFilter.cs" />

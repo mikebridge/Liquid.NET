@@ -14,7 +14,7 @@ namespace Liquid.NET.Filters.Strings
     {
         public override StringValue ApplyTo(IExpressionConstant objectExpression)
         {
-            return StringResult.Eval(objectExpression, x => x.ToLower());
+            return StringUtils.Eval(objectExpression, x => x.ToLower());
         }
     }
 }

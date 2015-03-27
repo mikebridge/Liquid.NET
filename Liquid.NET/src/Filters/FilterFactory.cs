@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Xml.XPath;
 using Liquid.NET.Constants;
 using Liquid.NET.Expressions;
@@ -59,9 +60,9 @@ namespace Liquid.NET.Filters
             if (constructors.Count() != 1)
             {
                 // for the time being, ensure just one constructor.
-                throw new Exception("The \""+filterType+"\" class for " + name + " has more than one constructor.  Please contact the devloper to fix this.");
+                throw new Exception("The \""+filterType+"\" class for " + name + " has more than one constructor.  Please contact the developer to fix this.");
             }
-            return InstantiateFilter(filterType, CreateArguments(filterArgs, constructors));
+            return InstantiateFilter(filterType, CreateArguments(filterArgs, constructors[0]));
            
         }
 
@@ -72,46 +73,67 @@ namespace Liquid.NET.Filters
                 : (IFilterExpression) Activator.CreateInstance(filterType, args.ToArray());
         }
 
-        private static IList<object> CreateArguments(IEnumerable<IExpressionConstant> filterArgs, ConstructorInfo[] constructors)
+        private static IList<object> CreateArguments(IEnumerable<IExpressionConstant> filterArgs, ConstructorInfo argConstructor)
         {
             IList<Object> result = new List<object>();
             int i = 0;
             var filterList = filterArgs.ToList();
 
-            foreach (var parmType in constructors[0].GetParameters()
+            foreach (var argType in argConstructor.GetParameters()
                                                     .Select(parameter => parameter.ParameterType))
             {
                 Console.WriteLine("There are " + filterList.Count + " args in the filter.");
                 if (i < filterList.Count)
                 {
-                    Console.WriteLine("COMPARING " + filterList[i].GetType() + " TO " + parmType);
-                    if (parmType == typeof (ExpressionConstant) || parmType == typeof(IExpressionConstant))
+                    Console.WriteLine("COMPARING " + filterList[i].GetType() + " TO " + argType);
+                    if (argType == typeof (ExpressionConstant) || argType == typeof(IExpressionConstant))
                     {
-                        Console.WriteLine("Skipping...");
+                        Console.WriteLine("Skipping ExpressionConstant...");
                         result.Add(filterList[i]);
                         continue;
                     }
-               /*     Console.WriteLine(filterList[i].GetType() == parmType);
-                    Console.WriteLine(filterList[i].GetType().IsAssignableFrom(parmType));
-                    Console.WriteLine(parmType.IsAssignableFrom(filterList[i].GetType()));
-                    Console.WriteLine(parmType.IsInstanceOfType(filterList[i]));
-                    Console.WriteLine(filterList[i].GetType().IsInstanceOfType(parmType));*/
-                    // TODO: don't know why isassignabel from doesn't work.
+
                     //result.Add(filterList[i].GetType() == parmType // if it's the same type
-                    result.Add(parmType.IsInstanceOfType(filterList[i])
+                    result.Add(argType.IsInstanceOfType(filterList[i])
                     //result.Add(parmType.IsInstanceOfType(filterList[i])    
                         ? filterList[i] // then it's ok
-                        : CastParameter(filterList[i], parmType)); // else cast it 
+                        : CastParameter(filterList[i], argType)); // else cast it 
                 }
                 else
                 {
-                    // no value provided, so use the default
-                    // TODO: pass the wrapped null parameter, not just a bare null. (?)
-                    //Console.WriteLine("Passing null--- no value");
-                    result.Add(null);
+                    // no value provided, so use the default                    
+                    Console.WriteLine("Passing null--- no value");
+                    Console.WriteLine("THERE ARE "+argType.GetConstructors().Count());
+                    // construct a default value type
+                    var constructorInfo = argType.GetConstructors()[0];
+                    var parameterInfos = constructorInfo.GetParameters();
+
+
+                    var defaultValue = parameterInfos.Select(p => GetDefault(p.ParameterType)).ToArray(); //.Select(x => x == System.DBNull? ToArray();
+                    Console.WriteLine("Default is " + defaultValue.GetType());
+                    //var defaultarg = (IExpressionConstant)Activator.CreateInstance(argType, null);
+                    var defaultarg = (IExpressionConstant)constructorInfo.Invoke(defaultValue);
+                    defaultarg.IsUndefined = true;
+                    result.Add(defaultarg);
+                    //result.Add(CreateUndefinedForType(parmType, defaultParams));
+                    //result.Add(null);
                 }
                 i++;
             }
+            return result;
+        }
+
+        public static object GetDefault(Type type)
+        {
+            return type.IsValueType ? Activator.CreateInstance(type) : null;
+        }
+
+        public static IExpressionConstant CreateUndefinedForType(Type valueType, object[] args)
+        {
+            // TODO: Introspect the argument for the Value type and get the default.
+            Console.WriteLine("passing " + args.Count() + " args");
+            var result = (IExpressionConstant)Activator.CreateInstance(valueType, args);
+            result.IsUndefined = true;
             return result;
         }
 

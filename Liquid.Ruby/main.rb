@@ -13,3 +13,5 @@ def print_test(tmpl)
 end
 
 print_test "foo {{ \"bar\" | upcase }}"
+
+print_test "foo {{ \"hello\" | slice: -3,2 }}"

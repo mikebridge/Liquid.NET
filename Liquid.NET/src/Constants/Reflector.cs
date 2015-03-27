@@ -22,7 +22,7 @@ namespace Liquid.NET.Constants
             // http://stackoverflow.com/questions/9115413/is-there-an-easy-way-to-convert-object-properties-to-a-dictionarystring-string
 
             var type = obj.GetType();
-            Console.WriteLine("TYype is " + type);
+            //Console.WriteLine("TYype is " + type);
             var dict = obj as IDictionary;
             if (dict != null) // TODO: handle any collection
             {
@@ -39,10 +39,10 @@ namespace Liquid.NET.Constants
             var newDict = dict.Keys.Cast<object>()
                              .ToDictionary(key => key.ToString(), 
                                            key => ConvertToConstant(dict[key].GetType(), dict[key]));
-            foreach (var key in newDict.Keys)
-            {
-                Console.WriteLine("   " + key + "=" + newDict[key].Value);
-            }
+            //foreach (var key in newDict.Keys)
+            //{
+                //Console.WriteLine("   " + key + "=" + newDict[key].Value);
+            //}
             return new DictionaryValue(newDict);
         }
 
@@ -64,7 +64,7 @@ namespace Liquid.NET.Constants
 
         private IExpressionConstant ConvertToConstant(Type type, Object obj)
         {
-            Console.WriteLine("Converting " + obj + " to a constant type ");
+            //Console.WriteLine("Converting " + obj + " to a constant type ");
             if (type == typeof(String))
             {
                 return new StringValue((String) obj);

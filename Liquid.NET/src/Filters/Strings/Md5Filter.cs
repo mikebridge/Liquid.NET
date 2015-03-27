@@ -13,7 +13,7 @@ namespace Liquid.NET.Filters.Strings
 
         public override StringValue ApplyTo(IExpressionConstant objectExpression)
         {
-            return StringResult.Eval(objectExpression, ToMd5);
+            return StringUtils.Eval(objectExpression, ToMd5);
             
         }
 

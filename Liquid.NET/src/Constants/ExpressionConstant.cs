@@ -7,6 +7,11 @@ namespace Liquid.NET.Constants
 {
     public abstract class ExpressionConstant : ExpressionDescription, IExpressionConstant
     {
+//        public ExpressionConstant()
+//        {
+//            IsUndefined=true;
+//        }
+
         public abstract object Value
         {
             get;
@@ -28,14 +33,14 @@ namespace Liquid.NET.Constants
         /// <returns></returns>
         public IExpressionConstant Bind(Func<IExpressionConstant, IExpressionConstant> f)
         {
-            Console.WriteLine("Old Bind");
+            //Console.WriteLine("Old Bind");
             if (HasError)
             {
                 Console.WriteLine("Bind Sees an error: " + ErrorMessage);
             }
             if (IsUndefined || GetType() == typeof (Undefined))
             {
-                Console.WriteLine("Undefined---ignoring the rest.");
+                //Console.WriteLine("Undefined---ignoring the rest.");
                 //return this;
                 return ConstantFactory.CreateUndefined(f, "Undefined field");
             }
@@ -50,7 +55,7 @@ namespace Liquid.NET.Constants
         public TOut Bind<TOut>(Func<IExpressionConstant, TOut> f)
             where TOut : IExpressionConstant
         {
-            Console.WriteLine("New Bind");
+            //Console.WriteLine("New Bind");
             if (HasError)
             {
                 Console.WriteLine("Bind Sees an error: " + ErrorMessage);

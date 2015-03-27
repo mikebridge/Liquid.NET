@@ -44,5 +44,16 @@ namespace Liquid.NET.Tests.Filters
             Assert.Fail("Not Implemented Yet");
         }
 
+        [Test]
+        public void It_Should_Not_Throw_An_Exception_When_Deferencing_A_NonExistent_Variable()
+        {
+            // Arrange
+
+            // Act
+
+            // Assert
+            Assert.Fail("Not Implemented Yet");
+        }
+
     }
 }

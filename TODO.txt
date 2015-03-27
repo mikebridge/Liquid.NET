@@ -1,17 +1,13 @@
 
-- Better error handling
+- Better error handling / nulls / undefined
 
-- Check the pipeline for nulls, undefined, etc.
-
-- Move the Casting to the Monadic bind
+- Implement {%- -%}
 
 - Write the filters
 
 - WRite the std tags
 
 - Write the std blocks
-
-- Add the -%} to eat chars
 
 - Set up custom blocks/filters
 

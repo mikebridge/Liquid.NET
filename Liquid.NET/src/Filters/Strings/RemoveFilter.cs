@@ -11,7 +11,7 @@ namespace Liquid.NET.Filters.Strings
         {
             _replacement = replacement;
         }
-        // TODO: use StringResult.Eval
+        // TODO: use StringUtils.Eval
         public override StringValue Apply(StringValue objectExpression)
         {
             // TODO: Return errors

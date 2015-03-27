@@ -17,15 +17,9 @@ namespace Liquid.NET.Filters.Array
             _index = index;
         }
 
-//        public override IExpressionConstant Apply(ExpressionConstant objectExpression)
-//        {
-//            return ApplyTo((dynamic)objectExpression);
-//        }
-
         public override IExpressionConstant ApplyTo(IExpressionConstant objectExpression)
         {
-            return ConstantFactory.CreateError<ArrayValue>("Can't ask for an element at that.  This is not an array or a string.");
-
+            return ConstantFactory.CreateError<ArrayValue>("Can't find sub-elements from that object.  It is not an array or a string.");
         }
 
         public override IExpressionConstant ApplyTo(ArrayValue objectExpression)

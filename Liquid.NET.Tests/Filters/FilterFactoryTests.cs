@@ -53,7 +53,8 @@ namespace Liquid.NET.Tests.Filters
 
             // Assert
             Assert.That(filter.StringArg1, Is.Not.Null);
-            Assert.That(filter.StringArg2, Is.Null);
+            Assert.That(filter.StringArg2, Is.Not.Null);
+            Assert.That(filter.StringArg2.IsUndefined, Is.True);
         }
 
         [Test]
@@ -65,7 +66,6 @@ namespace Liquid.NET.Tests.Filters
             // Act
 
             Assert.That(filter.StringArg1.Value, Is.EqualTo("123"));
-            Assert.That(filter.StringArg2, Is.Null);
         }
 
 
@@ -87,6 +87,30 @@ namespace Liquid.NET.Tests.Filters
 
         }
 
+        [Test]
+        public void It_Should_Pass_A_Wrapped_Null_When_Arg_Missing()
+        {
+            // Arrange
+            var result = RenderingHelper.RenderTemplate("Result : {{ 'x123y' | replace_first : '123'}}");
+
+            // Assert
+            Assert.That(result, Is.EqualTo("Result : xy"));
+        }
+
+
+        [Test]
+        public void It_Should_Instantiate_The_Right_Generic_Class()
+        {
+            // Arrange
+
+            // Act
+            var result = FilterFactory.CreateCastExpression(typeof(NumericValue), typeof(StringValue));
+
+
+            // Assert
+            Assert.That(result, Is.TypeOf(typeof(CastFilter<NumericValue, StringValue>)));
+
+        }
 
         public class MockStringToStringFilter : FilterExpression<StringValue, StringValue>
         {
@@ -105,22 +129,6 @@ namespace Liquid.NET.Tests.Filters
             {
                 throw new NotImplementedException();
             }
-        }
-
-
-
-        [Test]
-        public void It_Should_Instantiate_The_Right_Generic_Class()
-        {
-            // Arrange
-
-            // Act
-            var result = FilterFactory.CreateCastExpression(typeof(NumericValue), typeof(StringValue));
-
-
-            // Assert
-            Assert.That(result, Is.TypeOf(typeof(CastFilter<NumericValue, StringValue>)));
-
         }
 
         private static FilterFactory CreateFilterFactory(FilterRegistry registry =null)

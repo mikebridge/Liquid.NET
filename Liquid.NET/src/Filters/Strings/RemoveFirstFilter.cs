@@ -9,12 +9,18 @@ namespace Liquid.NET.Filters.Strings
 {
     public class RemoveFirstFilter : FilterExpression<IExpressionConstant, StringValue>
     {
+        private readonly StringValue _stringToRemove;
+
+        public RemoveFirstFilter(StringValue stringToRemove)
+        {
+            _stringToRemove = stringToRemove;
+        }
 
         public override StringValue ApplyTo(IExpressionConstant objectExpression)
         {
-            //return StringResult.Eval(objectExpression, x => );
-            throw new NotImplementedException();
+            return StringUtils.Eval(objectExpression, x => StringUtils.ReplaceFirst(x, _stringToRemove.StringVal, ""));            
         }
 
+       
     }
 }

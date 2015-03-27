@@ -78,7 +78,7 @@ namespace Liquid.NET.Expressions
         {
             var startValue = ValueAsNumeric(_startExpression, symbolTableStack);
             var endValue = ValueAsNumeric(_endExpression, symbolTableStack);
-            Console.WriteLine("*** Generating sequence from "+ startValue.IntValue+ " to " +endValue.IntValue);
+            //Console.WriteLine("*** Generating sequence from "+ startValue.IntValue+ " to " +endValue.IntValue);
             var generatorValue = new GeneratorValue(startValue, endValue);
             return generatorValue;
 

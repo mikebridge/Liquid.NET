@@ -28,7 +28,7 @@ namespace Liquid.NET.Constants
             }
             catch
             {
-                var errorSymbol = new NumericValue(0) {ErrorMessage = "Unable to convert " + str + " to a number."};
+                var errorSymbol = new NumericValue(0) {ErrorMessage = "Unable to convert '" + str + "' to a number."};
                 return errorSymbol;
             }
         }

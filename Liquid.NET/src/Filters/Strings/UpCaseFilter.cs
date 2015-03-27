@@ -3,14 +3,11 @@ using Liquid.NET.Constants;
 
 namespace Liquid.NET.Filters.Strings
 {
-    public class UpCaseFilter : FilterExpression<StringValue, StringValue>
+    public class UpCaseFilter : FilterExpression<IExpressionConstant, StringValue>
     {
-
-        public override StringValue Apply(StringValue stringExpression)
+        public override StringValue ApplyTo(IExpressionConstant objectExpression) 
         {
-            // TODO: parameterize the type
-            String val = (String) stringExpression.Value;
-            return new StringValue(val.ToUpper());
+            return StringResult.Eval(objectExpression, x => x.ToLower());
         }
     }
 }

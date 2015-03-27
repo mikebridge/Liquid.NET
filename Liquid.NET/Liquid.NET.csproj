@@ -121,6 +121,7 @@
     <Compile Include="src\Filters\Strings\ReplaceFirstFilter.cs" />
     <Compile Include="src\Filters\Strings\RStripFilter.cs" />
     <Compile Include="src\Filters\Strings\SliceFilter.cs" />
+    <Compile Include="src\Filters\Strings\StringResult.cs" />
     <Compile Include="src\Filters\Strings\StripFilter.cs" />
     <Compile Include="src\Filters\Strings\StripHtmlFilter.cs" />
     <Compile Include="src\Filters\Strings\StripNewlinesFilter.cs" />
@@ -167,6 +168,7 @@
     <Compile Include="src\Tags\UnlessBlock.cs" />
     <Compile Include="src\TemplateContext.cs" />
     <Compile Include="src\Symbols\IASTVisitor.cs" />
+    <Compile Include="src\Utils\LiquidVersionAttribute.cs" />
     <Compile Include="src\Utils\TreeNode.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -8,9 +8,12 @@ namespace Liquid.NET.Tests
 {
     public static class RenderingHelper
     {
-        public static string RenderTemplate(string resultHello)
+        public static string RenderTemplate(string resultHello, TemplateContext ctx = null)
         {
-            TemplateContext ctx = new TemplateContext();
+            if (ctx == null)
+            {
+                ctx = new TemplateContext();
+            }
             var template = LiquidTemplate.Create(resultHello);
             return template.Render(ctx);
         }

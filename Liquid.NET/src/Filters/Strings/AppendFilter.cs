@@ -21,7 +21,7 @@ namespace Liquid.NET.Filters.Strings
 
         public override StringValue ApplyTo(IExpressionConstant objectExpression)
         {
-            return new StringValue(ValueCaster.RenderAsString(objectExpression) + _strToAppend.StringVal);
+            return StringResult.Eval(objectExpression, x => x + _strToAppend.StringVal);            
         }
     }
 }

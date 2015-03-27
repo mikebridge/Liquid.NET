@@ -16,14 +16,13 @@ namespace Liquid.NET.Tests.Filters.Strings
         {
             // Arrange
             TemplateContext ctx = new TemplateContext();
-            ctx.Define("email", new StringValue("tetsuro.takara@shopify.com"));
-            String tmpl =
-                "<img src=\"https://www.gravatar.com/avatar/{{ comment.email | remove: ' ' | strip_newlines | downcase | md5 }}";
-            var result = RenderingHelper.RenderTemplate("", ctx);
-
+            ctx.Define("email", new StringValue("mike@bridgecanada.com"));
+            const string tmpl = "<img src=\"https://www.gravatar.com/avatar/{{ email | md5 }}\" />";
+            var result = RenderingHelper.RenderTemplate(tmpl, ctx);
+            Console.WriteLine(result);
             // Assert
             Assert.That(result,
-                Is.EqualTo("<img src=\"https://www.gravatar.com/avatar/2a95ab7c950db9693c2ceb767784c201\" />"));
+                Is.EqualTo("<img src=\"https://www.gravatar.com/avatar/517ea04cf362ddc08f107f6ef98a12d9\" />"));
 
         }
     }

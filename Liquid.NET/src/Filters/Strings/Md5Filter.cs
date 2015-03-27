@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using Liquid.NET.Constants;
@@ -12,9 +13,16 @@ namespace Liquid.NET.Filters.Strings
 
         public override StringValue ApplyTo(IExpressionConstant objectExpression)
         {
-            //return StringResult.Eval(objectExpression, x => );
-            throw new NotImplementedException();
+            return StringResult.Eval(objectExpression, ToMd5);
+            
         }
+
+        public String ToMd5(String s)
+        {
+            byte[] hash = MD5.Create().ComputeHash(Encoding.ASCII.GetBytes(s));
+            return hash.Aggregate("", (current, t) => current + t.ToString("X2")).ToLower();
+        }
+
 
     }
 }

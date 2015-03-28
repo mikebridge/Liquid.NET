@@ -241,7 +241,7 @@ namespace Liquid.NET.Constants
                 //if (expectedInputType != null && filterExpression.SourceType != expectedInputType)
                 if (expectedInputType != null && !filterExpression.SourceType.IsAssignableFrom(expectedInputType))
                 {
-                    Console.WriteLine("Creating cast from " + filterExpression + " TO " + expectedInputType);
+                    //Console.WriteLine("Creating cast from " + filterExpression + " TO " + expectedInputType);
                     result.Add(CreateCastFilter(expectedInputType, filterExpression.SourceType));
                 }
                 result.Add(filterExpression);

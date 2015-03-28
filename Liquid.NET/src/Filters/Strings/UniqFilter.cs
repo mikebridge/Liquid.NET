@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,13 +8,13 @@ using Liquid.NET.Constants;
 
 namespace Liquid.NET.Filters.Strings
 {
-    public class UniqFilter : FilterExpression<IExpressionConstant, StringValue>
+    public class UniqFilter : FilterExpression<ArrayValue, ArrayValue>
     {
 
-        public override StringValue ApplyTo(IExpressionConstant objectExpression)
+        public override ArrayValue ApplyTo(ArrayValue objectExpression)
         {
-            //return StringUtils.Eval(objectExpression, x => );
-            throw new NotImplementedException();
+            return new ArrayValue(objectExpression.ArrValue.Distinct(new EasyValueComparer()).ToList());
+            
         }
 
     }

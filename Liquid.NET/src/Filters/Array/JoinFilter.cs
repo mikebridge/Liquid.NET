@@ -1,10 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
+
 using System.Linq;
 using Liquid.NET.Constants;
 
 namespace Liquid.NET.Filters.Array
 {
+    // TODO: this should work on an array.
     public class JoinFilter : FilterExpression<ExpressionConstant, StringValue>
     {
         private readonly StringValue _separator;
@@ -13,11 +14,6 @@ namespace Liquid.NET.Filters.Array
         {
             _separator = separator;
         }
-
-//        public override StringValue Apply(ExpressionConstant objectExpression)
-//        {
-//            return ApplyTo((dynamic)objectExpression);
-//        }
 
         public override StringValue ApplyTo(ArrayValue objectExpression)
         {

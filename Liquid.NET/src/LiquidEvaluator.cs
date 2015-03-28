@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Liquid.NET.Filters;
+using Liquid.NET.Filters.Array;
 using Liquid.NET.Filters.Math;
 using Liquid.NET.Filters.Strings;
 using Liquid.NET.Symbols;
@@ -35,6 +36,8 @@ namespace Liquid.NET
             globalScope.DefineFilter<ReplaceFilter>("replace");
             globalScope.DefineFilter<LookupFilter>("lookup");
             globalScope.DefineFilter<AppendFilter>("append");
+            globalScope.DefineFilter<JoinFilter>("join");
+
 
             // TODO: Register these separately
             globalScope.DefineFilter<CamelCaseFilter>("camelcase");
@@ -57,6 +60,8 @@ namespace Liquid.NET
             globalScope.DefineFilter<StripFilter>("strip");
             globalScope.DefineFilter<TruncateWordsFilter>("truncate_words");
             globalScope.DefineFilter<SliceFilter>("slice");
+            globalScope.DefineFilter<SplitFilter>("split");
+            globalScope.DefineFilter<UniqFilter>("uniq");
         }
 
         private string EvalTree(SymbolTableStack symbolStack, LiquidAST liquidAst)

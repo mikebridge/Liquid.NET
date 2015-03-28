@@ -9,11 +9,19 @@ namespace Liquid.NET.Filters.Strings
 {
     public class ReplaceFilter : FilterExpression<IExpressionConstant, StringValue>
     {
+        private readonly StringValue _stringToRemove;
+        private readonly StringValue _replacementString;
+
+        public ReplaceFilter(StringValue stringToRemove, StringValue replacementString)
+        {
+            _stringToRemove = stringToRemove;
+            _replacementString = replacementString;
+        }
+
 
         public override StringValue ApplyTo(IExpressionConstant objectExpression)
         {
-            //return StringUtils.Eval(objectExpression, x => );
-            throw new NotImplementedException();
+            return StringUtils.Eval(objectExpression, x => x.Replace(_stringToRemove.StringVal, _replacementString.StringVal));
         }
 
     }

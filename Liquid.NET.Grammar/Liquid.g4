@@ -104,7 +104,7 @@ outputmarkup:		OUTPUTMKUPSTART outputexpression OUTPUTMKUPEND ;
 
 outputexpression:	object (FILTERPIPE filter)* ; 
 	
-filter:				(filtername (FILTERCOLON filterargs)?) ;
+filter:				(filtername (COLON filterargs)?) ;
 
 filterargs:			filterarg (COMMA filterarg)* ;
 

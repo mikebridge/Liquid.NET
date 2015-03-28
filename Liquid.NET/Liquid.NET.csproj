@@ -66,6 +66,7 @@
     <Compile Include="src\Constants\BooleanValue.cs" />
     <Compile Include="src\Constants\ConstantFactory.cs" />
     <Compile Include="src\Constants\DictionaryValue.cs" />
+    <Compile Include="src\Constants\EasyValueComparer.cs" />
     <Compile Include="src\Constants\ExpressionConstant.cs" />
     <Compile Include="src\Constants\FieldAccessor.cs" />
     <Compile Include="src\Constants\GeneratorValue.cs" />
@@ -121,6 +122,7 @@
     <Compile Include="src\Filters\Strings\ReplaceFirstFilter.cs" />
     <Compile Include="src\Filters\Strings\RStripFilter.cs" />
     <Compile Include="src\Filters\Strings\SliceFilter.cs" />
+    <Compile Include="src\Filters\Strings\SplitFilter.cs" />
     <Compile Include="src\Filters\Strings\StringUtils.cs" />
     <Compile Include="src\Filters\Strings\StripFilter.cs" />
     <Compile Include="src\Filters\Strings\StripHtmlFilter.cs" />

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
+
 using System.Text.RegularExpressions;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Tree;
@@ -93,7 +93,7 @@ namespace Liquid.NET
             String txt = TrimRawTags(context.RAW().GetText());
             
             //String allTokens = _tokenStream.GetText();
-            Console.WriteLine(" *** Receiving Raw Text *** " + txt);
+            //Console.WriteLine(" *** Receiving Raw Text *** " + txt);
             var rawTag = new RawBlock(txt);
             var newNode = CreateTreeNode<IASTNode>(rawTag);
 
@@ -111,24 +111,7 @@ namespace Liquid.NET
             var str2 = Regex.Replace(str1, "{%\\s*endraw\\s%}$", "", RegexOptions.IgnoreCase);
             return str2;
         }
-
-//
-//        public override void Enter(LiquidParser.RawContext context)
-//        {
-//            base.EnterRaw(context);
-//            Console.WriteLine(" *** Receiving Raw Text *** ");
-//            var rawText = context.RAW().GetText();
-//            String allTokens = _tokenStream.GetText();
-//            //var originalTokens = _tokenStream.GetTokens(context.Start.TokenIndex, context.Stop.TokenIndex);
-//            // This removes extra whitespace---which may not be what we want...?
-//            // May need to figure out how to put the whitespace in the hidden stream for this only.
-//            //String normalizedArgs = String.Join(" ", originalTokens.Select(x => x.Text));
-//            //Console.WriteLine("Saving raw args " + normalizedArgs);
-//
-//            Console.WriteLine("RAW TEXT" + allTokens);
-//        }
-
-
+        
         public override void EnterAssign_tag(LiquidParser.Assign_tagContext context)
         {
             base.EnterAssign_tag(context);
@@ -144,7 +127,7 @@ namespace Liquid.NET
 
             StartNewObjectExpressionTree(result =>
             {
-                Console.WriteLine("Setting ExpRESSION TREE TO " + result);
+                //Console.WriteLine("Setting ExpRESSION TREE TO " + result);
                 assignTag.ObjectExpressionTree = result;
             });
             //if (context.outputexpression() != null)
@@ -184,7 +167,7 @@ namespace Liquid.NET
         public override void EnterFor_tag(LiquidParser.For_tagContext context)
         {
             base.EnterFor_tag(context);
-            Console.WriteLine("Entering FOR tag");
+            //Console.WriteLine("Entering FOR tag");
 
             var forBlock = new ForBlock
             {
@@ -203,7 +186,7 @@ namespace Liquid.NET
 
         public override void ExitFor_tag(LiquidParser.For_tagContext forContext)
         {
-            Console.WriteLine("@@@ EXITING FOR TAG *" + forContext.GetText() + "*");
+            //Console.WriteLine("@@@ EXITING FOR TAG *" + forContext.GetText() + "*");
 
             base.ExitFor_tag(forContext);
             _astNodeStack.Pop(); // stop capturing the block inside the for tag.
@@ -240,24 +223,24 @@ namespace Liquid.NET
         /// <param name="context"></param>
         public override void EnterFor_iterable(LiquidParser.For_iterableContext context)
         {
-            Console.WriteLine("  ^^^ PARSING FOR ITERABLE");
+            //Console.WriteLine("  ^^^ PARSING FOR ITERABLE");
             base.EnterFor_iterable(context);
             var forBlock = CurrentBuilderContext.ForBlockStack.Peek();
 
             // the iterators are going to be created by the visitor
             if (context.STRING() != null)
             {
-                Console.WriteLine("  +++ FOUND a STRING ");
+                //Console.WriteLine("  +++ FOUND a STRING ");
                 forBlock.IterableCreator =
                     new StringValueIterableCreator(GenerateStringSymbol(context.STRING().GetText()));
             }
             else if (context.variable() != null)
             {
-                Console.WriteLine("  +++ FOUND a VARIABLE ");
+                //Console.WriteLine("  +++ FOUND a VARIABLE ");
                
                 StartNewObjectExpressionTree(result =>
                 {
-                    Console.WriteLine("   --- Setting ExpRESSION TREE TO " + result);
+                    //Console.WriteLine("   --- Setting ExpRESSION TREE TO " + result);
                     forBlock.IterableCreator = new ArrayValueCreator(result);
                     
                 });
@@ -267,146 +250,30 @@ namespace Liquid.NET
             }
             else if (context.generator() != null)
             {
-                Console.WriteLine("  +++ FOUND a GENERATOR ");
+                //Console.WriteLine("  +++ FOUND a GENERATOR ");
                
                 forBlock.IterableCreator = CreateGeneratorContext(context.generator());
             }
             else
             {   
-                Console.WriteLine("TODO: Process the missing iterable");
+                //Console.WriteLine("TODO: Process the missing iterable");
                 // TODO: Maybe put an UNDEFINED variable in the AST?  Or an Erroneous If?
             }
         }
 
         public override void ExitFor_iterable(LiquidParser.For_iterableContext context)
         {
-            Console.WriteLine("  ^^^ DONE FOR ITERABLE");
+            //Console.WriteLine("  ^^^ DONE FOR ITERABLE");
             base.ExitFor_iterable(context);
 
             if (context.variable() != null )
             {
-                Console.WriteLine("CALLING FINISH OBJ"); 
+                //Console.WriteLine("CALLING FINISH OBJ"); 
                 //FinishObjectExpressionTree();
                 MarkCurrentExpressionComplete();
             }
         }
-        /*
-          
-            /// <summary>
-            /// for label in ITERABLE (parameters) block endfor
-            /// </summary>
-            /// <param name="context"></param>
-            public override void EnterFor_iterable(LiquidParser.For_iterableContext context)
-            {
-                //Console.WriteLine(" ^^^ FOR ITERABLE " + context.LABEL());
-                base.EnterFor_iterable(context);
-                //StartNewObjectExpressionTree();
-                var forBlock = CurrentBuilderContext.ForBlockStack.Peek();
-                // TODO: CHeck if this line (and the markdone) are necessary for the startcapturing variable.
-                StartNewObjectExpressionTree(); // does this work??
-                if (context.STRING() != null)
-                {
-                    // the iterable is a string literal
-                    Console.WriteLine("   for sees a STRING iterable " + context.STRING().GetText());
-                    //forBlock.Iterable = CreateObjectSimpleExpressionNode(GenerateStringSymbol(context.STRING().GetText()));
-                    forBlock.IterableCreator =
-                        new StringValueIterableCreator(GenerateStringSymbol(context.STRING().GetText()));
 
-                }
-                else if (context.variable() != null)
-                {
-                    Console.WriteLine("   for sees a VARIABLE iterable " + context.variable().LABEL());
-
-                    StartCapturingVariable(context.variable()); // marked complete in ExitFor_iterable.
-
-                    //forBlock.Iterable = CurrentBuilderContext.ObjectExpressionBuilder.ConstructedObjectExpressionTree;
-                    forBlock.IterableCreator =
-                       new ArrayValueCreator(CurrentBuilderContext.ObjectExpressionBuilder.ConstructedObjectExpressionTree);
-                
-                }
-                else if (context.generator() != null)
-                {
-                    forBlock.IterableCreator = CreateGeneratorContext(context.generator());
-                    //forBlock.Iterable = CreateObjectSimpleExpressionNode(new GeneratorValue());
-                
-                }
-                else
-                {
-                    Console.WriteLine("TODO: Process the missing iterable");
-                    // TODO: Maybe put an UNDEFINED variable in the AST?  Or an Erroneous If?
-                }
-            }
- 
-        
-            public override void ExitFor_iterable(LiquidParser.For_iterableContext context)
-            {
-                Console.WriteLine("  ^^^ DONE FOR ITERABLE");
-                base.ExitFor_iterable(context);
-                //CurrentBuilderContext.ForBlock.Iterable =
-                //    CurrentBuilderContext.ObjectExpressionBuilder.ConstructedObjectExpressionTree;
-                //FinishObjectExpressionTree();
-                //var objectExpression =
-                // TODO: Get the indices, etc.
-                if (context.variable() != null) // only the variable needs completing...
-                {
-                    // TODO Shouldn't this be FinishObjectExpressionTree??
-                    MarkCurrentExpressionComplete();
-                }
-                //new TreeNode<ObjectExpression>();VariableReference(context.LABEL().ToString());
-            }
-
-         
-            /// <summary>
-            /// for item in iterable (parameters) block endfor
-            /// </summary>
-            /// <param name="forContext"></param>
-            public override void EnterFor_tag(LiquidParser.For_tagContext forContext)
-            {
-                base.EnterFor_tag(forContext);
-                Console.WriteLine("@@@ CREATING FOR TAG *" + forContext.GetText() + "*");
-
-                // Create the node and put it in the AST
-                var forBlock = new ForBlock();
-
-                CurrentBuilderContext.ForBlockStack.Push(forBlock); // make it available for the closing tag
-                var newNode = CreateTreeNode<IASTNode>(forBlock);
-                CurrentAstNode.AddChild(newNode);                   // Add it to the AST
-
-                _astNodeStack.Push(forBlock.RootContentNode);       // subsequent parsing sends expressions to the root content node
-            }
-
-      
-            /// <summary>
-            /// for LABEL in iterable (parameters) block endfor
-            /// </summary>
-            /// <param name="context"></param>
-            public override void EnterFor_label(LiquidParser.For_labelContext context)
-            {
-                Console.WriteLine("The Label is "+context.LABEL());
-                //var forBlock = CurrentBuilderContext.ForBlockStack.Pop();
-                CurrentBuilderContext.ForBlockStack.Peek().LocalVariable = context.LABEL().ToString();
-                base.EnterFor_label(context);
-            }
-
-        
-
-            public override void ExitFor_params(LiquidParser.For_paramsContext context)
-            {
-
-                base.ExitFor_params(context);
-            }
-
-
-            public override void ExitFor_tag(LiquidParser.For_tagContext forContext)
-            {
-                Console.WriteLine("@@@ EXITING FOR TAG *" + forContext.GetText() + "*");
-
-                base.ExitFor_tag(forContext);
-                var forBlock = CurrentBuilderContext.ForBlockStack.Pop();
-                _astNodeStack.Pop();
-                //CurrentBuilderContext.ForBlock = null;
-            }
-            */
             private GeneratorCreator CreateGeneratorContext(LiquidParser.GeneratorContext generatorContext)
             {
                 Console.WriteLine("CREATING GENERATOR");
@@ -477,7 +344,7 @@ namespace Liquid.NET
         public override void EnterUnless_tag(LiquidParser.Unless_tagContext unlessContext)
         {
             base.EnterUnless_tag(unlessContext);
-            Console.WriteLine("CREATING UNLESS TAG *" + unlessContext.GetText() + "*");
+            //Console.WriteLine("CREATING UNLESS TAG *" + unlessContext.GetText() + "*");
             // create the parent if/then/else container and put it in the tree
             AddIfThenElseTagToCurrent();
 
@@ -489,14 +356,12 @@ namespace Liquid.NET
         public override void ExitUnless_tag(LiquidParser.Unless_tagContext context)
         {
             base.ExitUnless_tag(context);          
-            Console.WriteLine("TODO: Negate the first if statement");
             var unlessBlock = CurrentBuilderContext.IfThenElseBlockStack.Pop();
 
             ObjectExpression objectExpression = new ObjectExpression { Expression = new NotExpression() };
             var newRoot = new TreeNode<ObjectExpression>(objectExpression);
             newRoot.AddChild(unlessBlock.IfExpressions[0].ObjectExpressionTree);
             unlessBlock.IfExpressions[0].ObjectExpressionTree = newRoot;
-            //Console.WriteLine("EXITING IF/ELSE/ELSIF TAG *" + ifContext.GetText() + "*");
             EndIfClause();
             
         }
@@ -504,7 +369,7 @@ namespace Liquid.NET
         public override void EnterIf_tag(LiquidParser.If_tagContext ifContext)
         {
             base.EnterIf_tag(ifContext);
-            Console.WriteLine("CREATING IF TAG *" + ifContext.GetText() + "*");
+            //Console.WriteLine("CREATING IF TAG *" + ifContext.GetText() + "*");
 
             // create the parent if/then/else container and put it in the tree
             AddIfThenElseTagToCurrent();
@@ -518,10 +383,10 @@ namespace Liquid.NET
         /// </summary>
         private void AddIfThenElseTagToCurrent()
         {
-            Console.WriteLine("Adding If then else to current");
+            //Console.WriteLine("Adding If then else to current");
             //CurrentBuilderContext.IfThenElseBlock = new IfThenElseBlock();
             var ifThenElseBlock = new IfThenElseBlock();
-            Console.WriteLine("  -:> Pushing if block on stack");
+            //Console.WriteLine("  -:> Pushing if block on stack");
             CurrentBuilderContext.IfThenElseBlockStack.Push(ifThenElseBlock);
             var newNode = CreateTreeNode<IASTNode>(ifThenElseBlock);
             CurrentAstNode.AddChild(newNode);
@@ -534,7 +399,7 @@ namespace Liquid.NET
         private void InitiateIfClause()
         {
             var elsIfSymbol = new IfTagSymbol();
-            Console.WriteLine("Creating if expressino");
+            //Console.WriteLine("Creating if expressino");
             CurrentBuilderContext.IfThenElseBlockStack.Peek().AddIfExpression(elsIfSymbol);
             _astNodeStack.Push(elsIfSymbol.RootContentNode); // capture the block
         }
@@ -544,7 +409,7 @@ namespace Liquid.NET
         public override void EnterIfexpr(LiquidParser.IfexprContext context)
         {
             base.EnterIfexpr(context);
-            Console.WriteLine("New Expression Builder");
+            //Console.WriteLine("New Expression Builder");
             //InitiateExpressionBuilder();
             var ifexpr = CurrentBuilderContext.IfThenElseBlockStack.Peek().IfExpressions.Last();
             StartNewObjectExpressionTree(x => ifexpr.ObjectExpressionTree = x);
@@ -553,7 +418,7 @@ namespace Liquid.NET
         public override void ExitIfexpr(LiquidParser.IfexprContext context)
         {
             base.ExitIfexpr(context);
-            Console.WriteLine("End Expression Builder");
+            //Console.WriteLine("End Expression Builder");
             
             //CurrentBuilderContext.ObjectExpressionBuilder.StartObjectExpression();
 //            CurrentBuilderContext.IfThenElseBlockStack.Peek().IfExpressions.Last().ObjectExpressionTree =
@@ -587,7 +452,7 @@ namespace Liquid.NET
         public override void ExitIf_tag(LiquidParser.If_tagContext ifContext)
         {
             base.EnterIf_tag(ifContext);
-            Console.WriteLine("  <:- Popping if block off stack");
+            //Console.WriteLine("  <:- Popping if block off stack");
             CurrentBuilderContext.IfThenElseBlockStack.Pop();
 
             //Console.WriteLine("EXITING IF/ELSE/ELSIF TAG *" + ifContext.GetText() + "*");
@@ -666,24 +531,24 @@ namespace Liquid.NET
         /// <param name="variableContext"></param>
         private void StartCapturingVariable(LiquidParser.VariableContext variableContext)
         {
-            Console.WriteLine("START Capturing variable " + variableContext.LABEL().GetText());
+            //Console.WriteLine("START Capturing variable " + variableContext.LABEL().GetText());
             var varname = variableContext.LABEL().GetText();
             IEnumerable<FilterSymbol> indexLookupFilters =
                 variableContext.objectvariableindex().Select(AddIndexLookupFilter);
             AddExpressionToCurrentExpressionBuilder(new VariableReference(varname));
             foreach (var filter in indexLookupFilters)
             {
-                Console.WriteLine("  ADDING FILTER TO VARIABLE OBJECT " + filter);
+                //Console.WriteLine("  ADDING FILTER TO VARIABLE OBJECT " + filter);
                 CurrentBuilderContext.ObjectExpressionBuilder.AddFilterSymbolToCurrentExpression(filter);
             }
-            Console.WriteLine("START Capturing variable END");
+            //Console.WriteLine("START Capturing variable END");
         }
         /// <summary>
         /// Mark the current expression complete.  Needs to be called after AddExpressionToCurrentExpressionBuilder.
         /// </summary>
         private void MarkCurrentExpressionComplete()
         {
-            Console.WriteLine("Current expression complete!");
+            //Console.WriteLine("Current expression complete!");
             CurrentBuilderContext.ObjectExpressionBuilder.EndObjectExpression();
         }
 
@@ -814,21 +679,21 @@ namespace Liquid.NET
         {
             _blockBuilderContextStack.Push(new BlockBuilderContext());
             base.EnterBlock(blockContext);
-            Console.WriteLine(">>> ENTERING BLOCK *" + blockContext.GetText() + "*");
+            //Console.WriteLine(">>> ENTERING BLOCK *" + blockContext.GetText() + "*");
         }
 
         public override void ExitBlock(LiquidParser.BlockContext blockContext)
         {
             _blockBuilderContextStack.Pop();
             base.ExitBlock(blockContext);
-            Console.WriteLine(">>> EXITING BLOCK *" + blockContext.GetText() + "*");
+            //Console.WriteLine(">>> EXITING BLOCK *" + blockContext.GetText() + "*");
         }
 
         #region Output / Filter
 
         public override void EnterStringObject(LiquidParser.StringObjectContext context)
         {
-            Console.WriteLine("CREATING STRING OBJECT" + context.GetText() + "<");
+            //Console.WriteLine("CREATING STRING OBJECT" + context.GetText() + "<");
             // TODO: Figure out how to strip the quotes in the g4 file
             base.EnterStringObject(context);
          
@@ -1036,7 +901,7 @@ namespace Liquid.NET
         public override void EnterFiltername(LiquidParser.FilternameContext context)
         {
             base.EnterFiltername(context);
-            Console.WriteLine("CREATING FILTER " + context.GetText());
+            //Console.WriteLine("CREATING FILTER " + context.GetText());
 
             
             //_currentFilterSymbol = new FilterSymbol(context.GetText());
@@ -1046,7 +911,7 @@ namespace Liquid.NET
 
         public override void EnterOutputexpression(LiquidParser.OutputexpressionContext context)
         {
-            Console.WriteLine("* Entering Output Expression");
+            //Console.WriteLine("* Entering Output Expression");
             base.EnterOutputexpression(context);
             //StartNewObjectExpressionTree();
             
@@ -1054,7 +919,7 @@ namespace Liquid.NET
 
         public override void ExitOutputexpression(LiquidParser.OutputexpressionContext context)
         {
-            Console.WriteLine("* Exiting Output Expression");
+            //Console.WriteLine("* Exiting Output Expression");
             base.ExitOutputexpression(context);            
             //FinishObjectExpressionTree();
         }
@@ -1106,7 +971,7 @@ namespace Liquid.NET
             // This removes extra whitespace---which may not be what we want...?
             // May need to figure out how to put the whitespace in the hidden stream for this only.
             String normalizedArgs = String.Join(" ", originalTokens.Select(x => x.Text));
-            Console.WriteLine("Saving raw args " + normalizedArgs);
+            //Console.WriteLine("Saving raw args " + normalizedArgs);
 
             CurrentBuilderContext.ObjectExpressionBuilder.SetRawArgsForLastExpressionsFilter(normalizedArgs);
         }
@@ -1116,7 +981,7 @@ namespace Liquid.NET
         public override void EnterRawtext(LiquidParser.RawtextContext context)
         {
             base.EnterRawtext(context);
-            Console.WriteLine("ADDING TEXT :"+context.GetText());
+            //Console.WriteLine("ADDING TEXT :"+context.GetText());
             CurrentAstNode.AddChild(CreateTreeNode<IASTNode>(new RawBlock(context.GetText())));
         }
 

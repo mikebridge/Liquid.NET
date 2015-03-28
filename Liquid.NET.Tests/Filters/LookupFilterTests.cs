@@ -55,5 +55,18 @@ namespace Liquid.NET.Tests.Filters
             Assert.Fail("Not Implemented Yet");
         }
 
+        [Test]
+        // see: https://github.com/Shopify/liquid/issues/543
+        public void It_Should_Allow_Indexes_Via_First()
+        {
+            // Arrange
+
+            // Act
+
+            // Assert
+            Assert.Fail("Not Implemented Yet");
+        }
+
+
     }
 }

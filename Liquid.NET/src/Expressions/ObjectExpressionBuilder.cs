@@ -21,19 +21,19 @@ namespace Liquid.NET.Expressions
 
         public void StartObjectExpression(IExpressionDescription expressionDescription)
         {
-            Console.WriteLine("ObjectExpressionBuilder >>> PUSH");
+            //Console.WriteLine("ObjectExpressionBuilder >>> PUSH");
             ObjectExpression objectExpression = new ObjectExpression { Expression = expressionDescription };
             var child = new TreeNode<ObjectExpression>(objectExpression);
-            Console.WriteLine("Appending " + objectExpression + " TO TREE.");
+            //Console.WriteLine("Appending " + objectExpression + " TO TREE.");
             
             if (_objectExpressionStack.Any())
             {
-                Console.WriteLine(" to " + _objectExpressionStack.Peek());
+                //Console.WriteLine(" to " + _objectExpressionStack.Peek());
                 _objectExpressionStack.Peek().AddChild(child);
             }
             else
             {
-                Console.WriteLine(" to ROOT ");
+                //Console.WriteLine(" to ROOT ");
                 _objectExpressionTree = child;
             }
             _objectExpressionStack.Push(child);
@@ -69,9 +69,9 @@ namespace Liquid.NET.Expressions
 
         public void EndObjectExpression()
         {
-            Console.WriteLine("ObjectExpressionBuilder >>> POP");
+            //Console.WriteLine("ObjectExpressionBuilder >>> POP");
             _lastExpression = _objectExpressionStack.Pop();
-            Console.WriteLine("invoking end event...");
+            //Console.WriteLine("invoking end event...");
             InvokeExpressionCompleteEvent(_lastExpression);
         }
 

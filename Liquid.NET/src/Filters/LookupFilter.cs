@@ -35,8 +35,36 @@ namespace Liquid.NET.Filters
 
         public IExpressionConstant ApplyTo(ArrayValue arrayValue)
         {
-            //Console.WriteLine("Looking up index " + Convert.ToInt32(_propertyName.Value));
-            var result = arrayValue.ValueAt(Convert.ToInt32(_propertyName.Value)); // yuck!
+            //Console.WriteLine("Looking up " + _propertyName.Value);
+            // I see that arrays can be looked up using "first" or "last".  Let's convert these
+            // here to numeric.
+            String propertyNameString = ValueCaster.RenderAsString(_propertyName);
+            int index;
+            if (propertyNameString.ToLower().Equals("first"))
+            {
+                index = 0;
+            }
+            else if (propertyNameString.ToLower().Equals("last"))
+            {
+                index = arrayValue.ArrValue.Count - 1;
+            }
+            else
+            {
+                var maybeIndex = ValueCaster.Cast<IExpressionConstant, NumericValue>(_propertyName);
+                if (!maybeIndex.IsUndefined)
+                {
+                    index = maybeIndex.IntValue;
+                }
+                else
+                {
+                    return new Undefined("invalid array index: "+propertyNameString);
+                }
+            }
+            
+
+            //Console.WriteLine("Looking up index " + index);
+            // TODO: Check array bounds 
+            var result = arrayValue.ValueAt(index); 
             //Console.WriteLine("RESULT: "+result.Value.ToString());
             return result;
         }

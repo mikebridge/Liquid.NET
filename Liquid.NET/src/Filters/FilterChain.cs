@@ -66,7 +66,7 @@ namespace Liquid.NET.Filters
                 //if (expectedInputType != null && filterExpression.SourceType != expectedInputType)
                 if (expectedInputType != null && !filterExpression.SourceType.IsAssignableFrom(expectedInputType))
                 {
-                    Console.WriteLine("Creating cast from " + filterExpression +" TO "+expectedInputType);
+                    //Console.WriteLine("Creating cast from " + filterExpression +" TO "+expectedInputType);
                     result.Add(CreateCastFilter(expectedInputType, filterExpression.SourceType));
                 }
                 result.Add(filterExpression);
@@ -81,7 +81,7 @@ namespace Liquid.NET.Filters
             // TODO: Move this to FilterFactory.Instantiate
             Type genericClass = typeof(CastFilter<,>);
             // MakeGenericType is badly named
-            Console.WriteLine("FilterChain Creating Converter from " + sourceType + " to " + resultType);
+            //Console.WriteLine("FilterChain Creating Converter from " + sourceType + " to " + resultType);
             Type constructedClass = genericClass.MakeGenericType(sourceType, resultType);
             return (IFilterExpression)Activator.CreateInstance(constructedClass);
         }

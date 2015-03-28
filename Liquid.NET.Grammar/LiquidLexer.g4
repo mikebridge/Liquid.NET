@@ -52,7 +52,6 @@ fragment ALPHA:			[a-zA-Z] ;
 fragment DIGIT:			[0-9] ;
 
 FILTERPIPE :			'|' ;
-FILTERCOLON :			':' ;
 
 PERIOD:					'.' ;
 
@@ -79,7 +78,6 @@ mode INLIQUIDFILTER ;
 OUTPUTMKUPEND :			'}}'            -> popMode ;
 
 FILTERPIPE1 :			FILTERPIPE -> type(FILTERPIPE) ;
-FILTERCOLON1 :			FILTERCOLON -> type(FILTERCOLON) ;
 
 PERIOD1:				PERIOD -> type(PERIOD) ;
 
@@ -95,6 +93,7 @@ ARRAYSTART1 :			'[' -> pushMode(INARRAYINDEX), type(ARRAYSTART) ;
 ARRAYEND1 :				']' -> type(ARRAYEND);
 
 COMMA :					',' ;
+COLON :					':' ;
 
 WS :					[ \t\r\n]+ -> skip ;
 
@@ -141,7 +140,7 @@ ENDCAPTURE_TAG :		'endcapture';
 INCREMENT_TAG :			'increment';
 DECREMENT_TAG :			'decrement';
 
-COLON :					':' ;
+COLON1 :				':' -> type(COLON);
 COMMA1 :				',' -> type(COMMA);
 ARRAYSTART3 :			'[' -> pushMode(INARRAYINDEX), type(ARRAYSTART) ;
 ARRAYEND3 :				']' -> type(ARRAYEND);
@@ -176,7 +175,7 @@ NEGATIVE :				'-' ;
 NOT :					'!' ;
 
 FILTERPIPE2 :			FILTERPIPE -> type(FILTERPIPE) ;
-FILTERCOLON2 :			FILTERCOLON -> type(FILTERCOLON) ;
+COLON2 :				COLON -> type(COLON);
 PERIOD2 :				PERIOD -> type(PERIOD) ;
 //fragment ALPHACHAR:		[a-zA-Z] ;
 

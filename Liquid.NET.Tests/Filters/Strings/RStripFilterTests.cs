@@ -8,16 +8,16 @@ using NUnit.Framework;
 namespace Liquid.NET.Tests.Filters.Strings
 {
     [TestFixture]
-    public class HandleizeFilterTests
+    public class RStripFilterTests
     {
         [Test]
-        public void It_SHould_Handleize_Text()
+        public void It_Should_Strip_Whitespace_on_The_Right()
         {
             // Act
-            var result = RenderingHelper.RenderTemplate("Result : {{ '100% M & Ms!!!' | handleize }}");
+            var result = RenderingHelper.RenderTemplate("Result : {{ '   too many spaces           ' | rstrip }}");
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : 100-m-ms"));
+            Assert.That(result, Is.EqualTo("Result :    too many spaces"));
 
         }
     }

@@ -9,8 +9,8 @@ namespace Liquid.NET.Filters.Strings
 {
     public class ReplaceFirstFilter : FilterExpression<IExpressionConstant, StringValue>
     {
-       private readonly StringValue _stringToRemove;
-       private readonly StringValue _replacementString;
+        private readonly StringValue _stringToRemove;
+        private readonly StringValue _replacementString;
 
         public ReplaceFirstFilter(StringValue stringToRemove, StringValue replacementString)
         {

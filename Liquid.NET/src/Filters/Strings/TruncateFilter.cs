@@ -17,14 +17,7 @@ namespace Liquid.NET.Filters.Strings
         public TruncateFilter(NumericValue length, StringValue truncateString)
         {
             _length = length;
-            if (truncateString.IsUndefined)
-            {
-                _truncateString = new StringValue("...");
-            }
-            else
-            {
-                _truncateString = truncateString;
-            }
+            _truncateString = truncateString.IsUndefined ? new StringValue("...") : truncateString;
         }
 
         public override StringValue ApplyTo(IExpressionConstant objectExpression)

@@ -31,5 +31,18 @@ namespace Liquid.NET.Tests.Filters.Strings
             Assert.That(result, Is.EqualTo("Result : " + expected));
 
         }
+
+        [Test]
+        public void It_Should_Use_Something_Other_Than_Ellipses()
+        {
+            // Arrange
+            var result = RenderingHelper.RenderTemplate("Result : {{ 'I thought he was a goner' | truncate:12, '!!!' }}");
+            // Act
+
+            // Assert
+            Assert.That(result, Is.EqualTo("Result : I thought!!!"));
+
+        }
+
     }
 }

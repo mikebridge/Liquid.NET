@@ -58,10 +58,12 @@ namespace Liquid.NET
             globalScope.DefineFilter<RStripFilter>("rstrip");
             globalScope.DefineFilter<LStripFilter>("lstrip");
             globalScope.DefineFilter<StripFilter>("strip");
-            globalScope.DefineFilter<TruncateWordsFilter>("truncate_words");
+            globalScope.DefineFilter<TruncateWordsFilter>("truncatewords");
             globalScope.DefineFilter<SliceFilter>("slice");
             globalScope.DefineFilter<SplitFilter>("split");
             globalScope.DefineFilter<UniqFilter>("uniq");
+            globalScope.DefineFilter<UrlEscapeFilter>("url_escape");
+            globalScope.DefineFilter<UrlParamEscapeFilter>("url_param_escape");
         }
 
         private string EvalTree(SymbolTableStack symbolStack, LiquidAST liquidAst)

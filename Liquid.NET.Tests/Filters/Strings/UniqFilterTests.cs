@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Liquid.NET.Constants;
 using Liquid.NET.Filters.Array;
 using Liquid.NET.Filters.Strings;
@@ -27,13 +28,14 @@ namespace Liquid.NET.Tests.Filters.Strings
         }
 
         [Test]
-        public void It_Should_Filter_Out_Unique_Objects()
+        public void It_Should_Filter_Out_Unique_Simple_Objects()
         {
             // Arrange
             IList<IExpressionConstant> objlist = new List<IExpressionConstant>
             {
                 new StringValue("123"), 
                 new NumericValue(456m),
+                new NumericValue(123), 
                 new NumericValue(123), 
                 new BooleanValue(false)
             };
@@ -43,7 +45,8 @@ namespace Liquid.NET.Tests.Filters.Strings
             // Act
             var result = filter.Apply(arrayValue);
 
-            Assert.Fail("hmm");
+            // Assert
+            Assert.That(result.Select(ValueCaster.RenderAsString), Is.EquivalentTo(new List<String>{"123", "456", "123", "false"}));
 
         }
 

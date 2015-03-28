@@ -159,6 +159,7 @@
     <Compile Include="src\Tags\AssignTag.cs" />
     <Compile Include="src\Tags\CaptureBlock.cs" />
     <Compile Include="src\Tags\CaseBlock.cs" />
+    <Compile Include="src\Tags\CaseWhenElseBlock.cs" />
     <Compile Include="src\Tags\CommentBlock.cs" />
     <Compile Include="src\Tags\CustomTag.cs" />
     <Compile Include="src\Tags\CycleTag.cs" />

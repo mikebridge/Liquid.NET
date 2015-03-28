@@ -90,6 +90,11 @@ namespace Liquid.NET.Tests
             _result += includeTag.ToString();
         }
 
+        public void Visit(CaseWhenElseBlock caseWhenElseBlock)
+        {
+            _result += caseWhenElseBlock.ToString();
+        }
+
         private String VisitIfTag(TreeNode<ObjectExpression> exprNode)
         {
             String result = " IF => " + exprNode.Data;

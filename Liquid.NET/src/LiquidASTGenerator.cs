@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 
 using System.Text.RegularExpressions;
+using System.Web.UI.WebControls.WebParts;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Tree;
 
@@ -68,23 +69,7 @@ namespace Liquid.NET
             base.EnterTag(tagContext);
             // Console.WriteLine("CREATING TAG *" + tagContext.GetText() + "*");            
         }
-        /*
-        public override void EnterComment_tag(LiquidParser.Comment_tagContext context)
-        {
-            base.EnterComment_tag(context);
-            // Console.WriteLine("Creating COmment");
-            var comment = new CommentBlock(context.rawtext().GetText());
-            CurrentAstNode.AddChild(CreateTreeNode<IASTNode>(comment));
-            _astNodeStack.Push(comment.RootNode);
-        }
 
-        public override void ExitComment_tag(LiquidParser.Comment_tagContext context)
-        {
-            base.ExitComment_tag(context);
-            _astNodeStack.Pop();
-        }
-         * */
- 
         public override void EnterRaw_tag(LiquidParser.Raw_tagContext context)
         {
             base.EnterRaw_tag(context);
@@ -520,6 +505,57 @@ namespace Liquid.NET
 
         
         #endregion
+
+        #region Case / When / Else tag
+
+        public override void EnterCase_tag(LiquidParser.Case_tagContext context)
+        {
+            base.EnterCase_tag(context);
+            Console.WriteLine(">>>FOUND CASE");
+            var caseBlock = new CaseWhenElseBlock();
+            //Console.WriteLine("  -:> Pushing if block on stack");
+            CurrentBuilderContext.CaseWhenElseBlockStack.Push(caseBlock);
+            var newNode = CreateTreeNode<IASTNode>(caseBlock);
+            CurrentAstNode.AddChild(newNode);
+
+            StartNewObjectExpressionTree(result =>
+            {
+                Console.WriteLine("Setting ExpRESSION TREE TO " + result);
+                caseBlock.ObjectExpressionTree = result;
+            });
+
+        }
+
+        public override void ExitCase_tag(LiquidParser.Case_tagContext context)
+        {
+            base.ExitCase_tag(context);
+            Console.WriteLine("<<<Exit Case Tag");
+            
+            CurrentBuilderContext.CaseWhenElseBlockStack.Pop();
+          
+        }
+
+        public override void EnterCase_tag_contents(LiquidParser.Case_tag_contentsContext context)
+        {
+            base.EnterCase_tag_contents(context);
+            Console.WriteLine("CASE COntents");
+        }
+
+        public override void EnterWhen_tag(LiquidParser.When_tagContext context)
+        {
+            base.EnterWhen_tag(context);
+            Console.WriteLine("When Tag");
+
+        }
+
+        public override void EnterWhenblock(LiquidParser.WhenblockContext context)
+        {
+            base.EnterWhenblock(context);
+            Console.WriteLine("WHEN BLOCK");
+        }
+
+        #endregion
+
 
         /// <summary>
         /// Start capturing the tree of variable references and indices, transforming them as Antlr descends the
@@ -1005,6 +1041,7 @@ namespace Liquid.NET
         {
             //public CurrentObjectFilterExpression 
             public readonly Stack<IfThenElseBlock> IfThenElseBlockStack = new Stack<IfThenElseBlock>();
+            public readonly Stack<CaseWhenElseBlock> CaseWhenElseBlockStack = new Stack<CaseWhenElseBlock>();
             //public ExpressionBuilder ExpressionBuilder { get; set; }
             public ObjectExpressionTreeBuilder ObjectExpressionBuilder { get; set; }
             public readonly Stack<ForBlock> ForBlockStack = new Stack<ForBlock>();

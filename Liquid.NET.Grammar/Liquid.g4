@@ -34,7 +34,7 @@ tag:				raw_tag
 					| decrement_tag
 					| unless_tag
 					
-					// | case_tag
+					| case_tag
 					// | table_tag
 					// | include_tag
 					// | break_tag
@@ -61,6 +61,15 @@ else_tag:			TAGSTART ELSE_TAG TAGEND block*;
 ifexpr:				expr ;
 
 ifblock:			block*;
+
+case_tag:			TAGSTART CASE_TAG outputexpression TAGEND case_tag_contents TAGSTART ENDCASE_TAG TAGEND ;
+
+case_tag_contents:	when_tag* else_tag?  ;
+//case_tag_contents:	when_tag* ;
+
+when_tag:			TAGSTART WHEN_TAG outputexpression TAGEND whenblock;
+
+whenblock:			block*;
 
 cycle_tag:			TAGSTART CYCLE_TAG cycle_group? cycle_string (COMMA cycle_string)* TAGEND ;
 

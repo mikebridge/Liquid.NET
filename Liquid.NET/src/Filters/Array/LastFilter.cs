@@ -9,7 +9,11 @@ namespace Liquid.NET.Filters.Array
 {
     public class LastFilter : FilterExpression<ExpressionConstant, IExpressionConstant>
     {
-
+        /// <summary>
+        ///  TODO: Update to new structure
+        /// </summary>
+        /// <param name="objectExpression"></param>
+        /// <returns></returns>
         public override IExpressionConstant Apply(ExpressionConstant objectExpression)
         {
             return ApplyTo((dynamic)objectExpression);

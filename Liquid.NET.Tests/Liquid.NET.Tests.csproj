@@ -138,6 +138,7 @@
     <Compile Include="Symbols\UndefinedTests.cs" />
     <Compile Include="Tags\AssignTagTests.cs" />
     <Compile Include="Tags\CaptureBlockTests.cs" />
+    <Compile Include="Tags\CaseWhenElseBlockTests.cs" />
     <Compile Include="Tags\IncludeTagTests.cs" />
     <Compile Include="Tags\RawBlockTests.cs" />
     <Compile Include="Tags\CommentBlockTests.cs" />

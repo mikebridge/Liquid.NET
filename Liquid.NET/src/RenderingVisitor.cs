@@ -107,6 +107,12 @@ namespace Liquid.NET
             throw new NotImplementedException();
         }
 
+        public void Visit(CaseWhenElseBlock caseWhenElseBlock)
+        {
+            Console.WriteLine("IGNORING CASE BLOCK");
+            //throw new NotImplementedException();
+        }
+
         public void Visit(DecrementTag decrementTag)
         {
             int currentIndex;

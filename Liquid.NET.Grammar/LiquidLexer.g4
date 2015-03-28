@@ -113,30 +113,26 @@ mode INLIQUIDTAG ;
 
 TAGEND :				'%}'			-> popMode ;
 
-//COMMENT_TAG :			'comment' TAGEND -> pushMode(INCOMMENT);
-//ENDCOMMENT_TAG :		'endcomment' ;
 INCLUDE_TAG :			'include' ;
 IF_TAG :				'if' ;
 UNLESS_TAG :			'unless' ;
+CASE_TAG :				'case' ;
+WHEN_TAG :				'when' ;
+ENDCASE_TAG :			'endcase' ;
 ELSIF_TAG :				'elsif' ;
 ELSE_TAG :				'else' ;
 ENDIF_TAG :				'endif' ;
 ENDUNLESS_TAG :			'endunless' ;
-
 FOR_TAG :				'for' ;
 FOR_IN :				'in';
 PARAM_REVERSED:			'reversed';
 PARAM_OFFSET:		    'offset' ;
 PARAM_LIMIT:		    'limit' ;
 ENDFOR_TAG :			'endfor' ;
-
 CYCLE_TAG :				'cycle' ;
-
 ASSIGN_TAG :			'assign';
-
 CAPTURE_TAG :			'capture';
 ENDCAPTURE_TAG :		'endcapture';
-
 INCREMENT_TAG :			'increment';
 DECREMENT_TAG :			'decrement';
 
@@ -144,12 +140,9 @@ COLON1 :				':' -> type(COLON);
 COMMA1 :				',' -> type(COMMA);
 ARRAYSTART3 :			'[' -> pushMode(INARRAYINDEX), type(ARRAYSTART) ;
 ARRAYEND3 :				']' -> type(ARRAYEND);
-
 ASSIGNEQUALS :			'=' ;
-
 PARENOPEN :				'(' ;
 PARENCLOSE :			')' ;
-
 GT:						'>';
 GTE:					'>=';
 EQ:						'==';
@@ -159,34 +152,21 @@ LTE:					'<=';
 CONTAINS:				'contains';
 AND:					'and';
 OR:						'or';
-
 MULT:					'*' ;
 DIV:					'/' ;
 MOD:					'%' ;
 ADD:					'+' ;
 SUB:					'-' ;
-
-NUMBER2 :				NUMBER -> type(NUMBER);
-
-BOOLEAN2 :				BOOLEAN -> type(BOOLEAN);
-
 NEGATIVE :				'-' ;
-
 NOT :					'!' ;
+NUMBER2 :				NUMBER -> type(NUMBER);
+BOOLEAN2 :				BOOLEAN -> type(BOOLEAN);
 
 FILTERPIPE2 :			FILTERPIPE -> type(FILTERPIPE) ;
 COLON2 :				COLON -> type(COLON);
 PERIOD2 :				PERIOD -> type(PERIOD) ;
-//fragment ALPHACHAR:		[a-zA-Z] ;
-
-//VARIABLE :				ALPHACHAR (ALPHACHAR | '_' | [0-9])* ;
-
-//TRING2 :				'"' (ESC | ~["\\])* '"' ;  // TODO: accept single quotes
 STRING2:				STRING -> type(STRING);
-
 LABEL2:					LABEL -> type(LABEL);
-
 GENERATORRANGE1:		GENERATORRANGE -> type(GENERATORRANGE) ;
-//INT1:					INT -> type(INT) ;
 
 WS2 :					[ \t\r\n]+ -> skip ;

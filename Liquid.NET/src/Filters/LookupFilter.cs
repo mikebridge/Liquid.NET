@@ -6,7 +6,7 @@ using Liquid.NET.Constants;
 namespace Liquid.NET.Filters
 {
     /// <summary>
-    /// TODO: Find some way to reduce the amout of casting in this class. :(
+    /// TODO: Update to new structure
     /// </summary>
 
     public class LookupFilter : FilterExpression<ExpressionConstant, IExpressionConstant>

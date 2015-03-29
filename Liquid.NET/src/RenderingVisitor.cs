@@ -107,11 +107,6 @@ namespace Liquid.NET
             throw new NotImplementedException();
         }
 
-        public void Visit(CaseWhenElseBlock caseWhenElseBlock)
-        {
-            Console.WriteLine("IGNORING CASE BLOCK");
-            //throw new NotImplementedException();
-        }
 
         public void Visit(DecrementTag decrementTag)
         {
@@ -179,6 +174,36 @@ namespace Liquid.NET
                         LiquidExpressionEvaluator.Eval(expr.ObjectExpressionTree, _symbolTableStack).IsTrue);
                         //expr.Eval(_symbolTableStack).IsTrue);
                         //).BoolValue);
+            if (match != null)
+            {
+                _evaluator.StartVisiting(this, match.RootContentNode); // then render the contents
+            }
+        }
+
+
+        public void Visit(CaseWhenElseBlock caseWhenElseBlock)
+        {
+            Console.WriteLine("Evaluating CASE BLOCK");
+            // find the first place where the expression tree evaluates to true (i.e. which of the if/elsif/else clauses)
+            //var match = IfThenElseBlock.IfExpressions.FirstOrDefault(expr => LiquidExpressionEvaluator.Eval(_symbolTableStack, expr.ObjectExpression).IsTrue);
+            var valueToMatch = LiquidExpressionEvaluator.Eval(caseWhenElseBlock.ObjectExpressionTree, _symbolTableStack);
+            Console.WriteLine("Value to Match: "+valueToMatch);
+
+            // TODO: FIx this for ELSE--- it is returning "TRUE", which is correct for "if/then/else", but not for
+            // the case match.  It needs to just be evaluated as a predicate. 
+            // make it call LiquidExpressionEvaluator(...).IsTrue.
+
+            var match =
+                caseWhenElseBlock.WhenBlocks.FirstOrDefault(
+                    expr =>
+                        // Take the valueToMatch "Case" expression result value
+                        // and check if it's equal to the expr.ObjectExpressionTree expression.
+                        // THe "EasyValueComparer" is supposed to match stuff fairly liberally,
+                        // though it doesn't cast values---TODO: probably it should.
+                        new EasyValueComparer().Equals(valueToMatch,
+                            LiquidExpressionEvaluator.Eval(expr.ObjectExpressionTree, _symbolTableStack)));
+            //expr.Eval(_symbolTableStack).IsTrue);
+            //).BoolValue);
             if (match != null)
             {
                 _evaluator.StartVisiting(this, match.RootContentNode); // then render the contents

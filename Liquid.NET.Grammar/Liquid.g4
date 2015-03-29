@@ -62,10 +62,11 @@ ifexpr:				expr ;
 
 ifblock:			block*;
 
-case_tag:			TAGSTART CASE_TAG outputexpression TAGEND case_tag_contents TAGSTART ENDCASE_TAG TAGEND ;
+case_tag:			TAGSTART CASE_TAG outputexpression TAGEND whenblock case_tag_contents TAGSTART ENDCASE_TAG TAGEND ;
 
-case_tag_contents:	when_tag* else_tag?  ;
-//case_tag_contents:	when_tag* ;
+case_tag_contents:	when_tag* when_else_tag? ;
+
+when_else_tag:		TAGSTART ELSE_TAG TAGEND block*;
 
 when_tag:			TAGSTART WHEN_TAG outputexpression TAGEND whenblock;
 

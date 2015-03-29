@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 
 using System.Text.RegularExpressions;
-using System.Web.UI.WebControls.WebParts;
+
 using Antlr4.Runtime;
 using Antlr4.Runtime.Tree;
 
@@ -513,14 +513,17 @@ namespace Liquid.NET
             base.EnterCase_tag(context);
             Console.WriteLine(">>>FOUND CASE");
             var caseBlock = new CaseWhenElseBlock();
-            //Console.WriteLine("  -:> Pushing if block on stack");
+
             CurrentBuilderContext.CaseWhenElseBlockStack.Push(caseBlock);
             var newNode = CreateTreeNode<IASTNode>(caseBlock);
             CurrentAstNode.AddChild(newNode);
-
+            
+            // TODO: probably the eval-ed value to compare can 
+            // be "Equalled" with the when-expression and
+            // so converted to a predicate.
             StartNewObjectExpressionTree(result =>
             {
-                Console.WriteLine("Setting ExpRESSION TREE TO " + result);
+                Console.WriteLine("Setting Expression tree to" + result);
                 caseBlock.ObjectExpressionTree = result;
             });
 
@@ -530,10 +533,35 @@ namespace Liquid.NET
         {
             base.ExitCase_tag(context);
             Console.WriteLine("<<<Exit Case Tag");
-            
             CurrentBuilderContext.CaseWhenElseBlockStack.Pop();
-          
+            //Console.WriteLine(context.whenblock().)
+            //CurrentBuilderContext.CaseWhenElseBlockStack.Pop();
+
+            FinishObjectExpressionTree();
         }
+     
+        /*
+         * public override void EnterIfexpr(LiquidParser.IfexprContext context)
+        {
+            base.EnterIfexpr(context);
+            //Console.WriteLine("New Expression Builder");
+            //InitiateExpressionBuilder();
+            var ifexpr = CurrentBuilderContext.IfThenElseBlockStack.Peek().IfExpressions.Last();
+            StartNewObjectExpressionTree(x => ifexpr.ObjectExpressionTree = x);
+        }
+
+        public override void ExitIfexpr(LiquidParser.IfexprContext context)
+        {
+            base.ExitIfexpr(context);
+            //Console.WriteLine("End Expression Builder");
+            
+            //CurrentBuilderContext.ObjectExpressionBuilder.StartObjectExpression();
+//            CurrentBuilderContext.IfThenElseBlockStack.Peek().IfExpressions.Last().ObjectExpressionTree =
+//                CurrentBuilderContext.ObjectExpressionBuilder.ConstructedObjectExpressionTree;
+                
+
+            FinishObjectExpressionTree();
+        }*/
 
         public override void EnterCase_tag_contents(LiquidParser.Case_tag_contentsContext context)
         {
@@ -545,7 +573,20 @@ namespace Liquid.NET
         {
             base.EnterWhen_tag(context);
             Console.WriteLine("When Tag");
+            InitiateWhenClause();
 
+            StartNewObjectExpressionTree(result =>
+            {
+                Console.WriteLine("Setting Expression tree to" + result);
+                CurrentBuilderContext.CaseWhenElseBlockStack.Peek().WhenBlocks.Last().ObjectExpressionTree = result;
+            });
+
+        }
+
+        public override void ExitWhen_tag(LiquidParser.When_tagContext context)
+        {
+            base.ExitWhen_tag(context);
+            EndWhenClause();
         }
 
         public override void EnterWhenblock(LiquidParser.WhenblockContext context)
@@ -554,6 +595,37 @@ namespace Liquid.NET
             Console.WriteLine("WHEN BLOCK");
         }
 
+        public override void EnterWhen_else_tag(LiquidParser.When_else_tagContext context)
+        {
+            base.EnterWhen_else_tag(context);
+            //InitiateIfClause();
+            InitiateWhenClause();
+
+            //ExpressionBuilder expressionBuilder = new ExpressionBuilder();
+            var symbol = new BooleanValue(true);
+            CurrentBuilderContext.CaseWhenElseBlockStack.Peek()
+                .WhenBlocks.Last()
+                .ObjectExpressionTree = CreateObjectSimpleExpressionNode(symbol);
+        }
+
+        public override void ExitWhen_else_tag(LiquidParser.When_else_tagContext context)
+        {
+            base.ExitWhen_else_tag(context);
+            Console.WriteLine("Exit When Else");
+            EndWhenClause();
+        }
+
+        private void InitiateWhenClause()
+        {
+            var whenBlock = new CaseWhenElseBlock.WhenBlock();
+            Console.WriteLine("Creating if expressino");
+            CurrentBuilderContext.CaseWhenElseBlockStack.Peek().AddWhenBlock(whenBlock);
+            _astNodeStack.Push(whenBlock.RootContentNode); // capture the block
+        }
+        private void EndWhenClause()
+        {
+            _astNodeStack.Pop();
+        }
         #endregion
 
 

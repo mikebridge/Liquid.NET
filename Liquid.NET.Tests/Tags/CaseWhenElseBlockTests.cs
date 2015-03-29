@@ -26,17 +26,19 @@ namespace Liquid.NET.Tests.Tags
         }
 
         [Test]
-        [TestCase("cake", "expected")]
+        [TestCase("cake", "This is a cake")]
+        [TestCase("cookie", "This is a cookie")]
+        [TestCase("apple", "This is not a cake nor a cookie")]
         public void It_Should_Parse_A_Case_Tag(String handle, string expected)
         {
             // Arrange
-            var result = RenderingHelper.RenderTemplate("Result : "+GetTestData(handle));
+            var result = RenderingHelper.RenderTemplate(GetTestData(handle));
 
             // Act
             Console.WriteLine(result);
 
             // Assert
-            Assert.Fail("Not Implemented Yet");
+            Assert.That(result.Trim(), Is.EqualTo(expected));
 
         }
 

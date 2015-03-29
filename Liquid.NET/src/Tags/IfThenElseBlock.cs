@@ -7,6 +7,7 @@ namespace Liquid.NET.Tags
 {
     public class IfThenElseBlock : IASTNode
     {
+        // TODO: Fix the names on all these to make them consistent (They're all blocks);
         private readonly IList<IfTagSymbol> _ifExpressions = new List<IfTagSymbol>();
 
         public IList<IfTagSymbol> IfExpressions { get { return _ifExpressions; } }

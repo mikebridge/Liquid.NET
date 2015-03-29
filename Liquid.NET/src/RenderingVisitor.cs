@@ -194,7 +194,7 @@ namespace Liquid.NET
             // make it call LiquidExpressionEvaluator(...).IsTrue.
 
             var match =
-                caseWhenElseBlock.WhenBlocks.FirstOrDefault(
+                caseWhenElseBlock.WhenClauses.FirstOrDefault(
                     expr =>
                         // Take the valueToMatch "Case" expression result value
                         // and check if it's equal to the expr.ObjectExpressionTree expression.
@@ -206,7 +206,11 @@ namespace Liquid.NET
             //).BoolValue);
             if (match != null)
             {
-                _evaluator.StartVisiting(this, match.RootContentNode); // then render the contents
+                _evaluator.StartVisiting(this, match.RootContentNode); // then eval + render the HTML
+            }
+            else if (caseWhenElseBlock.HasElseClause)
+            {
+                _evaluator.StartVisiting(this, caseWhenElseBlock.ElseClause.RootContentNode);
             }
         }
 

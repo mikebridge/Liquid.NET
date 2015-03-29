@@ -578,7 +578,7 @@ namespace Liquid.NET
             StartNewObjectExpressionTree(result =>
             {
                 Console.WriteLine("Setting Expression tree to" + result);
-                CurrentBuilderContext.CaseWhenElseBlockStack.Peek().WhenBlocks.Last().ObjectExpressionTree = result;
+                CurrentBuilderContext.CaseWhenElseBlockStack.Peek().WhenClauses.Last().ObjectExpressionTree = result;
             });
 
         }
@@ -599,25 +599,28 @@ namespace Liquid.NET
         {
             base.EnterWhen_else_tag(context);
             //InitiateIfClause();
-            InitiateWhenClause();
-
+            //InitiateWhenClause();
+            var elseClause = new CaseWhenElseBlock.WhenElseClause();
+            CurrentBuilderContext.CaseWhenElseBlockStack.Peek().ElseClause = elseClause;
+            _astNodeStack.Push(elseClause.RootContentNode); // capture the block
             //ExpressionBuilder expressionBuilder = new ExpressionBuilder();
-            var symbol = new BooleanValue(true);
-            CurrentBuilderContext.CaseWhenElseBlockStack.Peek()
-                .WhenBlocks.Last()
-                .ObjectExpressionTree = CreateObjectSimpleExpressionNode(symbol);
+            //var symbol = new BooleanValue(true);
+//            CurrentBuilderContext.CaseWhenElseBlockStack.Peek()
+//                .ElseClause
+//                .ObjectExpressionTree = CreateObjectSimpleExpressionNode(symbol);
         }
 
         public override void ExitWhen_else_tag(LiquidParser.When_else_tagContext context)
         {
             base.ExitWhen_else_tag(context);
             Console.WriteLine("Exit When Else");
-            EndWhenClause();
+            //EndWhenClause();
+            _astNodeStack.Pop();
         }
 
         private void InitiateWhenClause()
         {
-            var whenBlock = new CaseWhenElseBlock.WhenBlock();
+            var whenBlock = new CaseWhenElseBlock.WhenClause();
             Console.WriteLine("Creating if expressino");
             CurrentBuilderContext.CaseWhenElseBlockStack.Peek().AddWhenBlock(whenBlock);
             _astNodeStack.Push(whenBlock.RootContentNode); // capture the block

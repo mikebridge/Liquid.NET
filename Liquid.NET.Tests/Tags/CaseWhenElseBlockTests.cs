@@ -26,6 +26,21 @@ namespace Liquid.NET.Tests.Tags
         }
 
         [Test]
+        public void It_Should_Parse_A_Nested_Case_Tag()
+        {
+            // Arrange
+            var result = RenderingHelper.RenderTemplate("Result : {% case 'test' %}{% when 'test' %}{% case 'test' %}{% when 'nottest' %}NOT TEST{% else %}SUCCESS{% endcase %}{% endcase %}");
+
+            // Act
+            Console.WriteLine(result);
+            // Act
+
+            // Assert
+            Assert.That(result, Is.EqualTo("Result : SUCCESS"));
+
+        }
+
+        [Test]
         [TestCase("cake", "This is a cake")]
         [TestCase("cookie", "This is a cookie")]
         [TestCase("apple", "This is not a cake nor a cookie")]

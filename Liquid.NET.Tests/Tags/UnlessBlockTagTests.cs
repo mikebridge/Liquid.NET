@@ -3,7 +3,7 @@
 namespace Liquid.NET.Tests.Tags
 {
     [TestFixture]
-    public class UnlessTagTests
+    public class UnlessBlockTagTests
     {
         [Test]
         public void It_Should_Render_If_False()

@@ -9,7 +9,7 @@ using NUnit.Framework;
 namespace Liquid.NET.Tests.Tags
 {
     [TestFixture]
-    public class ForBlockTests
+    public class ForBlockTagTests
     {
         [Test]
         public void It_Should_Iterate_Through_A_Collection()

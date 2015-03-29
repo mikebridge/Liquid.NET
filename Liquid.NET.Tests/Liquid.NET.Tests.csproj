@@ -137,17 +137,19 @@
     <Compile Include="Symbols\SymbolTableStackTests.cs" />
     <Compile Include="Symbols\UndefinedTests.cs" />
     <Compile Include="Tags\AssignTagTests.cs" />
-    <Compile Include="Tags\CaptureBlockTests.cs" />
-    <Compile Include="Tags\CaseWhenElseBlockTests.cs" />
+    <Compile Include="Tags\CaptureBlockTagTests.cs" />
+    <Compile Include="Tags\CaseWhenElseBlockTagTests.cs" />
+    <Compile Include="Tags\CustomBlockTagTests.cs" />
+    <Compile Include="Tags\CustomTagTests.cs" />
     <Compile Include="Tags\IncludeTagTests.cs" />
-    <Compile Include="Tags\RawBlockTests.cs" />
-    <Compile Include="Tags\CommentBlockTests.cs" />
+    <Compile Include="Tags\RawBlockTagTests.cs" />
+    <Compile Include="Tags\CommentBlockTagTests.cs" />
     <Compile Include="Tags\CycleTagTests.cs" />
     <Compile Include="Tags\DecrementTagTests.cs" />
-    <Compile Include="Tags\ForBlockTests.cs" />
-    <Compile Include="Tags\IfThenElseBlockTests.cs" />
+    <Compile Include="Tags\ForBlockTagTests.cs" />
+    <Compile Include="Tags\IfThenElseBlockTagTests.cs" />
     <Compile Include="Tags\IncrementTagTests.cs" />
-    <Compile Include="Tags\UnlessTagTests.cs" />
+    <Compile Include="Tags\UnlessBlockTagTests.cs" />
     <Compile Include="TemplateContextTests.cs" />
   </ItemGroup>
   <ItemGroup>

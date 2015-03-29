@@ -8,7 +8,7 @@ using NUnit.Framework;
 namespace Liquid.NET.Tests.Tags
 {
     [TestFixture]
-    public class CaseWhenElseBlockTests
+    public class CaseWhenElseBlockTagTests
     {
         [Test]
         public void It_Should_Parse_A_Simple_Case_Tag()

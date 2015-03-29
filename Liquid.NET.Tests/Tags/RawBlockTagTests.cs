@@ -8,7 +8,7 @@ using NUnit.Framework;
 namespace Liquid.NET.Tests.Tags
 {
     [TestFixture]
-    public class RawBlockTests
+    public class RawBlockTagTests
     {
         [Test]
         public void It_Should_Not_Format_The_Raw_Text()

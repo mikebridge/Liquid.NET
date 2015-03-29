@@ -8,7 +8,7 @@ using NUnit.Framework;
 namespace Liquid.NET.Tests.Tags
 {
     [TestFixture]
-    public class CommentBlockTests
+    public class CommentBlockTagTests
     {
         [Test]
         public void It_Should_Remove_The_Commented_Text()

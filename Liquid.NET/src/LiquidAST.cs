@@ -19,7 +19,7 @@ namespace Liquid.NET
 
         public LiquidAST()
         {
-            RootNode = new TreeNode<IASTNode>(new RootDocumentSymbol());  
+            RootNode = new TreeNode<IASTNode>(new RootDocumentNode());  
         } 
 
         //private readonly IList<TreeNode<IASTNode>> _children = new List<TreeNode<IASTNode>>();

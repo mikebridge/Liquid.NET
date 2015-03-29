@@ -11,31 +11,27 @@ namespace Liquid.NET.Symbols
 
         void Visit(ObjectExpressionTree objectExpressionTree);
 
-        void Visit(RawBlock rawBlock);
+        void Visit(RawBlockTag rawBlockTag);
 
-        void Visit(CommentBlock commentBlock);
+        void Visit(CommentBlockTag commentBlockTag);
 
         void Visit(CustomTag customTag);
 
-        void Visit(RootDocumentSymbol rootDocumentSymbol);
+        void Visit(RootDocumentNode rootDocumentNode);
 
         void Visit(VariableReference variableReference);
 
         void Visit(StringValue stringValue);
 
-        void Visit(ForBlock forBlock);
+        void Visit(ForTagBlock forTagBlock);
 
-        void Visit(IfThenElseBlock ifThenElseBlock);
+        void Visit(IfThenElseBlockTag ifThenElseBlockTag);
 
         void Visit(CycleTag cycleTag);
 
-        void Visit(UnlessBlock unlessBlock);
-
-        void Visit(CaseBlock caseBlock);
-
         void Visit(AssignTag assignTag);
 
-        void Visit(CaptureBlock captureBlock);
+        void Visit(CaptureBlockTag captureBlockTag);
 
         void Visit(DecrementTag decrementTag);
 
@@ -43,6 +39,6 @@ namespace Liquid.NET.Symbols
 
         void Visit(IncludeTag includeTag);
 
-        void Visit(CaseWhenElseBlock caseWhenElseBlock);
+        void Visit(CaseWhenElseBlockTag caseWhenElseBlockTag);
     }
 }

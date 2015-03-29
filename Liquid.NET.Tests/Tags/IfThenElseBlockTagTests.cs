@@ -8,7 +8,7 @@ using NUnit.Framework;
 namespace Liquid.NET.Tests.Tags
 {
     [TestFixture]
-    public class IfThenElseBlockTests
+    public class IfThenElseBlockTagTests
     {
         [Test]
         public void It_Should_Render_If_True()

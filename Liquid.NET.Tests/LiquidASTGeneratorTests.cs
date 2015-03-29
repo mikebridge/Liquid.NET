@@ -92,7 +92,7 @@ namespace Liquid.NET.Tests
             LiquidAST ast = generator.Generate("Result : {{ 123 | add: 3}} More Text.");
 
             // Assert
-            var objectExpressions = FindNodesWithType(ast, typeof(RawBlock));
+            var objectExpressions = FindNodesWithType(ast, typeof(RawBlockTag));
             Assert.That(objectExpressions.Count(), Is.EqualTo(2));
 
         }
@@ -107,7 +107,7 @@ namespace Liquid.NET.Tests
             LiquidAST ast = generator.Generate("Result : {% if true %} abcd {% endif %}");
 
             // Assert
-            var tagExpressions = FindNodesWithType(ast, typeof(IfThenElseBlock));
+            var tagExpressions = FindNodesWithType(ast, typeof(IfThenElseBlockTag));
             Assert.That(tagExpressions.Count(), Is.EqualTo(1));
             //Assert.That(objectExpressions, Is.Not.Null);
             //Assert.That(((ObjectExpression)objectExpressions.Data).FilterSymbols.Count(), Is.EqualTo(1));
@@ -124,7 +124,7 @@ namespace Liquid.NET.Tests
             LiquidAST ast = generator.Generate("Result : {% if true %} aaaa {% elsif false %} test 2 {% elsif true %} test 3 {% else %} ELSE {% endif %}");
 
             // Assert
-            var tagExpressions = FindNodesWithType(ast, typeof(IfThenElseBlock));
+            var tagExpressions = FindNodesWithType(ast, typeof(IfThenElseBlockTag));
             Assert.That(tagExpressions.Count(), Is.EqualTo(1));
             //Assert.That(objectExpressions, Is.Not.Null);
             //Assert.That(((ObjectExpression)objectExpressions.Data).FilterSymbols.Count(), Is.EqualTo(1));
@@ -139,9 +139,9 @@ namespace Liquid.NET.Tests
 
             // Act
             LiquidAST ast = generator.Generate("Result : {% if true %} 33 + 4 = {{ 33 | add: 4}} {% else %} hello {% endif %}");
-            var tagExpressions = FindNodesWithType(ast, typeof(IfThenElseBlock)).FirstOrDefault();
-            var ifThenElseTag = (IfThenElseBlock) tagExpressions.Data;
-            var objectExpressions = FindWhere(ifThenElseTag.IfExpressions[0].RootContentNode.Children, typeof(ObjectExpressionTree));
+            var tagExpressions = FindNodesWithType(ast, typeof(IfThenElseBlockTag)).FirstOrDefault();
+            var ifThenElseTag = (IfThenElseBlockTag) tagExpressions.Data;
+            var objectExpressions = FindWhere(ifThenElseTag.IfElseClauses[0].LiquidBlock.Children, typeof(ObjectExpressionTree));
             
             // Assert
             Assert.That(objectExpressions.Count(), Is.EqualTo(1));
@@ -156,10 +156,10 @@ namespace Liquid.NET.Tests
             // Act
             LiquidAST ast = generator.Generate("Result : {% if true %} 33 + 4 = {% if true %} {{ 33 | add: 4}} {% endif %}{% else %} hello {% endif %}");
 
-            var tagExpressions = FindNodesWithType(ast, typeof(IfThenElseBlock)).FirstOrDefault();
-            var ifThenElseTag = (IfThenElseBlock)tagExpressions.Data;
-            var blockTags = ifThenElseTag.IfExpressions[0].RootContentNode.Children;
-            var objectExpressions = FindWhere(blockTags, typeof(IfThenElseBlock));
+            var tagExpressions = FindNodesWithType(ast, typeof(IfThenElseBlockTag)).FirstOrDefault();
+            var ifThenElseTag = (IfThenElseBlockTag)tagExpressions.Data;
+            var blockTags = ifThenElseTag.IfElseClauses[0].LiquidBlock.Children;
+            var objectExpressions = FindWhere(blockTags, typeof(IfThenElseBlockTag));
 
             // Assert
             Assert.That(objectExpressions.Count(), Is.EqualTo(1));
@@ -179,14 +179,14 @@ namespace Liquid.NET.Tests
             var evaluator = new LiquidEvaluator();
             evaluator.StartVisiting(visitor,ast.RootNode);
             // Assert
-            var tagExpressions = FindNodesWithType(ast, typeof(IfThenElseBlock)).ToList();
-            var ifThenElseTag = (IfThenElseBlock) tagExpressions[0].Data;
+            var tagExpressions = FindNodesWithType(ast, typeof(IfThenElseBlockTag)).ToList();
+            var ifThenElseTag = (IfThenElseBlockTag) tagExpressions[0].Data;
 
             Assert.That(tagExpressions.Count(), Is.EqualTo(1));
-            //Assert.That(ifThenElseTag.IfExpressions[0].RootNode.Data, Is.TypeOf<AndExpression>());            
+            //Assert.That(ifThenElseTag.IfElseClauses[0].RootNode.Data, Is.TypeOf<AndExpression>());            
             //TODO: TextMessageWriter otu the tree
-            //Assert.That(ifThenElseTag.IfExpressions[0].RootNode[0].Data, Is.TypeOf<AndExpression>());
-            var ifTagSymbol = ifThenElseTag.IfExpressions[0];
+            //Assert.That(ifThenElseTag.IfElseClauses[0].RootNode[0].Data, Is.TypeOf<AndExpression>());
+            var ifTagSymbol = ifThenElseTag.IfElseClauses[0];
             //Assert.That(ifTagSymbol.RootNode.Data, Is.TypeOf<AndExpression>());
             var expressionSymbolTree = ifTagSymbol.ObjectExpressionTree;
             Assert.That(expressionSymbolTree.Data.Expression, Is.TypeOf<AndExpression>());
@@ -197,7 +197,7 @@ namespace Liquid.NET.Tests
             Assert.That(expressionSymbolTree[1][0].Data.Expression, Is.TypeOf<OrExpression>());
             Assert.That(expressionSymbolTree[1][0][0].Data.Expression, Is.TypeOf<BooleanValue>());
             Assert.That(expressionSymbolTree[1][0][1].Data.Expression, Is.TypeOf<BooleanValue>());
-            //Assert.That(ifThenElseTag.IfExpressions[0].ObjectExpression[2].Data, Is.TypeOf<GroupedExpression>());
+            //Assert.That(ifThenElseTag.IfElseClauses[0].ObjectExpression[2].Data, Is.TypeOf<GroupedExpression>());
             
             //Assert.That(objectExpressions, Is.Not.Null);
             //Assert.That(((ObjectExpression)objectExpressions.Data).FilterSymbols.Count(), Is.EqualTo(1));

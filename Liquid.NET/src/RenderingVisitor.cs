@@ -35,14 +35,14 @@ namespace Liquid.NET
             get { return _result; }
         }
 
-        public void Visit(RawBlock rawBlock)
+        public void Visit(RawBlockTag rawBlockTag)
         {
-            Console.WriteLine("Visiting raw text = " + rawBlock.Value);
-            _result += rawBlock.Value;
+            Console.WriteLine("Visiting raw text = " + rawBlockTag.Value);
+            _result += rawBlockTag.Value;
         }
 
 
-        public void Visit(CommentBlock commentBlock)
+        public void Visit(CommentBlockTag commentBlockTag)
         {
             // do nothing
         }
@@ -58,15 +58,6 @@ namespace Liquid.NET
             _result += GetNextCycleText(cycleTag);
         }
 
-        public void Visit(UnlessBlock unlessBlock)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Visit(CaseBlock caseBlock)
-        {
-            throw new NotImplementedException();
-        }
 
         public void Visit(AssignTag assignTag)
         {
@@ -75,13 +66,13 @@ namespace Liquid.NET
             _symbolTableStack.DefineGlobal(assignTag.VarName, result);
         }
 
-        public void Visit(CaptureBlock captureBlock)
+        public void Visit(CaptureBlockTag captureBlockTag)
         {
-            Console.WriteLine("RENDERING CAPTURE " + captureBlock.VarName);
+            Console.WriteLine("RENDERING CAPTURE " + captureBlockTag.VarName);
             var hiddenVisitor = new RenderingVisitor(this._evaluator, this._symbolTableStack);
-            _evaluator.StartVisiting(hiddenVisitor, captureBlock.RootContentNode);
+            _evaluator.StartVisiting(hiddenVisitor, captureBlockTag.RootContentNode);
             
-            _symbolTableStack.DefineGlobal(captureBlock.VarName, new StringValue(hiddenVisitor.Text) );
+            _symbolTableStack.DefineGlobal(captureBlockTag.VarName, new StringValue(hiddenVisitor.Text) );
         }
 
 
@@ -155,20 +146,20 @@ namespace Liquid.NET
 
         }
 
-        public void Visit(ForBlock forBlock)
+        public void Visit(ForTagBlock forTagBlock)
         {
-            new ForRenderer(this, _evaluator).Render(forBlock, _symbolTableStack);
+            new ForRenderer(this, _evaluator).Render(forTagBlock, _symbolTableStack);
         }
 
 
 
-        public void Visit(IfThenElseBlock ifThenElseBlock)
+        public void Visit(IfThenElseBlockTag ifThenElseBlockTag)
         {
 
             // find the first place where the expression tree evaluates to true (i.e. which of the if/elsif/else clauses)
-            //var match = IfThenElseBlock.IfExpressions.FirstOrDefault(expr => LiquidExpressionEvaluator.Eval(_symbolTableStack, expr.ObjectExpression).IsTrue);
+            //var match = IfThenElseBlockTag.IfElseClauses.FirstOrDefault(expr => LiquidExpressionEvaluator.Eval(_symbolTableStack, expr.ObjectExpression).IsTrue);
             var match =
-                ifThenElseBlock.IfExpressions.FirstOrDefault(
+                ifThenElseBlockTag.IfElseClauses.FirstOrDefault(
                     expr =>
                         //ValueCaster.Cast<IExpressionConstant, BooleanValue>(
                         LiquidExpressionEvaluator.Eval(expr.ObjectExpressionTree, _symbolTableStack).IsTrue);
@@ -176,17 +167,17 @@ namespace Liquid.NET
                         //).BoolValue);
             if (match != null)
             {
-                _evaluator.StartVisiting(this, match.RootContentNode); // then render the contents
+                _evaluator.StartVisiting(this, match.LiquidBlock); // then render the contents
             }
         }
 
 
-        public void Visit(CaseWhenElseBlock caseWhenElseBlock)
+        public void Visit(CaseWhenElseBlockTag caseWhenElseBlockTag)
         {
             Console.WriteLine("Evaluating CASE BLOCK");
             // find the first place where the expression tree evaluates to true (i.e. which of the if/elsif/else clauses)
-            //var match = IfThenElseBlock.IfExpressions.FirstOrDefault(expr => LiquidExpressionEvaluator.Eval(_symbolTableStack, expr.ObjectExpression).IsTrue);
-            var valueToMatch = LiquidExpressionEvaluator.Eval(caseWhenElseBlock.ObjectExpressionTree, _symbolTableStack);
+            //var match = IfThenElseBlockTag.IfElseClauses.FirstOrDefault(expr => LiquidExpressionEvaluator.Eval(_symbolTableStack, expr.ObjectExpression).IsTrue);
+            var valueToMatch = LiquidExpressionEvaluator.Eval(caseWhenElseBlockTag.ObjectExpressionTree, _symbolTableStack);
             Console.WriteLine("Value to Match: "+valueToMatch);
 
             // TODO: FIx this for ELSE--- it is returning "TRUE", which is correct for "if/then/else", but not for
@@ -194,7 +185,7 @@ namespace Liquid.NET
             // make it call LiquidExpressionEvaluator(...).IsTrue.
 
             var match =
-                caseWhenElseBlock.WhenClauses.FirstOrDefault(
+                caseWhenElseBlockTag.WhenClauses.FirstOrDefault(
                     expr =>
                         // Take the valueToMatch "Case" expression result value
                         // and check if it's equal to the expr.ObjectExpressionTree expression.
@@ -206,15 +197,15 @@ namespace Liquid.NET
             //).BoolValue);
             if (match != null)
             {
-                _evaluator.StartVisiting(this, match.RootContentNode); // then eval + render the HTML
+                _evaluator.StartVisiting(this, match.LiquidBlock); // then eval + render the HTML
             }
-            else if (caseWhenElseBlock.HasElseClause)
+            else if (caseWhenElseBlockTag.HasElseClause)
             {
-                _evaluator.StartVisiting(this, caseWhenElseBlock.ElseClause.RootContentNode);
+                _evaluator.StartVisiting(this, caseWhenElseBlockTag.ElseClause.LiquidBlock);
             }
         }
 
-        public void Visit(RootDocumentSymbol rootDocumentSymbol)
+        public void Visit(RootDocumentNode rootDocumentNode)
         {
            // Console.WriteLine("Visiting Root Node");
         }

@@ -79,7 +79,7 @@ namespace Liquid.NET
             
             //String allTokens = _tokenStream.GetText();
             //Console.WriteLine(" *** Receiving Raw Text *** " + txt);
-            var rawTag = new RawBlock(txt);
+            var rawTag = new RawBlockTag(txt);
             var newNode = CreateTreeNode<IASTNode>(rawTag);
 
             CurrentAstNode.AddChild(newNode);
@@ -132,7 +132,7 @@ namespace Liquid.NET
         public override void EnterCapture_tag(LiquidParser.Capture_tagContext contentContext)
         {
             base.EnterCapture_tag(contentContext);
-            var captureBlock = new CaptureBlock()
+            var captureBlock = new CaptureBlockTag()
             {
                 VarName = contentContext.LABEL().GetText()
             };
@@ -154,7 +154,7 @@ namespace Liquid.NET
             base.EnterFor_tag(context);
             //Console.WriteLine("Entering FOR tag");
 
-            var forBlock = new ForBlock
+            var forBlock = new ForTagBlock
             {
                 LocalVariable = context.for_label().LABEL().ToString()
             };
@@ -164,7 +164,7 @@ namespace Liquid.NET
             CurrentBuilderContext.ForBlockStack.Push(forBlock);
 
             // subsequent parsing sends blocks to the root content node (i.e. the stuff to repeat)
-            _astNodeStack.Push(forBlock.RootContentNode);
+            _astNodeStack.Push(forBlock.LiquidBlock);
                 
         }
 
@@ -345,8 +345,8 @@ namespace Liquid.NET
 
             ObjectExpression objectExpression = new ObjectExpression { Expression = new NotExpression() };
             var newRoot = new TreeNode<ObjectExpression>(objectExpression);
-            newRoot.AddChild(unlessBlock.IfExpressions[0].ObjectExpressionTree);
-            unlessBlock.IfExpressions[0].ObjectExpressionTree = newRoot;
+            newRoot.AddChild(unlessBlock.IfElseClauses[0].ObjectExpressionTree);
+            unlessBlock.IfElseClauses[0].ObjectExpressionTree = newRoot;
             EndIfClause();
             
         }
@@ -369,8 +369,8 @@ namespace Liquid.NET
         private void AddIfThenElseTagToCurrent()
         {
             //Console.WriteLine("Adding If then else to current");
-            //CurrentBuilderContext.IfThenElseBlock = new IfThenElseBlock();
-            var ifThenElseBlock = new IfThenElseBlock();
+            //CurrentBuilderContext.IfThenElseBlockTag = new IfThenElseBlockTag();
+            var ifThenElseBlock = new IfThenElseBlockTag();
             //Console.WriteLine("  -:> Pushing if block on stack");
             CurrentBuilderContext.IfThenElseBlockStack.Push(ifThenElseBlock);
             var newNode = CreateTreeNode<IASTNode>(ifThenElseBlock);
@@ -383,10 +383,10 @@ namespace Liquid.NET
         /// </summary>
         private void InitiateIfClause()
         {
-            var elsIfSymbol = new IfTagSymbol();
+            var elsIfSymbol = new IfElseClause();
             //Console.WriteLine("Creating if expressino");
-            CurrentBuilderContext.IfThenElseBlockStack.Peek().AddIfExpression(elsIfSymbol);
-            _astNodeStack.Push(elsIfSymbol.RootContentNode); // capture the block
+            CurrentBuilderContext.IfThenElseBlockStack.Peek().AddIfClause(elsIfSymbol);
+            _astNodeStack.Push(elsIfSymbol.LiquidBlock); // capture the block
         }
 
 
@@ -396,7 +396,7 @@ namespace Liquid.NET
             base.EnterIfexpr(context);
             //Console.WriteLine("New Expression Builder");
             //InitiateExpressionBuilder();
-            var ifexpr = CurrentBuilderContext.IfThenElseBlockStack.Peek().IfExpressions.Last();
+            var ifexpr = CurrentBuilderContext.IfThenElseBlockStack.Peek().IfElseClauses.Last();
             StartNewObjectExpressionTree(x => ifexpr.ObjectExpressionTree = x);
         }
 
@@ -406,7 +406,7 @@ namespace Liquid.NET
             //Console.WriteLine("End Expression Builder");
             
             //CurrentBuilderContext.ObjectExpressionBuilder.StartObjectExpression();
-//            CurrentBuilderContext.IfThenElseBlockStack.Peek().IfExpressions.Last().ObjectExpressionTree =
+//            CurrentBuilderContext.IfThenElseBlockStack.Peek().IfElseClauses.Last().ObjectExpressionTree =
 //                CurrentBuilderContext.ObjectExpressionBuilder.ConstructedObjectExpressionTree;
                 
 
@@ -429,7 +429,7 @@ namespace Liquid.NET
             //ExpressionBuilder expressionBuilder = new ExpressionBuilder();
             var symbol = new BooleanValue(true);
             CurrentBuilderContext.IfThenElseBlockStack.Peek()
-                .IfExpressions.Last()
+                .IfElseClauses.Last()
                 .ObjectExpressionTree = CreateObjectSimpleExpressionNode(symbol);
 
         }
@@ -455,7 +455,7 @@ namespace Liquid.NET
         {
             base.ExitElse_tag(elseContext);
             EndIfClause();
-            //CurrentBuilderContext.IfThenElseBlock.ElseSymbol = //CurrentBuilderContext.ExpressionBuilder.ConstructedExpression;
+            //CurrentBuilderContext.IfThenElseBlockTag.ElseSymbol = //CurrentBuilderContext.ExpressionBuilder.ConstructedExpression;
         }
 
 
@@ -512,7 +512,7 @@ namespace Liquid.NET
         {
             base.EnterCase_tag(context);
             Console.WriteLine(">>>FOUND CASE");
-            var caseBlock = new CaseWhenElseBlock();
+            var caseBlock = new CaseWhenElseBlockTag();
 
             CurrentBuilderContext.CaseWhenElseBlockStack.Push(caseBlock);
             var newNode = CreateTreeNode<IASTNode>(caseBlock);
@@ -546,7 +546,7 @@ namespace Liquid.NET
             base.EnterIfexpr(context);
             //Console.WriteLine("New Expression Builder");
             //InitiateExpressionBuilder();
-            var ifexpr = CurrentBuilderContext.IfThenElseBlockStack.Peek().IfExpressions.Last();
+            var ifexpr = CurrentBuilderContext.IfThenElseBlockStack.Peek().IfElseClauses.Last();
             StartNewObjectExpressionTree(x => ifexpr.ObjectExpressionTree = x);
         }
 
@@ -556,7 +556,7 @@ namespace Liquid.NET
             //Console.WriteLine("End Expression Builder");
             
             //CurrentBuilderContext.ObjectExpressionBuilder.StartObjectExpression();
-//            CurrentBuilderContext.IfThenElseBlockStack.Peek().IfExpressions.Last().ObjectExpressionTree =
+//            CurrentBuilderContext.IfThenElseBlockStack.Peek().IfElseClauses.Last().ObjectExpressionTree =
 //                CurrentBuilderContext.ObjectExpressionBuilder.ConstructedObjectExpressionTree;
                 
 
@@ -600,9 +600,9 @@ namespace Liquid.NET
             base.EnterWhen_else_tag(context);
             //InitiateIfClause();
             //InitiateWhenClause();
-            var elseClause = new CaseWhenElseBlock.WhenElseClause();
+            var elseClause = new CaseWhenElseBlockTag.WhenElseClause();
             CurrentBuilderContext.CaseWhenElseBlockStack.Peek().ElseClause = elseClause;
-            _astNodeStack.Push(elseClause.RootContentNode); // capture the block
+            _astNodeStack.Push(elseClause.LiquidBlock); // capture the block
             //ExpressionBuilder expressionBuilder = new ExpressionBuilder();
             //var symbol = new BooleanValue(true);
 //            CurrentBuilderContext.CaseWhenElseBlockStack.Peek()
@@ -620,10 +620,10 @@ namespace Liquid.NET
 
         private void InitiateWhenClause()
         {
-            var whenBlock = new CaseWhenElseBlock.WhenClause();
+            var whenBlock = new CaseWhenElseBlockTag.WhenClause();
             Console.WriteLine("Creating if expressino");
             CurrentBuilderContext.CaseWhenElseBlockStack.Peek().AddWhenBlock(whenBlock);
-            _astNodeStack.Push(whenBlock.RootContentNode); // capture the block
+            _astNodeStack.Push(whenBlock.LiquidBlock); // capture the block
         }
         private void EndWhenClause()
         {
@@ -986,7 +986,7 @@ namespace Liquid.NET
         public override void ExitOutputmarkup(LiquidParser.OutputmarkupContext context)
         {
             base.ExitOutputmarkup(context);
-            //CurrentBuilderContext.IfThenElseBlock.IfExpressions.Last().ObjectExpression =
+            //CurrentBuilderContext.IfThenElseBlockTag.IfElseClauses.Last().ObjectExpression =
             Console.WriteLine("-<-EXITING OUTPUT dMARKUP ");
             //CurrentBuilderContext.ObjectExpressionBuilder.ConfigureExpression(_currentObjectExpression);
             //Console.WriteLine(_currentObjectExpression);
@@ -1093,7 +1093,7 @@ namespace Liquid.NET
         {
             base.EnterRawtext(context);
             //Console.WriteLine("ADDING TEXT :"+context.GetText());
-            CurrentAstNode.AddChild(CreateTreeNode<IASTNode>(new RawBlock(context.GetText())));
+            CurrentAstNode.AddChild(CreateTreeNode<IASTNode>(new RawBlockTag(context.GetText())));
         }
 
 
@@ -1115,11 +1115,11 @@ namespace Liquid.NET
         private class BlockBuilderContext
         {
             //public CurrentObjectFilterExpression 
-            public readonly Stack<IfThenElseBlock> IfThenElseBlockStack = new Stack<IfThenElseBlock>();
-            public readonly Stack<CaseWhenElseBlock> CaseWhenElseBlockStack = new Stack<CaseWhenElseBlock>();
+            public readonly Stack<IfThenElseBlockTag> IfThenElseBlockStack = new Stack<IfThenElseBlockTag>();
+            public readonly Stack<CaseWhenElseBlockTag> CaseWhenElseBlockStack = new Stack<CaseWhenElseBlockTag>();
             //public ExpressionBuilder ExpressionBuilder { get; set; }
             public ObjectExpressionTreeBuilder ObjectExpressionBuilder { get; set; }
-            public readonly Stack<ForBlock> ForBlockStack = new Stack<ForBlock>();
+            public readonly Stack<ForTagBlock> ForBlockStack = new Stack<ForTagBlock>();
         }
 
 

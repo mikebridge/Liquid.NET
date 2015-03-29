@@ -3,14 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Liquid.NET.Symbols;
 
-namespace Liquid.NET.Tags
+namespace Liquid.NET.Symbols
 {
     /// <summary>
-    /// For those too lazy to use NOT.
+    /// The root node in an AST document
     /// </summary>
-    public class UnlessBlock : IASTNode
+    public class RootDocumentNode : IASTNode
     {
         public void Accept(IASTVisitor visitor)
         {

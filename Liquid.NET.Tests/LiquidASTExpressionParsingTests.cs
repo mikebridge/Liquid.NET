@@ -34,12 +34,12 @@ namespace Liquid.NET.Tests
 
             // Assert
             var ifThenSymbolNode =
-                LiquidASTGeneratorTests.FindNodesWithType(ast, typeof (IfThenElseBlock)).FirstOrDefault();
+                LiquidASTGeneratorTests.FindNodesWithType(ast, typeof (IfThenElseBlockTag)).FirstOrDefault();
             Assert.That(ifThenSymbolNode, Is.Not.Null);
             // ReSharper disable once PossibleNullReferenceException
             var predicateTree =
-                ((IfThenElseBlock)ifThenSymbolNode.Data).IfExpressions[0].ObjectExpressionTree;
-            foreach (var expr in ((IfThenElseBlock)ifThenSymbolNode.Data).IfExpressions)
+                ((IfThenElseBlockTag)ifThenSymbolNode.Data).IfElseClauses[0].ObjectExpressionTree;
+            foreach (var expr in ((IfThenElseBlockTag)ifThenSymbolNode.Data).IfElseClauses)
             {
                 DebugIfExpressions(expr.ObjectExpressionTree);
             }
@@ -59,10 +59,10 @@ namespace Liquid.NET.Tests
 
             // Assert
             var ifThenSymbolNode =
-                LiquidASTGeneratorTests.FindNodesWithType(ast, typeof(IfThenElseBlock)).FirstOrDefault();
+                LiquidASTGeneratorTests.FindNodesWithType(ast, typeof(IfThenElseBlockTag)).FirstOrDefault();
             Assert.That(ifThenSymbolNode, Is.Not.Null);
             // ReSharper disable once PossibleNullReferenceException
-            var predicateTree = ((IfThenElseBlock)ifThenSymbolNode.Data).IfExpressions[0].ObjectExpressionTree;
+            var predicateTree = ((IfThenElseBlockTag)ifThenSymbolNode.Data).IfElseClauses[0].ObjectExpressionTree;
 
             Assert.That(predicateTree.Data.Expression, Is.TypeOf<EqualsExpression>());
             Assert.That(predicateTree[0].Data.Expression, Is.TypeOf<VariableReference>());
@@ -80,13 +80,13 @@ namespace Liquid.NET.Tests
 
             // Assert
             var ifThenSymbolNode =
-                LiquidASTGeneratorTests.FindNodesWithType(ast, typeof(IfThenElseBlock)).FirstOrDefault();
+                LiquidASTGeneratorTests.FindNodesWithType(ast, typeof(IfThenElseBlockTag)).FirstOrDefault();
 
             Assert.That(ifThenSymbolNode, Is.Not.Null);
             // ReSharper disable once PossibleNullReferenceException
-            var elsIfPredicateTrees = ((IfThenElseBlock) ifThenSymbolNode.Data).IfExpressions.Select(x => x.ObjectExpressionTree).ToList();
+            var elsIfPredicateTrees = ((IfThenElseBlockTag) ifThenSymbolNode.Data).IfElseClauses.Select(x => x.ObjectExpressionTree).ToList();
 
-            foreach (var expr in ((IfThenElseBlock) ifThenSymbolNode.Data).IfExpressions)
+            foreach (var expr in ((IfThenElseBlockTag) ifThenSymbolNode.Data).IfElseClauses)
             {
                 DebugIfExpressions(expr.ObjectExpressionTree);
             }
@@ -115,10 +115,10 @@ namespace Liquid.NET.Tests
 
             // Assert
             var ifThenSymbolNode =
-                LiquidASTGeneratorTests.FindNodesWithType(ast, typeof(IfThenElseBlock)).FirstOrDefault();
+                LiquidASTGeneratorTests.FindNodesWithType(ast, typeof(IfThenElseBlockTag)).FirstOrDefault();
             Assert.That(ifThenSymbolNode, Is.Not.Null);
             // ReSharper disable once PossibleNullReferenceException
-            var elseSymbols = ((IfThenElseBlock) ifThenSymbolNode.Data).IfExpressions;
+            var elseSymbols = ((IfThenElseBlockTag) ifThenSymbolNode.Data).IfElseClauses;
 
             Console.WriteLine("-- AST --");
             Console.WriteLine(new ASTWalker().Walk(ast));
@@ -135,9 +135,9 @@ namespace Liquid.NET.Tests
             var ast = _generator.Generate("Result : {% if true %} {% if false %} True and false {% endif %} {% endif %}");
 
             // Assert
-            var parentIfThenElseSymbol = LiquidASTGeneratorTests.FindNodesWithType(ast, typeof(IfThenElseBlock)).FirstOrDefault();
+            var parentIfThenElseSymbol = LiquidASTGeneratorTests.FindNodesWithType(ast, typeof(IfThenElseBlockTag)).FirstOrDefault();
 
-            var childIfThenElse = ((IfThenElseBlock) parentIfThenElseSymbol.Data).IfExpressions[0].RootContentNode;
+            var childIfThenElse = ((IfThenElseBlockTag) parentIfThenElseSymbol.Data).IfElseClauses[0].LiquidBlock;
             Console.WriteLine(childIfThenElse);
             Assert.That(childIfThenElse, Is.Not.Null);
 
@@ -150,13 +150,13 @@ namespace Liquid.NET.Tests
             var ast = _generator.Generate("Result : {% if myvar  %} OK {% endif %}");
 
             // Assert
-            var ifThenElseNode = LiquidASTGeneratorTests.FindNodesWithType(ast, typeof(IfThenElseBlock)).FirstOrDefault();
+            var ifThenElseNode = LiquidASTGeneratorTests.FindNodesWithType(ast, typeof(IfThenElseBlockTag)).FirstOrDefault();
             Assert.That(ifThenElseNode, Is.Not.Null);
             // ReSharper disable once PossibleNullReferenceException
-            var ifThenElseSymbol = ((IfThenElseBlock)ifThenElseNode.Data);
+            var ifThenElseSymbol = ((IfThenElseBlockTag)ifThenElseNode.Data);
 
             // Assert
-            Assert.That(ifThenElseSymbol.IfExpressions[0].ObjectExpressionTree.Data.Expression, Is.TypeOf<VariableReference>());
+            Assert.That(ifThenElseSymbol.IfElseClauses[0].ObjectExpressionTree.Data.Expression, Is.TypeOf<VariableReference>());
 
         }
 
@@ -202,13 +202,13 @@ namespace Liquid.NET.Tests
         {
             // Act
             var ast = _generator.Generate("Result : {% if true %} OK {% endif %}");
-            var ifThenElseNode = LiquidASTGeneratorTests.FindNodesWithType(ast, typeof(IfThenElseBlock)).FirstOrDefault();
+            var ifThenElseNode = LiquidASTGeneratorTests.FindNodesWithType(ast, typeof(IfThenElseBlockTag)).FirstOrDefault();
             Assert.That(ifThenElseNode, Is.Not.Null);
             // ReSharper disable once PossibleNullReferenceException
-            var ifThenElseSymbol = ((IfThenElseBlock)ifThenElseNode.Data);
+            var ifThenElseSymbol = ((IfThenElseBlockTag)ifThenElseNode.Data);
 
             // Assert
-            Assert.That(ifThenElseSymbol.IfExpressions[0].ObjectExpressionTree.Data.Expression, Is.TypeOf<BooleanValue>());
+            Assert.That(ifThenElseSymbol.IfElseClauses[0].ObjectExpressionTree.Data.Expression, Is.TypeOf<BooleanValue>());
 
         }
 
@@ -217,13 +217,13 @@ namespace Liquid.NET.Tests
         {
             // Act
             var ast = _generator.Generate("Result : {% if \"hello\" %} OK {% endif %}");
-            var ifThenElseNode = LiquidASTGeneratorTests.FindNodesWithType(ast, typeof(IfThenElseBlock)).FirstOrDefault();
+            var ifThenElseNode = LiquidASTGeneratorTests.FindNodesWithType(ast, typeof(IfThenElseBlockTag)).FirstOrDefault();
             Assert.That(ifThenElseNode, Is.Not.Null);
             // ReSharper disable once PossibleNullReferenceException
-            var ifThenElseSymbol = ((IfThenElseBlock)ifThenElseNode.Data);
+            var ifThenElseSymbol = ((IfThenElseBlockTag)ifThenElseNode.Data);
 
             // Assert
-            Assert.That(ifThenElseSymbol.IfExpressions[0].ObjectExpressionTree.Data.Expression, Is.TypeOf<StringValue>());
+            Assert.That(ifThenElseSymbol.IfElseClauses[0].ObjectExpressionTree.Data.Expression, Is.TypeOf<StringValue>());
 
         }
 

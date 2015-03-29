@@ -23,14 +23,14 @@ namespace Liquid.NET.Tests
             _result += objectExpressionTree.ToString();
         }
 
-        public void Visit(RawBlock rawBlock)
+        public void Visit(RawBlockTag rawBlockTag)
         {
-            _result += rawBlock.ToString();
+            _result += rawBlockTag.ToString();
         }
 
-        public void Visit(CommentBlock commentBlock)
+        public void Visit(CommentBlockTag commentBlockTag)
         {
-            _result += commentBlock.ToString();
+            _result += commentBlockTag.ToString();
         }
 
         public void Visit(CustomTag customTag)
@@ -38,16 +38,16 @@ namespace Liquid.NET.Tests
             _result += customTag.ToString();
         }
 
-        public void Visit(ForBlock forBlock)
+        public void Visit(ForTagBlock forTagBlock)
         {
-            _result += forBlock.ToString();
+            _result += forTagBlock.ToString();
         }
 
-        public void Visit(IfThenElseBlock ifThenElseBlock)
+        public void Visit(IfThenElseBlockTag ifThenElseBlockTag)
         {
-            _result += ifThenElseBlock.ToString();
-            //_result += IfThenElseBlock.IfExpressions.Select( x => Visit(x));
-            _result += ifThenElseBlock.IfExpressions.Select(x => VisitIfTag(x.ObjectExpressionTree));
+            _result += ifThenElseBlockTag.ToString();
+            //_result += IfThenElseBlockTag.IfElseClauses.Select( x => Visit(x));
+            _result += ifThenElseBlockTag.IfElseClauses.Select(x => VisitIfTag(x.ObjectExpressionTree));
         }
 
         public void Visit(CycleTag cycleTag)
@@ -55,24 +55,14 @@ namespace Liquid.NET.Tests
             _result += cycleTag.ToString();
         }
 
-        public void Visit(UnlessBlock unlessBlock)
-        {
-            _result += unlessBlock.ToString();
-        }
-
-        public void Visit(CaseBlock caseBlock)
-        {
-            _result += caseBlock.ToString();
-        }
-
         public void Visit(AssignTag assignTag)
         {
             _result += assignTag.ToString();
         }
 
-        public void Visit(CaptureBlock captureBlock)
+        public void Visit(CaptureBlockTag captureBlockTag)
         {
-            _result += captureBlock.ToString();
+            _result += captureBlockTag.ToString();
         }
 
         public void Visit(DecrementTag decrementTag)
@@ -90,9 +80,9 @@ namespace Liquid.NET.Tests
             _result += includeTag.ToString();
         }
 
-        public void Visit(CaseWhenElseBlock caseWhenElseBlock)
+        public void Visit(CaseWhenElseBlockTag caseWhenElseBlockTag)
         {
-            _result += caseWhenElseBlock.ToString();
+            _result += caseWhenElseBlockTag.ToString();
         }
 
         private String VisitIfTag(TreeNode<ObjectExpression> exprNode)
@@ -116,9 +106,9 @@ namespace Liquid.NET.Tests
             //_result += "    " + predicateDescription.Arguments;
         //}
 
-        public void Visit(RootDocumentSymbol rootDocumentSymbol)
+        public void Visit(RootDocumentNode rootDocumentNode)
         {
-            _result += rootDocumentSymbol.ToString();
+            _result += rootDocumentNode.ToString();
         }
 
         public void Visit(VariableReference variableReference)
@@ -131,9 +121,9 @@ namespace Liquid.NET.Tests
             _result += stringValue.ToString();
         }
 
-//        public void Visit(IfThenElseTag IfThenElseBlock)
+//        public void Visit(IfThenElseTag IfThenElseBlockTag)
 //        {
-//            _result += IfThenElseBlock.ToString();
+//            _result += IfThenElseBlockTag.ToString();
 //        }
 
         public String Result()

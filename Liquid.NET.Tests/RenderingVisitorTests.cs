@@ -19,7 +19,7 @@ namespace Liquid.NET.Tests
             // Arrange
             const string blocktext = "HELLO";
             var renderingVisitor = CreateRenderingVisitor();
-            var rawTextNode = new RawBlock(blocktext);
+            var rawTextNode = new RawBlockTag(blocktext);
 
             // Act
             renderingVisitor.Visit(rawTextNode);

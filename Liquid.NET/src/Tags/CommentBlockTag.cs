@@ -4,11 +4,11 @@ using Liquid.NET.Utils;
 
 namespace Liquid.NET.Tags
 {
-    public class CommentBlock : IASTNode
+    public class CommentBlockTag : IASTNode
     {
         private readonly string _rawText;
 
-        public CommentBlock(String rawText)
+        public CommentBlockTag(String rawText)
         {
             _rawText = rawText;
         }
@@ -18,6 +18,6 @@ namespace Liquid.NET.Tags
             visitor.Visit(this);
         }
 
-        public TreeNode<IASTNode> RootNode = new TreeNode<IASTNode>(new RootDocumentSymbol()); 
+        public TreeNode<IASTNode> RootNode = new TreeNode<IASTNode>(new RootDocumentNode()); 
     }
 }

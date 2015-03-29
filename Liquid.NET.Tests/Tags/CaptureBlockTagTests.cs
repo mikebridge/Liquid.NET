@@ -8,7 +8,7 @@ using NUnit.Framework;
 namespace Liquid.NET.Tests.Tags
 {
     [TestFixture]
-    public class CaptureBlockTests
+    public class CaptureBlockTagTests
     {
         [Test]
         public void It_Should_Put_A_Block_In_A_Variable()

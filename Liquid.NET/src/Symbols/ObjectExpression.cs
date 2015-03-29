@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Liquid.NET.Constants;
+﻿using System.Collections.Generic;
 using Liquid.NET.Expressions;
-using Liquid.NET.Filters;
-using Liquid.NET.Utils;
 
 namespace Liquid.NET.Symbols
 {

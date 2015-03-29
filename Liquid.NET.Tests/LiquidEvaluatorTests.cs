@@ -50,7 +50,7 @@ namespace Liquid.NET.Tests
             const string helloWorld = "HELLO WORLD";
             LiquidAST ast = new LiquidAST();
             TemplateContext ctx = new TemplateContext();
-            ast.RootNode.AddChild(new TreeNode<IASTNode>(new RawBlock(helloWorld)));
+            ast.RootNode.AddChild(new TreeNode<IASTNode>(new RawBlockTag(helloWorld)));
             var evaluator = new LiquidEvaluator();
 
             // Act

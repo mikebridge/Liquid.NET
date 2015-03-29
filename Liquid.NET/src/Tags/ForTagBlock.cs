@@ -7,10 +7,10 @@ using Liquid.NET.Utils;
 
 namespace Liquid.NET.Tags
 {
-    public class ForBlock : IASTNode
+    public class ForTagBlock : IASTNode
     {
 
-        public ForBlock()
+        public ForTagBlock()
         {
             this.Limit = new NumericValue(50); // as per the Shopify docs
             this.Reversed = new BooleanValue(false);
@@ -32,8 +32,11 @@ namespace Liquid.NET.Tags
 
         public BooleanValue Reversed { get; set; }
 
-        public TreeNode<IASTNode> RootContentNode = new TreeNode<IASTNode>(new RootDocumentSymbol());
+        public TreeNode<IASTNode> LiquidBlock = new TreeNode<IASTNode>(new RootDocumentNode());
 
+        /// <summary>
+        /// The local variable name (the "item" in "for item in ..."
+        /// </summary>
         public String LocalVariable { get; set; }
 
         public IIterableCreator IterableCreator { get; set; }

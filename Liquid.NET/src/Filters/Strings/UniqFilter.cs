@@ -11,9 +11,9 @@ namespace Liquid.NET.Filters.Strings
     public class UniqFilter : FilterExpression<ArrayValue, ArrayValue>
     {
 
-        public override ArrayValue ApplyTo(ArrayValue objectExpression)
+        public override ArrayValue ApplyTo(ArrayValue liquidArrayExpression)
         {
-            return new ArrayValue(objectExpression.ArrValue.Distinct(new EasyValueComparer()).ToList());
+            return new ArrayValue(liquidArrayExpression.ArrValue.Distinct(new EasyValueComparer()).ToList());
             
         }
 

@@ -23,18 +23,18 @@ namespace Liquid.NET.Filters.Strings
             _length = length;
         }
 
-        public override IExpressionConstant ApplyTo(IExpressionConstant objectExpression)
+        public override IExpressionConstant ApplyTo(IExpressionConstant liquidExpression)
         {
             return ConstantFactory.CreateError<ArrayValue>("Can't find sub-elements from that object.  It is not an array or a string.");
         }
 
-        public override IExpressionConstant ApplyTo(ArrayValue originalArrayValue)
+        public override IExpressionConstant ApplyTo(ArrayValue liquidArrayExpression)
         {
-            if (originalArrayValue == null || originalArrayValue.Value == null)
+            if (liquidArrayExpression == null || liquidArrayExpression.Value == null)
             {
                 return ConstantFactory.CreateError<ArrayValue>("Array is nil");
             }
-            var list = originalArrayValue.ArrValue;
+            var list = liquidArrayExpression.ArrValue;
 
             if (_start == null || _start.IsUndefined)
             {

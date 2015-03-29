@@ -16,10 +16,10 @@ namespace Liquid.NET.Filters.Strings
     public class CamelCaseFilter : FilterExpression<IExpressionConstant, StringValue>
     {
 
-        public override StringValue ApplyTo(IExpressionConstant objectExpression)
+        public override StringValue ApplyTo(IExpressionConstant liquidExpression)
         {
 
-            return StringUtils.Eval(objectExpression, before =>
+            return StringUtils.Eval(liquidExpression, before =>
             {
                 return String.Concat(before.Split(new[] {' ', '-', '_'}, StringSplitOptions.RemoveEmptyEntries)
                     .Select(x => char.ToUpper(x[0]) + x.Substring(1).ToLower()));

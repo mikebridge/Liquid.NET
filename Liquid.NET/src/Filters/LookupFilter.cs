@@ -18,10 +18,10 @@ namespace Liquid.NET.Filters
             _propertyName = propertyName;
         }
 
-        public override IExpressionConstant Apply(ExpressionConstant objectExpression)
+        public override IExpressionConstant Apply(ExpressionConstant liquidExpression)
         {
             //Console.WriteLine("APPLYING LOOKUP ");
-            return ApplyTo((dynamic) objectExpression);
+            return ApplyTo((dynamic) liquidExpression);
         }
 
         public IExpressionConstant ApplyTo(IExpressionConstant expr)

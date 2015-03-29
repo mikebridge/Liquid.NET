@@ -12,10 +12,10 @@ namespace Liquid.NET.Filters.Strings
     public class StripHtmlFilter : FilterExpression<StringValue, StringValue>
     {
 
-        public override StringValue ApplyTo(StringValue objectExpression)
+        public override StringValue ApplyTo(StringValue liquidStringExpression)
         {
             //input.to_s.gsub(/<script.*?<\/script>/m, empty).gsub(/<!--.*?-->/m, empty).gsub(/<style.*?<\/style>/m, empty).gsub(/<.*?>/m, empty)
-            return StringUtils.Eval(objectExpression, UnHtml);
+            return StringUtils.Eval(liquidStringExpression, UnHtml);
         }
 
 

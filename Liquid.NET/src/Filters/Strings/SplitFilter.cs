@@ -16,9 +16,9 @@ namespace Liquid.NET.Filters.Strings
             _delimiter = delimiter;
         }
 
-        public override ArrayValue ApplyTo(StringValue objectExpression)
+        public override ArrayValue ApplyTo(StringValue liquidStringExpression)
         {
-            var strings = objectExpression.StringVal.Split(new [] {_delimiter.StringVal}, StringSplitOptions.RemoveEmptyEntries);
+            var strings = liquidStringExpression.StringVal.Split(new[] { _delimiter.StringVal }, StringSplitOptions.RemoveEmptyEntries);
             return new ArrayValue(strings.Select(s => (IExpressionConstant) new StringValue(s)).ToList());
         }
 

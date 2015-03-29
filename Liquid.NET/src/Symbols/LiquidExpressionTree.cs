@@ -8,15 +8,15 @@ using Liquid.NET.Utils;
 
 namespace Liquid.NET.Symbols
 {
-    public class ObjectExpressionTree : IASTNode
+    public class LiquidExpressionTree : IASTNode
     {
 
-        public ObjectExpressionTree(TreeNode<ObjectExpression> objectExpressionTree)
+        public LiquidExpressionTree(TreeNode<LiquidExpression> liquidExpressionTree)
         {
-            ExpressionTree = objectExpressionTree;
+            ExpressionTree = liquidExpressionTree;
         }
 
-        public TreeNode<ObjectExpression> ExpressionTree { get; private set; }
+        public TreeNode<LiquidExpression> ExpressionTree { get; private set; }
 
         public void Accept(IASTVisitor visitor)
         {

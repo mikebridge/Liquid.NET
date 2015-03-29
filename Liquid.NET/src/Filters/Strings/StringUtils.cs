@@ -9,9 +9,9 @@ namespace Liquid.NET.Filters.Strings
 {
     public static class StringUtils
     {
-        public static StringValue Eval(IExpressionConstant objectExpression, Func<String, String> f)
+        public static StringValue Eval(IExpressionConstant liquidExpression, Func<String, String> f)
         {
-            String before = ValueCaster.RenderAsString(objectExpression);
+            String before = ValueCaster.RenderAsString(liquidExpression);
 
             if (String.IsNullOrWhiteSpace(before))
             {
@@ -22,7 +22,7 @@ namespace Liquid.NET.Filters.Strings
 
         public static String ReplaceFirst(string origStr, String removeStr, String replaceStr)
         {
-            var pos = origStr.IndexOf(removeStr);
+            var pos = origStr.IndexOf(removeStr, StringComparison.Ordinal);
             return pos < 0
                 ? origStr
                 : origStr.Substring(0, pos) + replaceStr + origStr.Substring(pos + removeStr.Length);

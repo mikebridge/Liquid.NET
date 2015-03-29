@@ -13,10 +13,10 @@ namespace Liquid.NET.Filters.Strings
     public class HandleizeFilter : FilterExpression<IExpressionConstant, StringValue>
     {
 
-        public override StringValue ApplyTo(IExpressionConstant objectExpression)
+        public override StringValue ApplyTo(IExpressionConstant liquidExpression)
         {
-            var strArray = ValueCaster.RenderAsString(objectExpression).Split();
-            return StringUtils.Eval(objectExpression, x => Slug.Create(true, strArray));
+            var strArray = ValueCaster.RenderAsString(liquidExpression).Split();
+            return StringUtils.Eval(liquidExpression, x => Slug.Create(true, strArray));
         }
 
 

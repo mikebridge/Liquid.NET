@@ -90,7 +90,7 @@
     <Compile Include="src\Expressions\IExpressionDescription.cs" />
     <Compile Include="src\Expressions\IExpressionDescriptionVisitor.cs" />
     <Compile Include="src\Expressions\NotExpression.cs" />
-    <Compile Include="src\Expressions\ObjectExpressionBuilder.cs" />
+    <Compile Include="src\Expressions\LiquidExpressionTreeBuilder.cs" />
     <Compile Include="src\Expressions\ObjectReferenceChain.cs" />
     <Compile Include="src\Expressions\OrExpression.cs" />
     <Compile Include="src\Expressions\VariableReference.cs" />
@@ -144,15 +144,14 @@
     <Compile Include="src\Filters\CastFilter.cs" />
     <Compile Include="src\Filters\FilterExpression.cs" />
     <Compile Include="src\Filters\FilterFactory.cs" />
-    <Compile Include="src\LiquidExpression.cs" />
     <Compile Include="src\RenderingVisitor.cs" />
     <Compile Include="src\Rendering\ForRenderer.cs" />
     <Compile Include="src\Symbols\FilterSymbol.cs" />
     <Compile Include="src\LiquidEvaluator.cs" />
     <Compile Include="src\LiquidTemplate.cs" />
     <Compile Include="src\Symbols\IASTNode.cs" />
-    <Compile Include="src\Symbols\ObjectExpression.cs" />
-    <Compile Include="src\Symbols\ObjectExpressionTree.cs" />
+    <Compile Include="src\Symbols\LiquidExpression.cs" />
+    <Compile Include="src\Symbols\LiquidExpressionTree.cs" />
     <Compile Include="src\Symbols\RootDocumentNode.cs" />
     <Compile Include="src\Symbols\SymbolTable.cs" />
     <Compile Include="src\Symbols\SymbolTableStack.cs" />

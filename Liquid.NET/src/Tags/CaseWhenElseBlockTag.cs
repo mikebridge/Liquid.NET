@@ -9,7 +9,7 @@ namespace Liquid.NET.Tags
     /// The difference between case expressions and if/unless expressions is that
     /// while the if/else/elsif expressions return a boolean value (and an "else" just 
     /// returns true, since it always matches), a case expression might be any kind of 
-    /// value.  That value gets compared to the CaseWhenElseBlockTag.ObjectExpressionTree
+    /// value.  That value gets compared to the CaseWhenElseBlockTag.LiquidExpressionTree
     /// result.
     /// </summary>
     public class CaseWhenElseBlockTag : IASTNode
@@ -34,7 +34,7 @@ namespace Liquid.NET.Tags
         /// TODO: think of a better name for this.  "Thing to match case
         /// results to".
         /// </summary>
-        public TreeNode<ObjectExpression> ObjectExpressionTree { get; set; }
+        public TreeNode<LiquidExpression> LiquidExpressionTree { get; set; }
 
         public bool HasElseClause
         {
@@ -44,11 +44,11 @@ namespace Liquid.NET.Tags
 
         public class WhenClause
         {
-            // the blocks to render When This Matches
+            // the blocks to render when this WHEN expression result matches the where 
             public TreeNode<IASTNode> LiquidBlock = new TreeNode<IASTNode>(new RootDocumentNode());
 
             // The expression to evaluate
-            public TreeNode<ObjectExpression> ObjectExpressionTree { get; set; }
+            public TreeNode<LiquidExpression> LiquidExpressionTree { get; set; }
 
         }
 

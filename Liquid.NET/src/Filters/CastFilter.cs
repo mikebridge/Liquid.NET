@@ -14,10 +14,10 @@ namespace Liquid.NET.Filters
         where TResult : IExpressionConstant
     {
 
-        public override TResult Apply(TSource objectExpression)
+        public override TResult Apply(TSource liquidExpression)
         {
             Console.WriteLine("Casting from " + typeof(TSource) + " to " + typeof(TResult));
-            var result= ValueCaster.Cast<TSource, TResult>(objectExpression);
+            var result= ValueCaster.Cast<TSource, TResult>(liquidExpression);
             Console.WriteLine("RESULT IS " + result);
             return result;
         }

@@ -9,14 +9,14 @@ namespace Liquid.NET.Filters
         Type SourceType { get; }
         Type ResultType { get; }
 
-        IExpressionConstant Apply(IExpressionConstant objectExpression);
+        IExpressionConstant Apply(IExpressionConstant liquidExpression);
     };
 
     public interface IFilterExpression<in TSource, out TResult> : IFilterExpression        
         where TSource : IExpressionConstant
         where TResult : IExpressionConstant
     {
-        TResult Apply(TSource objectExpression);
+        TResult Apply(TSource liquidExpression);
     };
 
     public abstract class FilterExpression<TSource,TResult> : IFilterExpression
@@ -24,20 +24,19 @@ namespace Liquid.NET.Filters
         where TResult : IExpressionConstant
     {
 
-        //public abstract TResult Apply(TSource objectExpression);
         // TODO: I don't think this should be virtual
-        public virtual TResult Apply(TSource objectExpression)
+        public virtual TResult Apply(TSource liquidExpression)
         {
-            return objectExpression.Bind<TResult>(x => ApplyTo((dynamic)x));
+            return liquidExpression.Bind<TResult>(x => ApplyTo((dynamic)x));
         }
 
-        public IExpressionConstant Apply(IExpressionConstant objectExpression)
+        public IExpressionConstant Apply(IExpressionConstant liquidExpression)
         {
-            return Apply((TSource)objectExpression);
+            return Apply((TSource)liquidExpression);
         }
 
         /* override some or all of these ApplyTo functions */
-        public virtual TResult ApplyTo(IExpressionConstant val) // todo: make this fallback abtstract
+        public virtual TResult ApplyTo(IExpressionConstant liquidExpression) // todo: make this fallback abtstract
         {
             throw new NotImplementedException();
         }

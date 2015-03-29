@@ -17,7 +17,7 @@ namespace Liquid.NET.Tags
 
         public String VarName { get; set; }
 
-        public TreeNode<ObjectExpression> ObjectExpressionTree { get; set; }
+        public TreeNode<LiquidExpression> LiquidExpressionTree { get; set; }
 
     }
 }

@@ -6,46 +6,46 @@ namespace Liquid.NET.Filters.Array
     public class SizeFilter : FilterExpression<ExpressionConstant, NumericValue>
     {
 
-        public override NumericValue ApplyTo(IExpressionConstant objectExpression)
+        public override NumericValue ApplyTo(IExpressionConstant liquidExpression)
         {
             Console.WriteLine("In IExpressionConstant");
-            if (objectExpression == null || objectExpression.Value == null)
+            if (liquidExpression == null || liquidExpression.Value == null)
             {
                 return new NumericValue(0);
             }
             return new NumericValue(1); // if it's not an enumerable, it must be of length 1.
         }
 
-        public override NumericValue ApplyTo(ArrayValue objectExpression)
+        public override NumericValue ApplyTo(ArrayValue liquidArrayExpression)
         {
-            if (objectExpression == null || objectExpression.Value == null)
+            if (liquidArrayExpression == null || liquidArrayExpression.Value == null)
             {
                 return new NumericValue(0);
             }
-            return new NumericValue(objectExpression.ArrValue.Count);
+            return new NumericValue(liquidArrayExpression.ArrValue.Count);
         }
 
-        public override NumericValue ApplyTo(StringValue objectExpression)
+        public override NumericValue ApplyTo(StringValue liquidStringExpression)
         {
-            if (objectExpression == null || objectExpression.Value == null)
+            if (liquidStringExpression == null || liquidStringExpression.Value == null)
             {
                 return new NumericValue(0);
             }
-            return new NumericValue(objectExpression.StringVal.Length);
+            return new NumericValue(liquidStringExpression.StringVal.Length);
         }
 
-        public override NumericValue ApplyTo(DictionaryValue objectExpression)
+        public override NumericValue ApplyTo(DictionaryValue liquidDictionaryExpression)
         {
-            if (objectExpression == null || objectExpression.Value == null)
+            if (liquidDictionaryExpression == null || liquidDictionaryExpression.Value == null)
             {
                 return new NumericValue(0);
             }
-            return new NumericValue(objectExpression.DictValue.Keys.Count);
+            return new NumericValue(liquidDictionaryExpression.DictValue.Keys.Count);
         }
 
-        public override NumericValue ApplyTo(GeneratorValue objectExpression)
+        public override NumericValue ApplyTo(GeneratorValue liquidGeneratorExpression)
         {
-            return new NumericValue(objectExpression.Length);            
+            return new NumericValue(liquidGeneratorExpression.Length);            
         }
 
 

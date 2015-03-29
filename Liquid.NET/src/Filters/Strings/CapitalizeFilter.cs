@@ -12,9 +12,9 @@ namespace Liquid.NET.Filters.Strings
     /// </summary>
     public class CapitalizeFilter : FilterExpression<IExpressionConstant, StringValue>
     {
-        public override StringValue ApplyTo(IExpressionConstant objectExpression)
+        public override StringValue ApplyTo(IExpressionConstant liquidExpression)
         {
-            String before = ValueCaster.RenderAsString(objectExpression);
+            String before = ValueCaster.RenderAsString(liquidExpression);
             if (String.IsNullOrWhiteSpace(before))
             {
                 return new StringValue("");

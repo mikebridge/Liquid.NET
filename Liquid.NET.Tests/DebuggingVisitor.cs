@@ -13,14 +13,14 @@ namespace Liquid.NET.Tests
     {
         private String _result = "";
 
-        public void Visit(ObjectExpression objectExpression)
+        public void Visit(LiquidExpression liquidExpression)
         {
-            _result += objectExpression.ToString();
+            _result += liquidExpression.ToString();
         }
 
-        public void Visit(ObjectExpressionTree objectExpressionTree)
+        public void Visit(LiquidExpressionTree liquidExpressionTree)
         {
-            _result += objectExpressionTree.ToString();
+            _result += liquidExpressionTree.ToString();
         }
 
         public void Visit(RawBlockTag rawBlockTag)
@@ -47,7 +47,7 @@ namespace Liquid.NET.Tests
         {
             _result += ifThenElseBlockTag.ToString();
             //_result += IfThenElseBlockTag.IfElseClauses.Select( x => Visit(x));
-            _result += ifThenElseBlockTag.IfElseClauses.Select(x => VisitIfTag(x.ObjectExpressionTree));
+            _result += ifThenElseBlockTag.IfElseClauses.Select(x => VisitIfTag(x.LiquidExpressionTree));
         }
 
         public void Visit(CycleTag cycleTag)
@@ -85,7 +85,7 @@ namespace Liquid.NET.Tests
             _result += caseWhenElseBlockTag.ToString();
         }
 
-        private String VisitIfTag(TreeNode<ObjectExpression> exprNode)
+        private String VisitIfTag(TreeNode<LiquidExpression> exprNode)
         {
             String result = " IF => " + exprNode.Data;
             return result + "    -> " + exprNode.Children.Select(x => VisitIfTag(exprNode));

@@ -30,7 +30,7 @@ namespace Liquid.NET.Tags
         public TreeNode<IASTNode> LiquidBlock = new TreeNode<IASTNode>(new RootDocumentNode());
 
         // The expression to evaluate
-        public TreeNode<ObjectExpression> ObjectExpressionTree { get; set; }
+        public TreeNode<LiquidExpression> LiquidExpressionTree { get; set; }
 
     }
 

@@ -23,17 +23,17 @@ namespace Liquid.NET.Filters.Array
             _sortField = sortField;
         }
 
-        public override ArrayValue ApplyTo(ArrayValue val)
+        public override ArrayValue ApplyTo(ArrayValue liquidArrayExpression)
         {            
             var sortfield = _sortField.StringVal;
 
             if (String.IsNullOrWhiteSpace(sortfield)) // try to sort as an array
             {
-                return SortAsArrayOfStrings(val);
+                return SortAsArrayOfStrings(liquidArrayExpression);
             }
             else
             {
-                return SortByProperty(val, sortfield);
+                return SortByProperty(liquidArrayExpression, sortfield);
             }
         }
 

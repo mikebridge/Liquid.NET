@@ -10,11 +10,11 @@ namespace Liquid.NET.Filters.Strings
     public class UrlParamEscapeFilter : FilterExpression<IExpressionConstant, StringValue>
     {
 
-        public override StringValue ApplyTo(IExpressionConstant objectExpression)
+        public override StringValue ApplyTo(IExpressionConstant liquidExpression)
         {
-            //return StringUtils.Eval(objectExpression, x => WebUtility.UrlEncode(x));
+            //return StringUtils.Eval(liquidStringExpression, x => WebUtility.UrlEncode(x));
             // Dunno if this is right but it seems to do the same as CGI::escape
-            return StringUtils.Eval(objectExpression, Uri.EscapeDataString);
+            return StringUtils.Eval(liquidExpression, Uri.EscapeDataString);
         }
 
     }

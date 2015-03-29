@@ -16,9 +16,9 @@ namespace Liquid.NET.Filters.Array
             _positionFilter = new PositionFilter(new NumericValue(0));
         }
         
-        public override IExpressionConstant Apply(ExpressionConstant objectExpression)
+        public override IExpressionConstant Apply(ExpressionConstant liquidConstantExpression)
         {
-            return _positionFilter.Apply(objectExpression);
+            return _positionFilter.Apply(liquidConstantExpression);
         }
     }
 }

@@ -18,9 +18,9 @@ namespace Liquid.NET.Filters.Strings
             _replacementString = replacementString;
         }
 
-        public override StringValue ApplyTo(IExpressionConstant objectExpression)
+        public override StringValue ApplyTo(IExpressionConstant liquidExpression)
         {
-            return StringUtils.Eval(objectExpression, x => StringUtils.ReplaceFirst(x, _stringToRemove.StringVal, _replacementString.StringVal));
+            return StringUtils.Eval(liquidExpression, x => StringUtils.ReplaceFirst(x, _stringToRemove.StringVal, _replacementString.StringVal));
         }
 
 

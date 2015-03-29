@@ -15,9 +15,9 @@ namespace Liquid.NET.Filters.Strings
     {
         public const String BR = "<br />\r\n";
 
-        public override StringValue ApplyTo(IExpressionConstant objectExpression)
+        public override StringValue ApplyTo(IExpressionConstant liquidExpression)
         {
-            return StringUtils.Eval(objectExpression, x => Regex.Replace(x, @"(\r\n)|[\u000A\u000B\u000C\u000D\u2028\u2029\u0085]", BR));
+            return StringUtils.Eval(liquidExpression, x => Regex.Replace(x, @"(\r\n)|[\u000A\u000B\u000C\u000D\u2028\u2029\u0085]", BR));
         }
 
     }

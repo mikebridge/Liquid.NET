@@ -16,9 +16,9 @@ namespace Liquid.NET.Filters.Strings
             _stringToRemove = stringToRemove;
         }
 
-        public override StringValue ApplyTo(IExpressionConstant objectExpression)
+        public override StringValue ApplyTo(IExpressionConstant liquidExpression)
         {
-            return StringUtils.Eval(objectExpression, x => StringUtils.ReplaceFirst(x, _stringToRemove.StringVal, ""));            
+            return StringUtils.Eval(liquidExpression, x => StringUtils.ReplaceFirst(x, _stringToRemove.StringVal, ""));            
         }
 
        

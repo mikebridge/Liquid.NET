@@ -15,23 +15,23 @@ namespace Liquid.NET.Filters.Array
             _separator = separator;
         }
 
-        public override StringValue ApplyTo(ArrayValue objectExpression)
+        public override StringValue ApplyTo(ArrayValue liquidArrayExpression)
         {
-            var vals = objectExpression
+            var vals = liquidArrayExpression
                 .ArrValue
                 .Select(ValueCaster.Cast<IExpressionConstant, StringValue>)
                 .Select(x => x.Value);
             return new StringValue(String.Join(_separator.StringVal, vals));
         }
 
-        public override StringValue ApplyTo(StringValue objectExpression)
+        public override StringValue ApplyTo(StringValue liquidStringExpression)
         {
-            if (String.IsNullOrEmpty(objectExpression.StringVal))
+            if (String.IsNullOrEmpty(liquidStringExpression.StringVal))
             {
                 return new StringValue(null);
             }
-            return new StringValue(String.Join(_separator.StringVal, 
-                objectExpression.StringVal.ToCharArray().Select(c => c.ToString())));
+            return new StringValue(String.Join(_separator.StringVal,
+                liquidStringExpression.StringVal.ToCharArray().Select(c => c.ToString())));
 
         }
     }

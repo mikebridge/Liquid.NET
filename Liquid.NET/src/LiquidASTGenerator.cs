@@ -110,10 +110,10 @@ namespace Liquid.NET
             //CurrentBuilderContext.AssignTag = assignTag;
             CurrentAstNode.AddChild(newNode);
 
-            StartNewObjectExpressionTree(result =>
+            StartNewLiquidExpressionTree(result =>
             {
                 //Console.WriteLine("Setting ExpRESSION TREE TO " + result);
-                assignTag.ObjectExpressionTree = result;
+                assignTag.LiquidExpressionTree = result;
             });
             //if (context.outputexpression() != null)
             //StartCapturingVariable(context.outputexpression().);
@@ -126,7 +126,7 @@ namespace Liquid.NET
         {
             base.ExitAssign_tag(context);
 
-            FinishObjectExpressionTree();
+            FinishLiquidExpressionTree();
         }
 
         public override void EnterCapture_tag(LiquidParser.Capture_tagContext contentContext)
@@ -223,7 +223,7 @@ namespace Liquid.NET
             {
                 //Console.WriteLine("  +++ FOUND a VARIABLE ");
                
-                StartNewObjectExpressionTree(result =>
+                StartNewLiquidExpressionTree(result =>
                 {
                     //Console.WriteLine("   --- Setting ExpRESSION TREE TO " + result);
                     forBlock.IterableCreator = new ArrayValueCreator(result);
@@ -254,7 +254,7 @@ namespace Liquid.NET
             if (context.variable() != null )
             {
                 //Console.WriteLine("CALLING FINISH OBJ"); 
-                //FinishObjectExpressionTree();
+                //FinishLiquidExpressionTree();
                 MarkCurrentExpressionComplete();
             }
         }
@@ -262,8 +262,8 @@ namespace Liquid.NET
             private GeneratorCreator CreateGeneratorContext(LiquidParser.GeneratorContext generatorContext)
             {
                 Console.WriteLine("CREATING GENERATOR");
-                TreeNode<ObjectExpression> startExpression= null;
-                TreeNode<ObjectExpression> endExpression = null;
+                TreeNode<LiquidExpression> startExpression= null;
+                TreeNode<LiquidExpression> endExpression = null;
                
 
                 if (generatorContext.NUMBER(0) != null) // lower range
@@ -275,7 +275,7 @@ namespace Liquid.NET
                 }
                 else if (generatorContext.variable(0) != null)
                 {
-                    StartNewObjectExpressionTree(x => startExpression = x);
+                    StartNewLiquidExpressionTree(x => startExpression = x);
                     StartCapturingVariable(generatorContext.variable(0));
                     MarkCurrentExpressionComplete();
                 }
@@ -288,7 +288,7 @@ namespace Liquid.NET
                 }
                 else if (generatorContext.variable(1) != null)
                 {
-                    StartNewObjectExpressionTree(x => endExpression = x);
+                    StartNewLiquidExpressionTree(x => endExpression = x);
                     StartCapturingVariable(generatorContext.variable(1));
                     MarkCurrentExpressionComplete();
                 }
@@ -343,10 +343,10 @@ namespace Liquid.NET
             base.ExitUnless_tag(context);          
             var unlessBlock = CurrentBuilderContext.IfThenElseBlockStack.Pop();
 
-            ObjectExpression objectExpression = new ObjectExpression { Expression = new NotExpression() };
-            var newRoot = new TreeNode<ObjectExpression>(objectExpression);
-            newRoot.AddChild(unlessBlock.IfElseClauses[0].ObjectExpressionTree);
-            unlessBlock.IfElseClauses[0].ObjectExpressionTree = newRoot;
+            LiquidExpression liquidExpression = new LiquidExpression { Expression = new NotExpression() };
+            var newRoot = new TreeNode<LiquidExpression>(liquidExpression);
+            newRoot.AddChild(unlessBlock.IfElseClauses[0].LiquidExpressionTree);
+            unlessBlock.IfElseClauses[0].LiquidExpressionTree = newRoot;
             EndIfClause();
             
         }
@@ -397,7 +397,7 @@ namespace Liquid.NET
             //Console.WriteLine("New Expression Builder");
             //InitiateExpressionBuilder();
             var ifexpr = CurrentBuilderContext.IfThenElseBlockStack.Peek().IfElseClauses.Last();
-            StartNewObjectExpressionTree(x => ifexpr.ObjectExpressionTree = x);
+            StartNewLiquidExpressionTree(x => ifexpr.LiquidExpressionTree = x);
         }
 
         public override void ExitIfexpr(LiquidParser.IfexprContext context)
@@ -405,12 +405,12 @@ namespace Liquid.NET
             base.ExitIfexpr(context);
             //Console.WriteLine("End Expression Builder");
             
-            //CurrentBuilderContext.ObjectExpressionBuilder.StartObjectExpression();
-//            CurrentBuilderContext.IfThenElseBlockStack.Peek().IfElseClauses.Last().ObjectExpressionTree =
-//                CurrentBuilderContext.ObjectExpressionBuilder.ConstructedObjectExpressionTree;
+            //CurrentBuilderContext.LiquidExpressionBuilder.StartLiquidExpression();
+//            CurrentBuilderContext.IfThenElseBlockStack.Peek().IfElseClauses.Last().LiquidExpressionTree =
+//                CurrentBuilderContext.LiquidExpressionBuilder.ConstructedLiquidExpressionTree;
                 
 
-            FinishObjectExpressionTree();
+            FinishLiquidExpressionTree();
         }
 
 
@@ -430,7 +430,7 @@ namespace Liquid.NET
             var symbol = new BooleanValue(true);
             CurrentBuilderContext.IfThenElseBlockStack.Peek()
                 .IfElseClauses.Last()
-                .ObjectExpressionTree = CreateObjectSimpleExpressionNode(symbol);
+                .LiquidExpressionTree = CreateObjectSimpleExpressionNode(symbol);
 
         }
 
@@ -488,19 +488,18 @@ namespace Liquid.NET
             CurrentAstNode.AddChild(newNode);
         }
 
-        private void StartNewObjectExpressionTree(Action<TreeNode<ObjectExpression>> setExpression)
+        private void StartNewLiquidExpressionTree(Action<TreeNode<LiquidExpression>> setExpression)
         {
-            CurrentBuilderContext.ObjectExpressionBuilder = new ObjectExpressionTreeBuilder();
+            CurrentBuilderContext.LiquidExpressionBuilder = new LiquidExpressionTreeBuilder();
             
-            CurrentBuilderContext.ObjectExpressionBuilder.ExpressionCompleteEvent += new OnExpressionCompleteEventHandler(setExpression);
+            CurrentBuilderContext.LiquidExpressionBuilder.ExpressionCompleteEvent += new OnExpressionCompleteEventHandler(setExpression);
         }
 
-        private void FinishObjectExpressionTree()
+        private void FinishLiquidExpressionTree()
         {
-            //Console.WriteLine("   <<< End FinishObjectExpression (set Builder to Null)");
+            //Console.WriteLine("   <<< End FinishLiquidExpression (set Builder to Null)");
 
-            //_currentObjectExpression = null;
-            CurrentBuilderContext.ObjectExpressionBuilder = null;
+            CurrentBuilderContext.LiquidExpressionBuilder = null;
         }
 
         
@@ -521,10 +520,10 @@ namespace Liquid.NET
             // TODO: probably the eval-ed value to compare can 
             // be "Equalled" with the when-expression and
             // so converted to a predicate.
-            StartNewObjectExpressionTree(result =>
+            StartNewLiquidExpressionTree(result =>
             {
                 Console.WriteLine("Setting Expression tree to" + result);
-                caseBlock.ObjectExpressionTree = result;
+                caseBlock.LiquidExpressionTree = result;
             });
 
         }
@@ -537,7 +536,7 @@ namespace Liquid.NET
             //Console.WriteLine(context.whenblock().)
             //CurrentBuilderContext.CaseWhenElseBlockStack.Pop();
 
-            FinishObjectExpressionTree();
+            FinishLiquidExpressionTree();
         }
      
         /*
@@ -547,7 +546,7 @@ namespace Liquid.NET
             //Console.WriteLine("New Expression Builder");
             //InitiateExpressionBuilder();
             var ifexpr = CurrentBuilderContext.IfThenElseBlockStack.Peek().IfElseClauses.Last();
-            StartNewObjectExpressionTree(x => ifexpr.ObjectExpressionTree = x);
+            StartNewLiquidExpressionTree(x => ifexpr.LiquidExpressionTree = x);
         }
 
         public override void ExitIfexpr(LiquidParser.IfexprContext context)
@@ -555,12 +554,12 @@ namespace Liquid.NET
             base.ExitIfexpr(context);
             //Console.WriteLine("End Expression Builder");
             
-            //CurrentBuilderContext.ObjectExpressionBuilder.StartObjectExpression();
-//            CurrentBuilderContext.IfThenElseBlockStack.Peek().IfElseClauses.Last().ObjectExpressionTree =
-//                CurrentBuilderContext.ObjectExpressionBuilder.ConstructedObjectExpressionTree;
+            //CurrentBuilderContext.LiquidExpressionBuilder.StartLiquidExpression();
+//            CurrentBuilderContext.IfThenElseBlockStack.Peek().IfElseClauses.Last().LiquidExpressionTree =
+//                CurrentBuilderContext.LiquidExpressionBuilder.ConstructedLiquidExpressionTree;
                 
 
-            FinishObjectExpressionTree();
+            FinishLiquidExpressionTree();
         }*/
 
         public override void EnterCase_tag_contents(LiquidParser.Case_tag_contentsContext context)
@@ -575,10 +574,10 @@ namespace Liquid.NET
             Console.WriteLine("When Tag");
             InitiateWhenClause();
 
-            StartNewObjectExpressionTree(result =>
+            StartNewLiquidExpressionTree(result =>
             {
                 Console.WriteLine("Setting Expression tree to" + result);
-                CurrentBuilderContext.CaseWhenElseBlockStack.Peek().WhenClauses.Last().ObjectExpressionTree = result;
+                CurrentBuilderContext.CaseWhenElseBlockStack.Peek().WhenClauses.Last().LiquidExpressionTree = result;
             });
 
         }
@@ -607,7 +606,7 @@ namespace Liquid.NET
             //var symbol = new BooleanValue(true);
 //            CurrentBuilderContext.CaseWhenElseBlockStack.Peek()
 //                .ElseClause
-//                .ObjectExpressionTree = CreateObjectSimpleExpressionNode(symbol);
+//                .LiquidExpressionTree = CreateObjectSimpleExpressionNode(symbol);
         }
 
         public override void ExitWhen_else_tag(LiquidParser.When_else_tagContext context)
@@ -634,10 +633,10 @@ namespace Liquid.NET
 
         /// <summary>
         /// Start capturing the tree of variable references and indices, transforming them as Antlr descends the
-        /// tree into a tree of ObjectExpressions.  Each ObjectExpression is a VariableReference + a potential set of filters
-        /// to index it.  (The indices may contain nested ObjectExpressions, hence the tree).
+        /// tree into a tree of LiquidExpressions.  Each LiquidExpression is a VariableReference + a potential set of filters
+        /// to index it.  (The indices may contain nested LiquidExpressions, hence the tree).
         /// 
-        /// The result will be at CurrentBuilderContext.ObjectExpressionBuilder.ConstructedObjectExpressionTree.
+        /// The result will be at CurrentBuilderContext.LiquidExpressionBuilder.ConstructedLiquidExpressionTree.
         /// </summary>
         /// <param name="variableContext"></param>
         private void StartCapturingVariable(LiquidParser.VariableContext variableContext)
@@ -650,7 +649,7 @@ namespace Liquid.NET
             foreach (var filter in indexLookupFilters)
             {
                 //Console.WriteLine("  ADDING FILTER TO VARIABLE OBJECT " + filter);
-                CurrentBuilderContext.ObjectExpressionBuilder.AddFilterSymbolToCurrentExpression(filter);
+                CurrentBuilderContext.LiquidExpressionBuilder.AddFilterSymbolToCurrentExpression(filter);
             }
             //Console.WriteLine("START Capturing variable END");
         }
@@ -660,7 +659,7 @@ namespace Liquid.NET
         private void MarkCurrentExpressionComplete()
         {
             //Console.WriteLine("Current expression complete!");
-            CurrentBuilderContext.ObjectExpressionBuilder.EndObjectExpression();
+            CurrentBuilderContext.LiquidExpressionBuilder.EndLiquidExpression();
         }
 
 
@@ -772,12 +771,12 @@ namespace Liquid.NET
         private void AddExpressionToCurrentExpressionBuilder(IExpressionDescription symbol)
         {
             Console.WriteLine("AddExpressionToCurrentExpressionBuilder "+symbol);
-            CurrentBuilderContext.ObjectExpressionBuilder.StartObjectExpression(symbol);
+            CurrentBuilderContext.LiquidExpressionBuilder.StartLiquidExpression(symbol);
         }
 
-        private static TreeNode<ObjectExpression> CreateObjectSimpleExpressionNode(IExpressionDescription expressionDescription)
+        private static TreeNode<LiquidExpression> CreateObjectSimpleExpressionNode(IExpressionDescription expressionDescription)
         {
-            return new TreeNode<ObjectExpression>(new ObjectExpression { Expression = expressionDescription });
+            return new TreeNode<LiquidExpression>(new LiquidExpression { Expression = expressionDescription });
         }
 
 
@@ -886,7 +885,7 @@ namespace Liquid.NET
 //                {
 //                    StartCapturingVariable(arrayIndex.variable());
 //
-//                    var expression = CurrentBuilderContext.ObjectExpressionBuilder.ConstructedObjectExpressionTree;
+//                    var expression = CurrentBuilderContext.LiquidExpressionBuilder.ConstructedLiquidExpressionTree;
 //                    var refChain = new ObjectReferenceChain(expression.Data); // TODO: Check if this is right?
 //                    indexingFilter.AddArg(refChain);
 //                    //arrayIndex.objectvariableindex();
@@ -899,7 +898,7 @@ namespace Liquid.NET
 
 
                     // maybe this shoud be a wrapper instead of a chain
-                    var arrayIndexObjectExpression = new ObjectExpression
+                    var arrayIndexLiquidExpression = new LiquidExpression
                     {
                         Expression = new VariableReference(arrayIndex.LABEL().GetText())
                     };
@@ -907,11 +906,11 @@ namespace Liquid.NET
                     // todo: switch tho AddFilterSymbols
                     foreach (var filter in arrayIndex.objectvariableindex().Select(AddIndexLookupFilter))
                     { 
-                        arrayIndexObjectExpression.AddFilterSymbol(filter);
+                        arrayIndexLiquidExpression.AddFilterSymbol(filter);
                     }
                     // This chain needs to be evaluated --- somehow the parent evaluation needs
                     // to be able to pick up on it....
-                    var refChain = new ObjectReferenceChain(arrayIndexObjectExpression);
+                    var refChain = new ObjectReferenceChain(arrayIndexLiquidExpression);
                     indexingFilter.AddArg(refChain);
                     //arrayIndex.objectvariableindex();
                     
@@ -933,10 +932,8 @@ namespace Liquid.NET
             Console.WriteLine("CREATING NUMBER OBJECT  >" + context.GetText() + "<");
             base.EnterNumberObject(context);
             AddExpressionToCurrentExpressionBuilder(NumericValue.Parse(context.GetText()));
-            // TODO: Create the number symbol
-            // this shouldn't fail to parse unless the lexer syntax is incorrect.
 
-            //_currentObjectExpression.Expression = NumericValue.Parse(context.GetText());
+
         }
 
         public override void ExitNumberObject(LiquidParser.NumberObjectContext context)
@@ -955,7 +952,6 @@ namespace Liquid.NET
             //CurrentBuilderContext.ExpressionBuilder.AddExpression(symbol);
 
             AddExpressionToCurrentExpressionBuilder(new BooleanValue(Convert.ToBoolean(context.GetText())));
-            //_currentObjectExpression.Expression = new BooleanValue(Convert.ToBoolean(context.GetText()));
         }
 
         public override void ExitBooleanObject(LiquidParser.BooleanObjectContext context)
@@ -975,33 +971,23 @@ namespace Liquid.NET
             //_liquidAst.AddChild();
             _tokenStreamRewriter.Delete(context.Start); // Delete the opening // TODO: I don't think these are necessary now that we're not using the token stream
             _tokenStreamRewriter.Delete(context.Stop); // and closing braces
-            StartNewObjectExpressionTree(x => CurrentAstNode.AddChild(CreateTreeNode<IASTNode>(
-                new ObjectExpressionTree(x))));
-            //InitiateExpressionBuilder();            
-            //_currentObjectExpression = new ObjectExpression(); // todo: figure out a better way to init and construct this object in two places.
-            //CurrentAstNode.AddChild(CreateTreeNode<IASTNode>(_currentObjectExpression));
-           
+            StartNewLiquidExpressionTree(x => CurrentAstNode.AddChild(CreateTreeNode<IASTNode>(
+                new LiquidExpressionTree(x))));
+
         }
 
         public override void ExitOutputmarkup(LiquidParser.OutputmarkupContext context)
         {
             base.ExitOutputmarkup(context);
-            //CurrentBuilderContext.IfThenElseBlockTag.IfElseClauses.Last().ObjectExpression =
+            //CurrentBuilderContext.IfThenElseBlockTag.IfElseClauses.Last().LiquidExpression =
             Console.WriteLine("-<-EXITING OUTPUT dMARKUP ");
-            //CurrentBuilderContext.ObjectExpressionBuilder.ConfigureExpression(_currentObjectExpression);
-            //Console.WriteLine(_currentObjectExpression);
 
             // TODO: the parser can create a composite expression here, but the output markup only ever sends
-            // a simple object expression in.  I think _currentObjectExpression.Expression should be a tree
+            // a simple object expression in.  I think _currentLiquidExpression.Expression should be a tree
             // anyway, rather than just assuming that the first expression (i.e. we're taking ".Data" of the top
             // node) is the only one.
-            //_currentObjectExpression.Expression = CurrentBuilderContext.ObjectExpressionBuilder.ConstructedExpression;
-            //var x = CurrentBuilderContext.ObjectExpressionBuilder.ConstructedExpression;
-            //CurrentAstNode.AddChild(CreateTreeNode<IASTNode>(
-            //    new ObjectExpressionTree(CurrentBuilderContext.ObjectExpressionBuilder.ConstructedObjectExpressionTree)));
-            
-            //EndExpressionBuilder();
-            FinishObjectExpressionTree();
+
+            FinishLiquidExpressionTree();
         }
 
 
@@ -1016,7 +1002,7 @@ namespace Liquid.NET
 
             
             //_currentFilterSymbol = new FilterSymbol(context.GetText());
-            CurrentBuilderContext.ObjectExpressionBuilder.AddFilterSymbolToLastExpression(new FilterSymbol(context.GetText()));
+            CurrentBuilderContext.LiquidExpressionBuilder.AddFilterSymbolToLastExpression(new FilterSymbol(context.GetText()));
 
         }
 
@@ -1024,7 +1010,7 @@ namespace Liquid.NET
         {
             //Console.WriteLine("* Entering Output Expression");
             base.EnterOutputexpression(context);
-            //StartNewObjectExpressionTree();
+            //StartNewLiquidExpressionTree();
             
         }
 
@@ -1032,14 +1018,14 @@ namespace Liquid.NET
         {
             //Console.WriteLine("* Exiting Output Expression");
             base.ExitOutputexpression(context);            
-            //FinishObjectExpressionTree();
+            //FinishLiquidExpressionTree();
         }
 
         public override void EnterStringFilterArg(LiquidParser.StringFilterArgContext context)
         {
             base.EnterStringFilterArg(context);
             Console.WriteLine("Enter STRING FILTERARG " + context.GetText());
-            CurrentBuilderContext.ObjectExpressionBuilder.AddFilterArgToLastExpressionsFilter(
+            CurrentBuilderContext.LiquidExpressionBuilder.AddFilterArgToLastExpressionsFilter(
                 GenerateStringSymbol(context.GetText()));
         }
 
@@ -1047,7 +1033,7 @@ namespace Liquid.NET
         {
             base.EnterNumberFilterArg(context);
             Console.WriteLine("Enter NUMBER FILTERARG " + context.GetText());
-            CurrentBuilderContext.ObjectExpressionBuilder.AddFilterArgToLastExpressionsFilter(
+            CurrentBuilderContext.LiquidExpressionBuilder.AddFilterArgToLastExpressionsFilter(
                 NumericValue.Parse(context.GetText()));
 
         }
@@ -1056,7 +1042,7 @@ namespace Liquid.NET
         {
             base.EnterBooleanFilterArg(context);
             Console.WriteLine("Enter BOOLEAN FILTERARG " + context.GetText());
-            CurrentBuilderContext.ObjectExpressionBuilder.AddFilterArgToLastExpressionsFilter(
+            CurrentBuilderContext.LiquidExpressionBuilder.AddFilterArgToLastExpressionsFilter(
                 new BooleanValue(Convert.ToBoolean(context.GetText())));
         }
 
@@ -1064,7 +1050,7 @@ namespace Liquid.NET
         {
             base.EnterVariableFilterArg(context);
             Console.WriteLine("Enter VARIABLE FILTERARG " + context.GetText());
-            CurrentBuilderContext.ObjectExpressionBuilder.AddFilterArgToLastExpressionsFilter(
+            CurrentBuilderContext.LiquidExpressionBuilder.AddFilterArgToLastExpressionsFilter(
                 new VariableReference(context.GetText()));
         }
 
@@ -1084,7 +1070,7 @@ namespace Liquid.NET
             String normalizedArgs = String.Join(" ", originalTokens.Select(x => x.Text));
             //Console.WriteLine("Saving raw args " + normalizedArgs);
 
-            CurrentBuilderContext.ObjectExpressionBuilder.SetRawArgsForLastExpressionsFilter(normalizedArgs);
+            CurrentBuilderContext.LiquidExpressionBuilder.SetRawArgsForLastExpressionsFilter(normalizedArgs);
         }
 
         #endregion
@@ -1118,7 +1104,7 @@ namespace Liquid.NET
             public readonly Stack<IfThenElseBlockTag> IfThenElseBlockStack = new Stack<IfThenElseBlockTag>();
             public readonly Stack<CaseWhenElseBlockTag> CaseWhenElseBlockStack = new Stack<CaseWhenElseBlockTag>();
             //public ExpressionBuilder ExpressionBuilder { get; set; }
-            public ObjectExpressionTreeBuilder ObjectExpressionBuilder { get; set; }
+            public LiquidExpressionTreeBuilder LiquidExpressionBuilder { get; set; }
             public readonly Stack<ForTagBlock> ForBlockStack = new Stack<ForTagBlock>();
         }
 

@@ -146,11 +146,7 @@ namespace Liquid.NET.Filters
             //Console.WriteLine("Adding CASTED value " + result.Value);
         }
 
-        //public static CastFilter<IObjectExpression, IObjectExpression> CreateCastFilter(Type sourceType, Type resultType)
         public static IFilterExpression CreateCastExpression(Type sourceType, Type resultType)
-            //where TSource : IObjectExpression
-            //where TResult : IObjectExpression
-
         {
 
             Type genericClass = typeof(CastFilter<,>);

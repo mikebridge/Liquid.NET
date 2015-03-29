@@ -3,8 +3,8 @@ using Liquid.NET.Expressions;
 
 namespace Liquid.NET.Symbols
 {
-    // TODO: Change this to "ObjectFilterChain" or something.
-    public class ObjectExpression : IASTNode
+
+    public class LiquidExpression : IASTNode
     {
 
         public IExpressionDescription Expression { get; set; }

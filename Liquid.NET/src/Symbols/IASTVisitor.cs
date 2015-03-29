@@ -7,9 +7,9 @@ namespace Liquid.NET.Symbols
 
     public interface IASTVisitor
     {
-        void Visit(ObjectExpression objectExpression);
+        void Visit(LiquidExpression liquidExpression);
 
-        void Visit(ObjectExpressionTree objectExpressionTree);
+        void Visit(LiquidExpressionTree liquidExpressionTree);
 
         void Visit(RawBlockTag rawBlockTag);
 

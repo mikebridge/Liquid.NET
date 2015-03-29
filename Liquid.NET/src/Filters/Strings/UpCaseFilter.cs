@@ -5,9 +5,9 @@ namespace Liquid.NET.Filters.Strings
 {
     public class UpCaseFilter : FilterExpression<IExpressionConstant, StringValue>
     {
-        public override StringValue ApplyTo(IExpressionConstant objectExpression) 
+        public override StringValue ApplyTo(IExpressionConstant liquidExpression) 
         {
-            return StringUtils.Eval(objectExpression, x => x.ToUpper());
+            return StringUtils.Eval(liquidExpression, x => x.ToUpper());
         }
     }
 }

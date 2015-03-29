@@ -145,7 +145,7 @@ namespace Liquid.NET.Tests
         }
 
         [Test]
-        public void It_Should_Render_A_Defined_Variable_In_An_ObjectExpression()
+        public void It_Should_Render_A_Defined_Variable_In_A_LiquidExpression()
         {
             // Arrange
             TemplateContext templateContext = new TemplateContext();
@@ -165,7 +165,7 @@ namespace Liquid.NET.Tests
 
    
         [Test]
-        public void It_Should_Render_An_Undefined_Variable_In_An_ObjectExpression()
+        public void It_Should_Render_An_Undefined_Variable_In_A_LiquidExpression()
         {
             // Arrange
             TemplateContext templateContext = new TemplateContext();

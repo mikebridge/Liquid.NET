@@ -62,7 +62,7 @@ namespace Liquid.NET
         public void Visit(AssignTag assignTag)
         {
             Console.WriteLine("RENDERING ASSIGN " + assignTag.VarName);
-            var result = LiquidExpressionEvaluator.Eval(assignTag.ObjectExpressionTree, _symbolTableStack);
+            var result = LiquidExpressionEvaluator.Eval(assignTag.LiquidExpressionTree, _symbolTableStack);
             _symbolTableStack.DefineGlobal(assignTag.VarName, result);
         }
 
@@ -157,12 +157,12 @@ namespace Liquid.NET
         {
 
             // find the first place where the expression tree evaluates to true (i.e. which of the if/elsif/else clauses)
-            //var match = IfThenElseBlockTag.IfElseClauses.FirstOrDefault(expr => LiquidExpressionEvaluator.Eval(_symbolTableStack, expr.ObjectExpression).IsTrue);
+            //var match = IfThenElseBlockTag.IfElseClauses.FirstOrDefault(expr => LiquidExpressionEvaluator.Eval(_symbolTableStack, expr.LiquidExpression).IsTrue);
             var match =
                 ifThenElseBlockTag.IfElseClauses.FirstOrDefault(
                     expr =>
                         //ValueCaster.Cast<IExpressionConstant, BooleanValue>(
-                        LiquidExpressionEvaluator.Eval(expr.ObjectExpressionTree, _symbolTableStack).IsTrue);
+                        LiquidExpressionEvaluator.Eval(expr.LiquidExpressionTree, _symbolTableStack).IsTrue);
                         //expr.Eval(_symbolTableStack).IsTrue);
                         //).BoolValue);
             if (match != null)
@@ -176,8 +176,8 @@ namespace Liquid.NET
         {
             Console.WriteLine("Evaluating CASE BLOCK");
             // find the first place where the expression tree evaluates to true (i.e. which of the if/elsif/else clauses)
-            //var match = IfThenElseBlockTag.IfElseClauses.FirstOrDefault(expr => LiquidExpressionEvaluator.Eval(_symbolTableStack, expr.ObjectExpression).IsTrue);
-            var valueToMatch = LiquidExpressionEvaluator.Eval(caseWhenElseBlockTag.ObjectExpressionTree, _symbolTableStack);
+            //var match = IfThenElseBlockTag.IfElseClauses.FirstOrDefault(expr => LiquidExpressionEvaluator.Eval(_symbolTableStack, expr.LiquidExpression).IsTrue);
+            var valueToMatch = LiquidExpressionEvaluator.Eval(caseWhenElseBlockTag.LiquidExpressionTree, _symbolTableStack);
             Console.WriteLine("Value to Match: "+valueToMatch);
 
             // TODO: FIx this for ELSE--- it is returning "TRUE", which is correct for "if/then/else", but not for
@@ -188,11 +188,11 @@ namespace Liquid.NET
                 caseWhenElseBlockTag.WhenClauses.FirstOrDefault(
                     expr =>
                         // Take the valueToMatch "Case" expression result value
-                        // and check if it's equal to the expr.ObjectExpressionTree expression.
+                        // and check if it's equal to the expr.LiquidExpressionTree expression.
                         // THe "EasyValueComparer" is supposed to match stuff fairly liberally,
                         // though it doesn't cast values---TODO: probably it should.
                         new EasyValueComparer().Equals(valueToMatch,
-                            LiquidExpressionEvaluator.Eval(expr.ObjectExpressionTree, _symbolTableStack)));
+                            LiquidExpressionEvaluator.Eval(expr.LiquidExpressionTree, _symbolTableStack)));
             //expr.Eval(_symbolTableStack).IsTrue);
             //).BoolValue);
             if (match != null)
@@ -227,24 +227,24 @@ namespace Liquid.NET
         /// <summary>
         /// Process the object / filter chain
         /// </summary>
-        /// <param name="objectExpression"></param>
-        public void Visit(ObjectExpression objectExpression)
+        /// <param name="liquidExpression"></param>
+        public void Visit(LiquidExpression liquidExpression)
         {
             Console.WriteLine("Visiting Object Expression ");
 
-            var constResult = LiquidExpressionEvaluator.Eval(objectExpression, _symbolTableStack);
-            //var constResult = LiquidExpressionEvaluator.Eval(_symbolTableStack,objectExpression);
+            var constResult = LiquidExpressionEvaluator.Eval(liquidExpression, _symbolTableStack);
+            //var constResult = LiquidExpressionEvaluator.Eval(_symbolTableStack,LiquidExpression);
 
             _result += Render(constResult); 
 
         }
 
-        public void Visit(ObjectExpressionTree objectExpressionTree)
+        public void Visit(LiquidExpressionTree liquidExpressionTree)
         {
             Console.WriteLine("Visiting Object Expression Tree ");
 
-            var constResult = LiquidExpressionEvaluator.Eval(objectExpressionTree, _symbolTableStack);
-            //var constResult = LiquidExpressionEvaluator.Eval(_symbolTableStack,objectExpression);
+            var constResult = LiquidExpressionEvaluator.Eval(liquidExpressionTree, _symbolTableStack);
+            //var constResult = LiquidExpressionEvaluator.Eval(_symbolTableStack,LiquidExpression);
 
             _result += Render(constResult); 
         }

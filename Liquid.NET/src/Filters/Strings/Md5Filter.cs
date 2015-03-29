@@ -11,9 +11,9 @@ namespace Liquid.NET.Filters.Strings
     public class Md5Filter : FilterExpression<IExpressionConstant, StringValue>
     {
 
-        public override StringValue ApplyTo(IExpressionConstant objectExpression)
+        public override StringValue ApplyTo(IExpressionConstant liquidExpression)
         {
-            return StringUtils.Eval(objectExpression, ToMd5);
+            return StringUtils.Eval(liquidExpression, ToMd5);
             
         }
 

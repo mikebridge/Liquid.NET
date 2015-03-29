@@ -10,7 +10,7 @@ namespace Liquid.NET.Tests.Expressions
 {
     [TestFixture]
     [Ignore("Need to write these")]
-    public class ObjectExpressionBuilderTests
+    public class LiquidExpressionTreeBuilderTests
     {
         [Test]
         public void It_Should_Create_An_Expression_Chain()

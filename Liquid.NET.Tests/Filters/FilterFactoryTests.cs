@@ -125,7 +125,7 @@ namespace Liquid.NET.Tests.Filters
                 StringArg2 = stringLiteral2;
             }
 
-            public override StringValue Apply(StringValue objectExpression)
+            public override StringValue Apply(StringValue liquidStringExpression)
             {
                 throw new NotImplementedException();
             }

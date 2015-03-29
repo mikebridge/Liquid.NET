@@ -16,9 +16,9 @@ namespace Liquid.NET.Filters.Strings
             _prependedStr = prependedStr;
         }
 
-        public override StringValue ApplyTo(IExpressionConstant objectExpression)
+        public override StringValue ApplyTo(IExpressionConstant liquidExpression)
         {
-            return StringUtils.Eval(objectExpression, x => _prependedStr.StringVal + x );
+            return StringUtils.Eval(liquidExpression, x => _prependedStr.StringVal + x);
         }
     }
 }

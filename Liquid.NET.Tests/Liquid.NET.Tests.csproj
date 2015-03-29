@@ -64,7 +64,7 @@
     <Compile Include="Constants\ValueCasterTests.cs" />
     <Compile Include="Expressions\AndExpressionTests.cs" />
     <Compile Include="Expressions\NotExpressionTests.cs" />
-    <Compile Include="Expressions\ObjectExpressionBuilderTests.cs" />
+    <Compile Include="Expressions\LiquidExpressionTreeBuilderTests.cs" />
     <Compile Include="Expressions\OrExpressionTests.cs" />
     <Compile Include="Expressions\SymbolTableTests.cs" />
     <Compile Include="Expressions\VariableReferenceIndexTests.cs" />

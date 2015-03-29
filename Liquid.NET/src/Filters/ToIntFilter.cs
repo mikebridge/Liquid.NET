@@ -11,9 +11,9 @@ namespace Liquid.NET.Filters
 {
     public class ToIntFilter : FilterExpression<ExpressionConstant, NumericValue>
     {
-        public override NumericValue Apply([NotNull] ExpressionConstant objectExpression)
+        public override NumericValue Apply([NotNull] ExpressionConstant liquidExpression)
         {
-            return new NumericValue(ToDecimalFilter.ConvertToDecimal(objectExpression).IntValue);
+            return new NumericValue(ToDecimalFilter.ConvertToDecimal(liquidExpression).IntValue);
         }
     }
 }

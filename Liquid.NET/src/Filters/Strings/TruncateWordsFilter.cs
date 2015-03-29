@@ -17,9 +17,9 @@ namespace Liquid.NET.Filters.Strings
             _length = length;
             _truncateString = truncateString.IsUndefined ? new StringValue("...") : truncateString;
         }
-        public override StringValue ApplyTo(StringValue objectExpression)
+        public override StringValue ApplyTo(StringValue liquidStringExpression)
         {
-            return StringUtils.Eval(objectExpression, TruncateWords);
+            return StringUtils.Eval(liquidStringExpression, TruncateWords);
             
         }
 

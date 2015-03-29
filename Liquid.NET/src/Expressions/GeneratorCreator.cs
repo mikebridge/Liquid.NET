@@ -38,9 +38,9 @@ namespace Liquid.NET.Expressions
 
     public class ArrayValueCreator : IIterableCreator
     {
-        private readonly TreeNode<ObjectExpression> _arrayValueExpression;
+        private readonly TreeNode<LiquidExpression> _arrayValueExpression;
 
-        public ArrayValueCreator(TreeNode<ObjectExpression> arrayValueExpression)
+        public ArrayValueCreator(TreeNode<LiquidExpression> arrayValueExpression)
         {
             _arrayValueExpression = arrayValueExpression;
         }
@@ -65,10 +65,10 @@ namespace Liquid.NET.Expressions
 
     public class GeneratorCreator : IIterableCreator
     {
-        private readonly TreeNode<ObjectExpression> _startExpression;
-        private readonly TreeNode<ObjectExpression> _endExpression;
+        private readonly TreeNode<LiquidExpression> _startExpression;
+        private readonly TreeNode<LiquidExpression> _endExpression;
 
-        public GeneratorCreator(TreeNode<ObjectExpression> start, TreeNode<ObjectExpression> end)
+        public GeneratorCreator(TreeNode<LiquidExpression> start, TreeNode<LiquidExpression> end)
         {
             _startExpression = start;
             _endExpression = end;
@@ -84,7 +84,7 @@ namespace Liquid.NET.Expressions
 
         }
 
-        private NumericValue ValueAsNumeric(TreeNode<ObjectExpression> expr, SymbolTableStack symbolTableStack)
+        private NumericValue ValueAsNumeric(TreeNode<LiquidExpression> expr, SymbolTableStack symbolTableStack)
         {
             return ValueCaster.Cast<IExpressionConstant, NumericValue>(LiquidExpressionEvaluator.Eval(expr, symbolTableStack));
         }

@@ -13,18 +13,18 @@ namespace Liquid.NET
     public static class LiquidExpressionEvaluator
     {
         
-        public static IExpressionConstant Eval(TreeNode<ObjectExpression> expr, SymbolTableStack symbolTableStack)
+        public static IExpressionConstant Eval(TreeNode<LiquidExpression> expr, SymbolTableStack symbolTableStack)
         {
             // Evaluate the children, depth first
             var leaves = expr.Children.Select(x => Eval(x, symbolTableStack));
 
             // pass the results to the parent
-            //return Eval((ObjectExpression) symbolTableStack, (SymbolTableStack) leaves);
+            //return Eval((LiquidExpression) symbolTableStack, (SymbolTableStack) leaves);
             //throw new ApplicationException("SCrewed this up");
             return Eval(expr.Data, leaves, symbolTableStack);
         }
 
-        public static IExpressionConstant Eval(ObjectExpressionTree expressiontree, SymbolTableStack symbolTableStack)
+        public static IExpressionConstant Eval(LiquidExpressionTree expressiontree, SymbolTableStack symbolTableStack)
         {
             // Evaluate the children, depth first
             var leaves = expressiontree.ExpressionTree.Children.Select(x => Eval(x, symbolTableStack));
@@ -33,16 +33,16 @@ namespace Liquid.NET
             return Eval(expressiontree.ExpressionTree.Data, leaves, symbolTableStack);
         }
 
-        public static IExpressionConstant Eval(ObjectExpression expression, SymbolTableStack symbolTableStack)
+        public static IExpressionConstant Eval(LiquidExpression expression, SymbolTableStack symbolTableStack)
         {
             return Eval(expression, new List<IExpressionConstant>(), symbolTableStack);
         }
 
-        public static IExpressionConstant Eval(ObjectExpression expression, IEnumerable<IExpressionConstant> leaves, SymbolTableStack symbolTableStack)
+        public static IExpressionConstant Eval(LiquidExpression expression, IEnumerable<IExpressionConstant> leaves, SymbolTableStack symbolTableStack)
         {
 
 
-            //Console.WriteLine("In ObjectExpression.Eval, Expression is " + Expression);
+            //Console.WriteLine("In LiquidExpression.Eval, Expression is " + Expression);
 
 
             IExpressionConstant objResult = Eval(expression.Expression, leaves, symbolTableStack);

@@ -12,17 +12,17 @@ namespace Liquid.NET.Filters.Strings
             _replacement = replacement;
         }
         // TODO: use StringUtils.Eval
-        public override StringValue Apply(StringValue objectExpression)
+        public override StringValue Apply(StringValue liquidStringExpression)
         {
             // TODO: Return errors
-            Console.WriteLine("APPLYING REMOVE "+_replacement.Value+"TO "+objectExpression.Value);
+            Console.WriteLine("APPLYING REMOVE " + _replacement.Value + "TO " + liquidStringExpression.Value);
             if (_replacement == null || _replacement.Value == null)
             {
                 var result = new StringValue(null) {ErrorMessage = "Please specify a replacement string."};
                 return result;
             }
 
-            return Remove((String) objectExpression.Value, _replacement);
+            return Remove((String)liquidStringExpression.Value, _replacement);
 
         }
 

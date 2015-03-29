@@ -16,13 +16,13 @@ namespace Liquid.NET.Filters.Array
             _selector = selector;
         }
 
-        public override ArrayValue Apply(ArrayValue objectExpression)
+        public override ArrayValue Apply(ArrayValue liquidArrayExpression)
         {
-            if (objectExpression == null || objectExpression.Value == null)
+            if (liquidArrayExpression == null || liquidArrayExpression.Value == null)
             {
                 return ConstantFactory.CreateError<ArrayValue>("Array is nil");
             }
-            var list = objectExpression.ArrValue.Select(x => FieldAccessor.TryField(x, _selector.StringVal)).ToList();
+            var list = liquidArrayExpression.ArrValue.Select(x => FieldAccessor.TryField(x, _selector.StringVal)).ToList();
             return new ArrayValue(list);
         }
     }

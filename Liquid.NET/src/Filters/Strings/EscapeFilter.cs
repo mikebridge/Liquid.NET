@@ -13,9 +13,9 @@ namespace Liquid.NET.Filters.Strings
     /// </summary>
     public class EscapeFilter : FilterExpression<IExpressionConstant, StringValue>
     {
-        public override StringValue ApplyTo(IExpressionConstant objectExpression)
+        public override StringValue ApplyTo(IExpressionConstant liquidExpression)
         {
-            return StringUtils.Eval(objectExpression, WebUtility.HtmlEncode);
+            return StringUtils.Eval(liquidExpression, WebUtility.HtmlEncode);
         }
     }
 }

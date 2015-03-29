@@ -17,33 +17,33 @@ namespace Liquid.NET.Filters.Array
             _index = index;
         }
 
-        public override IExpressionConstant ApplyTo(IExpressionConstant objectExpression)
+        public override IExpressionConstant ApplyTo(IExpressionConstant liquidExpression)
         {
             return ConstantFactory.CreateError<ArrayValue>("Can't find sub-elements from that object.  It is not an array or a string.");
         }
 
-        public override IExpressionConstant ApplyTo(ArrayValue objectExpression)
+        public override IExpressionConstant ApplyTo(ArrayValue liquidArrayExpression)
         {
-            if (objectExpression == null || objectExpression.Value == null)
+            if (liquidArrayExpression == null || liquidArrayExpression.Value == null)
             {
                 return ConstantFactory.CreateError<ArrayValue>("Array is nil");
             }
-            Console.WriteLine("Array is " + objectExpression.ArrValue.Count);
+            Console.WriteLine("Array is " + liquidArrayExpression.ArrValue.Count);
             Console.WriteLine("Index is " + _index.IntValue);
-            return objectExpression.ArrValue.Count > 0 && 
-                objectExpression.ArrValue.Count >= _index.IntValue + 1 ? 
-                objectExpression.ValueAt(_index.IntValue) : 
+            return liquidArrayExpression.ArrValue.Count > 0 && 
+                liquidArrayExpression.ArrValue.Count >= _index.IntValue + 1 ? 
+                liquidArrayExpression.ValueAt(_index.IntValue) : 
                 ConstantFactory.CreateError<ArrayValue>("Array has no element at position " + _index.IntValue);
         }
 
-        public override IExpressionConstant ApplyTo(StringValue objectExpression)
+        public override IExpressionConstant ApplyTo(StringValue liquidStringExpression)
         {
-            if (objectExpression == null || objectExpression.Value == null)
+            if (liquidStringExpression == null || liquidStringExpression.Value == null)
             {
                 return ConstantFactory.CreateError<StringValue>("String is nil");
             }
-            return objectExpression.StringVal.Length >= _index.IntValue + 1
-                ? (IExpressionConstant) new StringValue(objectExpression.StringVal[_index.IntValue].ToString())
+            return liquidStringExpression.StringVal.Length >= _index.IntValue + 1
+                ? (IExpressionConstant)new StringValue(liquidStringExpression.StringVal[_index.IntValue].ToString())
                 : ConstantFactory.CreateError<ArrayValue>("String has no element at position " + _index.IntValue);
         }
     }

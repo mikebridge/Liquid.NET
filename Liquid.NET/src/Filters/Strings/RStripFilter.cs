@@ -10,9 +10,9 @@ namespace Liquid.NET.Filters.Strings
     public class RStripFilter : FilterExpression<IExpressionConstant, StringValue>
     {
 
-        public override StringValue ApplyTo(IExpressionConstant objectExpression)
+        public override StringValue ApplyTo(IExpressionConstant liquidExpression)
         {
-            return StringUtils.Eval(objectExpression, x => x.TrimEnd());
+            return StringUtils.Eval(liquidExpression, x => x.TrimEnd());
         }
 
     }

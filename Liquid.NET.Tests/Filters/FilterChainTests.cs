@@ -15,7 +15,6 @@ namespace Liquid.NET.Tests.Filters
         public void It_Should_Cast_MisMatched_Filters()
         {
             // Arrange
-            //var objectExpression = new StringLiteral("1");
             var filters = new List<IFilterExpression>
             {
                 new UpCaseFilter(),

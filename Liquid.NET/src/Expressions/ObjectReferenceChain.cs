@@ -10,16 +10,16 @@ namespace Liquid.NET.Expressions
 {
     public class ObjectReferenceChain : ExpressionDescription
     {
-        private readonly ObjectExpression _objectExpression;
+        private readonly LiquidExpression _liquidExpression;
 
-        public ObjectReferenceChain(ObjectExpression objectExpression)
+        public ObjectReferenceChain(LiquidExpression liquidExpression)
         {
-            _objectExpression = objectExpression;
+            _liquidExpression = liquidExpression;
         }
 
         public override IExpressionConstant Eval(SymbolTableStack symbolTableStack, IEnumerable<IExpressionConstant> expressions)
         {
-            return LiquidExpressionEvaluator.Eval(_objectExpression, symbolTableStack );
+            return LiquidExpressionEvaluator.Eval(_liquidExpression, symbolTableStack );
         }
     }
 }

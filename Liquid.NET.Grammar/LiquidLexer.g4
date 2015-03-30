@@ -123,6 +123,8 @@ ENDIF_TAG :				'endif' ;
 ENDUNLESS_TAG :			'endunless' ;
 FOR_TAG :				'for' ;
 FOR_IN :				'in';
+BREAK_TAG :				'break';
+CONTINUE_TAG :			'continue';
 PARAM_REVERSED:			'reversed';
 PARAM_OFFSET:		    'offset' ;
 PARAM_LIMIT:		    'limit' ;

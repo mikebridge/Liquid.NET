@@ -70,5 +70,44 @@ namespace Liquid.NET.Tests.Tags
             Assert.That(result, Is.EqualTo("Result : OKOK"));
         }
 
+        [Test]
+        public void It_Should_Break_Out_Of_A_Loop()
+        {
+            // Arrange
+            var tmpl = GetForLoop("{% break %}");
+
+            // Act
+            var result = RenderingHelper.RenderTemplate(tmpl);
+
+            // Assert
+            Assert.That(result, Is.EqualTo("Result : 1,2"));
+        }
+
+        [Test]
+        public void It_Should_Skip_Part_Of_A_Loop()
+        {
+            // Arrange
+            var tmpl = GetForLoop("{% continue %}");
+
+            // Act 
+            var result = RenderingHelper.RenderTemplate(tmpl);
+
+            // Assert
+            Assert.That(result, Is.EqualTo("Result : 1,2"));
+        }
+
+        private static string GetForLoop(string txt)
+        {
+            return @"{%assign coll = ""1,2,3,4"" | split: ','%}"
+                   + "{% for item in coll %}"
+                   +"{% if item > 2 %}ITEM:{{item}}"
+                   +txt
+                   +"{% endif %}"
+                   +"{{item}}"
+                   +"{% endfor %}";
+        }
+
+
+
     }
 }

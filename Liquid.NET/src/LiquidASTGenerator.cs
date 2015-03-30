@@ -324,6 +324,47 @@ namespace Liquid.NET
 
         #endregion
 
+        public override void EnterCustom_tag(LiquidParser.Custom_tagContext context)
+        {
+            Console.WriteLine("CUSTOM " + context.tagname());
+            base.EnterCustom_tag(context);
+        }
+
+        public override void EnterContinue_tag(LiquidParser.Continue_tagContext context)
+        {
+            base.EnterContinue_tag(context);
+            ContinueTag continueTag = new ContinueTag();
+            CurrentAstNode.AddChild(CreateTreeNode<IASTNode>(continueTag));
+        }
+
+        public override void EnterBreak_tag(LiquidParser.Break_tagContext context)
+        {
+            BreakTag breakTag = new BreakTag();
+            CurrentAstNode.AddChild(CreateTreeNode<IASTNode>(breakTag));
+
+
+        }
+
+
+//        public override void EnterCycle_tag(LiquidParser.Cycle_tagContext context)
+//        {
+//            base.EnterCycle_tag(context);
+//
+//            var cycleTag = new CycleTag
+//            {
+//                // TODO: Allow variables in cycle?
+//                CycleList = context.cycle_string().Select(str => (IExpressionConstant)GenerateStringSymbol(str.GetText())).ToList()
+//            };
+//            if (context.cycle_group() != null)
+//            {
+//                cycleTag.Group = context.cycle_group().STRING().GetText();
+//            }
+//
+//            CurrentAstNode.AddChild(CreateTreeNode<IASTNode>(cycleTag));
+//            //_astNodeStack.Push();
+//        }
+
+
         #region If|Unless / Elsif / Else / Endif Tag
 
         public override void EnterUnless_tag(LiquidParser.Unless_tagContext unlessContext)

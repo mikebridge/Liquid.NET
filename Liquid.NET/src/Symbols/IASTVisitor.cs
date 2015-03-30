@@ -40,5 +40,9 @@ namespace Liquid.NET.Symbols
         void Visit(IncludeTag includeTag);
 
         void Visit(CaseWhenElseBlockTag caseWhenElseBlockTag);
+
+        void Visit(ContinueTag continueTag);
+
+        void Visit(BreakTag breakTag);
     }
 }

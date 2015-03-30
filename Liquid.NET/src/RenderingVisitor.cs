@@ -205,6 +205,18 @@ namespace Liquid.NET
             }
         }
 
+        public void Visit(ContinueTag continueTag)
+        {
+            Console.WriteLine(" === CONTINUE!! ==");
+            //throw new NotImplementedException();
+        }
+
+        public void Visit(BreakTag breakTag)
+        {
+            Console.WriteLine(" === BREAK!! ==");
+            //throw new NotImplementedException();
+        }
+
         public void Visit(RootDocumentNode rootDocumentNode)
         {
            // Console.WriteLine("Visiting Root Node");

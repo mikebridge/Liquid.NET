@@ -159,9 +159,11 @@
     <Compile Include="src\Symbols\SymbolTableStack.cs" />
     <Compile Include="src\Symbols\SymbolTableStackFactory.cs" />
     <Compile Include="src\Tags\AssignTag.cs" />
+    <Compile Include="src\Tags\BreakTag.cs" />
     <Compile Include="src\Tags\CaptureBlockTag.cs" />
     <Compile Include="src\Tags\CaseWhenElseBlockTag.cs" />
     <Compile Include="src\Tags\CommentBlockTag.cs" />
+    <Compile Include="src\Tags\ContinueTag.cs" />
     <Compile Include="src\Tags\CustomTag.cs" />
     <Compile Include="src\Tags\CycleTag.cs" />
     <Compile Include="src\Tags\DecrementTag.cs" />

@@ -62,6 +62,12 @@ namespace Liquid.NET.Filters
             return ApplyTo((IExpressionConstant)val);
         }
 
+        public virtual TResult ApplyTo(DateValue val)
+        {
+            return ApplyTo((IExpressionConstant)val);
+        }
+
+
         public virtual TResult ApplyTo(GeneratorValue val)
         {
             return ApplyTo((IExpressionConstant)val);

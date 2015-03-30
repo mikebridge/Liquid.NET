@@ -66,6 +66,7 @@
     <Compile Include="src\Constants\ArrayValue.cs" />
     <Compile Include="src\Constants\BooleanValue.cs" />
     <Compile Include="src\Constants\ConstantFactory.cs" />
+    <Compile Include="src\Constants\DateValue.cs" />
     <Compile Include="src\Constants\DictionaryValue.cs" />
     <Compile Include="src\Constants\EasyValueComparer.cs" />
     <Compile Include="src\Constants\ExpressionConstant.cs" />
@@ -102,6 +103,7 @@
     <Compile Include="src\Filters\Array\PositionFilter.cs" />
     <Compile Include="src\Filters\Array\SizeFilter.cs" />
     <Compile Include="src\Filters\Array\SortFilter.cs" />
+    <Compile Include="src\Filters\DateFilter.cs" />
     <Compile Include="src\Filters\FilterChain.cs" />
     <Compile Include="src\Filters\FilterRegistry.cs" />
     <Compile Include="src\Filters\LookupFilter.cs" />
@@ -171,6 +173,7 @@
     <Compile Include="src\TemplateContext.cs" />
     <Compile Include="src\Symbols\IASTVisitor.cs" />
     <Compile Include="src\Utils\LiquidVersionAttribute.cs" />
+    <Compile Include="src\Utils\StrFTime.cs" />
     <Compile Include="src\Utils\TreeNode.cs" />
   </ItemGroup>
   <ItemGroup>

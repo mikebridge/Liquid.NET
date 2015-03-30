@@ -57,6 +57,7 @@ namespace Liquid.NET
             // ceil
             // concat
             // date
+            _filterRegistry.Register<DateFilter>("date");
             // default
             // divided_by
             // downcase
@@ -77,6 +78,7 @@ namespace Liquid.NET
             // map
             _filterRegistry.Register<MapFilter>("map");
             // minus
+            _filterRegistry.Register<MinusFilter>("minus");
             // modulo
             // newline_to_br
             _filterRegistry.Register<NewlineToBrFilter>("newline_to_br");

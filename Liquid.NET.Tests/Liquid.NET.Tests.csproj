@@ -77,6 +77,7 @@
     <Compile Include="Filters\Array\PositionFilterTests.cs" />
     <Compile Include="Filters\Array\SizeFilterTests.cs" />
     <Compile Include="Filters\Array\SortFilterTests.cs" />
+    <Compile Include="Filters\DateFilterTests.cs" />
     <Compile Include="Filters\Html\ImgTagFilterTests.cs" />
     <Compile Include="Filters\Html\ScriptTagFilterTests.cs" />
     <Compile Include="Filters\Html\StyleSheetTagFilterTests.cs" />
@@ -153,6 +154,7 @@
     <Compile Include="Tags\IncrementTagTests.cs" />
     <Compile Include="Tags\UnlessBlockTagTests.cs" />
     <Compile Include="TemplateContextTests.cs" />
+    <Compile Include="Utils\StrFTimeTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Liquid.NET\Liquid.NET.csproj">

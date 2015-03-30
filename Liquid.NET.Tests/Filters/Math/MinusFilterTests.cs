@@ -3,18 +3,26 @@
 namespace Liquid.NET.Tests.Filters.Math
 {
     [TestFixture]
-    [Ignore("Implement this")]
     public class MinusFilterTests
     {
         [Test]
-        public void It_Should_Subtract_A_Number_From_Another()
+        public void It_Should_Subtract_One_Number_From_Another()
         {
             // Arrange
-
-            // Act
+            var result = RenderingHelper.RenderTemplate("Result : {{ 23 | minus: 12 }}");
 
             // Assert
-            Assert.Fail("Not Implemented Yet");
+            Assert.That(result, Is.EqualTo("Result : 11"));
+        }
+
+        [Test]
+        public void It_Should_Cast_Strings_To_Numbers_When_Subtracting()
+        {
+            // Arrange
+            var result = RenderingHelper.RenderTemplate("Result : {{ \"23\" | minus: \"12\" }}");
+
+            // Assert
+            Assert.That(result, Is.EqualTo("Result : 11"));
         }
     }
 }

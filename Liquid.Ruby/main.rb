@@ -1,5 +1,9 @@
 #!/usr/bin/env ruby
 
+#
+# An informal scratch area 
+#
+
 require 'liquid'
 
 def escape(str)
@@ -7,10 +11,27 @@ def escape(str)
 end
   
 
-def print_test(tmpl)
+def print_test(tmpl, vars = {})
   puts escape(tmpl);
-  puts Liquid::Template.parse(tmpl).render
+  puts Liquid::Template.parse(tmpl).render(vars);
 end
+
+multiline_tmpl=<<HERE 
+{% assign tests = "1,2,3,4" | split: "|" %}
+{%
+   for test in tests 
+%}result:
+{{
+      test 
+}}
+{%
+     endfor
+   %}
+HERE
+print_test multiline_tmpl; # ///, { tests: [1,2,4,5] }
+
+print_test "{% for test in tests %}result:{{ test }}{% endfor %}"; #, { tests: [1,2,4,5] }
+
 
 print_test "foo {{ \"bar\" | upcase }}"
 

@@ -16,7 +16,7 @@ namespace Liquid.NET
             _liquidAst = liquidAst;
         }
 
-        public String Render(TemplateContext ctx)
+        public String Render(ITemplateContext ctx)
         {
             var liquidEvaluator = new LiquidEvaluator();
             return liquidEvaluator.Render(ctx, _liquidAst);

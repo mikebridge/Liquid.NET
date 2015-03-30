@@ -127,6 +127,7 @@
     <Compile Include="Filters\ToIntFilterTests.cs" />
     <Compile Include="Grammar\ExpressionParsingTests.cs" />
     <Compile Include="Grammar\GrammarTests.cs" />
+    <Compile Include="Helpers\StackHelper.cs" />
     <Compile Include="LiquidASTExpressionParsingTests.cs" />
     <Compile Include="LiquidASTGeneratorTests.cs" />
     <Compile Include="LiquidEvaluatorTests.cs" />
@@ -134,6 +135,7 @@
     <Compile Include="DebuggingVisitor.cs" />
     <Compile Include="RenderingHelper.cs" />
     <Compile Include="RenderingVisitorTests.cs" />
+    <Compile Include="Symbols\SymbolTableStackFactoryTests.cs" />
     <Compile Include="Symbols\SymbolTableStackTests.cs" />
     <Compile Include="Symbols\UndefinedTests.cs" />
     <Compile Include="Tags\AssignTagTests.cs" />

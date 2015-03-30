@@ -21,7 +21,7 @@ namespace Liquid.NET.Tests.Constants
             var number = new NumericValue(123m);
 
             // Act
-            var result = number.Eval(new SymbolTableStack(new TemplateContext()), new List<IExpressionConstant>());
+            var result = number.Eval(SymbolTableStackFactory.CreateSymbolTableStack(new TemplateContext()), new List<IExpressionConstant>());
 
             // Assert
             Assert.That(result.Value, Is.EqualTo(123m));

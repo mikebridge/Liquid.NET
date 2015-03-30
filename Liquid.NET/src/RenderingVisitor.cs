@@ -69,7 +69,7 @@ namespace Liquid.NET
         public void Visit(CaptureBlockTag captureBlockTag)
         {
             Console.WriteLine("RENDERING CAPTURE " + captureBlockTag.VarName);
-            var hiddenVisitor = new RenderingVisitor(this._evaluator, this._symbolTableStack);
+            var hiddenVisitor = new RenderingVisitor(_evaluator, _symbolTableStack);
             _evaluator.StartVisiting(hiddenVisitor, captureBlockTag.RootContentNode);
             
             _symbolTableStack.DefineGlobal(captureBlockTag.VarName, new StringValue(hiddenVisitor.Text) );

@@ -1,5 +1,6 @@
 ﻿using Liquid.NET.Constants;
 using Liquid.NET.Symbols;
+using Liquid.NET.Tests.Helpers;
 using NUnit.Framework;
 
 namespace Liquid.NET.Tests.Symbols
@@ -14,7 +15,7 @@ namespace Liquid.NET.Tests.Symbols
             const string str = "This is a test.";
             var templateContext = new TemplateContext();
             templateContext.Define("test", new StringValue(str));
-            var stack = CreateSymbolTableStack(templateContext);
+            var stack = StackHelper.CreateSymbolTableStack(templateContext);
 
             // Act
             var result = stack.Reference("test");
@@ -29,8 +30,7 @@ namespace Liquid.NET.Tests.Symbols
         public void It_Should_Retrieve_An_Undefined_Value_When_Missing()
         {
             // Arrange
-            var templateContext = new TemplateContext();
-            var stack = CreateSymbolTableStack(templateContext);
+            var stack = StackHelper.CreateSymbolTableStack();
 
             // Act
             var result = stack.Reference("test");
@@ -45,8 +45,7 @@ namespace Liquid.NET.Tests.Symbols
         public void A_Locally_Scoped_Variable_Should_Override_A_Global_Variable()
         {
             // Arrange
-            var templateContext = new TemplateContext();
-            var stack = CreateSymbolTableStack(templateContext);
+            var stack = StackHelper.CreateSymbolTableStack();
             stack.Define("hello", new StringValue("HELLO"));
             var localScope = new SymbolTable();
             stack.Push(localScope);
@@ -65,9 +64,8 @@ namespace Liquid.NET.Tests.Symbols
         public void A_Global_Variable_Should_Reemerge_When_Scope_Override_Removed()
         {
             // Arrange
-            var varname = "hello";
-            var templateContext = new TemplateContext();
-            var stack = CreateSymbolTableStack(templateContext);
+            const string varname = "hello";
+            var stack = StackHelper.CreateSymbolTableStack();
             stack.Define(varname, new StringValue("HELLO"));
             var localScope = new SymbolTable();
             stack.Push(localScope);
@@ -86,8 +84,7 @@ namespace Liquid.NET.Tests.Symbols
         public void A_Parent_Scope_Should_Be_Consulted_When_Child_Scope_Has_No_Reference()
         {
             // Arrange
-            var templateContext = new TemplateContext();
-            var stack = CreateSymbolTableStack(templateContext);
+            var stack = StackHelper.CreateSymbolTableStack(); 
             stack.Define("hello", new StringValue("HELLO"));
             var localScope = new SymbolTable();
             stack.Push(localScope);
@@ -103,13 +100,5 @@ namespace Liquid.NET.Tests.Symbols
 
 
 
-
-        private static SymbolTableStack CreateSymbolTableStack(TemplateContext templateContext)
-        {
-            SymbolTableStack stack = new SymbolTableStack(templateContext);
-            var globalTable = new SymbolTable();
-            stack.Push(globalTable);
-            return stack;
-        }
     }
 }

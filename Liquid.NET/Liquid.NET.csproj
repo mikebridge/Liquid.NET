@@ -155,6 +155,7 @@
     <Compile Include="src\Symbols\RootDocumentNode.cs" />
     <Compile Include="src\Symbols\SymbolTable.cs" />
     <Compile Include="src\Symbols\SymbolTableStack.cs" />
+    <Compile Include="src\Symbols\SymbolTableStackFactory.cs" />
     <Compile Include="src\Tags\AssignTag.cs" />
     <Compile Include="src\Tags\CaptureBlockTag.cs" />
     <Compile Include="src\Tags\CaseWhenElseBlockTag.cs" />

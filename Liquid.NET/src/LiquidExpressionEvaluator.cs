@@ -68,7 +68,8 @@ namespace Liquid.NET
         {
             Console.WriteLine("LOOKUP");
             var expressionConstants = filterSymbol.Args.Select(x => x.Eval(stack, new List<IExpressionConstant>()));
-            var filterExpression = stack.ReferenceFunction(filterSymbol.Name, expressionConstants);
+            
+            var filterExpression = stack.CreateFilter(filterSymbol.Name, expressionConstants);
             return filterExpression;
         }
 

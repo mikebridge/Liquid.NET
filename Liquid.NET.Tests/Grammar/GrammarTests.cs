@@ -159,11 +159,7 @@ namespace Liquid.NET.Tests.Grammar
 
         private static string RenderTemplate(string resultHello)
         {
-            TemplateContext ctx = new TemplateContext();
-            
-            var template = LiquidTemplate.Create(resultHello);
-            String result = template.Render(ctx);            
-            return result;
+            return RenderingHelper.RenderTemplate(resultHello);
         }
 
     }

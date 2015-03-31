@@ -112,6 +112,7 @@ mode INLIQUIDTAG ;
 TAGEND :				'%}'			-> popMode ;
 
 INCLUDE_TAG :			'include' ;
+WITH:					'with' ;
 IF_TAG :				'if' ;
 UNLESS_TAG :			'unless' ;
 CASE_TAG :				'case' ;

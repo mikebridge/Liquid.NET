@@ -23,7 +23,7 @@ namespace Liquid.NET.Tests.Filters.Math
             var result = RenderingHelper.RenderTemplate("Result : {{ \"11\" | plus: \"12\" }}");
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : 13"));
+            Assert.That(result, Is.EqualTo("Result : 23"));
         }
     }
 }

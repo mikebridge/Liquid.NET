@@ -112,6 +112,7 @@ namespace Liquid.NET
             // strip_newlines
             _filterRegistry.Register<StripNewlinesFilter>("strip_newlines");
             // times
+            _filterRegistry.Register<TimesFilter>("times");
             // to_date
             // to_number
             // truncate

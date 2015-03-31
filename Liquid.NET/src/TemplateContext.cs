@@ -55,11 +55,13 @@ namespace Liquid.NET
             // capitalize
             _filterRegistry.Register<CapitalizeFilter>("capitalize");
             // ceil
+            _filterRegistry.Register<CeilFilter>("ceil");
             // concat
             // date
             _filterRegistry.Register<DateFilter>("date");
             // default
             // divided_by
+            _filterRegistry.Register<DividedByFilter>("divided_by");
             // downcase
             _filterRegistry.Register<DownCaseFilter>("downcase");
             // escape // NOTE: this is aliased "h"
@@ -95,6 +97,7 @@ namespace Liquid.NET
             // reverse
             _filterRegistry.Register<ReplaceFilter>("replace");
             // round
+            _filterRegistry.Register<RoundFilter>("round");
             // rstrip
             _filterRegistry.Register<RStripFilter>("rstrip");
             // size

@@ -108,7 +108,12 @@
     <Compile Include="src\Filters\FilterChain.cs" />
     <Compile Include="src\Filters\FilterRegistry.cs" />
     <Compile Include="src\Filters\LookupFilter.cs" />
+    <Compile Include="src\Filters\Math\RoundFilter.cs" />
+    <Compile Include="src\Filters\Math\CeilFilter.cs" />
+    <Compile Include="src\Filters\Math\DividedByFilter.cs" />
+    <Compile Include="src\Filters\Math\FloorFilter.cs" />
     <Compile Include="src\Filters\Math\MinusFilter.cs" />
+    <Compile Include="src\Filters\Math\ModuloFilter.cs" />
     <Compile Include="src\Filters\Math\TimesFilter.cs" />
     <Compile Include="src\Filters\Strings\AppendFilter.cs" />
     <Compile Include="src\Filters\Strings\CamelCaseFilter.cs" />

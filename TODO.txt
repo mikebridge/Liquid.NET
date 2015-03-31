@@ -1,8 +1,6 @@
 
 - Better error handling / nulls / undefined
 
-- Implement {%- -%}
-
 - Write the filters
 
 - WRite the std tags
@@ -11,6 +9,12 @@
   - include
 
 - Set up custom blocks/filters
+     - ability to define a keyword in a block
+    
+
+EXTRA
+
+- Implement {%- -%}
 
 - add more concise comments
 
@@ -18,5 +22,5 @@
 
 - Add array literals
 
-TAGS:
-- for: iterate through dictionary
+- Can use generator anywhere
+

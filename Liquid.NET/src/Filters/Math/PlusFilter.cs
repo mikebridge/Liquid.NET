@@ -9,13 +9,9 @@ namespace Liquid.NET.Filters.Math
     {
         private readonly NumericValue _operand;
 
-        public PlusFilter([NotNull] NumericValue operand)
-        {
-            Console.WriteLine("Not Null");
-            _operand = operand;
-        }
+        public PlusFilter(NumericValue operand) { _operand = operand; }
 
-        public override NumericValue Apply([NotNull] NumericValue numericValue)
+        public override NumericValue Apply(NumericValue numericValue)
         {
             if (_operand == null)
             {

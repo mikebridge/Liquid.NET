@@ -7,14 +7,12 @@ lexer grammar LiquidLexer;
 
 }
 
-// MB: TODO: wait for "channels {}" syntax 
-// see: https://github.com/antlr/antlr4/pull/694
 COMMENT :				COMMENTSTART ( COMMENT | . )*? COMMENTEND -> skip ; // TODO: skip
 fragment COMMENTSTART:	TAGSTART [ \t]* 'comment' [ \t]* TAGEND ;
 fragment COMMENTEND:	TAGSTART [ \t]* 'endcomment' [ \t]* TAGEND ;
 
 RAW :					RAWSTART RAWBLOCK RAWEND ;
-RAWBLOCK:				( RAW | . )*?;
+fragment RAWBLOCK:				( RAW | . )*?;
 fragment RAWSTART:		TAGSTART [ \t]* 'raw' [ \t]* TAGEND ;
 fragment RAWEND:		TAGSTART [ \t]* 'endraw' [ \t]* TAGEND ;
 
@@ -125,6 +123,8 @@ ENDIF_TAG :				'endif' ;
 ENDUNLESS_TAG :			'endunless' ;
 FOR_TAG :				'for' ;
 FOR_IN :				'in';
+BREAK_TAG :				'break';
+CONTINUE_TAG :			'continue';
 PARAM_REVERSED:			'reversed';
 PARAM_OFFSET:		    'offset' ;
 PARAM_LIMIT:		    'limit' ;

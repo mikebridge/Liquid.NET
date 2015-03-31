@@ -11,13 +11,12 @@ namespace Liquid.NET.Symbols
     {
         private readonly IList<SymbolTable> _symbolTables = new List<SymbolTable>();
 
-        public TemplateContext TemplateContext { get; private set; }
+        //public TemplateContext TemplateContext { get; private set; }
 
-
-        public SymbolTableStack(TemplateContext templateContext)
-        {
-            TemplateContext = templateContext;
-        }
+//        public SymbolTableStack()
+//        {
+//            //TemplateContext = templateContext;
+//        }
 
         public void Push(SymbolTable symbolTable)
         {
@@ -35,17 +34,18 @@ namespace Liquid.NET.Symbols
         {
             for (int i = _symbolTables.Count()-1; i >= 0; i--)
             {
+                Console.WriteLine("Looking up" + reference);
                 if (_symbolTables[i].HasVariableReference(reference))
                 {
                     return _symbolTables[i].ReferenceVariable(reference);
                 }
             }
             // TODO: Can the template context be merged with a symbolstack?
-            var result = TemplateContext.Reference(reference);
-            if (result.GetType() != typeof (Undefined))
-            {
-                return result;
-            }
+            //var result = TemplateContext.Reference(reference);
+            //if (result.GetType() != typeof (Undefined))
+            //{
+                //return result;
+            //}
             
             return new Undefined(reference); 
         }
@@ -56,17 +56,15 @@ namespace Liquid.NET.Symbols
             _symbolTables.Last().DefineVariable(reference, obj);
         }
 
-        public IFilterExpression ReferenceFunction(string filterName, IEnumerable<IExpressionConstant> args)
+        public void DefineGlobal(string key, IExpressionConstant obj)
         {
-            Type filterType = null;
+            _symbolTables[0].DefineVariable(key, obj);
+        }
+
+        public IFilterExpression CreateFilter(string filterName, IEnumerable<IExpressionConstant> args)
+        {
             // TODO: make an iterator for this kind of thing
-            for (int i = _symbolTables.Count() - 1; i >= 0; i--)
-            {
-                if (_symbolTables[i].HasFilterReference(filterName))
-                {
-                    filterType = _symbolTables[i].ReferenceFilter(filterName);
-                }
-            }
+            var filterType = LookupFilter(filterName);
 
             //var filterType= _symbolTables.Last().ReferenceFilter(name);
             if (filterType == null)
@@ -77,10 +75,29 @@ namespace Liquid.NET.Symbols
             return FilterFactory.InstantiateFilter(filterName, filterType, args);
         }
 
-
-        public void DefineGlobal(string key, IExpressionConstant obj)
+        public bool HasFilter(String name)
         {
-            _symbolTables[0].DefineVariable(key, obj);
+            for (var i = _symbolTables.Count() - 1; i >= 0; i--)
+            {
+                if (_symbolTables[i].HasFilterReference(name))
+                {
+                    return true;
+                }
+            } 
+            return false;
+        }
+
+        private Type LookupFilter(string filterName)
+        {
+            
+            for (var i = _symbolTables.Count() - 1; i >= 0; i--)
+            {
+                if (_symbolTables[i].HasFilterReference(filterName))
+                {
+                    return _symbolTables[i].ReferenceFilter(filterName);
+                }
+            }
+            return null;
         }
     }
 }

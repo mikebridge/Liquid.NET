@@ -61,6 +61,7 @@ namespace Liquid.NET.Rendering
 
                     symbolTableStack.Define(forTagBlock.LocalVariable, item);
                     // TODO: This could be handled a little cleaner.
+                    Console.WriteLine("Eval-ing " + forTagBlock.LiquidBlock);
                     _evaluator.StartVisiting(_renderingVisitor, forTagBlock.LiquidBlock);
                     iter ++;
                 }

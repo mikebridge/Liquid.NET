@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Liquid.NET.Constants
 {
@@ -14,7 +11,7 @@ namespace Liquid.NET.Constants
     {
         public bool Equals(IExpressionConstant x, IExpressionConstant y)
         {
-            Console.WriteLine("Comparing " + x.Value + " to " + y.Value);
+            //Console.WriteLine("Comparing " + x.Value + " to " + y.Value);
             //Check whether the compared objects reference the same data.
             if (ReferenceEquals(x, y))
             {

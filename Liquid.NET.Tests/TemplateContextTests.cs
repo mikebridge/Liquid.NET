@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Policy;
-using System.Text;
-using System.Threading.Tasks;
-using Liquid.NET.Constants;
-using Liquid.NET.Expressions;
+﻿using Liquid.NET.Constants;
 using NUnit.Framework;
 
 namespace Liquid.NET.Tests
@@ -27,7 +20,7 @@ namespace Liquid.NET.Tests
             // Assert
             Assert.That(result.Value, Is.EqualTo("HELLO"));
 
-
         }
+
     }
 }

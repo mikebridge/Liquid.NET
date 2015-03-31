@@ -8,6 +8,9 @@
 - WRite the std tags
 
 - Write the std blocks
+  - include
+  - break
+  - continue
 
 - Set up custom blocks/filters
 
@@ -15,7 +18,7 @@
 
 - Add math expressions (either as filter or natively)
 
-- macros?
+- Add array literals
 
 TAGS:
 - for: iterate through dictionary

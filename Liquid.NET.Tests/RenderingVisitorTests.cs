@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Liquid.NET.Grammar;
-using Liquid.NET.Symbols;
-using Liquid.NET.Tags;
+﻿using Liquid.NET.Tags;
+using Liquid.NET.Tests.Helpers;
 using NUnit.Framework;
 
 namespace Liquid.NET.Tests
@@ -32,7 +26,8 @@ namespace Liquid.NET.Tests
 
         private static RenderingVisitor CreateRenderingVisitor()
         {
-            return new RenderingVisitor(new LiquidEvaluator(), new SymbolTableStack(new TemplateContext()));
+            var stack = StackHelper.CreateSymbolTableStack(new TemplateContext());
+            return new RenderingVisitor(new LiquidEvaluator(), stack);
         }
     }
 }

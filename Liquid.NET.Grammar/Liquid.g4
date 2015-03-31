@@ -39,8 +39,8 @@ tag:				raw_tag
 					| case_tag
 					// | table_tag
 					// | include_tag
-					// | break_tag
-					// | continue_tag
+					| break_tag
+					| continue_tag
 					;
 
 // text wrapped in a raw tag
@@ -49,6 +49,10 @@ raw_tag:			RAW;
 //raw_tag:			RAW_START .*? RAW_END;
 
 custom_tag:			TAGSTART tagname outputexpression* TAGEND ;	
+
+break_tag:			TAGSTART BREAK_TAG TAGEND ;
+
+continue_tag:		TAGSTART CONTINUE_TAG TAGEND ;
 
 unless_tag:			TAGSTART UNLESS_TAG if_tag_contents ENDUNLESS_TAG TAGEND ;
 

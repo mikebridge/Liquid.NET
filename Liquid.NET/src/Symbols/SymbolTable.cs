@@ -1,23 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 using Liquid.NET.Constants;
-using Liquid.NET.Expressions;
 using Liquid.NET.Filters;
 
 namespace Liquid.NET.Symbols
 {
     public class SymbolTable
     {
-        private readonly Dictionary<String, IExpressionConstant> _variables = new Dictionary<string, IExpressionConstant>();
+        private readonly IDictionary<String, IExpressionConstant> _variableDictionary;
 
         private readonly FilterRegistry _filterRegistry;
 
-        public SymbolTable()
+        public SymbolTable(
+            IDictionary<String, IExpressionConstant> variableDictionary = null,
+            FilterRegistry filterRegistry = null)
         {
-            _filterRegistry = new FilterRegistry();
+            _variableDictionary = variableDictionary ?? new Dictionary<string, IExpressionConstant>();
+            _filterRegistry = filterRegistry ?? new FilterRegistry();
         }
 
         public void DefineFilter<T>(String name)
@@ -37,13 +37,13 @@ namespace Liquid.NET.Symbols
 
         public void DefineVariable(String key, IExpressionConstant obj)
         {
-            if (_variables.ContainsKey(key))
+            if (_variableDictionary.ContainsKey(key))
             {
-                _variables[key] = obj;
+                _variableDictionary[key] = obj;
             }
             else
             {
-                _variables.Add(key, obj);
+                _variableDictionary.Add(key, obj);
             }
         }
 
@@ -51,7 +51,7 @@ namespace Liquid.NET.Symbols
 
         public bool HasVariableReference(String key)
         {
-            return _variables.ContainsKey(key);
+            return _variableDictionary.ContainsKey(key);
         }
 
         public IExpressionConstant ReferenceVariable(String key)
@@ -59,7 +59,7 @@ namespace Liquid.NET.Symbols
 
             if (HasVariableReference(key))
             {
-                return _variables[key];
+                return _variableDictionary[key];
             }
             else
             {

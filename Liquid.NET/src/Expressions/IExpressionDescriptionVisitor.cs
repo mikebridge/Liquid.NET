@@ -11,7 +11,9 @@ namespace Liquid.NET.Expressions
         void Visit(BooleanValue booleanValue);
 
         void Visit(NumericValue numericValue);
-        
+
+        void Visit(DateValue dateValue);
+
         void Visit(AndExpression expressionDescription);
         
         void Visit(OrExpression expressionDescription);
@@ -21,5 +23,13 @@ namespace Liquid.NET.Expressions
         void Visit(GroupedExpression expressionDescription);
         
         void Visit(NotExpression expressionDescription);
+
+        void Visit(GreaterThanExpression expressionDescription);
+
+        void Visit(LessThanExpression expressionDescription);
+
+        void Visit(LessThanOrEqualsExpression expressionDescription);
+
+        void Visit(GreaterThanOrEqualsExpression expressionDescription);
     }
 }

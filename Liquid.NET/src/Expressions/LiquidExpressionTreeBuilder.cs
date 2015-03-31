@@ -24,8 +24,7 @@ namespace Liquid.NET.Expressions
             //Console.WriteLine("LiquidExpressionBuilder >>> PUSH");
             LiquidExpression liquidExpression = new LiquidExpression { Expression = expressionDescription };
             var child = new TreeNode<LiquidExpression>(liquidExpression);
-            //Console.WriteLine("Appending " + LiquidExpression + " TO TREE.");
-            
+          
             if (_liquidExpressionStack.Any())
             {
                 //Console.WriteLine(" to " + _liquidExpressionStack.Peek());

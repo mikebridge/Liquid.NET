@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Liquid.NET.Constants;
 using Liquid.NET.Expressions;
 using Liquid.NET.Symbols;
+using Liquid.NET.Tests.Helpers;
 using NUnit.Framework;
 
 namespace Liquid.NET.Tests.Expressions
@@ -24,7 +25,7 @@ namespace Liquid.NET.Tests.Expressions
             var templateContext = new TemplateContext();
             IDictionary<String, IExpressionConstant> dict = new Dictionary<string, IExpressionConstant> { { "test", new StringValue("aaa") } };
             templateContext.Define("myvar", new DictionaryValue(dict));
-            var symbolTableStack = new SymbolTableStack(templateContext);
+            var symbolTableStack = StackHelper.CreateSymbolTableStack(templateContext);
 
             // Act
 

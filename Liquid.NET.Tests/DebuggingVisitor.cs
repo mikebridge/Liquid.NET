@@ -85,6 +85,16 @@ namespace Liquid.NET.Tests
             _result += caseWhenElseBlockTag.ToString();
         }
 
+        public void Visit(ContinueTag continueTag)
+        {
+            _result += continueTag.ToString();
+        }
+
+        public void Visit(BreakTag breakTag)
+        {
+            _result += breakTag.ToString();
+        }
+
         private String VisitIfTag(TreeNode<LiquidExpression> exprNode)
         {
             String result = " IF => " + exprNode.Data;

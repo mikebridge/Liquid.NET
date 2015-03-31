@@ -45,7 +45,7 @@ namespace Liquid.NET.Tests.Tags
         public void It_Should_Evaluate_An_Expresson()
         {
             // Arrange
-            TemplateContext ctx = new TemplateContext();
+            ITemplateContext ctx = new TemplateContext().WithAllFilters();
             ctx.Define("array", CreateArrayValues());
             var template = LiquidTemplate.Create("{% assign foo = \"test\" | upcase %}{{ foo }}");
 

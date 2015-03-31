@@ -20,7 +20,7 @@ namespace Liquid.NET.Tests.Expressions
             var variableReference = new VariableReference("myvar");
             var templateContext = new TemplateContext();
             templateContext.Define("myvar", new StringValue("HELLO"));
-            var symbolTableStack = new SymbolTableStack(templateContext);
+            var symbolTableStack = SymbolTableStackFactory.CreateSymbolTableStack(templateContext);
 
             // Act
             var result = variableReference.Eval(symbolTableStack, new List<IExpressionConstant>());

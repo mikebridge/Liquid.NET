@@ -69,7 +69,7 @@ namespace Liquid.NET
         public void Visit(CaptureBlockTag captureBlockTag)
         {
             Console.WriteLine("RENDERING CAPTURE " + captureBlockTag.VarName);
-            var hiddenVisitor = new RenderingVisitor(this._evaluator, this._symbolTableStack);
+            var hiddenVisitor = new RenderingVisitor(_evaluator, _symbolTableStack);
             _evaluator.StartVisiting(hiddenVisitor, captureBlockTag.RootContentNode);
             
             _symbolTableStack.DefineGlobal(captureBlockTag.VarName, new StringValue(hiddenVisitor.Text) );
@@ -203,6 +203,18 @@ namespace Liquid.NET
             {
                 _evaluator.StartVisiting(this, caseWhenElseBlockTag.ElseClause.LiquidBlock);
             }
+        }
+
+        public void Visit(ContinueTag continueTag)
+        {
+            Console.WriteLine(" === CONTINUE!! ==");
+            //throw new NotImplementedException();
+        }
+
+        public void Visit(BreakTag breakTag)
+        {
+            Console.WriteLine(" === BREAK!! ==");
+            //throw new NotImplementedException();
         }
 
         public void Visit(RootDocumentNode rootDocumentNode)

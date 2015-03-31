@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Liquid.NET.Constants;
 using Liquid.NET.Expressions;
 using Liquid.NET.Symbols;
+using Liquid.NET.Tests.Helpers;
 using NUnit.Framework;
 
 namespace Liquid.NET.Tests.Expressions
@@ -25,7 +26,7 @@ namespace Liquid.NET.Tests.Expressions
             var expr = new OrExpression();
 
             // Act
-            var result = expr.Eval(new SymbolTableStack(new TemplateContext()), new List<IExpressionConstant>
+            var result = expr.Eval(StackHelper.CreateSymbolTableStack(), new List<IExpressionConstant>
             {
                 new BooleanValue(expr1),
                 new BooleanValue(expr2)

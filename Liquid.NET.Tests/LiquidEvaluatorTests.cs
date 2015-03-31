@@ -203,7 +203,7 @@ namespace Liquid.NET.Tests
         public void It_Should_Evaluate_A_Filter_Inside_A_Tag()
         {
             // Arrange
-            var templateContext = new TemplateContext();
+            var templateContext = new TemplateContext().WithAllFilters();
             templateContext.Define("myvar", new StringValue("hello"));
             var ast = _generator.Generate("Result : {% if myvar | upcase == \"HELLO\" %}TRUE{% else %}FALSE{% endif %}");
 
@@ -220,7 +220,7 @@ namespace Liquid.NET.Tests
         public void It_Should_Evaluate_An_Index_Inside_A_Tag()
         {
             // Arrange
-            var templateContext = new TemplateContext();
+            var templateContext = new TemplateContext().WithAllFilters();
             templateContext.Define("myvar", new ArrayValue(new List<IExpressionConstant>{new StringValue("hello")}));
             var ast = _generator.Generate("Result : {% if myvar[0] | upcase == \"HELLO\" %}TRUE{% else %}FALSE{% endif %}");
 

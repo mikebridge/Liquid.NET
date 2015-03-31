@@ -66,6 +66,7 @@
     <Compile Include="src\Constants\ArrayValue.cs" />
     <Compile Include="src\Constants\BooleanValue.cs" />
     <Compile Include="src\Constants\ConstantFactory.cs" />
+    <Compile Include="src\Constants\DateValue.cs" />
     <Compile Include="src\Constants\DictionaryValue.cs" />
     <Compile Include="src\Constants\EasyValueComparer.cs" />
     <Compile Include="src\Constants\ExpressionConstant.cs" />
@@ -86,6 +87,7 @@
     <Compile Include="src\Expressions\ExpressionBuilder.cs" />
     <Compile Include="src\Expressions\ExpressionDescription.cs" />
     <Compile Include="src\Expressions\GeneratorCreator.cs" />
+    <Compile Include="src\Expressions\ComparisonExpressions.cs" />
     <Compile Include="src\Expressions\GroupedExpression.cs" />
     <Compile Include="src\Expressions\IExpressionDescription.cs" />
     <Compile Include="src\Expressions\IExpressionDescriptionVisitor.cs" />
@@ -102,6 +104,7 @@
     <Compile Include="src\Filters\Array\PositionFilter.cs" />
     <Compile Include="src\Filters\Array\SizeFilter.cs" />
     <Compile Include="src\Filters\Array\SortFilter.cs" />
+    <Compile Include="src\Filters\DateFilter.cs" />
     <Compile Include="src\Filters\FilterChain.cs" />
     <Compile Include="src\Filters\FilterRegistry.cs" />
     <Compile Include="src\Filters\LookupFilter.cs" />
@@ -155,10 +158,13 @@
     <Compile Include="src\Symbols\RootDocumentNode.cs" />
     <Compile Include="src\Symbols\SymbolTable.cs" />
     <Compile Include="src\Symbols\SymbolTableStack.cs" />
+    <Compile Include="src\Symbols\SymbolTableStackFactory.cs" />
     <Compile Include="src\Tags\AssignTag.cs" />
+    <Compile Include="src\Tags\BreakTag.cs" />
     <Compile Include="src\Tags\CaptureBlockTag.cs" />
     <Compile Include="src\Tags\CaseWhenElseBlockTag.cs" />
     <Compile Include="src\Tags\CommentBlockTag.cs" />
+    <Compile Include="src\Tags\ContinueTag.cs" />
     <Compile Include="src\Tags\CustomTag.cs" />
     <Compile Include="src\Tags\CycleTag.cs" />
     <Compile Include="src\Tags\DecrementTag.cs" />
@@ -170,6 +176,7 @@
     <Compile Include="src\TemplateContext.cs" />
     <Compile Include="src\Symbols\IASTVisitor.cs" />
     <Compile Include="src\Utils\LiquidVersionAttribute.cs" />
+    <Compile Include="src\Utils\StrFTime.cs" />
     <Compile Include="src\Utils\TreeNode.cs" />
   </ItemGroup>
   <ItemGroup>

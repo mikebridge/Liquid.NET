@@ -14,7 +14,7 @@ namespace Liquid.NET.Tests.Tags
         public void It_Should_Put_A_Block_In_A_Variable()
         {
             // Arrange
-            TemplateContext ctx = new TemplateContext();
+            ITemplateContext ctx = new TemplateContext().WithAllFilters();
             var template = LiquidTemplate.Create("{% assign foo = \"test\" | upcase %}{% capture cap %}Result: {{ foo }}{% endcapture %}Captured: {{ cap }}");
 
             // Act

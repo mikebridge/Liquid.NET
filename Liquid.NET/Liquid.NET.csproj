@@ -109,6 +109,7 @@
     <Compile Include="src\Filters\FilterRegistry.cs" />
     <Compile Include="src\Filters\LookupFilter.cs" />
     <Compile Include="src\Filters\Math\MinusFilter.cs" />
+    <Compile Include="src\Filters\Math\TimesFilter.cs" />
     <Compile Include="src\Filters\Strings\AppendFilter.cs" />
     <Compile Include="src\Filters\Strings\CamelCaseFilter.cs" />
     <Compile Include="src\Filters\Strings\CapitalizeFilter.cs" />

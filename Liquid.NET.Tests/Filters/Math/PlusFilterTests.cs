@@ -17,13 +17,13 @@ namespace Liquid.NET.Tests.Filters.Math
         }
 
         [Test]
-        public void It_Should_Cast_Strings_To_Numbers()
+        public void It_Should_Cast_Strings()
         {
             // Arrange
             var result = RenderingHelper.RenderTemplate("Result : {{ \"11\" | plus: \"12\" }}");
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : 23"));
+            Assert.That(result, Is.EqualTo("Result : 13"));
         }
     }
 }

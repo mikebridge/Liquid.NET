@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using Liquid.NET.Constants;
 using Liquid.NET.Symbols;
 using Liquid.NET.Tags;
@@ -62,7 +63,18 @@ namespace Liquid.NET.Rendering
                     symbolTableStack.Define(forTagBlock.LocalVariable, item);
                     // TODO: This could be handled a little cleaner.
                     Console.WriteLine("Eval-ing " + forTagBlock.LiquidBlock);
-                    _evaluator.StartVisiting(_renderingVisitor, forTagBlock.LiquidBlock);
+                    try
+                    {
+                        _evaluator.StartVisiting(_renderingVisitor, forTagBlock.LiquidBlock);
+                    }
+                    catch (ContinueException ex)
+                    {
+                        continue;
+                    }
+                    catch (BreakException ex)
+                    {
+                        break;
+                    }
                     iter ++;
                 }
             }

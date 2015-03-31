@@ -208,13 +208,13 @@ namespace Liquid.NET
         public void Visit(ContinueTag continueTag)
         {
             Console.WriteLine(" === CONTINUE!! ==");
-            //throw new NotImplementedException();
+            throw new ContinueException();
         }
 
         public void Visit(BreakTag breakTag)
         {
             Console.WriteLine(" === BREAK!! ==");
-            //throw new NotImplementedException();
+            throw new BreakException();
         }
 
         public void Visit(RootDocumentNode rootDocumentNode)
@@ -275,5 +275,13 @@ namespace Liquid.NET
 
 
 
+    }
+
+    public class ContinueException : Exception
+    {
+    }
+
+    public class BreakException : Exception
+    {
     }
 }

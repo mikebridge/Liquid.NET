@@ -343,6 +343,43 @@ namespace Liquid.NET.Tests.Tags
 
         }
 
+        [Test]
+        public void It_Should_Break_Out_Of_A_Loop()
+        {
+            // Arrange
+            var tmpl = GetForLoop("{% break %}");
+
+            // Act
+            var result = RenderingHelper.RenderTemplate(tmpl);
+
+            // Assert
+            Assert.That(result, Is.EqualTo("Result : loop1loop2loop"));
+        }
+
+        [Test]
+        public void It_Should_Skip_Part_Of_A_Loop()
+        {
+            // Arrange
+            var tmpl = GetForLoop("{% continue %}");
+
+            // Act 
+            var result = RenderingHelper.RenderTemplate(tmpl);
+
+            // Assert
+            Assert.That(result, Is.EqualTo("Result : loop1loop2looploop"));
+        }
+
+        private static string GetForLoop(string txt)
+        {
+            return @"Result : {%assign coll = ""1,2,3,4"" | split: ','%}"
+                   + "{% for item in coll %}"
+                   + "loop"
+                   + "{% if item > 2 %}"
+                   + txt
+                   + "{% endif %}"
+                   + "{{item}}"
+                   + "{% endfor %}";
+        }
 
       
 

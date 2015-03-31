@@ -7,6 +7,8 @@ options {
   tokenVocab=LiquidLexer;
 }
 
+// todo: rename outputxperssion to liquidexpression
+
 /*
  * Parser Rules
  */
@@ -46,7 +48,7 @@ raw_tag:			RAW;
 
 //raw_tag:			RAW_START .*? RAW_END;
 
-custom_tag:			TAGSTART tagname TAGEND ;	
+custom_tag:			TAGSTART tagname outputexpression* TAGEND ;	
 
 unless_tag:			TAGSTART UNLESS_TAG if_tag_contents ENDUNLESS_TAG TAGEND ;
 

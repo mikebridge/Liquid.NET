@@ -662,6 +662,13 @@ namespace Liquid.NET
             CurrentBuilderContext.LiquidExpressionBuilder.EndLiquidExpression();
         }
 
+        public override void EnterCustom_tag(LiquidParser.Custom_tagContext customContext)
+        {
+            base.EnterCustom_tag(customContext);
+
+            Console.WriteLine("I see CUSTOM TAG "+customContext.tagname());
+            //_astNodeStack.Push(customBlokc.LiquidBlock); // capture the block
+        }
 
         #region Expressions
 

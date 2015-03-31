@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using Liquid.NET.Constants;
 using Liquid.NET.Filters;
 using Liquid.NET.Filters.Array;
 using Liquid.NET.Filters.Math;
 using Liquid.NET.Filters.Strings;
+using Liquid.NET.Tags.Custom;
+using Liquid.NET.Utils;
 
 namespace Liquid.NET
 {
@@ -20,6 +23,8 @@ namespace Liquid.NET
 
         private readonly FilterRegistry _filterRegistry = new FilterRegistry();
 
+        private readonly Registry<ICustomTagRenderer> _customTagRegistry = new Registry<ICustomTagRenderer>();
+
         public ITemplateContext Define(String name, IExpressionConstant constant)
         {
             if (_varDictionary.ContainsKey(name))
@@ -33,9 +38,17 @@ namespace Liquid.NET
             return this;
         }
 
+        public ITemplateContext WithCustomTagRenderer<T>(string echoargs) where T : ICustomTagRenderer
+        {
+            _customTagRegistry.Register<T>(echoargs);
+            return this;
+        }
+
         internal FilterRegistry FilterRegistry { get { return _filterRegistry; } }
 
         internal IDictionary<String, IExpressionConstant> VariableDictionary { get { return _varDictionary; } }
+
+        internal Registry<ICustomTagRenderer> CustomTagRendererRegistry { get { return _customTagRegistry; } }
 
         [Obsolete] // this should be transferred to the ScopeStack
         public IExpressionConstant Reference(String name)
@@ -173,5 +186,6 @@ namespace Liquid.NET
         ITemplateContext WithAllFilters();
         ITemplateContext WithFilter<T>(String name) where T : IFilterExpression;
         ITemplateContext Define(string array, IExpressionConstant createArrayValues);
+        ITemplateContext WithCustomTagRenderer<T>(string echoargs) where T: ICustomTagRenderer;
     }
 }

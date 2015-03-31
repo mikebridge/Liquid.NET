@@ -61,20 +61,6 @@ namespace Liquid.NET.Symbols
             _symbolTables[0].DefineVariable(key, obj);
         }
 
-        public IFilterExpression CreateFilter(string filterName, IEnumerable<IExpressionConstant> args)
-        {
-            // TODO: make an iterator for this kind of thing
-            var filterType = LookupFilter(filterName);
-
-            //var filterType= _symbolTables.Last().ReferenceFilter(name);
-            if (filterType == null)
-            {
-                //TODO: make this return an error filter or something?
-                throw new Exception("Invalid filter: " + filterName);
-            }
-            return FilterFactory.InstantiateFilter(filterName, filterType, args);
-        }
-
         public bool HasFilter(String name)
         {
             for (var i = _symbolTables.Count() - 1; i >= 0; i--)
@@ -87,7 +73,7 @@ namespace Liquid.NET.Symbols
             return false;
         }
 
-        private Type LookupFilter(string filterName)
+        public Type LookupFilterType(string filterName)
         {
             
             for (var i = _symbolTables.Count() - 1; i >= 0; i--)
@@ -95,6 +81,18 @@ namespace Liquid.NET.Symbols
                 if (_symbolTables[i].HasFilterReference(filterName))
                 {
                     return _symbolTables[i].ReferenceFilter(filterName);
+                }
+            }
+            return null;
+        }
+
+        public Type LookupCustomTagRendererType(string tagName)
+        {
+            for (var i = _symbolTables.Count() - 1; i >= 0; i--)
+            {
+                if (_symbolTables[i].HasCustomTagReference(tagName))
+                {
+                    return _symbolTables[i].ReferenceCustomTag(tagName);
                 }
             }
             return null;

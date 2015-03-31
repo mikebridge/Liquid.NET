@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
+using System.Web.UI.WebControls;
 using Liquid.NET.Constants;
 using Liquid.NET.Expressions;
 using Liquid.NET.Filters;
 using Liquid.NET.Symbols;
+using Liquid.NET.Tags;
+using Liquid.NET.Tags.Custom;
 using Liquid.NET.Utils;
 
 namespace Liquid.NET
@@ -51,7 +53,7 @@ namespace Liquid.NET
             // is done between them.
             var filterChain = FilterChain.CreateChain(
                 objResult.GetType(),
-                expression.FilterSymbols.Select(symbol => Lookup(symbolTableStack, symbol)));
+                expression.FilterSymbols.Select(symbol => InstantiateFilter(symbolTableStack, symbol)));
 
             // apply the composed function to the object
             return filterChain(objResult);
@@ -64,14 +66,30 @@ namespace Liquid.NET
             return expr.Eval(symbolTableStack, leaves);
         }
 
-        private static IFilterExpression Lookup(SymbolTableStack stack, FilterSymbol filterSymbol)
+        private static IFilterExpression InstantiateFilter(SymbolTableStack stack, FilterSymbol filterSymbol)
         {
-            Console.WriteLine("LOOKUP");
+            var filterType = stack.LookupFilterType(filterSymbol.Name);
+            if (filterType == null)
+            {
+                //TODO: make this return an error filter or something?
+                throw new Exception("Invalid filter: " + filterSymbol.Name);
+            }
             var expressionConstants = filterSymbol.Args.Select(x => x.Eval(stack, new List<IExpressionConstant>()));
-            
-            var filterExpression = stack.CreateFilter(filterSymbol.Name, expressionConstants);
-            return filterExpression;
+            return FilterFactory.InstantiateFilter(filterSymbol.Name, filterType, expressionConstants);
         }
+
+//        private static ICustomTagRenderer InstantiateCustomTag(SymbolTableStack stack, CustomTag customTagSymbol)
+//        {
+//            var customTagRendererType = stack.LookupCustomTagRendererType(customTagSymbol.TagName);
+//            if (customTagRendererType == null)
+//            {
+//                //TODO: make this return an error filter or something?
+//                throw new Exception("Invalid filter: " + customTagSymbol.TagName);
+//            }
+//            //return FilterFactory.InstantiateFilter(filterSymbol.Name, filterType, expressionConstants);
+//
+//            return CustomTagRendererFactory.Create(customTagSymbol.TagName);            
+//        }
 
         // obsolete?
         //        public static IExpressionConstant Eval(TreeNode<IExpressionDescription> expr, SymbolTableStack symbolTableStack)

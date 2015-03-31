@@ -67,11 +67,11 @@ namespace Liquid.NET.Rendering
                     {
                         _evaluator.StartVisiting(_renderingVisitor, forTagBlock.LiquidBlock);
                     }
-                    catch (ContinueException ex)
+                    catch (ContinueException)
                     {
                         continue;
                     }
-                    catch (BreakException ex)
+                    catch (BreakException)
                     {
                         break;
                     }

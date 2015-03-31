@@ -329,8 +329,37 @@ namespace Liquid.NET
         {
             base.EnterCustom_tag(customContext);
 
-            Console.WriteLine("I see CUSTOM TAG " + customContext.tagname());
-            //_astNodeStack.Push(customBlokc.LiquidBlock); // capture the block
+            Console.WriteLine("I see CUSTOM TAG " + customContext.tagname().GetText());
+            var customTag = new CustomTag(customContext.tagname().GetText());
+            AddNodeToAST(customTag);
+
+            CurrentBuilderContext.CustomTagStack.Push(customTag);
+            //_astNodeStack.Push(customBlock.LiquidBlock); // capture the block
+        }
+
+        public override void EnterCustomtag_expr(LiquidParser.Customtag_exprContext context)
+        {
+            base.EnterCustomtag_expr(context);
+            Console.WriteLine("EXPR IS "+context.outputexpression().GetText());
+            
+
+            StartNewLiquidExpressionTree(result =>
+            {
+                Console.WriteLine("Setting ExpRESSION TREE TO " + result);
+                CurrentBuilderContext.CustomTagStack.Peek().LiquidExpressionTrees.Add(result);
+                //Console.WriteLine("Setting ExpRESSION TREE TO " + result);
+                //customBlock.LiquidExpressionTrees = result;
+            });
+        }
+
+        public override void ExitCustomtag_expr(LiquidParser.Customtag_exprContext context)
+        {
+            base.ExitCustomtag_expr(context);
+        }
+
+        public override void ExitCustom_tag(LiquidParser.Custom_tagContext context)
+        {
+            base.ExitCustom_tag(context);
         }
 
         public override void EnterContinue_tag(LiquidParser.Continue_tagContext context)
@@ -1169,9 +1198,16 @@ namespace Liquid.NET
             get { return _blockBuilderContextStack.Peek();  }
         }
 
+        private void AddNodeToAST(IASTNode node)
+        {
+            var newNode = CreateTreeNode<IASTNode>(node);
+            CurrentAstNode.AddChild(newNode);
+        }
+
         private class BlockBuilderContext
         {
             //public CurrentObjectFilterExpression 
+            public readonly Stack<CustomTag> CustomTagStack = new Stack<CustomTag>();
             public readonly Stack<IfThenElseBlockTag> IfThenElseBlockStack = new Stack<IfThenElseBlockTag>();
             public readonly Stack<CaseWhenElseBlockTag> CaseWhenElseBlockStack = new Stack<CaseWhenElseBlockTag>();
             //public ExpressionBuilder ExpressionBuilder { get; set; }
@@ -1180,12 +1216,7 @@ namespace Liquid.NET
         }
 
 
-        private void AddNodeToAST(IASTNode node)
-        {
-            var newNode = CreateTreeNode<IASTNode>(node);
-            CurrentAstNode.AddChild(newNode);
-        }
-
+       
        
     }
 

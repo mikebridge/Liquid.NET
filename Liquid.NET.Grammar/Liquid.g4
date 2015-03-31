@@ -48,7 +48,9 @@ raw_tag:			RAW;
 
 //raw_tag:			RAW_START .*? RAW_END;
 
-custom_tag:			TAGSTART tagname outputexpression* TAGEND ;	
+custom_tag:			TAGSTART tagname customtag_expr* TAGEND ;	
+
+customtag_expr:		outputexpression;
 
 break_tag:			TAGSTART BREAK_TAG TAGEND ;
 

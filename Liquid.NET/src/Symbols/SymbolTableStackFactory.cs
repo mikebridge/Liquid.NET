@@ -16,7 +16,9 @@ namespace Liquid.NET.Symbols
             // TODO: Fix this cast (the interface was to shield the user from the dict and the registry...
             var globalScopeSymbolTable = new SymbolTable(
                 ((TemplateContext) templateContext).VariableDictionary,
-                ((TemplateContext) templateContext).FilterRegistry);
+                ((TemplateContext) templateContext).FilterRegistry,
+                ((TemplateContext) templateContext).CustomTagRendererRegistry
+                );
 
             // TODO: make this less prone to collision:
             globalScopeSymbolTable.DefineFilter<LookupFilter>("lookup");

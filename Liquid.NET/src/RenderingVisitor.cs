@@ -8,6 +8,7 @@ using Liquid.NET.Expressions;
 using Liquid.NET.Rendering;
 using Liquid.NET.Symbols;
 using Liquid.NET.Tags;
+using Liquid.NET.Tags.Custom;
 
 namespace Liquid.NET
 {
@@ -49,7 +50,14 @@ namespace Liquid.NET
 
         public void Visit(CustomTag customTag)
         {
-            _result += "RENDERING CustomTag";
+            var tagType = _symbolTableStack.LookupCustomTagRendererType(customTag.TagName);
+            var tagRenderer = CustomTagRendererFactory.Create(tagType);
+            if (tagRenderer == null)
+            {
+                throw new Exception("Unregistered Tag: " + customTag.TagName);
+            }
+            _result += tagRenderer.Render(_symbolTableStack, new List<IExpressionConstant>()).StringVal;
+            //Console.WriteLine("")
         }
 
         public void Visit(CycleTag cycleTag)

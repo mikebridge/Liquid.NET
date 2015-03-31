@@ -172,6 +172,9 @@
     <Compile Include="src\Tags\CommentBlockTag.cs" />
     <Compile Include="src\Tags\ContinueTag.cs" />
     <Compile Include="src\Tags\CustomTag.cs" />
+    <Compile Include="src\Tags\Custom\CustomTagRendererFactory.cs" />
+    <Compile Include="src\Tags\Custom\ICustomBlockTagRenderer.cs" />
+    <Compile Include="src\Tags\Custom\ICustomTagRenderer.cs" />
     <Compile Include="src\Tags\CycleTag.cs" />
     <Compile Include="src\Tags\DecrementTag.cs" />
     <Compile Include="src\Tags\ForTagBlock.cs" />
@@ -182,6 +185,7 @@
     <Compile Include="src\TemplateContext.cs" />
     <Compile Include="src\Symbols\IASTVisitor.cs" />
     <Compile Include="src\Utils\LiquidVersionAttribute.cs" />
+    <Compile Include="src\Utils\Registry.cs" />
     <Compile Include="src\Utils\StrFTime.cs" />
     <Compile Include="src\Utils\TreeNode.cs" />
   </ItemGroup>

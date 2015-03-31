@@ -20,14 +20,6 @@ namespace Liquid.NET.Filters
             _registry = registry;
         }
 
-        public static void AddDefaultFilters(FilterRegistry registry)
-        {
-            registry.Register<UpCaseFilter>("upcase");
-            registry.Register<RemoveFilter>("remove");
-            registry.Register<PlusFilter>("plus");
-            registry.Register<LookupFilter>("lookup");
-            //registry.Register<MinusFilter>("subtract");
-        }
 
         /// <summary>
         /// TODO: THe IExpressionDescription args should be eval-ed before
@@ -143,7 +135,6 @@ namespace Liquid.NET.Filters
             MethodInfo generic = method.MakeGenericMethod(filterList.GetType(), parmType);
             return (IExpressionConstant) generic.Invoke(null, new object[] {filterList});
 
-            //Console.WriteLine("Adding CASTED value " + result.Value);
         }
 
         public static IFilterExpression CreateCastExpression(Type sourceType, Type resultType)

@@ -16,7 +16,9 @@ namespace Liquid.NET.Tests.Filters
     public class DateFilterTests
     {
         [Test]
-        [TestCase("%y", "2015")]
+        [TestCase("%y", "15")]
+        [TestCase("%B", "March")]
+        [TestCase("%m/%d/%Y", "03/30/2015")]
         public void It_Should_Format_A_Date(String format, string expected)
         {
             // Arrange
@@ -27,8 +29,7 @@ namespace Liquid.NET.Tests.Filters
             var result = RenderingHelper.RenderTemplate("Result : {{ mydate | date: \""+format+"\" }}", ctx);
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : 15"));
-            Assert.Fail("WRITE SOME MORE TESTS");
+            Assert.That(result, Is.EqualTo("Result : "+expected));
         }
 
         [Test]

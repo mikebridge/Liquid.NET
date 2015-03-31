@@ -8,7 +8,7 @@ using Liquid.NET.Constants;
 namespace Liquid.NET.Filters.Math
 {
     public class DividedByFilter : FilterExpression<NumericValue, NumericValue>
-    {
+    {        
         private readonly NumericValue _divisor;
 
         public DividedByFilter(NumericValue divisor)

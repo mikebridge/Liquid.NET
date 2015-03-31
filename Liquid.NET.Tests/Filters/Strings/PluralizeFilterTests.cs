@@ -35,7 +35,7 @@ namespace Liquid.NET.Tests.Filters.Strings
         [TestCase("1", "1 thing")]
         [TestCase("1.2", "1.2 things")]
         [TestCase("0", "0 things")]
-        [TestCase("", "")] // this should probably print nothing?
+        [TestCase("z", "")] // this should probably print nothing?
         public void It_Should_Pluralize_A_String(String input, String expected)
         {
             // Arrange

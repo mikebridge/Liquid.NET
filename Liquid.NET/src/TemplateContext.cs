@@ -71,6 +71,7 @@ namespace Liquid.NET
             // first
             _filterRegistry.Register<FirstFilter>("first");
             // floor
+            _filterRegistry.Register<FloorFilter>("floor");
             // join
             _filterRegistry.Register<JoinFilter>("join");
             // last
@@ -82,6 +83,7 @@ namespace Liquid.NET
             // minus
             _filterRegistry.Register<MinusFilter>("minus");
             // modulo
+            _filterRegistry.Register<ModuloFilter>("modulo");
             // newline_to_br
             _filterRegistry.Register<NewlineToBrFilter>("newline_to_br");
             // plus

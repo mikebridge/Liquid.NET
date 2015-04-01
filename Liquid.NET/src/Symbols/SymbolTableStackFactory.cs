@@ -17,7 +17,8 @@ namespace Liquid.NET.Symbols
             var globalScopeSymbolTable = new SymbolTable(
                 ((TemplateContext) templateContext).VariableDictionary,
                 ((TemplateContext) templateContext).FilterRegistry,
-                ((TemplateContext) templateContext).CustomTagRendererRegistry
+                ((TemplateContext) templateContext).CustomTagRendererRegistry,
+                ((TemplateContext) templateContext).CustomBlockTagRendererRegistry
                 );
 
             // TODO: make this less prone to collision:

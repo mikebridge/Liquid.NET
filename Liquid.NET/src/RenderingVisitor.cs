@@ -59,9 +59,20 @@ namespace Liquid.NET
             _result += tagRenderer.Render(_symbolTableStack, args.ToList()).StringVal;
         }
 
-        public void Visit(CustomBlockTag caseWhenElseBlockTag)
+        public void Visit(CustomBlockTag customBlockTag)
         {
-            throw new NotImplementedException();
+            var tagType = _symbolTableStack.LookupCustomBlockTagRendererType(customBlockTag.TagName);
+            var tagRenderer = CustomBlockTagRendererFactory.Create(tagType);
+            if (tagRenderer == null)
+            {
+                throw new Exception("Unregistered Tag: " + customBlockTag.TagName);
+            }
+            IEnumerable<IExpressionConstant> args =
+                customBlockTag.LiquidExpressionTrees.Select(x => LiquidExpressionEvaluator.Eval(x, _symbolTableStack));
+            _result += tagRenderer.Render(_symbolTableStack, customBlockTag.LiquidBlock, args.ToList()).StringVal;
+
+            
+
         }
 
         public void Visit(CycleTag cycleTag)
@@ -205,9 +216,15 @@ namespace Liquid.NET
             throw new BreakException();
         }
 
+        public void Visit(MacroBlockTag macroBlockTag)
+        {
+            // not implemented yet
+            Console.WriteLine("Visiting a Macro");
+        }
+
         public void Visit(RootDocumentNode rootDocumentNode)
         {
-           // Console.WriteLine("Visiting Root Node");
+           // noop
         }
 
         public void Visit(VariableReference variableReference)

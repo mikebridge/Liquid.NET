@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 using Liquid.NET.Constants;
 using Liquid.NET.Symbols;
 using Liquid.NET.Tags.Custom;
+using Liquid.NET.Utils;
 using NUnit.Framework;
 
 namespace Liquid.NET.Tests.Tags
@@ -17,11 +17,11 @@ namespace Liquid.NET.Tests.Tags
         public void It_Should_Parse_A_Custom_BlockTag()
         {
             // Act
-            var templateContext = new TemplateContext().WithAllFilters().WithCustomTagBlockRenderer<EchoArgsAndBlockTagRenderer>("echoargs");
+            var templateContext = new TemplateContext().WithAllFilters().WithCustomTagBlockRenderer<WordReverserBlockTag>("echoargs");
             var result = RenderingHelper.RenderTemplate("Result : {% echoargs \"hello\" 123 true %}echo{% endechoargs %}", templateContext);
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : I heard StringValue:hello, NumericValue:123, BooleanValue:true"));
+            Assert.That(result, Is.EqualTo("Result : ohce"));
 
         }
 
@@ -29,12 +29,12 @@ namespace Liquid.NET.Tests.Tags
         public void It_Should_Not_Parse_A_Custom_BlockTag_With_No_End()
         {
             // Act
-            var templateContext = new TemplateContext().WithAllFilters().WithCustomTagBlockRenderer<EchoArgsAndBlockTagRenderer>("echoargs");
+            var templateContext = new TemplateContext().WithAllFilters().WithCustomTagBlockRenderer<WordReverserBlockTag>("echoargs");
             var result = RenderingHelper.RenderTemplate("Result : {% echoargs \"hello\" 123 true %}echo{% endsomethingelse %}", templateContext);
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : I heard StringValue:hello, NumericValue:123, BooleanValue:true"));
-
+            //Assert.That(result, Is.EqualTo("Result : ohce"));
+            Assert.Fail("This needs to throw an error.");
         }
 
 
@@ -42,21 +42,42 @@ namespace Liquid.NET.Tests.Tags
         public void It_Should_Parse_A_Custom_BlockTag_With_Nested_Liquid()
         {
             // Act
-            var templateContext = new TemplateContext().WithAllFilters().WithCustomTagBlockRenderer<EchoArgsAndBlockTagRenderer>("echoargs");
-            var result = RenderingHelper.RenderTemplate("Result : {% echoargs \"hello\" 123 true %}{% if true %}TRUE{% endif %}{% endechoargs %}", templateContext);
+            var templateContext = new TemplateContext().WithAllFilters().WithCustomTagBlockRenderer<WordReverserBlockTag>("echoargs");
+            var result = RenderingHelper.RenderTemplate("Result : {% echoargs \"hello\" 123 true %}{% if true %}IT IS TRUE{% endif %}{% endechoargs %}", templateContext);
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : I heard StringValue:hello, NumericValue:123, BooleanValue:true"));
+            Assert.That(result, Is.EqualTo("Result : TI SI EURT"));
 
         }
 
-        public class EchoArgsAndBlockTagRenderer : ICustomBlockTagRenderer
+        /// <summary>
+        /// Reverse each word
+        /// </summary>
+        public class WordReverserBlockTag : ICustomBlockTagRenderer
         {
- 
-            public StringValue Render(SymbolTableStack symbolTableStack, IList<IExpressionConstant> args)
+
+            public StringValue Render(
+                    SymbolTableStack symbolTableStack, 
+                    TreeNode<IASTNode> liquidBlock,
+                    IList<IExpressionConstant> args)
             {
-                var argsAsString = String.Join(", ", args.Select(x => x.GetType().Name + ":" + ValueCaster.RenderAsString(x)));
-                return new StringValue("I heard " + argsAsString);
+                //var argsAsString = String.Join(", ", args.Select(x => x.GetType().Name + ":" + ValueCaster.RenderAsString(x)));
+
+                var result = EvalLiquidBlock(symbolTableStack, liquidBlock);
+
+                var words = result.Split(new []{' '}, StringSplitOptions.RemoveEmptyEntries);
+                
+                return new StringValue(String.Join(" ", 
+                    words.Select(x => new String(x.Reverse().ToArray()))));
+
+            }
+
+            private static String EvalLiquidBlock(SymbolTableStack symbolTableStack, TreeNode<IASTNode> liquidBlock)
+            {
+                var evaluator = new LiquidEvaluator();
+                var subRenderer = new RenderingVisitor(evaluator, symbolTableStack);
+                evaluator.StartVisiting(subRenderer, liquidBlock);
+                return subRenderer.Text;
             }
         }
 

@@ -343,10 +343,14 @@ namespace Liquid.NET
             base.EnterCustom_blocktag(customBlockContext);
 
             Console.WriteLine("I see CUSTOM BLOCK TAG " + customBlockContext);
-            var customTag = new CustomBlockTag("test");
+            var customTag = new CustomBlockTag(customBlockContext.LABEL().GetText());
             AddNodeToAST(customTag);
+
+            // TODO: Check that these match!
             Console.WriteLine("START LABEL IS " + customBlockContext.LABEL());
             Console.WriteLine("END LABEL IS " + customBlockContext.ENDLABEL());
+            
+            
             CurrentBuilderContext.CustomBlockTagStack.Push(customTag);
             //_astNodeStack.Push(customBlock.LiquidBlock); // capture the block
         }
@@ -358,16 +362,23 @@ namespace Liquid.NET
             var y= context.children.Select(x => x.GetText());
             Console.WriteLine("BLOCK EXPR IS " + context.outputexpression().GetText());
 
-
             StartNewLiquidExpressionTree(result =>
             {
                 CurrentBuilderContext.CustomBlockTagStack.Peek().LiquidExpressionTrees.Add(result);
             });
         }
 
-        public override void EnterCustom_blocktag_block(LiquidParser.Custom_blocktag_blockContext context)
+        public override void EnterCustom_blocktag_block(LiquidParser.Custom_blocktag_blockContext customBlockTagBlockContext)
         {
-            base.EnterCustom_blocktag_block(context);
+            base.EnterCustom_blocktag_block(customBlockTagBlockContext);
+            //Console.WriteLine("EXPR IS " + context.);
+            _astNodeStack.Push(CurrentBuilderContext.CustomBlockTagStack.Peek().LiquidBlock);
+        }
+
+        public override void ExitCustom_blocktag_block(LiquidParser.Custom_blocktag_blockContext context)
+        {
+            base.ExitCustom_blocktag_block(context);
+            _astNodeStack.Pop();
         }
 
         public override void EnterCustomtag_expr(LiquidParser.Customtag_exprContext context)
@@ -375,13 +386,10 @@ namespace Liquid.NET
             base.EnterCustomtag_expr(context);
             Console.WriteLine("EXPR IS "+context.outputexpression().GetText());
             
-
             StartNewLiquidExpressionTree(result =>
             {
                 Console.WriteLine("Setting ExpRESSION TREE TO " + result);
                 CurrentBuilderContext.CustomTagStack.Peek().LiquidExpressionTrees.Add(result);
-                //Console.WriteLine("Setting ExpRESSION TREE TO " + result);
-                //customBlock.LiquidExpressionTrees = result;
             });
         }
 

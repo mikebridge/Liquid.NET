@@ -46,5 +46,7 @@ namespace Liquid.NET.Symbols
         void Visit(ContinueTag continueTag);
 
         void Visit(BreakTag breakTag);
+
+        void Visit(MacroBlockTag macroBlockTag);
     }
 }

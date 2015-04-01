@@ -48,7 +48,7 @@ LABEL :					ALPHA (ALPHA|DIGIT|UNDERSCORE)* ;
 fragment UNDERSCORE:	'_' ;
 fragment ALPHA:			[a-zA-Z] ;
 fragment DIGIT:			[0-9] ;
-
+ 
 FILTERPIPE :			'|' ;
 
 PERIOD:					'.' ;

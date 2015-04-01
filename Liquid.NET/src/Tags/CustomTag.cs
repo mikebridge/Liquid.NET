@@ -23,6 +23,5 @@ namespace Liquid.NET.Tags
 
         public IList<TreeNode<LiquidExpression>> LiquidExpressionTrees { get; private set; }
 
-        //public TreeNode<IASTNode> LiquidBlock { get; set; }
     }
 }

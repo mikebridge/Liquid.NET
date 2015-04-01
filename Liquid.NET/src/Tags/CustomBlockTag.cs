@@ -10,6 +10,7 @@ namespace Liquid.NET.Tags
 {
     public class CustomBlockTag : IASTNode
     {
+
         public String TagName { get; private set; }
 
         public CustomBlockTag(String tagName)
@@ -25,7 +26,7 @@ namespace Liquid.NET.Tags
 
         public IList<TreeNode<LiquidExpression>> LiquidExpressionTrees { get; private set; }
 
-        public TreeNode<IASTNode> LiquidBlock { get; set; }
+        public TreeNode<IASTNode> LiquidBlock = new TreeNode<IASTNode>(new RootDocumentNode());
 
     }
 }

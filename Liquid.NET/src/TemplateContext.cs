@@ -58,6 +58,8 @@ namespace Liquid.NET
 
         internal Registry<ICustomTagRenderer> CustomTagRendererRegistry { get { return _customTagRegistry; } }
 
+        internal Registry<ICustomBlockTagRenderer> CustomBlockTagRendererRegistry { get { return _customBlockTagRegistry; } }
+
         [Obsolete] // this should be transferred to the ScopeStack
         public IExpressionConstant Reference(String name)
         {

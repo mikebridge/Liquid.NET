@@ -10,16 +10,18 @@ namespace Liquid.NET.Symbols
 {
     public class SymbolTable
     {
-        private readonly Registry<ICustomTagRenderer> _customTagRendererRegistry;
-        private readonly IDictionary<String, IExpressionConstant> _variableDictionary;
-
         private readonly FilterRegistry _filterRegistry;
-
+        private readonly Registry<ICustomTagRenderer> _customTagRendererRegistry;
+        private readonly Registry<ICustomBlockTagRenderer> _customBlockTagRendererRegistry;
+        private readonly IDictionary<String, IExpressionConstant> _variableDictionary;
+        
         public SymbolTable(
             IDictionary<string, IExpressionConstant> variableDictionary = null, 
             FilterRegistry filterRegistry = null, 
-            Registry<ICustomTagRenderer> customTagRendererRegistry = null)
+            Registry<ICustomTagRenderer> customTagRendererRegistry = null,
+            Registry<ICustomBlockTagRenderer> customBlockTagRendererRegistry = null)
         {
+            _customBlockTagRendererRegistry = customBlockTagRendererRegistry ?? new Registry<ICustomBlockTagRenderer>();
             _customTagRendererRegistry = customTagRendererRegistry ?? new Registry<ICustomTagRenderer>();
             _variableDictionary = variableDictionary ?? new Dictionary<string, IExpressionConstant>();
             _filterRegistry = filterRegistry ?? new FilterRegistry();
@@ -37,24 +39,10 @@ namespace Liquid.NET.Symbols
             _customTagRendererRegistry.Register<T>(name);
         }
 
-
-        public bool HasCustomTagReference(string tagName)
+        public void DefineCustomBlockTag<T>(String name)
+            where T : ICustomBlockTagRenderer
         {
-            return _customTagRendererRegistry.HasKey(tagName);
-        }
-
-        public Type ReferenceCustomTag(String key)
-        {
-            return _customTagRendererRegistry.Find(key);
-        }
-
-        public Type ReferenceFilter(String key)
-        {
-            return _filterRegistry.Find(key);
-        }
-        public bool HasFilterReference(string filterName)
-        {
-            return _filterRegistry.HasKey(filterName);
+            _customBlockTagRendererRegistry.Register<T>(name);
         }
 
         public void DefineVariable(String key, IExpressionConstant obj)
@@ -69,12 +57,42 @@ namespace Liquid.NET.Symbols
             }
         }
 
+        public bool HasFilterReference(string filterName)
+        {
+            return _filterRegistry.HasKey(filterName);
+        }
 
+        public bool HasCustomTagReference(string tagName)
+        {
+            return _customTagRendererRegistry.HasKey(tagName);
+        }
+
+        public bool HasCustomBlockTagReference(string tagName)
+        {
+            return _customBlockTagRendererRegistry.HasKey(tagName);
+        }
 
         public bool HasVariableReference(String key)
         {
             return _variableDictionary.ContainsKey(key);
         }
+
+        public Type ReferenceCustomBlockTag(String key)
+        {
+            return _customBlockTagRendererRegistry.Find(key);
+        }
+
+        public Type ReferenceCustomTag(String key)
+        {
+            return _customTagRendererRegistry.Find(key);
+        }
+
+        public Type ReferenceFilter(String key)
+        {
+            return _filterRegistry.Find(key);
+        }
+
+
 
         public IExpressionConstant ReferenceVariable(String key)
         {
@@ -90,7 +108,6 @@ namespace Liquid.NET.Symbols
                 return ConstantFactory.CreateError<StringValue>("Undefined variable: " + key);
             }
         }
-
 
 
     }

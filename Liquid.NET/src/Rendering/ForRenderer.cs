@@ -28,7 +28,7 @@ namespace Liquid.NET.Rendering
         /// <param name="symbolTableStack"></param>
         public void Render(ForBlockTag forBlockTag, SymbolTableStack symbolTableStack)
         {
-            var localBlockScope = new SymbolTable(); // TODO: Put the local "forloop" variables in it.
+            var localBlockScope = new SymbolTable();
             symbolTableStack.Push(localBlockScope);
             try
             {
@@ -39,7 +39,6 @@ namespace Liquid.NET.Rendering
                 // this should use Bind
                 var iterable = iterableFactory.Eval(symbolTableStack).ToList();
 
-                Console.WriteLine("REVERSED: " + forBlockTag.Reversed.BoolValue);
                 if (forBlockTag.Reversed.BoolValue)
                 {
                     iterable.Reverse(); // stupid thing does it in-place.
@@ -47,22 +46,16 @@ namespace Liquid.NET.Rendering
                 var offset = forBlockTag.Offset.IntValue; // zero indexed
                 var limit = forBlockTag.Limit.IntValue; // max number of iterations.
 
-                // I think the offset and limit just slices the
-                // iterable before it goes into the loop.
-
+                // the offset and limit slice the iterable and sends the result to the loop.
                 int iter = 0;
                 int length = iterable.Skip(offset).Take(limit).Count();
-                if (length < 0)
-                {
-                    return;
-                }
+                if (length < 0) { return; }
+
                 foreach (var item in iterable.Skip(offset).Take(limit))
                 {
                     symbolTableStack.Define("forloop", CreateForLoopDescriptor(iter, length));
-
                     symbolTableStack.Define(forBlockTag.LocalVariable, item);
-                    // TODO: This could be handled a little cleaner.
-                    Console.WriteLine("Eval-ing " + forBlockTag.LiquidBlock);
+
                     try
                     {
                         _evaluator.StartVisiting(_renderingVisitor, forBlockTag.LiquidBlock);

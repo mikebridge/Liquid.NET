@@ -73,6 +73,8 @@ namespace Liquid.NET.Symbols
             return false;
         }
 
+        // TODO: Dry these out:
+
         public Type LookupFilterType(string filterName)
         {
             
@@ -93,6 +95,18 @@ namespace Liquid.NET.Symbols
                 if (_symbolTables[i].HasCustomTagReference(tagName))
                 {
                     return _symbolTables[i].ReferenceCustomTag(tagName);
+                }
+            }
+            return null;
+        }
+
+        public Type LookupCustomBlockTagRendererType(string tagName)
+        {
+            for (var i = _symbolTables.Count() - 1; i >= 0; i--)
+            {
+                if (_symbolTables[i].HasCustomBlockTagReference(tagName))
+                {
+                    return _symbolTables[i].ReferenceCustomBlockTag(tagName);
                 }
             }
             return null;

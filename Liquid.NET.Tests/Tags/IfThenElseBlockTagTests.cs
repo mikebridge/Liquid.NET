@@ -71,6 +71,41 @@ namespace Liquid.NET.Tests.Tags
         }
 
       
+        /// <summary>
+        /// https://github.com/mikebridge/Liquid.NET/wiki/Differences/
+        /// </summary>
+        [Test]
+        public void It_Should_Group_Expressions_With_Parentheses()
+        {
+            // Arrange
+            const string str = @"{% if (false and true) or true %}Result #1 is true{% endif %}"
+                             + @"{% if false and (true or true) %}Result #2 is true{% endif %}";
+            // Act
+            var result = RenderingHelper.RenderTemplate(str);
+
+            // Assert
+            Assert.That(result, Is.EqualTo("Result #1 is true"));
+
+        }
+
+        /// <summary>
+        /// https://github.com/mikebridge/Liquid.NET/wiki/Differences/
+        /// </summary>
+        [Test]
+        public void It_Should_Allow_Not_To_Be_Used()
+        {
+            // Arrange
+            const String txt = "not false is true!";
+            const string str = @"{% if not false %}"+txt+"{% endif %}";
+
+            // Act
+            var result = RenderingHelper.RenderTemplate(str);
+
+            // Assert
+            Assert.That(result, Is.EqualTo(txt));
+
+        }
+
 
 
     }

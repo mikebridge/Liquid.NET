@@ -163,7 +163,7 @@ MOD:					'%' ;
 ADD:					'+' ;
 SUB:					'-' ;
 NEGATIVE :				'-' ;
-NOT :					'!' ;
+NOT :					'not' ;
 NUMBER2 :				NUMBER -> type(NUMBER);
 BOOLEAN2 :				BOOLEAN -> type(BOOLEAN);
 

@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.Tracing;
 using System.Linq;
-using System.Reflection.Emit;
-using System.Text;
-using System.Threading.Tasks;
+
 using Liquid.NET.Constants;
 using Liquid.NET.Symbols;
 using Liquid.NET.Tags.Custom;
+
 using NUnit.Framework;
 
 namespace Liquid.NET.Tests.Tags
@@ -23,9 +21,22 @@ namespace Liquid.NET.Tests.Tags
             var result = RenderingHelper.RenderTemplate("Result : {% echoargs \"hello\" 123 true %}", templateContext);
 
             // Assert
-            Assert.That(result, Is.EqualTo("I heard \"hello\" 123 true"));
+            Assert.That(result, Is.EqualTo("Result : I heard StringValue:hello, NumericValue:123, BooleanValue:true"));
 
         }
+
+        [Test]
+        public void It_Should_Resolve_A_Variable()
+        {
+            // Act
+            var templateContext = new TemplateContext().WithAllFilters().WithCustomTagRenderer<EchoArgsTagRenderer>("echoargs");
+            var result = RenderingHelper.RenderTemplate("{% assign planet = \"world\"%}Result : {% echoargs \"hello\" planet %}", templateContext);
+
+            // Assert
+            Assert.That(result, Is.EqualTo("Result : I heard StringValue:hello, StringValue:world"));
+
+        }
+
 
         public class EchoArgsTagRenderer : ICustomTagRenderer
         {
@@ -36,8 +47,8 @@ namespace Liquid.NET.Tests.Tags
 
             public StringValue Render(SymbolTableStack symbolTableStack, IList<IExpressionConstant> args)
             {
-                var argsAsString = String.Join(", ", args.Select(ValueCaster.RenderAsString));
-                return new StringValue("Result: "+argsAsString);
+                var argsAsString = String.Join(", ", args.Select(x => x.GetType().Name+":"+ValueCaster.RenderAsString(x)));
+                return new StringValue("I heard " + argsAsString);
             }
         }
 

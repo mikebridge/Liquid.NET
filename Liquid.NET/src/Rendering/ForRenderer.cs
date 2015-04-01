@@ -24,28 +24,28 @@ namespace Liquid.NET.Rendering
         /// the block.  It would probably be better to handle this a little more
         /// cleanly.
         /// </summary>
-        /// <param name="forTagBlock"></param>
+        /// <param name="forBlockTag"></param>
         /// <param name="symbolTableStack"></param>
-        public void Render(ForTagBlock forTagBlock, SymbolTableStack symbolTableStack)
+        public void Render(ForBlockTag forBlockTag, SymbolTableStack symbolTableStack)
         {
             var localBlockScope = new SymbolTable(); // TODO: Put the local "forloop" variables in it.
             symbolTableStack.Push(localBlockScope);
             try
             {
-                var iterableFactory = forTagBlock.IterableCreator;
+                var iterableFactory = forBlockTag.IterableCreator;
 
                 // TODO: the Eval may result in an ArrayValue with no Array
                 // (i.e. it's undefined).  THe ToList therefore fails....
                 // this should use Bind
                 var iterable = iterableFactory.Eval(symbolTableStack).ToList();
 
-                Console.WriteLine("REVERSED: " + forTagBlock.Reversed.BoolValue);
-                if (forTagBlock.Reversed.BoolValue)
+                Console.WriteLine("REVERSED: " + forBlockTag.Reversed.BoolValue);
+                if (forBlockTag.Reversed.BoolValue)
                 {
                     iterable.Reverse(); // stupid thing does it in-place.
                 }
-                var offset = forTagBlock.Offset.IntValue; // zero indexed
-                var limit = forTagBlock.Limit.IntValue; // max number of iterations.
+                var offset = forBlockTag.Offset.IntValue; // zero indexed
+                var limit = forBlockTag.Limit.IntValue; // max number of iterations.
 
                 // I think the offset and limit just slices the
                 // iterable before it goes into the loop.
@@ -60,12 +60,12 @@ namespace Liquid.NET.Rendering
                 {
                     symbolTableStack.Define("forloop", CreateForLoopDescriptor(iter, length));
 
-                    symbolTableStack.Define(forTagBlock.LocalVariable, item);
+                    symbolTableStack.Define(forBlockTag.LocalVariable, item);
                     // TODO: This could be handled a little cleaner.
-                    Console.WriteLine("Eval-ing " + forTagBlock.LiquidBlock);
+                    Console.WriteLine("Eval-ing " + forBlockTag.LiquidBlock);
                     try
                     {
-                        _evaluator.StartVisiting(_renderingVisitor, forTagBlock.LiquidBlock);
+                        _evaluator.StartVisiting(_renderingVisitor, forBlockTag.LiquidBlock);
                     }
                     catch (ContinueException)
                     {

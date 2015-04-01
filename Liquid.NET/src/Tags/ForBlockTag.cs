@@ -7,10 +7,10 @@ using Liquid.NET.Utils;
 
 namespace Liquid.NET.Tags
 {
-    public class ForTagBlock : IASTNode
+    public class ForBlockTag : IASTNode
     {
 
-        public ForTagBlock()
+        public ForBlockTag()
         {
             this.Limit = new NumericValue(50); // as per the Shopify docs
             this.Reversed = new BooleanValue(false);

@@ -171,13 +171,14 @@
     <Compile Include="src\Tags\CaseWhenElseBlockTag.cs" />
     <Compile Include="src\Tags\CommentBlockTag.cs" />
     <Compile Include="src\Tags\ContinueTag.cs" />
+    <Compile Include="src\Tags\CustomBlockTag.cs" />
     <Compile Include="src\Tags\CustomTag.cs" />
     <Compile Include="src\Tags\Custom\CustomTagRendererFactory.cs" />
     <Compile Include="src\Tags\Custom\ICustomBlockTagRenderer.cs" />
     <Compile Include="src\Tags\Custom\ICustomTagRenderer.cs" />
     <Compile Include="src\Tags\CycleTag.cs" />
     <Compile Include="src\Tags\DecrementTag.cs" />
-    <Compile Include="src\Tags\ForTagBlock.cs" />
+    <Compile Include="src\Tags\ForBlockTag.cs" />
     <Compile Include="src\Tags\IfThenElseBlockTag.cs" />
     <Compile Include="src\Tags\IncludeTag.cs" />
     <Compile Include="src\Tags\IncrementTag.cs" />

@@ -38,9 +38,14 @@ namespace Liquid.NET.Tests
             _result += customTag.ToString();
         }
 
-        public void Visit(ForTagBlock forTagBlock)
+        public void Visit(CustomBlockTag caseWhenElseBlockTag)
         {
-            _result += forTagBlock.ToString();
+            _result += caseWhenElseBlockTag.ToString();
+        }
+
+        public void Visit(ForBlockTag forBlockTag)
+        {
+            _result += forBlockTag.ToString();
         }
 
         public void Visit(IfThenElseBlockTag ifThenElseBlockTag)

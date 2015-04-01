@@ -25,6 +25,7 @@ rawtext:			TEXT+ ;
 // {% Parse tags %}
 
 tag:				raw_tag
+					| custom_blocktag
 					| custom_tag
 					// | raw_tag
 					| if_tag
@@ -47,6 +48,14 @@ tag:				raw_tag
 raw_tag:			RAW;
 
 //raw_tag:			RAW_START .*? RAW_END;
+
+
+// maybe custom_blocktag and custom_tag can be combined
+custom_blocktag:	TAGSTART LABEL customtagblock_expr* TAGEND custom_blocktag_block TAGSTART ENDLABEL TAGEND;	
+
+customtagblock_expr:		outputexpression;
+
+custom_blocktag_block: block* ;
 
 custom_tag:			TAGSTART tagname customtag_expr* TAGEND ;	
 

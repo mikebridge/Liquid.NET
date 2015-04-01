@@ -25,6 +25,8 @@ namespace Liquid.NET
 
         private readonly Registry<ICustomTagRenderer> _customTagRegistry = new Registry<ICustomTagRenderer>();
 
+        private readonly Registry<ICustomBlockTagRenderer> _customBlockTagRegistry = new Registry<ICustomBlockTagRenderer>();
+
         public ITemplateContext Define(String name, IExpressionConstant constant)
         {
             if (_varDictionary.ContainsKey(name))
@@ -41,6 +43,12 @@ namespace Liquid.NET
         public ITemplateContext WithCustomTagRenderer<T>(string echoargs) where T : ICustomTagRenderer
         {
             _customTagRegistry.Register<T>(echoargs);
+            return this;
+        }
+
+        public ITemplateContext WithCustomTagBlockRenderer<T>(string echoargs) where T : ICustomBlockTagRenderer
+        {
+            _customBlockTagRegistry.Register<T>(echoargs);
             return this;
         }
 
@@ -187,5 +195,6 @@ namespace Liquid.NET
         ITemplateContext WithFilter<T>(String name) where T : IFilterExpression;
         ITemplateContext Define(string array, IExpressionConstant createArrayValues);
         ITemplateContext WithCustomTagRenderer<T>(string echoargs) where T: ICustomTagRenderer;
+        ITemplateContext WithCustomTagBlockRenderer<T>(string echoargs)  where T: ICustomBlockTagRenderer;
     }
 }

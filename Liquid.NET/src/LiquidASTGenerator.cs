@@ -154,7 +154,7 @@ namespace Liquid.NET
             base.EnterFor_tag(context);
             //Console.WriteLine("Entering FOR tag");
 
-            var forBlock = new ForTagBlock
+            var forBlock = new ForBlockTag
             {
                 LocalVariable = context.for_label().LABEL().ToString()
             };
@@ -335,6 +335,39 @@ namespace Liquid.NET
 
             CurrentBuilderContext.CustomTagStack.Push(customTag);
             //_astNodeStack.Push(customBlock.LiquidBlock); // capture the block
+        }
+
+        public override void EnterCustom_blocktag(LiquidParser.Custom_blocktagContext customBlockContext)
+        {
+
+            base.EnterCustom_blocktag(customBlockContext);
+
+            Console.WriteLine("I see CUSTOM BLOCK TAG " + customBlockContext);
+            var customTag = new CustomBlockTag("test");
+            AddNodeToAST(customTag);
+            Console.WriteLine("START LABEL IS " + customBlockContext.LABEL());
+            Console.WriteLine("END LABEL IS " + customBlockContext.ENDLABEL());
+            CurrentBuilderContext.CustomBlockTagStack.Push(customTag);
+            //_astNodeStack.Push(customBlock.LiquidBlock); // capture the block
+        }
+
+        public override void EnterCustomtagblock_expr(LiquidParser.Customtagblock_exprContext context)
+        {
+            base.EnterCustomtagblock_expr(context);
+            context.outputexpression();
+            var y= context.children.Select(x => x.GetText());
+            Console.WriteLine("BLOCK EXPR IS " + context.outputexpression().GetText());
+
+
+            StartNewLiquidExpressionTree(result =>
+            {
+                CurrentBuilderContext.CustomBlockTagStack.Peek().LiquidExpressionTrees.Add(result);
+            });
+        }
+
+        public override void EnterCustom_blocktag_block(LiquidParser.Custom_blocktag_blockContext context)
+        {
+            base.EnterCustom_blocktag_block(context);
         }
 
         public override void EnterCustomtag_expr(LiquidParser.Customtag_exprContext context)
@@ -1208,11 +1241,12 @@ namespace Liquid.NET
         {
             //public CurrentObjectFilterExpression 
             public readonly Stack<CustomTag> CustomTagStack = new Stack<CustomTag>();
+            public readonly Stack<CustomBlockTag> CustomBlockTagStack = new Stack<CustomBlockTag>();
             public readonly Stack<IfThenElseBlockTag> IfThenElseBlockStack = new Stack<IfThenElseBlockTag>();
             public readonly Stack<CaseWhenElseBlockTag> CaseWhenElseBlockStack = new Stack<CaseWhenElseBlockTag>();
             //public ExpressionBuilder ExpressionBuilder { get; set; }
             public LiquidExpressionTreeBuilder LiquidExpressionBuilder { get; set; }
-            public readonly Stack<ForTagBlock> ForBlockStack = new Stack<ForTagBlock>();
+            public readonly Stack<ForBlockTag> ForBlockStack = new Stack<ForBlockTag>();
         }
 
 

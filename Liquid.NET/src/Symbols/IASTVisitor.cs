@@ -17,13 +17,15 @@ namespace Liquid.NET.Symbols
 
         void Visit(CustomTag customTag);
 
+        void Visit(CustomBlockTag caseWhenElseBlockTag);
+
         void Visit(RootDocumentNode rootDocumentNode);
 
         void Visit(VariableReference variableReference);
 
         void Visit(StringValue stringValue);
 
-        void Visit(ForTagBlock forTagBlock);
+        void Visit(ForBlockTag forBlockTag);
 
         void Visit(IfThenElseBlockTag ifThenElseBlockTag);
 

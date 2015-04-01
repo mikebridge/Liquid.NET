@@ -51,7 +51,6 @@ namespace Liquid.NET.Tests
         public void Visit(IfThenElseBlockTag ifThenElseBlockTag)
         {
             _result += ifThenElseBlockTag.ToString();
-            //_result += IfThenElseBlockTag.IfElseClauses.Select( x => Visit(x));
             _result += ifThenElseBlockTag.IfElseClauses.Select(x => VisitIfTag(x.LiquidExpressionTree));
         }
 
@@ -111,21 +110,6 @@ namespace Liquid.NET.Tests
             return result + "    -> " + exprNode.Children.Select(x => VisitIfTag(exprNode));
         }
 
-        //public void 
-
-//        public void Visit(ExpressionDescription predicateDescription)
-//        {
-//            throw new NotImplementedException();
-//        }
-
-        //public void Visit(IExpressionDescription predicateDescription)
-        //{
-          //  _result += predicateDescription.ToString();
-            //_result += predicateDescription.Eval(); // TODO: figure out how to get the children here....
-
-            //_result += "    " + predicateDescription.Arguments;
-        //}
-
         public void Visit(RootDocumentNode rootDocumentNode)
         {
             _result += rootDocumentNode.ToString();
@@ -140,11 +124,6 @@ namespace Liquid.NET.Tests
         {
             _result += stringValue.ToString();
         }
-
-//        public void Visit(IfThenElseTag IfThenElseBlockTag)
-//        {
-//            _result += IfThenElseBlockTag.ToString();
-//        }
 
         public String Result()
         {

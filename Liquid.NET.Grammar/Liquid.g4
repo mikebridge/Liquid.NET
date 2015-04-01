@@ -25,9 +25,8 @@ rawtext:			TEXT+ ;
 // {% Parse tags %}
 
 tag:				raw_tag
-					| custom_blocktag
+					| custom_blocktag  //{System.String.Equals("end" + custom_block_start_tag().GetText(), custom_block_end_tag().GetText())}?
 					| custom_tag
-					// | raw_tag
 					| if_tag
 					| for_tag
 					| cycle_tag // you can use this outside a for loop.
@@ -35,13 +34,13 @@ tag:				raw_tag
 					| capture_tag
 					| increment_tag
 					| decrement_tag
-					| unless_tag
-					
+					| unless_tag										
 					| case_tag
 					// | table_tag
 					// | include_tag
 					| break_tag
 					| continue_tag
+					| macro_tag
 					;
 
 // text wrapped in a raw tag
@@ -51,7 +50,11 @@ raw_tag:			RAW;
 
 
 // maybe custom_blocktag and custom_tag can be combined
-custom_blocktag:	TAGSTART LABEL customtagblock_expr* TAGEND custom_blocktag_block TAGSTART ENDLABEL TAGEND;	
+custom_blocktag:	TAGSTART custom_block_start_tag customtagblock_expr* TAGEND custom_blocktag_block TAGSTART custom_block_end_tag TAGEND ;	
+
+custom_block_start_tag:		LABEL;
+
+custom_block_end_tag:		ENDLABEL;
 
 customtagblock_expr:		outputexpression;
 
@@ -124,6 +127,15 @@ generator:			PARENOPEN (NUMBER | variable) GENERATORRANGE (NUMBER | variable) PA
 increment_tag:		TAGSTART INCREMENT_TAG LABEL TAGEND ;
 
 decrement_tag:		TAGSTART DECREMENT_TAG LABEL TAGEND ;
+
+macro_tag:			TAGSTART MACRO_TAG macro_label macro_param* TAGEND macro_block TAGSTART ENDMACRO_TAG TAGEND ;
+
+macro_param:		LABEL ;
+
+macro_block:		block* ;
+
+macro_label:		LABEL ;
+
 
 // {{ Parse output and filters }}
 

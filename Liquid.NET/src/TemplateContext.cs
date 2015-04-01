@@ -40,15 +40,15 @@ namespace Liquid.NET
             return this;
         }
 
-        public ITemplateContext WithCustomTagRenderer<T>(string echoargs) where T : ICustomTagRenderer
+        public ITemplateContext WithCustomTagRenderer<T>(string name) where T : ICustomTagRenderer
         {
-            _customTagRegistry.Register<T>(echoargs);
+            _customTagRegistry.Register<T>(name);
             return this;
         }
 
-        public ITemplateContext WithCustomTagBlockRenderer<T>(string echoargs) where T : ICustomBlockTagRenderer
+        public ITemplateContext WithCustomTagBlockRenderer<T>(string name) where T : ICustomBlockTagRenderer
         {
-            _customBlockTagRegistry.Register<T>(echoargs);
+            _customBlockTagRegistry.Register<T>(name);
             return this;
         }
 

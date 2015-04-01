@@ -48,7 +48,36 @@ namespace Liquid.NET
 
         public void Visit(CustomTag customTag)
         {
+            Console.WriteLine("Looking up Custom Tag " + customTag.TagName);
             var tagType = _symbolTableStack.LookupCustomTagRendererType(customTag.TagName);
+            if (tagType != null)
+            {
+                _result += RenderCustomTag(customTag, tagType);
+                return;
+            }
+
+            Console.WriteLine("Looking up Macro "+ customTag.TagName);
+            var macroDescription = _symbolTableStack.LookupMacro(customTag.TagName);
+            if (macroDescription != null)
+            {
+                Console.WriteLine("...");
+                IEnumerable<IExpressionConstant> args =
+                    customTag.LiquidExpressionTrees.Select(x => LiquidExpressionEvaluator.Eval(x, _symbolTableStack));
+
+                _result += RenderMacro(macroDescription, args);
+                return;
+            }
+            _result += " ERROR: There is no macro or tag named "+  customTag.TagName+ " ";
+        }
+
+        private string RenderMacro(MacroBlockTag macroBlockTag, IEnumerable<IExpressionConstant> args)
+        {
+            var macroRenderer = new MacroRenderer();
+            return ValueCaster.RenderAsString(macroRenderer.Render(macroBlockTag, _symbolTableStack, args.ToList()));
+        }
+
+        private string RenderCustomTag(CustomTag customTag, Type tagType)
+        {
             var tagRenderer = CustomTagRendererFactory.Create(tagType);
             if (tagRenderer == null)
             {
@@ -56,7 +85,8 @@ namespace Liquid.NET
             }
             IEnumerable<IExpressionConstant> args =
                 customTag.LiquidExpressionTrees.Select(x => LiquidExpressionEvaluator.Eval(x, _symbolTableStack));
-            _result += tagRenderer.Render(_symbolTableStack, args.ToList()).StringVal;
+            var result = tagRenderer.Render(_symbolTableStack, args.ToList()).StringVal;
+            return result;
         }
 
         public void Visit(CustomBlockTag customBlockTag)
@@ -219,7 +249,11 @@ namespace Liquid.NET
         public void Visit(MacroBlockTag macroBlockTag)
         {
             // not implemented yet
-            Console.WriteLine("Visiting a Macro");
+            
+            Console.WriteLine("Creating a macro "+ macroBlockTag.Name);
+            Console.WriteLine("That takes args " + String.Join(",", macroBlockTag.Args));
+            Console.WriteLine("and has body " + macroBlockTag.LiquidBlock);
+            _symbolTableStack.DefineMacro(macroBlockTag.Name, macroBlockTag);
         }
 
         public void Visit(RootDocumentNode rootDocumentNode)

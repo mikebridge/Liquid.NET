@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 using Liquid.NET.Constants;
 using Liquid.NET.Filters;
+using Liquid.NET.Tags;
 using Liquid.NET.Tags.Custom;
 using Liquid.NET.Utils;
 
@@ -14,7 +15,8 @@ namespace Liquid.NET.Symbols
         private readonly Registry<ICustomTagRenderer> _customTagRendererRegistry;
         private readonly Registry<ICustomBlockTagRenderer> _customBlockTagRendererRegistry;
         private readonly IDictionary<String, IExpressionConstant> _variableDictionary;
-        
+        private readonly IDictionary<String, MacroBlockTag> _macroRegistry;
+
         public SymbolTable(
             IDictionary<string, IExpressionConstant> variableDictionary = null, 
             FilterRegistry filterRegistry = null, 
@@ -25,6 +27,7 @@ namespace Liquid.NET.Symbols
             _customTagRendererRegistry = customTagRendererRegistry ?? new Registry<ICustomTagRenderer>();
             _variableDictionary = variableDictionary ?? new Dictionary<string, IExpressionConstant>();
             _filterRegistry = filterRegistry ?? new FilterRegistry();
+            _macroRegistry = new Dictionary<string, MacroBlockTag>();
         }
 
         public void DefineFilter<T>(String name)
@@ -55,6 +58,23 @@ namespace Liquid.NET.Symbols
             {
                 _variableDictionary.Add(key, obj);
             }
+        }
+
+        public void DefineMacro(String key, MacroBlockTag macro)
+        {
+            if (_macroRegistry.ContainsKey(key))
+            {
+                _macroRegistry[key] = macro;
+            }
+            else
+            {
+                _macroRegistry.Add(key, macro);
+            }
+        }
+
+        public bool HasMacro(string filterName)
+        {
+            return _macroRegistry.ContainsKey(filterName);
         }
 
         public bool HasFilterReference(string filterName)
@@ -92,7 +112,17 @@ namespace Liquid.NET.Symbols
             return _filterRegistry.Find(key);
         }
 
-
+        public MacroBlockTag ReferenceMacro(String key)
+        {
+            if (HasMacro(key))
+            {
+                return _macroRegistry[key];
+            }
+            else
+            {
+                return null;
+            }
+        }
 
         public IExpressionConstant ReferenceVariable(String key)
         {
@@ -103,8 +133,6 @@ namespace Liquid.NET.Symbols
             }
             else
             {
-                // TODO: REturn undefined reference
-                //return new Undefined();
                 return ConstantFactory.CreateError<StringValue>("Undefined variable: " + key);
             }
         }

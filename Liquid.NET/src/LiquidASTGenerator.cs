@@ -259,47 +259,60 @@ namespace Liquid.NET
             }
         }
 
-            private GeneratorCreator CreateGeneratorContext(LiquidParser.GeneratorContext generatorContext)
+        private GeneratorCreator CreateGeneratorContext(LiquidParser.GeneratorContext generatorContext)
+        {
+            Console.WriteLine("CREATING GENERATOR");
+            TreeNode<LiquidExpression> startExpression = null;
+            TreeNode<LiquidExpression> endExpression = null;
+
+
+            if (generatorContext.NUMBER(0) != null) // lower range
             {
-                Console.WriteLine("CREATING GENERATOR");
-                TreeNode<LiquidExpression> startExpression= null;
-                TreeNode<LiquidExpression> endExpression = null;
-               
+                startExpression =
+                    CreateObjectSimpleExpressionNode(
+                        CreateIntNumericValueFromString(generatorContext.NUMBER(0).GetText()));
 
-                if (generatorContext.NUMBER(0) != null) // lower range
-                {
-                    startExpression =
-                        CreateObjectSimpleExpressionNode(
-                            CreateIntNumericValueFromString(generatorContext.NUMBER(0).GetText()));
-
-                }
-                else if (generatorContext.variable(0) != null)
-                {
-                    StartNewLiquidExpressionTree(x => startExpression = x);
-                    StartCapturingVariable(generatorContext.variable(0));
-                    MarkCurrentExpressionComplete();
-                }
-
-
-                if (generatorContext.NUMBER(1) != null) // lower range
-                {
-                    endExpression = CreateObjectSimpleExpressionNode(
-                        CreateIntNumericValueFromString(generatorContext.NUMBER(1).GetText()));
-                }
-                else if (generatorContext.variable(1) != null)
-                {
-                    StartNewLiquidExpressionTree(x => endExpression = x);
-                    StartCapturingVariable(generatorContext.variable(1));
-                    MarkCurrentExpressionComplete();
-                }
-
-
-                return new GeneratorCreator(startExpression, endExpression);
-
-                //return new GeneratorValue();
-                //return CreateObjectSimpleExpressionNode(new StringValue("TODO: FIX THE GENERATOR"));
             }
-                   
+            else if (generatorContext.variable(0) != null)
+            {
+                StartNewLiquidExpressionTree(x => startExpression = x);
+                StartCapturingVariable(generatorContext.variable(0));
+                MarkCurrentExpressionComplete();
+            }
+
+
+            if (generatorContext.NUMBER(1) != null) // lower range
+            {
+                endExpression = CreateObjectSimpleExpressionNode(
+                    CreateIntNumericValueFromString(generatorContext.NUMBER(1).GetText()));
+            }
+            else if (generatorContext.variable(1) != null)
+            {
+                StartNewLiquidExpressionTree(x => endExpression = x);
+                StartCapturingVariable(generatorContext.variable(1));
+                MarkCurrentExpressionComplete();
+            }
+
+
+            return new GeneratorCreator(startExpression, endExpression);
+
+            //return new GeneratorValue();
+            //return CreateObjectSimpleExpressionNode(new StringValue("TODO: FIX THE GENERATOR"));
+        }
+
+        public override void EnterContinue_tag(LiquidParser.Continue_tagContext context)
+        {
+            base.EnterContinue_tag(context);
+            ContinueTag continueTag = new ContinueTag();
+            CurrentAstNode.AddChild(CreateTreeNode<IASTNode>(continueTag));
+        }
+        
+        public override void EnterBreak_tag(LiquidParser.Break_tagContext context)
+        {
+            BreakTag breakTag = new BreakTag();
+            CurrentAstNode.AddChild(CreateTreeNode<IASTNode>(breakTag));
+        }
+ 
         #endregion
 
         #region Cycle Tag
@@ -324,6 +337,7 @@ namespace Liquid.NET
 
         #endregion
 
+        #region Custom Tags
 
         public override void EnterCustom_tag(LiquidParser.Custom_tagContext customContext)
         {
@@ -337,22 +351,37 @@ namespace Liquid.NET
             //_astNodeStack.Push(customBlock.LiquidBlock); // capture the block
         }
 
+        public override void ExitCustom_tag(LiquidParser.Custom_tagContext context)
+        {
+            base.ExitCustom_tag(context);
+            CurrentBuilderContext.CustomTagStack.Pop();
+        }
+
         public override void EnterCustom_blocktag(LiquidParser.Custom_blocktagContext customBlockContext)
         {
 
             base.EnterCustom_blocktag(customBlockContext);
-
+            if (customBlockContext.exception != null)
+            {
+                Console.WriteLine("There is an exception!!" + customBlockContext.exception.Message);
+            }
             Console.WriteLine("I see CUSTOM BLOCK TAG " + customBlockContext);
-            var customTag = new CustomBlockTag(customBlockContext.LABEL().GetText());
+            var customTag = new CustomBlockTag(customBlockContext.custom_block_start_tag().GetText());
+            //var customTag = new CustomBlockTag(customBlockContext.LABEL().GetText());
             AddNodeToAST(customTag);
 
             // TODO: Check that these match!
-            Console.WriteLine("START LABEL IS " + customBlockContext.LABEL());
-            Console.WriteLine("END LABEL IS " + customBlockContext.ENDLABEL());
-            
-            
+            Console.WriteLine("START LABEL IS " + customBlockContext.custom_block_start_tag());
+            Console.WriteLine("END LABEL IS " + customBlockContext.custom_block_end_tag());
+                        
             CurrentBuilderContext.CustomBlockTagStack.Push(customTag);
             //_astNodeStack.Push(customBlock.LiquidBlock); // capture the block
+        }
+
+        public override void ExitCustom_blocktag(LiquidParser.Custom_blocktagContext context)
+        {
+            base.ExitCustom_blocktag(context);
+            CurrentBuilderContext.CustomBlockTagStack.Pop();
         }
 
         public override void EnterCustomtagblock_expr(LiquidParser.Customtagblock_exprContext context)
@@ -360,7 +389,7 @@ namespace Liquid.NET
             base.EnterCustomtagblock_expr(context);
             context.outputexpression();
             var y= context.children.Select(x => x.GetText());
-            Console.WriteLine("BLOCK EXPR IS " + context.outputexpression().GetText());
+            //Console.WriteLine("BLOCK EXPR IS " + context.outputexpression().GetText());
 
             StartNewLiquidExpressionTree(result =>
             {
@@ -393,50 +422,9 @@ namespace Liquid.NET
             });
         }
 
-        public override void ExitCustomtag_expr(LiquidParser.Customtag_exprContext context)
-        {
-            base.ExitCustomtag_expr(context);
-        }
+        #endregion
 
-        public override void ExitCustom_tag(LiquidParser.Custom_tagContext context)
-        {
-            base.ExitCustom_tag(context);
-        }
-
-        public override void EnterContinue_tag(LiquidParser.Continue_tagContext context)
-        {
-            base.EnterContinue_tag(context);
-            ContinueTag continueTag = new ContinueTag();
-            CurrentAstNode.AddChild(CreateTreeNode<IASTNode>(continueTag));
-        }
-
-        public override void EnterBreak_tag(LiquidParser.Break_tagContext context)
-        {
-            BreakTag breakTag = new BreakTag();
-            CurrentAstNode.AddChild(CreateTreeNode<IASTNode>(breakTag));
-
-
-        }
-
-
-//        public override void EnterCycle_tag(LiquidParser.Cycle_tagContext context)
-//        {
-//            base.EnterCycle_tag(context);
-//
-//            var cycleTag = new CycleTag
-//            {
-//                // TODO: Allow variables in cycle?
-//                CycleList = context.cycle_string().Select(str => (IExpressionConstant)GenerateStringSymbol(str.GetText())).ToList()
-//            };
-//            if (context.cycle_group() != null)
-//            {
-//                cycleTag.Group = context.cycle_group().STRING().GetText();
-//            }
-//
-//            CurrentAstNode.AddChild(CreateTreeNode<IASTNode>(cycleTag));
-//            //_astNodeStack.Push();
-//        }
-
+    
 
         #region If|Unless / Elsif / Else / Endif Tag
 
@@ -742,6 +730,35 @@ namespace Liquid.NET
         {
             _astNodeStack.Pop();
         }
+        #endregion
+
+        #region Macro Tag
+
+        public override void EnterMacro_tag(LiquidParser.Macro_tagContext macroContext)
+        {
+            base.EnterMacro_tag(macroContext);
+            Console.WriteLine("Defining MACRO " + macroContext.macro_label().GetText());
+            Console.WriteLine(" --> with parameters " + String.Join(",", macroContext.macro_param().Select(x => x.GetText())));
+
+            var macroBlockTag = new MacroBlockTag(macroContext.macro_label().GetText())
+            {
+                Args = macroContext.macro_param().Select(x => x.GetText()).ToList()
+            };
+
+
+            AddNodeToAST(macroBlockTag);
+            CurrentBuilderContext.MacroBlockTagStack.Push(macroBlockTag);
+            _astNodeStack.Push(macroBlockTag.LiquidBlock); // capture the block
+        }
+
+        public override void ExitMacro_tag(LiquidParser.Macro_tagContext macroTagContext)
+        {
+            base.ExitMacro_tag(macroTagContext);
+            CurrentBuilderContext.MacroBlockTagStack.Pop();
+            _astNodeStack.Pop();
+        }
+
+  
         #endregion
 
 
@@ -1247,14 +1264,14 @@ namespace Liquid.NET
 
         private class BlockBuilderContext
         {
-            //public CurrentObjectFilterExpression 
             public readonly Stack<CustomTag> CustomTagStack = new Stack<CustomTag>();
             public readonly Stack<CustomBlockTag> CustomBlockTagStack = new Stack<CustomBlockTag>();
             public readonly Stack<IfThenElseBlockTag> IfThenElseBlockStack = new Stack<IfThenElseBlockTag>();
             public readonly Stack<CaseWhenElseBlockTag> CaseWhenElseBlockStack = new Stack<CaseWhenElseBlockTag>();
-            //public ExpressionBuilder ExpressionBuilder { get; set; }
-            public LiquidExpressionTreeBuilder LiquidExpressionBuilder { get; set; }
+            public readonly Stack<MacroBlockTag> MacroBlockTagStack = new Stack<MacroBlockTag>();
             public readonly Stack<ForBlockTag> ForBlockStack = new Stack<ForBlockTag>();
+
+            public LiquidExpressionTreeBuilder LiquidExpressionBuilder { get; set; }
         }
 
 

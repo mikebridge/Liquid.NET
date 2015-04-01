@@ -11,7 +11,7 @@ namespace Liquid.NET.Utils
     {
         readonly IDictionary<String, Type> _dictionary = new Dictionary<String, Type>();
 
-        public void Register<TSubtype>(String key)
+        public void Register<TSubtype>(string key)
             where TSubtype : T
         {
             if (_dictionary.ContainsKey(key))

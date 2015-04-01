@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 using Liquid.NET.Constants;
-using Liquid.NET.Filters;
+using Liquid.NET.Tags;
 
 namespace Liquid.NET.Symbols
 {
@@ -107,6 +107,30 @@ namespace Liquid.NET.Symbols
                 if (_symbolTables[i].HasCustomBlockTagReference(tagName))
                 {
                     return _symbolTables[i].ReferenceCustomBlockTag(tagName);
+                }
+            }
+            return null;
+        }
+
+        //        public void DefineCustomTag<T>(string name)
+        //            where T: ICustomTagRenderer
+        //        {
+        //            _symbolTables.Last().DefineCustomTag<T>(name);
+        //        }
+
+        public void DefineMacro(string name, MacroBlockTag macro)
+        {
+            _symbolTables.Last().DefineMacro(name, macro);
+        }
+
+
+        public MacroBlockTag LookupMacro(string tagName)
+        {
+            for (var i = _symbolTables.Count() - 1; i >= 0; i--)
+            {
+                if (_symbolTables[i].HasMacro(tagName))
+                {
+                    return _symbolTables[i].ReferenceMacro(tagName);
                 }
             }
             return null;

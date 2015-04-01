@@ -137,6 +137,8 @@ ENDCAPTURE_TAG :		'endcapture';
 INCREMENT_TAG :			'increment';
 DECREMENT_TAG :			'decrement';
 END:					'end' ;
+MACRO_TAG :				'macro' ;
+ENDMACRO_TAG :			'endmacro' ;
 ENDLABEL:				END LABEL;
 
 COLON1 :				':' -> type(COLON);

@@ -146,6 +146,7 @@
     <Compile Include="Tags\CustomBlockTagTests.cs" />
     <Compile Include="Tags\CustomTagTests.cs" />
     <Compile Include="Tags\IncludeTagTests.cs" />
+    <Compile Include="Tags\MacroBlockTagTests.cs" />
     <Compile Include="Tags\RawBlockTagTests.cs" />
     <Compile Include="Tags\CommentBlockTagTests.cs" />
     <Compile Include="Tags\CycleTagTests.cs" />

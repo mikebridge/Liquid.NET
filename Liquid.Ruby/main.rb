@@ -74,3 +74,4 @@ print_test "{{ 3 | times : 3 }}"
 #print_test "Nothing: {{ \"abcd\" | truncate: 7 }}"
 
 
+print_test "{{ missing }}"

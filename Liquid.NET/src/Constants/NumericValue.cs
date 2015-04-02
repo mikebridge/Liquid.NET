@@ -24,10 +24,13 @@ namespace Liquid.NET.Constants
         {
             try
             {
-                return new NumericValue(Convert.ToDecimal(str));
+                return ValueCaster.Cast<IExpressionConstant, NumericValue>(new StringValue(str));
+                //return ValueCaster.Cast<StringValue,NumericValue>((dynamic) new StringValue(str));
+                //return new NumericValue(Convert.ToDecimal(str));
             }
             catch
             {
+                // This shouldn't actually fail...
                 var errorSymbol = new NumericValue(0) {ErrorMessage = "Unable to convert '" + str + "' to a number."};
                 return errorSymbol;
             }

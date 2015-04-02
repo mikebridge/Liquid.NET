@@ -1089,6 +1089,7 @@ namespace Liquid.NET
         {
             Console.WriteLine("CREATING NUMBER OBJECT  >" + context.GetText() + "<");
             base.EnterNumberObject(context);
+            //ValueCaster.ConvertToM
             AddExpressionToCurrentExpressionBuilder(NumericValue.Parse(context.GetText()));
 
 

@@ -21,7 +21,7 @@ namespace Liquid.NET.Filters.Math
             }
             if (_operand.DecimalValue == 0)
             {
-                return NumericValue.CreateError("Divide-by-zero error.");
+                return NumericValue.CreateError("Liquid error: divided by 0");
             }
             return new NumericValue(numericValue.DecimalValue % _operand.DecimalValue);
         }

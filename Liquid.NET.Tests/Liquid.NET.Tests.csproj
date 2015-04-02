@@ -137,6 +137,8 @@
     <Compile Include="DebuggingVisitor.cs" />
     <Compile Include="RenderingHelper.cs" />
     <Compile Include="RenderingVisitorTests.cs" />
+    <Compile Include="Ruby\ErrorTests.cs" />
+    <Compile Include="Ruby\FilterTests.cs" />
     <Compile Include="Symbols\SymbolTableStackFactoryTests.cs" />
     <Compile Include="Symbols\SymbolTableStackTests.cs" />
     <Compile Include="Symbols\UndefinedTests.cs" />

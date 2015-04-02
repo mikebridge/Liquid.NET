@@ -30,7 +30,7 @@ namespace Liquid.NET.Tests.Filters.Math
             var result = RenderingHelper.RenderTemplate("Result : {{ 2  | modulo 2 }}");
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : Divide-by-zero error."));
+            Assert.That(result, Is.EqualTo("Liquid error: divided by 0"));
         }
 
     }

@@ -46,5 +46,16 @@ namespace Liquid.NET.Tests.Constants
 
         }
 
+        [Test]
+        public void It_Should_Cast_A_Non_Numeric_String_To_Zero()
+        {
+            // Act
+            NumericValue number = NumericValue.Parse("z");
+
+            // Assert
+            Assert.That(number.IntValue, Is.EqualTo(0));
+
+        }
+
     }
 }

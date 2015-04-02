@@ -14,6 +14,7 @@ namespace Liquid.NET.Constants
             where TDest : IExpressionConstant
             where TSource : IExpressionConstant
         {
+            Console.WriteLine("BAH");
             //if (src.GetType().IsAssignableFrom(typeof(TDest))) {
             if (src is TDest)
             {
@@ -37,8 +38,8 @@ namespace Liquid.NET.Constants
             {
                 return new StringValue(num.Value.ToString());
             }
-
-            return ConstantFactory.CreateError<TDest>("Can't convert from numeric to " + destType);
+            return new NumericValue(0); // Liquid seems to convert unknowns to numeric.
+            //return ConstantFactory.CreateError<TDest>("Can't convert from numeric to " + destType);
         }
 
         private static IExpressionConstant Convert<TDest>(BooleanValue boolean)
@@ -172,8 +173,15 @@ namespace Liquid.NET.Constants
 
             if (destType == typeof (NumericValue))
             {
-                // TODO: return error if fail
-                return NumericValue.Parse(str.StringVal);
+                try
+                {
+                    return new NumericValue(decimal.Parse(str.StringVal));
+                }
+                catch
+                {
+                    // https://github.com/Shopify/liquid/blob/master/lib/liquid/standardfilters.rb
+                    return new NumericValue(0);  // liquid to_numeric seems to convert these to 0.
+                }
             }
             return ConstantFactory.CreateError<TDest>("Can't convert from string to " + destType);
            
@@ -205,7 +213,10 @@ namespace Liquid.NET.Constants
             {
                 return new StringValue(source.ToString());
             }
-
+            if (destType == typeof (NumericValue))
+            {
+                return new NumericValue(0);
+            }
             return ConstantFactory.CreateError<TDest>("Can't convert from " + source.GetType() + " to " + destType);
 
         }

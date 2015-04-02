@@ -7,12 +7,15 @@
 
 - Write the std blocks
   - include
+  - table?
 
 - Set up custom blocks/filters
      - ability to define a keyword in a block
     
 
 EXTRA
+
+- Implement local variables
 
 - Implement {%- -%}
 

@@ -369,6 +369,26 @@ namespace Liquid.NET.Tests.Tags
             Assert.That(result, Is.EqualTo("Result : loop1loop2looploop"));
         }
 
+        [Test]
+        // SEE: https://github.com/Shopify/liquid/commit/410cce97407735b02dc265ba60a893efe7c1165e
+        public void It_Should_Use_Else_When_For_Loop_Has_Empty_Array()
+        {
+            // Arrange
+            const string emptystr = "There is nothing in the collection";
+            const string templateString = "Result : {% for item in array  %}<li>{{ item }}</li>{% else %}"+emptystr+"{% endfor %}";
+            Console.WriteLine(templateString);
+            TemplateContext ctx = new TemplateContext();
+            ctx.Define("array", new ArrayValue(new List<IExpressionConstant>()));
+            var template = LiquidTemplate.Create(templateString);
+
+            // Act
+            String result = template.Render(ctx);
+
+            // Assert
+            Assert.That(result, Is.EqualTo("Result : "+emptystr));
+
+        }
+
         private static string GetForLoop(string txt)
         {
             return @"Result : {%assign coll = ""1,2,3,4"" | split: ','%}"

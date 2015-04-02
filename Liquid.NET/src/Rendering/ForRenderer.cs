@@ -43,37 +43,48 @@ namespace Liquid.NET.Rendering
                 {
                     iterable.Reverse(); // stupid thing does it in-place.
                 }
-                var offset = forBlockTag.Offset.IntValue; // zero indexed
-                var limit = forBlockTag.Limit.IntValue; // max number of iterations.
-
-                // the offset and limit slice the iterable and sends the result to the loop.
-                int iter = 0;
-                int length = iterable.Skip(offset).Take(limit).Count();
-                if (length < 0) { return; }
-
-                foreach (var item in iterable.Skip(offset).Take(limit))
-                {
-                    symbolTableStack.Define("forloop", CreateForLoopDescriptor(iter, length));
-                    symbolTableStack.Define(forBlockTag.LocalVariable, item);
-
-                    try
-                    {
-                        _evaluator.StartVisiting(_renderingVisitor, forBlockTag.LiquidBlock);
-                    }
-                    catch (ContinueException)
-                    {
-                        continue;
-                    }
-                    catch (BreakException)
-                    {
-                        break;
-                    }
-                    iter ++;
-                }
+                IterateBlock(forBlockTag, symbolTableStack, iterable);
             }
             finally
             {
                 symbolTableStack.Pop();
+            }
+        }
+
+        private void IterateBlock(ForBlockTag forBlockTag, SymbolTableStack symbolTableStack, List<IExpressionConstant> iterable)
+        {
+            var offset = forBlockTag.Offset.IntValue; // zero indexed
+            var limit = forBlockTag.Limit.IntValue; // max number of iterations.
+
+            // the offset and limit slice the iterable and sends the result to the loop.
+            int length = iterable.Skip(offset).Take(limit).Count();
+            if (length <= 0) 
+            {
+                // test for 'else'
+                _evaluator.StartVisiting(_renderingVisitor, forBlockTag.ElseBlock);
+                return;
+                //return;
+            }
+
+            int iter = 0;
+            foreach (var item in iterable.Skip(offset).Take(limit))
+            {
+                symbolTableStack.Define("forloop", CreateForLoopDescriptor(iter, length));
+                symbolTableStack.Define(forBlockTag.LocalVariable, item);
+
+                try
+                {
+                    _evaluator.StartVisiting(_renderingVisitor, forBlockTag.LiquidBlock);
+                }
+                catch (ContinueException)
+                {
+                    continue;
+                }
+                catch (BreakException)
+                {
+                    break;
+                }
+                iter ++;
             }
         }
 

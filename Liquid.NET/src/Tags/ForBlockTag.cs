@@ -12,9 +12,9 @@ namespace Liquid.NET.Tags
 
         public ForBlockTag()
         {
-            this.Limit = new NumericValue(50); // as per the Shopify docs
-            this.Reversed = new BooleanValue(false);
-            this.Offset = new NumericValue(0);
+            Limit = new NumericValue(50); // as per the Shopify docs
+            Reversed = new BooleanValue(false);
+            Offset = new NumericValue(0);
         }
 
         public void Accept(IASTVisitor visitor)
@@ -33,6 +33,8 @@ namespace Liquid.NET.Tags
         public BooleanValue Reversed { get; set; }
 
         public TreeNode<IASTNode> LiquidBlock = new TreeNode<IASTNode>(new RootDocumentNode());
+
+        public TreeNode<IASTNode> ElseBlock = new TreeNode<IASTNode>(new RootDocumentNode());
 
         /// <summary>
         /// The local variable name (the "item" in "for item in ..."

@@ -104,7 +104,9 @@ capture_tag :		TAGSTART CAPTURE_TAG LABEL TAGEND capture_block TAGSTART ENDCAPTU
 
 capture_block:		block* ;
 
-for_tag:			TAGSTART FOR_TAG for_label FOR_IN for_iterable for_params* TAGEND for_block TAGSTART ENDFOR_TAG TAGEND ;
+for_tag:			TAGSTART FOR_TAG for_label FOR_IN for_iterable for_params* TAGEND for_block for_else? TAGSTART ENDFOR_TAG TAGEND ;
+
+for_else:			TAGSTART ELSE_TAG TAGEND block* ;
 
 for_block:			block* ;
 

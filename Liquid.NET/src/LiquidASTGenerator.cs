@@ -168,6 +168,20 @@ namespace Liquid.NET
                 
         }
 
+        public override void EnterFor_else(LiquidParser.For_elseContext context)
+        {
+            base.EnterFor_else(context);
+            var forBlock = CurrentBuilderContext.ForBlockStack.Peek();
+            // capture the liquid block to "else"
+            _astNodeStack.Push(forBlock.ElseBlock);
+        }
+
+        public override void ExitFor_else(LiquidParser.For_elseContext context)
+        {
+            base.ExitFor_else(context);
+            _astNodeStack.Pop();
+        }
+
 
         public override void ExitFor_tag(LiquidParser.For_tagContext forContext)
         {

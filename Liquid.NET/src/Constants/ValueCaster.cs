@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
+
 using Liquid.NET.Filters;
 
 namespace Liquid.NET.Constants
@@ -14,11 +13,8 @@ namespace Liquid.NET.Constants
             where TDest : IExpressionConstant
             where TSource : IExpressionConstant
         {
-            Console.WriteLine("BAH");
-            //if (src.GetType().IsAssignableFrom(typeof(TDest))) {
             if (src is TDest)
             {
-                //Console.WriteLine("Cast return returning "+src+" as a "+typeof(TDest));
                 return (TDest) ((dynamic) src);
             }
 

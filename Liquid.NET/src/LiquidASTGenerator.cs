@@ -17,7 +17,6 @@ using Liquid.NET.Utils;
 
 namespace Liquid.NET
 {
-
     /// <summary>
     /// When a tag or object/filter expression chain is encountered, a new AST node will be added to the AST tree.
     /// An AST node that is added to the tree will be parsed by the visitor.
@@ -31,6 +30,8 @@ namespace Liquid.NET
     public class LiquidASTGenerator : LiquidBaseListener
     {
         // TODO: WHen done it shoudl check if all the stacks are reset.
+
+        public event OnParsingErrorEventHandler ParsingErrorEventHandler;
 
         private BufferedTokenStream _tokenStream;
         private TokenStreamRewriter _tokenStreamRewriter;
@@ -58,7 +59,13 @@ namespace Liquid.NET
             _tokenStreamRewriter = new TokenStreamRewriter(_tokenStream);
 
             var parser = new LiquidParser(_tokenStream);
-            
+            parser.RemoveErrorListeners();
+            var liquidErrorListener = new LiquidErrorListener();
+            liquidErrorListener.ParsingErrorEventHandler += ParsingErrorEventHandler;
+
+            liquidErrorListener.ParsingErrorEventHandler += ASTErrorAppender;
+
+            parser.AddErrorListener(liquidErrorListener);
             new ParseTreeWalker().Walk(this, parser.init());
 
             return liquidAst;
@@ -1161,7 +1168,7 @@ namespace Liquid.NET
             // node) is the only one.
 
             FinishLiquidExpressionTree();
-        }
+        } 
 
 
         /// <summary>
@@ -1170,15 +1177,16 @@ namespace Liquid.NET
         /// <param name="context"></param>
         public override void EnterFiltername(LiquidParser.FilternameContext context)
         {
-            base.EnterFiltername(context);
+            base.EnterFiltername(context);           
             //Console.WriteLine("CREATING FILTER " + context.GetText());
 
-            
+            //context.
             //_currentFilterSymbol = new FilterSymbol(context.GetText());
             CurrentBuilderContext.LiquidExpressionBuilder.AddFilterSymbolToLastExpression(new FilterSymbol(context.GetText()));
 
         }
 
+        
         public override void EnterOutputexpression(LiquidParser.OutputexpressionContext context)
         {
             //Console.WriteLine("* Entering Output Expression");
@@ -1197,7 +1205,7 @@ namespace Liquid.NET
         public override void EnterStringFilterArg(LiquidParser.StringFilterArgContext context)
         {
             base.EnterStringFilterArg(context);
-            Console.WriteLine("Enter STRING FILTERARG " + context.GetText());
+            //Console.WriteLine("Enter STRING FILTERARG " + context.GetText());
             CurrentBuilderContext.LiquidExpressionBuilder.AddFilterArgToLastExpressionsFilter(
                 GenerateStringSymbol(context.GetText()));
         }
@@ -1205,7 +1213,7 @@ namespace Liquid.NET
         public override void EnterNumberFilterArg(LiquidParser.NumberFilterArgContext context)
         {
             base.EnterNumberFilterArg(context);
-            Console.WriteLine("Enter NUMBER FILTERARG " + context.GetText());
+            //Console.WriteLine("Enter NUMBER FILTERARG " + context.GetText());
             CurrentBuilderContext.LiquidExpressionBuilder.AddFilterArgToLastExpressionsFilter(
                 NumericValue.Parse(context.GetText()));
 
@@ -1214,7 +1222,7 @@ namespace Liquid.NET
         public override void EnterBooleanFilterArg(LiquidParser.BooleanFilterArgContext context)
         {
             base.EnterBooleanFilterArg(context);
-            Console.WriteLine("Enter BOOLEAN FILTERARG " + context.GetText());
+            //Console.WriteLine("Enter BOOLEAN FILTERARG " + context.GetText());
             CurrentBuilderContext.LiquidExpressionBuilder.AddFilterArgToLastExpressionsFilter(
                 new BooleanValue(Convert.ToBoolean(context.GetText())));
         }
@@ -1222,7 +1230,7 @@ namespace Liquid.NET
         public override void EnterVariableFilterArg(LiquidParser.VariableFilterArgContext context)
         {
             base.EnterVariableFilterArg(context);
-            Console.WriteLine("Enter VARIABLE FILTERARG " + context.GetText());
+            //Console.WriteLine("Enter VARIABLE FILTERARG " + context.GetText());
             CurrentBuilderContext.LiquidExpressionBuilder.AddFilterArgToLastExpressionsFilter(
                 new VariableReference(context.GetText()));
         }
@@ -1247,6 +1255,16 @@ namespace Liquid.NET
         }
 
         #endregion
+
+        private void ASTErrorAppender(LiquidError liquiderror)
+        {
+            // for the moment it doesn't append errors to the AST;
+            // Lexing errors appear before anything has rendered,
+            // so they would appear at the top of the AST tree.
+            //Console.WriteLine("Appending Error To Ast");
+            //CurrentAstNode.AddChild(CreateTreeNode<IASTNode>(new ErrorNode(liquiderror)));
+        }     
+       
 
         public override void EnterRawtext(LiquidParser.RawtextContext context)
         {
@@ -1273,7 +1291,7 @@ namespace Liquid.NET
 
         private void AddNodeToAST(IASTNode node)
         {
-            var newNode = CreateTreeNode<IASTNode>(node);
+            var newNode = CreateTreeNode(node);
             CurrentAstNode.AddChild(newNode);
         }
 
@@ -1288,7 +1306,6 @@ namespace Liquid.NET
 
             public LiquidExpressionTreeBuilder LiquidExpressionBuilder { get; set; }
         }
-
 
        
        

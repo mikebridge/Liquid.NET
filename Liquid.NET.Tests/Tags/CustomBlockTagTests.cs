@@ -74,7 +74,7 @@ namespace Liquid.NET.Tests.Tags
 
             private static String EvalLiquidBlock(SymbolTableStack symbolTableStack, TreeNode<IASTNode> liquidBlock)
             {
-                var evaluator = new LiquidEvaluator();
+                var evaluator = new LiquidASTRenderer();
                 var subRenderer = new RenderingVisitor(evaluator, symbolTableStack);
                 evaluator.StartVisiting(subRenderer, liquidBlock);
                 return subRenderer.Text;

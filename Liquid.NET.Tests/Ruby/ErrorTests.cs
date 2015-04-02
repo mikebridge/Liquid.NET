@@ -4,6 +4,8 @@
 //
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
+//
+//     Source: errors.txt
 // </auto-generated>
 //------------------------------------------------------------------------------
 
@@ -16,17 +18,21 @@ using System.Threading.Tasks;
 using Liquid.NET.Constants;
 using NUnit.Framework;
 
-namespace Liquid.NET.Tests.Tags
+namespace Liquid.NET.Tests.Ruby
 {
     [TestFixture]
     public class ErrorTests {
 
         [Test]
-        [TestCase("{{ \"1\" | divided_by: \"0\" }}", "Liquid error: divided by 0")]
-        [TestCase("{{ \"x\" | divided_by: \"1\" }}", "0")]
-        [TestCase("{{ 1 | unk_filter }}", "1")]
-        [TestCase("{{ \"test,test\" | split: }}", "Liquid error: wrong number of arguments calling `split` (1 for 2)")]
-        [TestCase("{% unknown_tag %}", "Liquid syntax error: Unknown tag 'unknown_tag'")]
+        [TestCase(@"", @"")]
+        [TestCase(@"{{ ""1"" | divided_by: ""0"" }}", @"Liquid error: divided by 0")]
+        [TestCase(@"{{ ""x"" | divided_by: ""1"" }}", @"0")]
+        [TestCase(@"{{ 1 | unk_filter }}", @"1")]
+        [TestCase(@"{{
+   multiline
+   }}", @"")]
+        [TestCase(@"{{ ""test,test"" | split: }}", @"Liquid error: wrong number of arguments calling `split` (1 for 2)")]
+        [TestCase(@"{% unknown_tag %}", @"EXCEPTION: Liquid syntax error: Unknown tag 'unknown_tag'")]
         public void It_Should_Match_Ruby_Output(String input, String expected) {
             // Arrange
             ITemplateContext ctx = new TemplateContext().WithAllFilters();

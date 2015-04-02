@@ -4,6 +4,8 @@
 //
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
+//
+//     Source: {{ sourcefile }}
 // </auto-generated>
 //------------------------------------------------------------------------------
 
@@ -16,13 +18,13 @@ using System.Threading.Tasks;
 using Liquid.NET.Constants;
 using NUnit.Framework;
 
-namespace Liquid.NET.Tests.Tags
+namespace Liquid.NET.Tests.Ruby
 {
     [TestFixture]
     public class {{ classname }} {
 
         [Test]{% for test in tests %}
-        [TestCase("{{test.input}}", "{{test.expected}}")]{% endfor %}
+        [TestCase(@"{{test.input}}", @"{{test.expected}}")]{% endfor %}
         public void It_Should_Match_Ruby_Output(String input, String expected) {
             // Arrange
             ITemplateContext ctx = new TemplateContext().WithAllFilters();

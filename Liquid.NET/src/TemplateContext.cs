@@ -51,7 +51,7 @@ namespace Liquid.NET
             _customBlockTagRegistry.Register<T>(name);
             return this;
         }
-
+       
         internal FilterRegistry FilterRegistry { get { return _filterRegistry; } }
 
         internal IDictionary<String, IExpressionConstant> VariableDictionary { get { return _varDictionary; } }

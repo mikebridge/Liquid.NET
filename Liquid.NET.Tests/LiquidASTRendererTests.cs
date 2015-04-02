@@ -10,7 +10,7 @@ using NUnit.Framework;
 namespace Liquid.NET.Tests
 {
     [TestFixture]
-    public class LiquidEvaluatorTests
+    public class LiquidASTRendererTests
     {
         private LiquidASTGenerator _generator;
 
@@ -34,7 +34,7 @@ namespace Liquid.NET.Tests
             var ast = _generator.Generate("Result : {{ "+literal+" }}");
 
             // Act
-            String result = new LiquidEvaluator().Render(templateContext, ast);
+            String result = new LiquidASTRenderer().Render(templateContext, ast);
             // Act
 
             // Assert
@@ -51,7 +51,7 @@ namespace Liquid.NET.Tests
             LiquidAST ast = new LiquidAST();
             TemplateContext ctx = new TemplateContext();
             ast.RootNode.AddChild(new TreeNode<IASTNode>(new RawBlockTag(helloWorld)));
-            var evaluator = new LiquidEvaluator();
+            var evaluator = new LiquidASTRenderer();
 
             // Act
             String result = evaluator.Render(ctx, ast);
@@ -76,7 +76,7 @@ namespace Liquid.NET.Tests
                                     "\" %}equal{% else %}not equal{% endif %}");
 
             // Act
-            var evaluator = new LiquidEvaluator();
+            var evaluator = new LiquidASTRenderer();
 
             // Act
             String result = evaluator.Render(new TemplateContext(), ast);
@@ -101,7 +101,7 @@ namespace Liquid.NET.Tests
         {
             // Arrange
             var ast = _generator.Generate("Result : {% if " + str1 + " " + op + " " + str2 +" %}TRUE{% else %}FALSE{% endif %}");
-            var evaluator = new LiquidEvaluator();
+            var evaluator = new LiquidASTRenderer();
 
             // Act
             String result = evaluator.Render(new TemplateContext(), ast);
@@ -118,7 +118,7 @@ namespace Liquid.NET.Tests
             TemplateContext templateContext = new TemplateContext();
             templateContext.Define("myVar", new StringValue("My Variable"));
             var ast = _generator.Generate("Result : {% if myVar %}OK{% else %}NOT OK{% endif %}");
-            var evaluator = new LiquidEvaluator();
+            var evaluator = new LiquidASTRenderer();
 
             // Act
             String result = evaluator.Render(templateContext, ast);
@@ -134,7 +134,7 @@ namespace Liquid.NET.Tests
             // Arrange
             TemplateContext templateContext = new TemplateContext();
             var ast = _generator.Generate("Result : {% if myUndefinedVar %}OK{% else %}NOT OK{% endif %}");
-            var evaluator = new LiquidEvaluator();
+            var evaluator = new LiquidASTRenderer();
 
             // Act
             String result = evaluator.Render(templateContext, ast);
@@ -152,7 +152,7 @@ namespace Liquid.NET.Tests
             const string val = "My Variable";
             templateContext.Define("myVar", new StringValue(val));
             var ast = _generator.Generate("Result : {{ myVar }}");
-            var evaluator = new LiquidEvaluator();
+            var evaluator = new LiquidASTRenderer();
 
             // Act
             String result = evaluator.Render(templateContext, ast);
@@ -170,7 +170,7 @@ namespace Liquid.NET.Tests
             // Arrange
             TemplateContext templateContext = new TemplateContext();
             var ast = _generator.Generate("Result : {{ myUndefinedVar }}");
-            var evaluator = new LiquidEvaluator();
+            var evaluator = new LiquidASTRenderer();
 
             // Act
             String result = evaluator.Render(templateContext, ast);
@@ -191,7 +191,7 @@ namespace Liquid.NET.Tests
             var ast = _generator.Generate("Result : {% if " + expr + " %}TRUE{% else %}FALSE{% endif %}");
 
             // Act
-            String result = new LiquidEvaluator().Render(new TemplateContext(), ast);
+            String result = new LiquidASTRenderer().Render(new TemplateContext(), ast);
 
             Console.WriteLine("result is " + result);
             // Assert
@@ -208,7 +208,7 @@ namespace Liquid.NET.Tests
             var ast = _generator.Generate("Result : {% if myvar | upcase == \"HELLO\" %}TRUE{% else %}FALSE{% endif %}");
 
             // Act
-            String result = new LiquidEvaluator().Render(templateContext, ast);
+            String result = new LiquidASTRenderer().Render(templateContext, ast);
             Console.WriteLine("result is " + result);
 
             // Assert
@@ -225,7 +225,7 @@ namespace Liquid.NET.Tests
             var ast = _generator.Generate("Result : {% if myvar[0] | upcase == \"HELLO\" %}TRUE{% else %}FALSE{% endif %}");
 
             // Act
-            String result = new LiquidEvaluator().Render(templateContext, ast);
+            String result = new LiquidASTRenderer().Render(templateContext, ast);
             Console.WriteLine("result is " + result);
 
             // Assert
@@ -246,7 +246,7 @@ namespace Liquid.NET.Tests
             var ast = _generator.Generate("Result : {{ mydict }}");
 
             // Act
-            String result = new LiquidEvaluator().Render(templateContext, ast);
+            String result = new LiquidASTRenderer().Render(templateContext, ast);
             // Act
 
             // Assert
@@ -270,7 +270,7 @@ namespace Liquid.NET.Tests
             var ast = _generator.Generate("Result : {{ mydict.test1 }}");
 
             // Act
-            String result = new LiquidEvaluator().Render(templateContext, ast);
+            String result = new LiquidASTRenderer().Render(templateContext, ast);
 
             // Assert
             Assert.That(result, Is.EqualTo("Result : test element"));
@@ -294,7 +294,7 @@ namespace Liquid.NET.Tests
             var ast = _generator.Generate("Result : {{ mydict.test.test1.test2 }}");
 
             // Act
-            String result = new LiquidEvaluator().Render(templateContext, ast);
+            String result = new LiquidASTRenderer().Render(templateContext, ast);
 
             // Assert
             Assert.That(result, Is.EqualTo("Result : test element"));
@@ -319,7 +319,7 @@ namespace Liquid.NET.Tests
             var ast = _generator.Generate("Result : {{ mydict.zzz.test1.test2 }}");
 
             // Act
-            String result = new LiquidEvaluator().Render(templateContext, ast);
+            String result = new LiquidASTRenderer().Render(templateContext, ast);
 
             // Assert
             Assert.That(result, Is.EqualTo("Result : UNDEFINED: zzz"));
@@ -340,7 +340,7 @@ namespace Liquid.NET.Tests
             var ast = _generator.Generate("Result : {{ mydict.test[0] }}");
 
             // Act
-            String result = new LiquidEvaluator().Render(templateContext, ast);
+            String result = new LiquidASTRenderer().Render(templateContext, ast);
             // Act
 
             // Assert
@@ -361,7 +361,7 @@ namespace Liquid.NET.Tests
             var ast = _generator.Generate("Result : {{ myarray }}");
 
             // Act
-            String result = new LiquidEvaluator().Render(templateContext, ast);
+            String result = new LiquidASTRenderer().Render(templateContext, ast);
             // Act
 
             // Assert
@@ -382,7 +382,7 @@ namespace Liquid.NET.Tests
             var ast = _generator.Generate("Result : {{ myarray[1] }}");
 
             // Act
-            String result = new LiquidEvaluator().Render(templateContext, ast);
+            String result = new LiquidASTRenderer().Render(templateContext, ast);
             // Act
 
             // Assert
@@ -405,7 +405,7 @@ namespace Liquid.NET.Tests
             var ast = _generator.Generate("Result : {{ myarray[indexes[1]] }}");
 
             // Act
-            String result = new LiquidEvaluator().Render(templateContext, ast);
+            String result = new LiquidASTRenderer().Render(templateContext, ast);
             // Act
 
             // Assert
@@ -431,7 +431,7 @@ namespace Liquid.NET.Tests
             
             // Act
             var ast = _generator.Generate("Result : {% if array2[0][0][idx1] %}first is TRUE{% endif %}{%if array2[0][0][idx2] %}second is TRUE{% endif %}");
-            String result = new LiquidEvaluator().Render(templateContext, ast);
+            String result = new LiquidASTRenderer().Render(templateContext, ast);
             Console.WriteLine(result);
             // Assert
             Assert.That(result, Is.EqualTo("Result : first is TRUE"));
@@ -457,7 +457,7 @@ namespace Liquid.NET.Tests
             var ast = _generator.Generate("Result : {{ arrayofstr[array2[0][0][idx[idx[1]]]] }}");
 
             // Act
-            String result = new LiquidEvaluator().Render(templateContext, ast);
+            String result = new LiquidASTRenderer().Render(templateContext, ast);
             // Act
 
             // Assert
@@ -473,7 +473,7 @@ namespace Liquid.NET.Tests
             var ast = _generator.Generate("123 : {{ \"HELLO\" }}" );
 
             // Act
-            String result = new LiquidEvaluator().Render(templateContext, ast);
+            String result = new LiquidASTRenderer().Render(templateContext, ast);
             Console.WriteLine("result is " + result);
 
             // Assert
@@ -511,7 +511,7 @@ namespace Liquid.NET.Tests
             var ast = _generator.Generate(tmpl);
 
             // Act
-            String result = new LiquidEvaluator().Render(templateContext, ast);
+            String result = new LiquidASTRenderer().Render(templateContext, ast);
             Console.WriteLine("result is " + result);
 
             // Assert

@@ -20,13 +20,15 @@ namespace Liquid.NET
     {
         private String _result = "";
         
-        private readonly LiquidEvaluator _evaluator;
+        private readonly LiquidASTRenderer _astRenderer;
         private readonly SymbolTableStack _symbolTableStack;
         private readonly ConcurrentDictionary<String, int> _counters = new ConcurrentDictionary<string, int>();
 
-        public RenderingVisitor(LiquidEvaluator evaluator, SymbolTableStack symbolTableStack)
+        public readonly IList<LiquidError> Errors = new List<LiquidError>();
+
+        public RenderingVisitor(LiquidASTRenderer astRenderer, SymbolTableStack symbolTableStack)
         {
-            _evaluator = evaluator;
+            _astRenderer = astRenderer;
             _symbolTableStack = symbolTableStack;
         }
 
@@ -67,7 +69,8 @@ namespace Liquid.NET
                 _result += RenderMacro(macroDescription, args);
                 return;
             }
-            _result += " ERROR: There is no macro or tag named "+  customTag.TagName+ " ";
+            //_result += " ERROR: There is no macro or tag named "+  customTag.TagName+ " ";
+            _result += "Liquid syntax error: Unknown tag '"+customTag.TagName+"'";
         }
 
         private string RenderMacro(MacroBlockTag macroBlockTag, IEnumerable<IExpressionConstant> args)
@@ -120,8 +123,8 @@ namespace Liquid.NET
 
         public void Visit(CaptureBlockTag captureBlockTag)
         {
-            var hiddenVisitor = new RenderingVisitor(_evaluator, _symbolTableStack);
-            _evaluator.StartVisiting(hiddenVisitor, captureBlockTag.RootContentNode);            
+            var hiddenVisitor = new RenderingVisitor(_astRenderer, _symbolTableStack);
+            _astRenderer.StartVisiting(hiddenVisitor, captureBlockTag.RootContentNode);            
             _symbolTableStack.DefineGlobal(captureBlockTag.VarName, new StringValue(hiddenVisitor.Text) );
         }
 
@@ -196,7 +199,7 @@ namespace Liquid.NET
 
         public void Visit(ForBlockTag forBlockTag)
         {
-            new ForRenderer(this, _evaluator).Render(forBlockTag, _symbolTableStack);
+            new ForRenderer(this, _astRenderer).Render(forBlockTag, _symbolTableStack);
         }
 
         public void Visit(IfThenElseBlockTag ifThenElseBlockTag)
@@ -207,7 +210,7 @@ namespace Liquid.NET
                                 expr => LiquidExpressionEvaluator.Eval(expr.LiquidExpressionTree, _symbolTableStack).IsTrue);
             if (match != null)
             {
-                _evaluator.StartVisiting(this, match.LiquidBlock); // then render the contents
+                _astRenderer.StartVisiting(this, match.LiquidBlock); // then render the contents
             }
         }
 
@@ -228,11 +231,11 @@ namespace Liquid.NET
 
             if (match != null)
             {
-                _evaluator.StartVisiting(this, match.LiquidBlock); // then eval + render the HTML
+                _astRenderer.StartVisiting(this, match.LiquidBlock); // then eval + render the HTML
             }
             else if (caseWhenElseBlockTag.HasElseClause)
             {
-                _evaluator.StartVisiting(this, caseWhenElseBlockTag.ElseClause.LiquidBlock);
+                _astRenderer.StartVisiting(this, caseWhenElseBlockTag.ElseClause.LiquidBlock);
             }
         }
 
@@ -250,10 +253,16 @@ namespace Liquid.NET
         {
             // not implemented yet
             
-            Console.WriteLine("Creating a macro "+ macroBlockTag.Name);
-            Console.WriteLine("That takes args " + String.Join(",", macroBlockTag.Args));
-            Console.WriteLine("and has body " + macroBlockTag.LiquidBlock);
+            //Console.WriteLine("Creating a macro "+ macroBlockTag.Name);
+            //Console.WriteLine("That takes args " + String.Join(",", macroBlockTag.Args));
+            //Console.WriteLine("and has body " + macroBlockTag.LiquidBlock);
             _symbolTableStack.DefineMacro(macroBlockTag.Name, macroBlockTag);
+        }
+
+        public void Visit(ErrorNode errorNode)
+        {
+            //Console.WriteLine("TODO: Render error : " + errorNode.ToString());
+            _result += errorNode.LiquidError.ToString();
         }
 
         public void Visit(RootDocumentNode rootDocumentNode)
@@ -279,7 +288,7 @@ namespace Liquid.NET
         {
             Console.WriteLine("Visiting Object Expression ");
 
-            var constResult = LiquidExpressionEvaluator.Eval(liquidExpression, _symbolTableStack);
+            var constResult = LiquidExpressionEvaluator.Eval(liquidExpression, new List<IExpressionConstant>(), _symbolTableStack);
 
             _result += Render(constResult); 
 
@@ -307,6 +316,10 @@ namespace Liquid.NET
         }
 
 
+        public void ErrorHandler(LiquidError error)
+        {
+            Console.WriteLine("TODO: Save the error " + error.ToString());
+        }
 
     }
 

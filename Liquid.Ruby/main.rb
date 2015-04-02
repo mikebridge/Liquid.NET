@@ -32,32 +32,34 @@ multiline_tmpl=<<HERE
 HERE
 print_test multiline_tmpl; # ///, { tests: [1,2,4,5] }
 
-print_test "{% for test in tests %}result:{{ test }}{% endfor %}"; #, { tests: [1,2,4,5] }
+# print_test "{% for test in tests %}result:{{ test }}{% endfor %}"; #, { tests: [1,2,4,5] }
 
 
-print_test "foo {{ \"bar\" | upcase }}"
+# print_test "foo {{ \"bar\" | upcase }}"
 
-print_test "foo {{ \"hello\" | slice: -3,2 }}"
+# print_test "foo {{ \"hello\" | slice: -3,2 }}"
 
-print_test "{% assign words = \"hello world\" | split: ' ' %} First Word: {{words.first}}"
+# print_test "{% assign words = \"hello world\" | split: ' ' %} First Word: {{words.first}}"
 
-print_test "{{ \"hello\" | times: 3 }}"
+# print_test "{{ \"hello\" | times: 3 }}"
 
-print_test "{{ 3 | times: 3 }}"
+# print_test "{{ 3 | times: 3 }}"
 
-print_test "{{ \"3\" | plus : 3 }}"
+# print_test "{{ \"3\" | plus : 3 }}"
 
-print_test "{{ 3 | plus : \"3\" }}"
+# print_test "{{ 3 | plus : \"3\" }}"
 
-print_test "{{ \"3\" | plus : \"3\" }}"
+# print_test "{{ \"3\" | plus : \"3\" }}"
 
-print_test "{{ \"test\" | plus : \"test\" }}"
+# print_test "{{ \"test\" | plus : \"test\" }}"
 
-print_test "{{ \"test\" | capitalize }}"
+# print_test "{{ \"test\" | capitalize }}"
 
-print_test "{{ \"test\" | times : 3 }}"
+# print_test "{{ \"test\" | times : 3 }}"
 
-print_test "{{ 3 | times : 3 }}"
+# print_test "{{ 3 | times : 3 }}"
+
+print_test "{{ assign a = \"\" | split: ' ' }}{% for x in a %}HELLO{% else %}NOTHING {% endfor %}"
 
 #print_test "Nothing: {{ \"xyz\" | truncate: 0 }}"
 #print_test "Nothing: {{ \"xyz\" | truncate: 2 }}"

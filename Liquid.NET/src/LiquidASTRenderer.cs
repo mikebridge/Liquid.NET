@@ -5,7 +5,7 @@ using Liquid.NET.Utils;
 
 namespace Liquid.NET
 {
-    public class LiquidEvaluator
+    public class LiquidASTRenderer
     {
 
         public String Render(ITemplateContext context, LiquidAST liquidAst)

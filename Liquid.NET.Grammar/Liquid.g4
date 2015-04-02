@@ -141,11 +141,14 @@ macro_label:		LABEL ;
 
 // {{ Parse output and filters }}
 
-outputmarkup:		OUTPUTMKUPSTART outputexpression OUTPUTMKUPEND ;
+outputmarkup:		OUTPUTMKUPSTART outputexpression OUTPUTMKUPEND |
+					OUTPUTMKUPSTART outputexpression? {NotifyErrorListeners("Missing '}}'");};
 
 outputexpression:	object (FILTERPIPE filter)* ; 
 	
-filter:				(filtername (COLON filterargs)?) ;
+filter:				(filtername ((COLON filterargs)? 
+								 | COLON {NotifyErrorListeners("Liquid error: missing arguments after colon in filter '" + _localctx.filtername().GetText() + "'");}
+								 )) ;
 
 filterargs:			filterarg (COMMA filterarg)* ;
 

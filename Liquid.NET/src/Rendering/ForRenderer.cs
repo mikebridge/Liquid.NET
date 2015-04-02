@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
+
 using Liquid.NET.Constants;
 using Liquid.NET.Symbols;
 using Liquid.NET.Tags;
@@ -11,16 +11,16 @@ namespace Liquid.NET.Rendering
     public class ForRenderer
     {
         private readonly RenderingVisitor _renderingVisitor;
-        private readonly LiquidEvaluator _evaluator;
+        private readonly LiquidASTRenderer _astRenderer;
 
-        public ForRenderer(RenderingVisitor renderingVisitor, LiquidEvaluator evaluator)
+        public ForRenderer(RenderingVisitor renderingVisitor, LiquidASTRenderer astRenderer)
         {
             _renderingVisitor = renderingVisitor;
-            _evaluator = evaluator;
+            _astRenderer = astRenderer;
         }
 
         /// <summary>
-        /// Side effect; this calls the renderer with the evaluator to render
+        /// Side effect; this calls the renderer with the astRenderer to render
         /// the block.  It would probably be better to handle this a little more
         /// cleanly.
         /// </summary>
@@ -60,10 +60,8 @@ namespace Liquid.NET.Rendering
             int length = iterable.Skip(offset).Take(limit).Count();
             if (length <= 0) 
             {
-                // test for 'else'
-                _evaluator.StartVisiting(_renderingVisitor, forBlockTag.ElseBlock);
+                _astRenderer.StartVisiting(_renderingVisitor, forBlockTag.ElseBlock);
                 return;
-                //return;
             }
 
             int iter = 0;
@@ -74,7 +72,7 @@ namespace Liquid.NET.Rendering
 
                 try
                 {
-                    _evaluator.StartVisiting(_renderingVisitor, forBlockTag.LiquidBlock);
+                    _astRenderer.StartVisiting(_renderingVisitor, forBlockTag.LiquidBlock);
                 }
                 catch (ContinueException)
                 {

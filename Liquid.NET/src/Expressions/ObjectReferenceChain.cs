@@ -19,7 +19,7 @@ namespace Liquid.NET.Expressions
 
         public override IExpressionConstant Eval(SymbolTableStack symbolTableStack, IEnumerable<IExpressionConstant> expressions)
         {
-            return LiquidExpressionEvaluator.Eval(_liquidExpression, symbolTableStack );
+            return LiquidExpressionEvaluator.Eval(_liquidExpression, new List<IExpressionConstant>(), symbolTableStack);
         }
     }
 }

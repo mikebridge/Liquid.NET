@@ -132,7 +132,8 @@
     <Compile Include="Helpers\StackHelper.cs" />
     <Compile Include="LiquidASTExpressionParsingTests.cs" />
     <Compile Include="LiquidASTGeneratorTests.cs" />
-    <Compile Include="LiquidEvaluatorTests.cs" />
+    <Compile Include="LiquidASTRendererTests.cs" />
+    <Compile Include="Parser\ErrorTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DebuggingVisitor.cs" />
     <Compile Include="RenderingHelper.cs" />

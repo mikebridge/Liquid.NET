@@ -104,6 +104,11 @@ namespace Liquid.NET.Tests
             _result += macroBlockTag.ToString();
         }
 
+        public void Visit(ErrorNode errorNode)
+        {
+            _result += errorNode.ToString();
+        }
+
         private String VisitIfTag(TreeNode<LiquidExpression> exprNode)
         {
             String result = " IF => " + exprNode.Data;

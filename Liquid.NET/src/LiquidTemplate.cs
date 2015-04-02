@@ -11,14 +11,14 @@ namespace Liquid.NET
 
         private readonly LiquidAST _liquidAst;
 
-        private LiquidTemplate(LiquidAST liquidAst)
+        public LiquidTemplate(LiquidAST liquidAst)
         {           
             _liquidAst = liquidAst;
         }
 
         public String Render(ITemplateContext ctx)
         {
-            var liquidEvaluator = new LiquidEvaluator();
+            var liquidEvaluator = new LiquidASTRenderer();
             return liquidEvaluator.Render(ctx, _liquidAst);
         }
 

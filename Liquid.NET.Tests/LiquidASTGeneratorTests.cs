@@ -176,7 +176,7 @@ namespace Liquid.NET.Tests
             LiquidAST ast = generator.Generate("Result : {% if true and (false or false) %}FALSE{% endif %}");
 
             var visitor= new DebuggingVisitor();
-            var evaluator = new LiquidEvaluator();
+            var evaluator = new LiquidASTRenderer();
             evaluator.StartVisiting(visitor,ast.RootNode);
             // Assert
             var tagExpressions = FindNodesWithType(ast, typeof(IfThenElseBlockTag)).ToList();

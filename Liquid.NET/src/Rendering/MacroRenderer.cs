@@ -12,7 +12,7 @@ namespace Liquid.NET.Rendering
     {
         public StringValue Render(MacroBlockTag macroBlocktag, SymbolTableStack symbolTableStack, IList<IExpressionConstant> args)
         {
-            var evaluator = new LiquidEvaluator();
+            var evaluator = new LiquidASTRenderer();
             var macroScope = new SymbolTable();
 
             var i = 0;

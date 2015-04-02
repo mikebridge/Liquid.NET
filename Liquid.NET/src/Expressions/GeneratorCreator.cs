@@ -54,10 +54,10 @@ namespace Liquid.NET.Expressions
 
         public IEnumerable<IExpressionConstant> Eval(SymbolTableStack symbolTableStack)
         {
-            Console.WriteLine("Evaling ArrayValue generator creator");
+            //Console.WriteLine("Evaling ArrayValue generator creator");
             var expressionConstant = LiquidExpressionEvaluator.Eval(_arrayValueExpression,
                 symbolTableStack);
-            Console.WriteLine("it is a "+expressionConstant);
+            //Console.WriteLine("it is a "+expressionConstant);
             return
                 ValueCaster.Cast<IExpressionConstant, ArrayValue>(expressionConstant);
         }

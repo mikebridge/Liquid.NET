@@ -8,6 +8,7 @@ namespace Liquid.NET.Constants
     /// <summary>
     /// TODO: Is this a type (as it is now?) or a property of a type (like an errormessage)?
     /// </summary>
+    [Obsolete]
     public class Undefined : ExpressionConstant
     {
         public static String CreateUndefinedMessage(String varname)
@@ -22,10 +23,6 @@ namespace Liquid.NET.Constants
             Name = name;
         }
 
-        public override IExpressionConstant Eval(SymbolTableStack symbolTableStack, IEnumerable<IExpressionConstant> childresults)
-        {
-            return this;
-        }
 
         public override object Value
         {

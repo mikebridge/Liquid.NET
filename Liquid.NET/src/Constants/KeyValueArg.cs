@@ -9,10 +9,10 @@ namespace Liquid.NET.Constants
 {
     public class KeyValueArg : ExpressionConstant
     {
-        public override IExpressionConstant Eval(SymbolTableStack symbolTableStack, IEnumerable<IExpressionConstant> expressions)
-        {
-            throw new NotImplementedException();
-        }
+//        public override IExpressionConstant Eval(SymbolTableStack symbolTableStack, IEnumerable<IExpressionConstant> expressions)
+//        {
+//            throw new NotImplementedException();
+//        }
 
         public override object Value
         {

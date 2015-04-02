@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
 using Liquid.NET.Constants;
-using Liquid.NET.Expressions;
 using Liquid.NET.Filters;
 using Liquid.NET.Symbols;
 using Liquid.NET.Utils;
@@ -44,10 +42,21 @@ namespace Liquid.NET
            
             // Compose a chain of filters, making sure type-casting
             // is done between them.
-            
+
+            var filterExpressionTuples = expression.FilterSymbols.Select(symbol => 
+                new Tuple<FilterSymbol, IFilterExpression>(symbol, InstantiateFilter(symbolTableStack, symbol))).ToList();
+
+            var erroringFilternames = filterExpressionTuples.Where(x => x.Item2 == null).Select(x => x.Item1);
+
+            if (erroringFilternames.Any())
+            {
+                // TODO: remove this!
+                throw new Exception("Missing filters..."); 
+            }
+
             var filterChain = FilterChain.CreateChain(
                 objResult.GetType(),
-                expression.FilterSymbols.Select(symbol => InstantiateFilter(symbolTableStack, symbol)));
+                filterExpressionTuples.Select(x => x.Item2));
 
             // apply the composed function to the object
             return filterChain(objResult);
@@ -61,7 +70,9 @@ namespace Liquid.NET
             if (filterType == null)
             {
                 //TODO: make this return an error filter or something?
-                throw new Exception("Invalid filter: " + filterSymbol.Name);
+                //throw new Exception("Invalid filter: " + filterSymbol.Name);
+                //return new Tuple<String, IFilterExpression>(filterSymbol.Name, null);
+                return null;
             }
             var expressionConstants = filterSymbol.Args.Select(x => x.Eval(stack, new List<IExpressionConstant>()));
             return FilterFactory.InstantiateFilter(filterSymbol.Name, filterType, expressionConstants);

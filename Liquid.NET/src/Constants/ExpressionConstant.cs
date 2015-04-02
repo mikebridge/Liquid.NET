@@ -7,10 +7,14 @@ namespace Liquid.NET.Constants
 {
     public abstract class ExpressionConstant : ExpressionDescription, IExpressionConstant
     {
-//        public ExpressionConstant()
-//        {
-//            IsUndefined=true;
-//        }
+
+        public override IExpressionConstant Eval(
+            SymbolTableStack symbolTableStack, 
+            IEnumerable<IExpressionConstant> childresults)
+        {
+            return this;
+        }
+
 
         public abstract object Value
         {

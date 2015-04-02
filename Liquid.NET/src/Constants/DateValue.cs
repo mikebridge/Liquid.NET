@@ -22,12 +22,6 @@ namespace Liquid.NET.Constants
             visitor.Visit(this);
         }
 
-        public override IExpressionConstant Eval(
-            SymbolTableStack symbolTableStack, 
-            IEnumerable<IExpressionConstant> childresults)
-        {
-            return this;
-        }
 
 
         public override Object Value { get { return _val; } }

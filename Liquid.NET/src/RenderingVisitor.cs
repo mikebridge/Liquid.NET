@@ -287,9 +287,10 @@ namespace Liquid.NET
         public void Visit(LiquidExpression liquidExpression)
         {
             Console.WriteLine("Visiting Object Expression ");
-
-            var constResult = LiquidExpressionEvaluator.Eval(liquidExpression, new List<IExpressionConstant>(), _symbolTableStack);
-
+            var constResult = LiquidExpressionEvaluator.Eval(liquidExpression, new List<IExpressionConstant>(),
+                 _symbolTableStack);
+            
+            catch
             _result += Render(constResult); 
 
         }

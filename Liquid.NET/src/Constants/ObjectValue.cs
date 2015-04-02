@@ -18,11 +18,6 @@ namespace Liquid.NET.Constants
             _dictionaryValue = _reflector.GenerateExpressionConstant(val);
         }
 
-        public override IExpressionConstant Eval(SymbolTableStack symbolTableStack, IEnumerable<IExpressionConstant> expressions)
-        {
-            return this;
-        }
-
         public override object Value { get { return _dictionaryValue; } }
 
         // TODO: Is this correct?

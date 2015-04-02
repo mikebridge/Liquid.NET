@@ -55,12 +55,6 @@ namespace Liquid.NET.Constants
             expressionDescriptionVisitor.Visit(this);
         }
 
-        // Todo: move all these up one level.
-        public override IExpressionConstant Eval(SymbolTableStack symbolTableStack, IEnumerable<IExpressionConstant> childresults)
-        {
-            return this;
-        }
-
         public static NumericValue CreateError(string message)
         {
             var result = new NumericValue(0);

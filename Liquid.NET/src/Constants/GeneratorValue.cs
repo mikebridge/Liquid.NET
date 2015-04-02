@@ -27,10 +27,6 @@ namespace Liquid.NET.Constants
         /// <param name="symbolTableStack"></param>
         /// <param name="expressions"></param>
         /// <returns></returns>
-        public override IExpressionConstant Eval(SymbolTableStack symbolTableStack, IEnumerable<IExpressionConstant> expressions)
-        {
-            return this;
-        }
 
         public override object Value
         {

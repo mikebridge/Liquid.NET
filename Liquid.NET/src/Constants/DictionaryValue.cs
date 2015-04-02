@@ -15,11 +15,6 @@ namespace Liquid.NET.Constants
             _value = dictionary;
         }
 
-        public override IExpressionConstant Eval(SymbolTableStack symbolTableStack, IEnumerable<IExpressionConstant> expressions)
-        {
-            return this;
-        }
-
         public override object Value
         {
             get { return _value; }

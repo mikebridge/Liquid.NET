@@ -1,12 +1,4 @@
 #
 {{ "1" | divided_by: "0" }}
-# 
-{{ "x" | divided_by: "1" }}
-#
-{{
-   multiline
-   }}
 #
 {% unknown_tag %}
-#
-{{ "z" | pluralize: "thing", "things" }}

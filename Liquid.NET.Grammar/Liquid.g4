@@ -126,7 +126,9 @@ for_iterable:		variable | STRING  | generator;
 
 variable:			LABEL objectvariableindex* ;
 
-generator:			PARENOPEN (NUMBER | variable) GENERATORRANGE (NUMBER | variable) PARENCLOSE ;
+generator:			PARENOPEN generator_index GENERATORRANGE generator_index PARENCLOSE ;
+
+generator_index:	NUMBER | variable;
 
 //comment_tag:		TAGSTART COMMENT_TAG TAGEND rawtext TAGSTART ENDCOMMENT_TAG TAGEND ;
 

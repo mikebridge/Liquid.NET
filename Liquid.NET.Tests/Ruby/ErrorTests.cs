@@ -26,12 +26,6 @@ namespace Liquid.NET.Tests.Ruby
         [Test]
         [TestCase(@"", @"")]
         [TestCase(@"{{ ""1"" | divided_by: ""0"" }}", @"Liquid error: divided by 0")]
-        [TestCase(@"{{ ""x"" | divided_by: ""1"" }}", @"0")]
-        [TestCase(@"{{ 1 | unk_filter }}", @"1")]
-        [TestCase(@"{{
-   multiline
-   }}", @"")]
-        [TestCase(@"{{ ""z"" | pluralize: ""thing"", ""things"" }}", @"z")]
         public void It_Should_Match_Ruby_Output(String input, String expected) {
 
             // Arrange

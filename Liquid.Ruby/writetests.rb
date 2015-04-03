@@ -44,13 +44,13 @@ end
 
 def create_test_file_from_cases(inputfile, outputfile, classname, test_template)
   test_cases = read_tests_into_array(inputfile).collect{ |x| test_line(x) }
-  puts test_cases
+  #puts test_cases
   vars = {'classname' => classname,
           'sourcefile' => File.basename(inputfile),
           'tests' => non_exception_results(test_cases),
           'exceptions' => exception_results(test_cases)
   }
-  puts(vars)
+  #puts(vars)
 
   write_test_file(outputfile, vars, test_template)
 

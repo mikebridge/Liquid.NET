@@ -106,8 +106,8 @@ ARRAYSTART2 :			ARRAYSTART {arraybracketcount++; System.Console.WriteLine("** En
 ARRAYEND2a :				{arraybracketcount == 0; }? ARRAYEND {System.Console.WriteLine("** leaving mode " +arraybracketcount);} -> type(ARRAYEND), popMode ;
 ARRAYEND2b :				{arraybracketcount > 0; }? ARRAYEND  { arraybracketcount--; System.Console.WriteLine("* closed nested ']' " +arraybracketcount); } -> type(ARRAYEND);
 ARRAYINT:				'0' | [1-9] [0-9]* ;
-STRING3:				STRING -> type(STRING);
-LABEL3:					LABEL -> type(LABEL);
+STRING3:				STRING {System.Console.WriteLine("** Lexing a string " +arraybracketcount);}  -> type(STRING);
+LABEL3:					LABEL -> type(LABEL) ;
 
 // ========= LIQUID TAGS ============
 
@@ -140,7 +140,6 @@ CAPTURE_TAG :			'capture';
 ENDCAPTURE_TAG :		'endcapture';
 INCREMENT_TAG :			'increment';
 DECREMENT_TAG :			'decrement';
-END:					'end' ;
 MACRO_TAG :				'macro' ;
 ENDMACRO_TAG :			'endmacro' ;
 ENDLABEL:				END LABEL;
@@ -177,6 +176,8 @@ PERIOD2 :				PERIOD -> type(PERIOD) ;
 STRING2:				STRING -> type(STRING);
 LABEL2:					LABEL -> type(LABEL);
 GENERATORRANGE1:		GENERATORRANGE -> type(GENERATORRANGE) ;
+
+END:					'end' ;
 
 WS2 :					[ \t\r\n]+ -> skip ;
 

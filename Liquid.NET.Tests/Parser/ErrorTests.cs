@@ -42,16 +42,18 @@ namespace Liquid.NET.Tests.Parser
             const string erroneousTemplate = "{{";
             ITemplateContext ctx = new TemplateContext().WithAllFilters();
             IList<LiquidError> errors = new List<LiquidError>();            
-            var template = CreateRenderer(errors, erroneousTemplate);
-
-
-            // Act
-            String result = template.Render(ctx);
-            Console.WriteLine(result);
-            Console.WriteLine("ERROR: "+String.Join(",", errors.Select(x => x.ToString())));
             
-            //Assert.That(result, Is.EqualTo(expected));
-            Assert.That(errors.Count, Is.EqualTo(1));
+            // Act
+            try
+            {
+                var template = CreateRenderer(errors, erroneousTemplate);
+                Assert.Fail("It Should throw an exception.");
+            }
+            catch (LiquidParserException ex)
+            {
+                Assert.That(ex.LiquidErrors.Count, Is.EqualTo(1));
+            }
+
         }
 
 

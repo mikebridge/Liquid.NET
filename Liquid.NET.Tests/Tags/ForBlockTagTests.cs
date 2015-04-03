@@ -291,7 +291,9 @@ namespace Liquid.NET.Tests.Tags
         }
 
         [Test]
-        public void It_Should_Iterate_Through_A_Generator_From_A_Dictionary()
+        [TestCase("(dict.start .. dict.end)")]
+        [TestCase("(dict.start..5)")]
+        public void It_Should_Iterate_Through_A_Generator_From_A_Dictionary(String generator)
         {
             // Arrange
             TemplateContext ctx = new TemplateContext();
@@ -301,7 +303,7 @@ namespace Liquid.NET.Tests.Tags
                     {"start", new NumericValue(1)},
                     {"end", new NumericValue(5)}
                 }));
-            var template = LiquidTemplate.Create("Result : {% for item in (dict.start..dict.end) %}{{ item }}{% endfor %}");
+            var template = LiquidTemplate.Create("Result : {% for item in " + generator + " %}{{ item }}{% endfor %}");
 
             // Act
             String result = template.Render(ctx);

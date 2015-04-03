@@ -63,14 +63,10 @@ namespace Liquid.NET
             liquidErrorListener.ParsingErrorEventHandler += ErrorHandler;
 
             var liquidLexer = new LiquidLexer(new AntlrInputStream(stringReader));
-//            liquidLexer.RemoveErrorListeners();
-//            liquidLexer.AddErrorListener(liquidErrorListener);
-            //liquidLexer.RemoveErrorListeners();
-            //liquidLexer.AddErrorListener(new L);
 
             _tokenStream = new CommonTokenStream(liquidLexer);
             _tokenStreamRewriter = new TokenStreamRewriter(_tokenStream);
-
+            
             var parser = new LiquidParser(_tokenStream);
 
             parser.RemoveErrorListeners();
@@ -80,6 +76,7 @@ namespace Liquid.NET
             parser.AddErrorListener(liquidErrorListener);
             new ParseTreeWalker().Walk(this, parser.init());
 
+            
             if (LiquidErrors.Any())
             {
                 throw new LiquidParserException(LiquidErrors);
@@ -245,7 +242,7 @@ namespace Liquid.NET
         /// <param name="context"></param>
         public override void EnterFor_iterable(LiquidParser.For_iterableContext context)
         {
-            //Console.WriteLine("  ^^^ PARSING FOR ITERABLE");
+            Console.WriteLine("  ^^^ PARSING FOR ITERABLE");
             base.EnterFor_iterable(context);
             var forBlock = CurrentBuilderContext.ForBlockStack.Peek();
 
@@ -272,7 +269,7 @@ namespace Liquid.NET
             }
             else if (context.generator() != null)
             {
-                //Console.WriteLine("  +++ FOUND a GENERATOR ");
+                Console.WriteLine("  +++ FOUND a GENERATOR ");
                
                 forBlock.IterableCreator = CreateGeneratorContext(context.generator());
             }
@@ -302,31 +299,33 @@ namespace Liquid.NET
             TreeNode<LiquidExpression> startExpression = null;
             TreeNode<LiquidExpression> endExpression = null;
 
+            var index1 = generatorContext.generator_index()[0];
+            var index2 = generatorContext.generator_index()[1];
 
-            if (generatorContext.NUMBER(0) != null) // lower range
+            if (index1.NUMBER() != null) // lower range
             {
                 startExpression =
                     CreateObjectSimpleExpressionNode(
-                        CreateIntNumericValueFromString(generatorContext.NUMBER(0).GetText()));
+                        CreateIntNumericValueFromString(index1.NUMBER().GetText()));
 
             }
-            else if (generatorContext.variable(0) != null)
+            else if (index1.variable() != null)
             {
                 StartNewLiquidExpressionTree(x => startExpression = x);
-                StartCapturingVariable(generatorContext.variable(0));
+                StartCapturingVariable(index1.variable());
                 MarkCurrentExpressionComplete();
             }
 
 
-            if (generatorContext.NUMBER(1) != null) // lower range
+            if (index2.NUMBER() != null) // upper range
             {
                 endExpression = CreateObjectSimpleExpressionNode(
-                    CreateIntNumericValueFromString(generatorContext.NUMBER(1).GetText()));
+                    CreateIntNumericValueFromString(index2.GetText()));
             }
-            else if (generatorContext.variable(1) != null)
+            else if (index2.variable() != null)
             {
                 StartNewLiquidExpressionTree(x => endExpression = x);
-                StartCapturingVariable(generatorContext.variable(1));
+                StartCapturingVariable(index2.variable());
                 MarkCurrentExpressionComplete();
             }
 
@@ -1071,6 +1070,7 @@ namespace Liquid.NET
                 }
                 if (arrayIndex.STRING() != null)
                 {
+                    Console.WriteLine("...");
                     indexingFilter.AddArg(new StringValue(arrayIndex.STRING().GetText()));
                     return indexingFilter;
                 }
@@ -1090,7 +1090,7 @@ namespace Liquid.NET
 //                }
                 if (arrayIndex.LABEL() != null)
                 {
-
+                    Console.WriteLine("INDEX IS LABEL " + arrayIndex.LABEL());
 
                     // maybe this shoud be a wrapper instead of a chain
                     var arrayIndexLiquidExpression = new LiquidExpression

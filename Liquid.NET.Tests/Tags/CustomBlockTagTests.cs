@@ -26,15 +26,23 @@ namespace Liquid.NET.Tests.Tags
         }
 
         [Test]
+        // TODO: FIgure out how to make this return a proper error....
         public void It_Should_Not_Parse_A_Custom_BlockTag_With_No_End()
         {
             // Act
             var templateContext = new TemplateContext().WithAllFilters().WithCustomTagBlockRenderer<WordReverserBlockTag>("echoargs");
-            var result = RenderingHelper.RenderTemplate("Result : {% echoargs \"hello\" 123 true %}echo{% endsomethingelse %}", templateContext);
-
-            // Assert
-            //Assert.That(result, Is.EqualTo("Result : ohce"));
-            Assert.Fail("This needs to throw an error.");
+            try
+            {
+                var result = RenderingHelper.RenderTemplate(
+                    "Result : {% echoargs \"hello\" 123 true %}echo{% endsomethingelse %}", templateContext);
+                Assert.Fail("This should have thrown an error.");
+            }
+            catch (LiquidParserException ex)
+            {
+                var allErrors = String.Join(",", ex.LiquidErrors.Select(x => x.ToString()));
+                Console.WriteLine(allErrors);
+                Assert.That(allErrors, Is.StringContaining("rule custom_blocktag failed predicate"));
+            }
         }
 
 

@@ -29,7 +29,7 @@ tag:				raw_tag
 					| custom_tag
 					| if_tag
 					| for_tag
-					| cycle_tag // you can use this outside a for loop.
+					| cycle_tag
 					| assign_tag
 					| capture_tag
 					| increment_tag
@@ -49,10 +49,14 @@ raw_tag:			RAW;
 //raw_tag:			RAW_START .*? RAW_END;
 
 
-// maybe custom_blocktag and custom_tag can be combined
-custom_blocktag:	TAGSTART custom_block_start_tag customtagblock_expr* TAGEND custom_blocktag_block TAGSTART custom_block_end_tag TAGEND ;	
+// TODO: Clean up this semantic predicate so it gives a decent error.
+//custom_blocktag:	TAGSTART custom_block_start_tag customtagblock_expr* TAGEND custom_blocktag_block TAGSTART custom_block_end_tag { _localctx.custom_block_end_tag().GetText().Equals("end" + _localctx.custom_block_start_tag().GetText()) }?  TAGEND ;
+custom_blocktag:	TAGSTART custom_block_start_tag customtagblock_expr* TAGEND custom_blocktag_block TAGSTART custom_block_end_tag TAGEND { _localctx.custom_block_end_tag().GetText().Equals("end" + _localctx.custom_block_start_tag().GetText()) }?;
+//					| TAGSTART custom_block_start_tag customtagblock_expr* TAGEND custom_blocktag_block TAGSTART LABEL TAGEND {NotifyErrorListeners("Liquid error: end tag does not match start tag '" + _localctx.custom_block_start_tag().GetText() + "'");} ;
 
 custom_block_start_tag:		LABEL;
+
+//custom_block_end_tag:		{ _localctx.GetText().Equals("end") + ??? }? ENDLABEL;
 
 custom_block_end_tag:		ENDLABEL;
 

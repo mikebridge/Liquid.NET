@@ -36,6 +36,9 @@ namespace Liquid.NET
         private BufferedTokenStream _tokenStream;
         private TokenStreamRewriter _tokenStreamRewriter;
 
+        private readonly IList<LiquidError> _liquidErrors = new List<LiquidError>();
+        public IList<LiquidError> LiquidErrors { get { return _liquidErrors;  } }
+
         /// <summary>
         /// A workspace to construct the current AST Node, e.g. If/Else, etc.
         /// </summary>
@@ -54,20 +57,33 @@ namespace Liquid.NET
             LiquidAST liquidAst = new LiquidAST();
             _astNodeStack.Push(liquidAst.RootNode);
             var stringReader = new StringReader(template);
-            
-            _tokenStream = new CommonTokenStream(new LiquidLexer(new AntlrInputStream(stringReader)));
+
+            var liquidErrorListener = new LiquidErrorListener();
+            liquidErrorListener.ParsingErrorEventHandler += ParsingErrorEventHandler;
+            liquidErrorListener.ParsingErrorEventHandler += ErrorHandler;
+
+            var liquidLexer = new LiquidLexer(new AntlrInputStream(stringReader));
+//            liquidLexer.RemoveErrorListeners();
+//            liquidLexer.AddErrorListener(liquidErrorListener);
+            //liquidLexer.RemoveErrorListeners();
+            //liquidLexer.AddErrorListener(new L);
+
+            _tokenStream = new CommonTokenStream(liquidLexer);
             _tokenStreamRewriter = new TokenStreamRewriter(_tokenStream);
 
             var parser = new LiquidParser(_tokenStream);
+
             parser.RemoveErrorListeners();
-            var liquidErrorListener = new LiquidErrorListener();
-            liquidErrorListener.ParsingErrorEventHandler += ParsingErrorEventHandler;
 
-            liquidErrorListener.ParsingErrorEventHandler += ASTErrorAppender;
-
+           
+            
             parser.AddErrorListener(liquidErrorListener);
             new ParseTreeWalker().Walk(this, parser.init());
 
+            if (LiquidErrors.Any())
+            {
+                throw new LiquidParserException(LiquidErrors);
+            }
             return liquidAst;
         }
 
@@ -1256,13 +1272,12 @@ namespace Liquid.NET
 
         #endregion
 
-        private void ASTErrorAppender(LiquidError liquiderror)
+        private void ErrorHandler(LiquidError liquiderror)
         {
-            // for the moment it doesn't append errors to the AST;
-            // Lexing errors appear before anything has rendered,
-            // so they would appear at the top of the AST tree.
-            //Console.WriteLine("Appending Error To Ast");
+
+            Console.WriteLine("GRABBING A ERROR  " + liquiderror);
             //CurrentAstNode.AddChild(CreateTreeNode<IASTNode>(new ErrorNode(liquiderror)));
+            this.LiquidErrors.Add(liquiderror);
         }     
        
 
@@ -1310,6 +1325,4 @@ namespace Liquid.NET
        
        
     }
-
-    
 }

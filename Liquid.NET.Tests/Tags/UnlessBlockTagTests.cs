@@ -29,7 +29,7 @@ namespace Liquid.NET.Tests.Tags
         public void It_Should_Render_Else()
         {
             // Act
-            var result = RenderingHelper.RenderTemplate("Result : {% unless true %}OK{% else true %}Else{% endunless %}");
+            var result = RenderingHelper.RenderTemplate("Result : {% unless true %}OK{% else %}Else{% endunless %}");
 
             // Assert
             Assert.That(result, Is.EqualTo("Result : Else"));
@@ -39,7 +39,7 @@ namespace Liquid.NET.Tests.Tags
         public void It_Should_Render_Elsif()
         {
             // Act
-            var result = RenderingHelper.RenderTemplate("Result : {% unless true %}OK{% elsif true %}Else If{% else true %}Else{% endunless %}");
+            var result = RenderingHelper.RenderTemplate("Result : {% unless true %}OK{% elsif true %}Else If{% else %}Else{% endunless %}");
 
             // Assert
             Assert.That(result, Is.EqualTo("Result : Else If"));
@@ -49,7 +49,7 @@ namespace Liquid.NET.Tests.Tags
         public void It_Should_Render_Second_Elsif()
         {
             // Act
-            var result = RenderingHelper.RenderTemplate("Result : {% unless true %}OK{% elsif false %}Else If{% elsif true %}second else{% else true %}Else{% endunless %}");
+            var result = RenderingHelper.RenderTemplate("Result : {% unless true %}OK{% elsif false %}Else If{% elsif true %}second else{% else %}Else{% endunless %}");
 
             // Assert
             Assert.That(result, Is.EqualTo("Result : second else"));
@@ -59,7 +59,7 @@ namespace Liquid.NET.Tests.Tags
         public void It_Should_Render_Nested_Unless_Statements()
         {
             // Act
-            var result = RenderingHelper.RenderTemplate("Result : {% unless false %}UNLESS1{% if false %}NOT OK{% endunless %}{% unless false %}UNLESS2{% endunless %}{% endunless %}");
+            var result = RenderingHelper.RenderTemplate("Result : {% unless false %}UNLESS1{% if false %}NOT OK{% endif %}{% unless false %}UNLESS2{% endunless %}{% endunless %}");
 
             // Assert
             Assert.That(result, Is.EqualTo("Result : UNLESS1UNLESS2"));

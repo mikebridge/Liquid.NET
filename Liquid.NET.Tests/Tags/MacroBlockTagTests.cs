@@ -13,7 +13,7 @@ namespace Liquid.NET.Tests.Tags
             // Arrange
             const string templateString =  @"Result : {% macro mymacro arg1 arg2 %}"
                                           +@"You said '{{ arg1 }}'."
-                                          +@"{% endmymacro %}"
+                                          + @"{% endmacro %}"
                                           +@"{% mymacro ""hello"" %}";
            
             TemplateContext ctx = new TemplateContext();
@@ -33,7 +33,7 @@ namespace Liquid.NET.Tests.Tags
             // Arrange
             const string templateString = @"{%assign arg1 = 'world' %}Result : {% macro mymacro arg1 arg2 %}"
                                           + @"You said {{ arg1 }} "
-                                          + @"{% endmymacro %}"
+                                          + @"{% endmacro %}"
                                           + @"{% mymacro ""hello"" %}{{ arg1 }}";
 
             TemplateContext ctx = new TemplateContext();
@@ -54,7 +54,7 @@ namespace Liquid.NET.Tests.Tags
             // Arrange
             const string templateString = @"Result : {% macro mymacro arg1 %}"
                                           + @"You said {{ arg1 }}."
-                                          + @"{% endmymacro %}"
+                                          + @"{% endmacro %}"
                                           + @"{% mymacro ""hello"" ""world""%}";
 
             TemplateContext ctx = new TemplateContext();

@@ -148,6 +148,7 @@ outputexpression:	object (FILTERPIPE filter)* ;
 	
 filter:				(filtername ((COLON filterargs)? 
 								 | COLON {NotifyErrorListeners("Liquid error: missing arguments after colon in filter '" + _localctx.filtername().GetText() + "'");}
+								 | filterargs {NotifyErrorListeners("Liquid error: missing colon before args in filter '" + _localctx.filtername().GetText() + "'");}
 								 )) ;
 
 filterargs:			filterarg (COMMA filterarg)* ;
@@ -183,7 +184,7 @@ expr:				PARENOPEN expr PARENCLOSE			# GroupedExpr // TODO is this in regular Li
 					| NOT expr					        # NotExpr
 					//	|  typecast?
 					| expr (MULT | DIV | MOD) expr      # MultExpr
-					| expr (SUB | ADD) expr             # AddSubExpr
+					| expr (MINUS | ADD) expr             # AddSubExpr
 					| expr (GT | LT | GTE | LTE | EQ | NEQ) expr      # ComparisonExpr
 					| expr AND expr                     # AndExpr
 					| expr OR expr                      # OrExpr

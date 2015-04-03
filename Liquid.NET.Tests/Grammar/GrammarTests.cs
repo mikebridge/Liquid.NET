@@ -67,7 +67,7 @@ namespace Liquid.NET.Tests.Grammar
         public void It_Should_Extract_A_Filter_Chain()
         {
             // Act
-            var result = RenderTemplate("Result : {{ \"test awesome\" | upcase | remove: \"AWESOME\" 123 }}");
+            var result = RenderTemplate("Result : {{ \"test awesome\" | upcase | remove: \"AWESOME\" }}");
             
             // Assert
             Assert.That(result, Is.EqualTo("Result : TEST "));

@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 using NUnit.Framework;
 
 namespace Liquid.NET.Tests.Filters.Math
@@ -24,14 +21,15 @@ namespace Liquid.NET.Tests.Filters.Math
         }
 
         [Test]
-        public void It_Should_Error_When_Zero()
+        public void It_Should_CHeck_For_Div_By_Zero()
         {
             // Act
-            var result = RenderingHelper.RenderTemplate("Result : {{ 2  | modulo 2 }}");
+            var result = RenderingHelper.RenderTemplate("Result : {{ 2  | modulo: 0 }}");
 
             // Assert
-            Assert.That(result, Is.EqualTo("Liquid error: divided by 0"));
+            Assert.That(result, Is.StringContaining("Liquid error: divided by 0"));
         }
+
 
     }
 }

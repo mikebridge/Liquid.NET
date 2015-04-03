@@ -184,7 +184,7 @@ namespace Liquid.NET
             while (true)
             {                
                 currentIndex = _counters.GetOrAdd(key, 0);
-                var newindex = (currentIndex + 1)%cycleTag.Length;
+                var newindex = (currentIndex + 1) % cycleTag.Length;
 
                 // fails if updated concurrently by someone else.
                 if (_counters.TryUpdate(key, newindex, currentIndex))
@@ -290,7 +290,7 @@ namespace Liquid.NET
             var constResult = LiquidExpressionEvaluator.Eval(liquidExpression, new List<IExpressionConstant>(),
                  _symbolTableStack);
             
-            catch
+            
             _result += Render(constResult); 
 
         }

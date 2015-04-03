@@ -60,6 +60,9 @@ GENERATORSTART : 		'(';
 GENERATOREND :			')';
 GENERATORRANGE :		'..';
 
+// SEE: http://stackoverflow.com/questions/18782388/antlr4-lexer-error-reporting-length-of-offending-characters#answer-18797779
+ERRORCHAR :				. ;
+
 // ========= COMMENT ===================
 
 mode INCOMMENT;
@@ -95,6 +98,7 @@ COLON :					':' ;
 
 WS :					[ \t\r\n]+ -> skip ;
 
+ERRORCHAR2 :			. -> type(ERRORCHAR);
 
 mode INARRAYINDEX ;
 
@@ -161,8 +165,8 @@ MULT:					'*' ;
 DIV:					'/' ;
 MOD:					'%' ;
 ADD:					'+' ;
-SUB:					'-' ;
-NEGATIVE :				'-' ;
+MINUS:					'-' ;
+
 NOT :					'not' ;
 NUMBER2 :				NUMBER -> type(NUMBER);
 BOOLEAN2 :				BOOLEAN -> type(BOOLEAN);
@@ -175,3 +179,5 @@ LABEL2:					LABEL -> type(LABEL);
 GENERATORRANGE1:		GENERATORRANGE -> type(GENERATORRANGE) ;
 
 WS2 :					[ \t\r\n]+ -> skip ;
+
+ERRORCHAR1 :			. -> type(ERRORCHAR);

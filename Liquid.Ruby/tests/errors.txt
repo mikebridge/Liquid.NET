@@ -9,7 +9,6 @@
    multiline
    }}
 #
-{{ "test,test" | split: }}
-#
 {% unknown_tag %}
-
+#
+{{ "z" | pluralize: "thing", "things" }}

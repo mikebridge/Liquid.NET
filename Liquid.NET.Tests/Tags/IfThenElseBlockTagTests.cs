@@ -34,7 +34,7 @@ namespace Liquid.NET.Tests.Tags
         public void It_Should_Render_Else()
         {
             // Act
-            var result = RenderingHelper.RenderTemplate("Result : {% if false %}OK{% else true %}Else{% endif %}");
+            var result = RenderingHelper.RenderTemplate("Result : {% if false %}OK{% else %}Else{% endif %}");
 
             // Assert
             Assert.That(result, Is.EqualTo("Result : Else"));
@@ -44,7 +44,7 @@ namespace Liquid.NET.Tests.Tags
         public void It_Should_Render_Elsif()
         {
             // Act
-            var result = RenderingHelper.RenderTemplate("Result : {% if false %}OK{% elsif true %}Else If{% else true %}Else{% endif %}");
+            var result = RenderingHelper.RenderTemplate("Result : {% if false %}OK{% elsif true %}Else If{% else %}Else{% endif %}");
 
             // Assert
             Assert.That(result, Is.EqualTo("Result : Else If"));
@@ -54,7 +54,7 @@ namespace Liquid.NET.Tests.Tags
         public void It_Should_Render_Second_Elsif()
         {
             // Act
-            var result = RenderingHelper.RenderTemplate("Result : {% if false %}OK{% elsif false %}Else If{% elsif true %}second else{% else true %}Else{% endif %}");
+            var result = RenderingHelper.RenderTemplate("Result : {% if false %}OK{% elsif false %}Else If{% elsif true %}second else{% else %}Else{% endif %}");
 
             // Assert
             Assert.That(result, Is.EqualTo("Result : second else"));

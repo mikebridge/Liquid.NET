@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web.UI.WebControls;
 using Liquid.NET.Constants;
 using Liquid.NET.Filters;
 using Liquid.NET.Symbols;
@@ -46,12 +47,12 @@ namespace Liquid.NET
             var filterExpressionTuples = expression.FilterSymbols.Select(symbol => 
                 new Tuple<FilterSymbol, IFilterExpression>(symbol, InstantiateFilter(symbolTableStack, symbol))).ToList();
 
-            var erroringFilternames = filterExpressionTuples.Where(x => x.Item2 == null).Select(x => x.Item1);
+            var erroringFilternames = filterExpressionTuples.Where(x => x.Item2 == null).Select(x => x.Item1).ToList();
 
             if (erroringFilternames.Any())
             {
-                // TODO: remove this!
-                throw new Exception("Missing filters..."); 
+                //throw new Exception("Missing filters..."); 
+                return ConstantFactory.CreateError<StringValue>("Missing filters: "+String.Join(", ", erroringFilternames.Select(x => x.Name)));
             }
 
             var filterChain = FilterChain.CreateChain(

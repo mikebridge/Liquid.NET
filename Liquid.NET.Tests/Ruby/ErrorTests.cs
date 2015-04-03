@@ -31,9 +31,9 @@ namespace Liquid.NET.Tests.Ruby
         [TestCase(@"{{
    multiline
    }}", @"")]
-        [TestCase(@"{{ ""test,test"" | split: }}", @"Liquid error: wrong number of arguments calling `split` (1 for 2)")]
-        [TestCase(@"{% unknown_tag %}", @"EXCEPTION: Liquid syntax error: Unknown tag 'unknown_tag'")]
+        [TestCase(@"{{ ""z"" | pluralize: ""thing"", ""things"" }}", @"z")]
         public void It_Should_Match_Ruby_Output(String input, String expected) {
+
             // Arrange
             ITemplateContext ctx = new TemplateContext().WithAllFilters();
             var template = LiquidTemplate.Create(input);
@@ -43,6 +43,26 @@ namespace Liquid.NET.Tests.Ruby
         
             // Assert
             Assert.That(result, Is.EqualTo(expected));
+        }
+
+        [Test]
+        [TestCase(@"{% unknown_tag %}", @"Liquid syntax error: Unknown tag 'unknown_tag'")]
+        public void It_Should_Generate_An_Exception(String input, String expectedMessage) {
+
+            // Arrange
+            ITemplateContext ctx = new TemplateContext().WithAllFilters();
+
+            try
+            {
+                var result = RenderingHelper.RenderTemplate(input);
+                Assert.Fail("Expected exception: "+expectedMessage);
+            }
+            catch (LiquidParserException ex)
+            {
+                // Assert
+                Assert.That(ex.LiquidErrors[0].ToString(), Is.StringContaining(expectedMessage));
+            }
+
         }
     }
 }

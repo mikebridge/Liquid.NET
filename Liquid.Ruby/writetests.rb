@@ -18,7 +18,7 @@ def read_tests_into_array(file)
   File.open(file, 'r').read.split(/^#.*\n/).collect{ |x| x.strip }
 end
 
-def write_test_file(output_filename, test_cases, vars, test_template)
+def write_test_file(output_filename, vars, test_template)
 
   File.open(output_filename, 'w') {
       |file| file.write(eval_tmpl(test_template, vars))
@@ -27,18 +27,32 @@ def write_test_file(output_filename, test_cases, vars, test_template)
 end
 
 def test_line(tmpl)
+
   { "input" => escape(tmpl),
-    "expected" => eval_tmpl(tmpl)
+    "expected" =>  eval_tmpl(tmpl)
   }
 end
 
+def exception_results(test_cases)
+  test_cases.select { |x| x["expected"].index("EXCEPTION: ") == 0 }
+end
+
+def non_exception_results(test_cases)
+  test_cases.select { |x| x["expected"].index("EXCEPTION: ") != 0 }
+end
+
+
 def create_test_file_from_cases(inputfile, outputfile, classname, test_template)
   test_cases = read_tests_into_array(inputfile).collect{ |x| test_line(x) }
-  #puts test_cases
+  puts test_cases
   vars = {'classname' => classname,
           'sourcefile' => File.basename(inputfile),
-          'tests' => test_cases}
-  write_test_file(outputfile, test_cases, vars, test_template)
+          'tests' => non_exception_results(test_cases),
+          'exceptions' => exception_results(test_cases)
+  }
+  puts(vars)
+
+  write_test_file(outputfile, vars, test_template)
 
 end
 

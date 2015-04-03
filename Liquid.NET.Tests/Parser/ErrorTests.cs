@@ -15,20 +15,24 @@ namespace Liquid.NET.Tests.Parser
         public void It_Should_Handle_Invalid_Filters(String input, String expected)
         {
             // Arrange
-            ITemplateContext ctx = new TemplateContext().WithAllFilters();
-            IList<LiquidError> errors = new List<LiquidError>();
-            var template = CreateRenderer(errors, input);
+            try
+            {
+                ITemplateContext ctx = new TemplateContext().WithAllFilters();
+                IList<LiquidError> errors = new List<LiquidError>();
+                var template = CreateRenderer(errors, input);
 
-            // Act
-            String result = template.Render(ctx);
-            //Console.WriteLine("ERROR: " + String.Join(",", errors.Select(x => x.ToString())));
-            //Console.WriteLine("ERRORS: " + errors);
-            Console.WriteLine("RESULT IS ");
-            Console.WriteLine(result);
+                // Act
+                String result = template.Render(ctx);
+            }
+            catch (LiquidParserException ex)
+            {
+                // Assert
+                //var allErrs = String.Join(",", ex.LiquidErrors.Select(x => x.ToString()));
+                var err = ex.LiquidErrors.FirstOrDefault(x => x.ToString().Contains(expected));
+                Assert.That(err, Is.Not.Null);
+            }
 
-            // Assert
-            Assert.That(result, Is.StringContaining(expected));
-            Assert.That(result, Is.Not.StringContaining(input));
+
         }
 
         [Test]
@@ -50,6 +54,23 @@ namespace Liquid.NET.Tests.Parser
             Assert.That(errors.Count, Is.EqualTo(1));
         }
 
+
+        [Test]
+        public void It_Should_Check_For_A_Missing_Colon()
+        {
+            // Act
+            try
+            {
+                var result = RenderingHelper.RenderTemplate("Result : {{ 2  | modulo 2 }}");
+                Assert.Fail("Expected exception");
+            }
+            catch (LiquidParserException ex)
+            {
+                // Assert
+                Assert.That(ex.LiquidErrors[0].ToString(), Is.StringContaining("Liquid error: missing colon before args "));
+            }
+        }
+       
         private static LiquidTemplate CreateRenderer(IList<LiquidError> errors, string erroneousTemplate)
         {
             var liquidAstGenerator = new LiquidASTGenerator();

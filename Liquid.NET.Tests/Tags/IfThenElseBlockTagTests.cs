@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Liquid.NET.Constants;
 using NUnit.Framework;
 
 namespace Liquid.NET.Tests.Tags
@@ -107,6 +108,61 @@ namespace Liquid.NET.Tests.Tags
         }
 
 
+        /// <summary>
+        /// https://github.com/Shopify/liquid/wiki/Liquid-for-Designers
+        /// </summary>
+        [Test]
+        public void It_Should_Test_An_Array_Against_Empty()
+        {
+            // Arrange
+            var ctx = CreateContextWithDictionary();
 
+
+            const String str = "{% if user.payments == empty %}you never paid !{% endif %}";
+
+            // Act
+            var result = RenderingHelper.RenderTemplate(str, ctx );
+
+            // Assert
+            Assert.That(result, Is.EqualTo("you never paid !"));
+
+        }
+
+        /// <summary>
+        /// https://github.com/Shopify/liquid/wiki/Liquid-for-Designers
+        /// </summary>
+        [Test]
+        public void It_Should_Throw_An_Error_If_Invalid_Key()
+        {
+            // Arrange
+            var ctx = CreateContextWithDictionary();
+
+
+            const String str = "{% if user.payments == wfwefewf %}you never paid !{% endif %}";
+
+            // Act
+            var result = RenderingHelper.RenderTemplate(str, ctx);
+
+            // Assert
+            Assert.That(result, Is.EqualTo("you never paid !"));
+
+        }
+
+        private static TemplateContext CreateContextWithDictionary()
+        {
+            var ctx = new TemplateContext();
+            var payments = new List<IExpressionConstant>
+            {
+                new NumericValue(12.34m),
+                new NumericValue(33.45m),
+            };
+
+            var dict = new Dictionary<String, IExpressionConstant>
+            {
+                {"payments", new ArrayValue(payments)}
+            };
+            ctx.Define("user", new DictionaryValue(dict));
+            return ctx;
+        }
     }
 }

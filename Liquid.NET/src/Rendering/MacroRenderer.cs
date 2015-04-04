@@ -10,7 +10,7 @@ namespace Liquid.NET.Rendering
 {
     public class MacroRenderer 
     {
-        public StringValue Render(MacroBlockTag macroBlocktag, SymbolTableStack symbolTableStack, IList<IExpressionConstant> args)
+        public StringValue Render(MacroBlockTag macroBlocktag, SymbolTableStack symbolTableStack, IList<IExpressionConstant> args, IList<LiquidError> errorAccumulator )
         {
             var evaluator = new LiquidASTRenderer();
             var macroScope = new SymbolTable();
@@ -24,8 +24,14 @@ namespace Liquid.NET.Rendering
             symbolTableStack.Push(macroScope);
 
             var subRenderer = new RenderingVisitor(evaluator, symbolTableStack);
+            //if (subRenderer )
+
             evaluator.StartVisiting(subRenderer, macroBlocktag.LiquidBlock);
             symbolTableStack.Pop();
+            foreach (var error in subRenderer.Errors)
+            {
+                errorAccumulator.Add(error);
+            }
             return new StringValue(subRenderer.Text);
 
 

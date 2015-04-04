@@ -56,7 +56,12 @@ namespace Liquid.NET.Tests.Ruby
                 // Assert
                 Assert.That(ex.LiquidErrors[0].ToString(), Is.StringContaining(expectedMessage));
             }
-
+            catch (LiquidRendererException ex)
+            {
+                // Assert
+                Assert.That(ex.LiquidErrors[0].ToString(), Is.StringContaining(expectedMessage));
+            }
         }
+        
     }
 }

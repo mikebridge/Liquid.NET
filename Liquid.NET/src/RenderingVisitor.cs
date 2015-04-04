@@ -2,7 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-
+using System.Web.UI.WebControls;
 using Liquid.NET.Constants;
 using Liquid.NET.Expressions;
 using Liquid.NET.Rendering;
@@ -25,6 +25,8 @@ namespace Liquid.NET
         private readonly ConcurrentDictionary<String, int> _counters = new ConcurrentDictionary<string, int>();
 
         public readonly IList<LiquidError> Errors = new List<LiquidError>();
+
+        public bool HasErrors { get { return Errors.Any();  } }
 
         public RenderingVisitor(LiquidASTRenderer astRenderer, SymbolTableStack symbolTableStack)
         {
@@ -70,26 +72,35 @@ namespace Liquid.NET
                 return;
             }
             //_result += " ERROR: There is no macro or tag named "+  customTag.TagName+ " ";
-            _result += "Liquid syntax error: Unknown tag '"+customTag.TagName+"'";
+            AddError("Liquid syntax error: Unknown tag '" + customTag.TagName + "'", customTag);
+            //_result += "Liquid syntax error: Unknown tag '"+customTag.TagName+"'";
+        }
+
+        private void AddError(String message, IASTNode node)
+        { 
+            // TODO: pass the tag info in...
+            Errors.Add(new LiquidError{Message = message});
         }
 
         private string RenderMacro(MacroBlockTag macroBlockTag, IEnumerable<IExpressionConstant> args)
         {
             var macroRenderer = new MacroRenderer();
-            return ValueCaster.RenderAsString(macroRenderer.Render(macroBlockTag, _symbolTableStack, args.ToList()));
+            //var hiddenRenderer = new RenderingVisitor(_a)
+            IList<LiquidError> macroErrors = new List<LiquidError>();
+            var macro = ValueCaster.RenderAsString(macroRenderer.Render(macroBlockTag, _symbolTableStack, args.ToList(), macroErrors));
+            foreach (var error in macroErrors)
+            {
+                Errors.Add(error);
+            }
+            return macro;
         }
 
         private string RenderCustomTag(CustomTag customTag, Type tagType)
         {
             var tagRenderer = CustomTagRendererFactory.Create(tagType);
-            if (tagRenderer == null)
-            {
-                throw new Exception("Unregistered Tag: " + customTag.TagName);
-            }
             IEnumerable<IExpressionConstant> args =
                 customTag.LiquidExpressionTrees.Select(x => LiquidExpressionEvaluator.Eval(x, _symbolTableStack));
-            var result = tagRenderer.Render(_symbolTableStack, args.ToList()).StringVal;
-            return result;
+            return tagRenderer.Render(_symbolTableStack, args.ToList()).StringVal;
         }
 
         public void Visit(CustomBlockTag customBlockTag)
@@ -98,7 +109,9 @@ namespace Liquid.NET
             var tagRenderer = CustomBlockTagRendererFactory.Create(tagType);
             if (tagRenderer == null)
             {
-                throw new Exception("Unregistered Tag: " + customBlockTag.TagName);
+                AddError("Liquid syntax error: Unknown tag '" + customBlockTag.TagName + "'", customBlockTag);
+                //throw new Exception("Unregistered Tag: " + customBlockTag.TagName);
+                return;
             }
             IEnumerable<IExpressionConstant> args =
                 customBlockTag.LiquidExpressionTrees.Select(x => LiquidExpressionEvaluator.Eval(x, _symbolTableStack));
@@ -126,6 +139,10 @@ namespace Liquid.NET
             var hiddenVisitor = new RenderingVisitor(_astRenderer, _symbolTableStack);
             _astRenderer.StartVisiting(hiddenVisitor, captureBlockTag.RootContentNode);            
             _symbolTableStack.DefineGlobal(captureBlockTag.VarName, new StringValue(hiddenVisitor.Text) );
+            foreach (var error in hiddenVisitor.Errors)
+            {
+                Errors.Add(error);
+            }
         }
 
 
@@ -316,11 +333,6 @@ namespace Liquid.NET
             return ValueCaster.RenderAsString(result);
         }
 
-
-        public void ErrorHandler(LiquidError error)
-        {
-            Console.WriteLine("TODO: Save the error " + error.ToString());
-        }
 
     }
 

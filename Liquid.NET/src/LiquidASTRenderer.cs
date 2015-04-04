@@ -18,6 +18,10 @@ namespace Liquid.NET
         {
             var renderingVisitor = new RenderingVisitor(this, symbolStack);
             StartVisiting(renderingVisitor, liquidAst.RootNode);
+            if (renderingVisitor.HasErrors)
+            {
+                throw new LiquidRendererException(renderingVisitor.Errors);
+            }
             return renderingVisitor.Text;
         }
 

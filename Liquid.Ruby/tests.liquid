@@ -38,7 +38,7 @@ namespace Liquid.NET.Tests.Ruby
             Assert.That(result, Is.EqualTo(expected));
         }
 
-        [Test]{% for test in exceptions %}
+        {% if exceptions %}[Test]{% for test in exceptions %}
         [TestCase(@"{{test.input}}", @"{{test.expected | remove: 'EXCEPTION: '}}")]{% endfor %}
         public void It_Should_Generate_An_Exception(String input, String expectedMessage) {
 
@@ -55,7 +55,12 @@ namespace Liquid.NET.Tests.Ruby
                 // Assert
                 Assert.That(ex.LiquidErrors[0].ToString(), Is.StringContaining(expectedMessage));
             }
-
+            catch (LiquidRendererException ex)
+            {
+                // Assert
+                Assert.That(ex.LiquidErrors[0].ToString(), Is.StringContaining(expectedMessage));
+            }
         }
+        {% endif %}
     }
 }

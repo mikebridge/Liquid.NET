@@ -155,6 +155,7 @@
     <Compile Include="src\Filters\CastFilter.cs" />
     <Compile Include="src\Filters\FilterExpression.cs" />
     <Compile Include="src\Filters\FilterFactory.cs" />
+    <Compile Include="src\LiquidRendererException.cs" />
     <Compile Include="src\LiquidParserException.cs" />
     <Compile Include="src\OnParsingErrorEventHandler.cs" />
     <Compile Include="src\RenderingVisitor.cs" />

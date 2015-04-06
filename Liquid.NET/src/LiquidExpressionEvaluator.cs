@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web.UI.WebControls;
+
 using Liquid.NET.Constants;
 using Liquid.NET.Filters;
 using Liquid.NET.Symbols;
@@ -9,6 +9,8 @@ using Liquid.NET.Utils;
 
 namespace Liquid.NET
 {
+    // Take an AST Expression and turn it into something
+    // that can be evaluated
     public static class LiquidExpressionEvaluator
     {
         

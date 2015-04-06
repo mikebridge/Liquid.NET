@@ -30,7 +30,15 @@ namespace :gen do
     create_test_file('filters.txt', 'FilterTests')
   end
 
-  task :all => [:errors, :filters]
+  task :tags do
+    create_test_file('tags.txt', 'TagTests')
+  end
+
+  task :tags do
+    create_test_file('truthy.txt', 'TruthyTests')
+  end
+
+  task :all => [:errors, :filters, :tags]
 
 end
 

@@ -1,0 +1,6 @@
+{% assign myarray = "" |split: "," %}{% if myarray %}TRUTHY{% else %}NOT TRUTHY{% endif %}
+#
+{% assign myarray = "1" |split: "," %}{% if myarray %}TRUTHY{% else %}NOT TRUTHY{% endif %}
+#
+{% if myarray %}TRUTHY{% else %}NOT TRUTHY{% endif %}
+#

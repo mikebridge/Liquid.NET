@@ -1,0 +1,32 @@
+#
+{% if "x" == empty %}EMPTY{% else %}NOT EMPTY{% endif %}
+#
+{% if "x" == empty %}EMPTY{% else %}NOT EMPTY{% endif %}
+#
+{% if empty == "x" %}EMPTY{% else %}NOT EMPTY{% endif %}
+#
+{% if 0 == empty %}EMPTY{% else %}NOT EMPTY{% endif %}
+#
+{% if '' == empty %}EMPTY{% else %}NOT EMPTY{% endif %}
+#
+{% assign myarray = "" |split: "," %}{% if myarray == empty %}EMPTY{% else %}NOT EMPTY{% endif %}
+#
+{% assign myarray = "1" |split: "," %}{% if myarray == empty %}EMPTY{% else %}NOT EMPTY{% endif %}
+#
+{% assign x = "" %}{% if x == empty %}EMPTY{% else %}NOT EMPTY{% endif %}
+#
+{% assign x = undef %}{% if x == empty %}EMPTY{% else %}NOT EMPTY{% endif %}
+#
+{% assign x = 0 %}{% if x == empty %}EMPTY{% else %}NOT EMPTY{% endif %}
+#
+{% assign x = null %}{% if x == empty %}EMPTY{% else %}NOT EMPTY{% endif %}
+#
+{% assign x = nil %}{% if x == empty %}EMPTY{% else %}NOT EMPTY{% endif %}
+#
+{% assign x = nil %}{% if x == nil %}EMPTY{% else %}NOT EMPTY{% endif %}
+#
+{% if " " == empty %}EMPTY{% else %}NOT EMPTY{% endif %}
+#
+{% if " " == empty %}EMPTY{% else %}NOT EMPTY{% endif %}
+#
+{% if null == empty %}EMPTY{% else %}NOT EMPTY{% endif %}

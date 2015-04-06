@@ -2,3 +2,37 @@
 {{ "1" | divided_by: "0" }}
 #
 {% unknown_tag %}
+#
+{% if 1 == woeifj %}EQUAL{% else %}NOT EQUAL{% endif %}
+#
+{% if user.payments == wfwefewf %}you never paid !{% endif %}
+#
+{% if user == wfwefewf %}you never paid !{% endif %}
+#
+{% if "user" == wfwefewf %}you never paid !{% endif %}
+#
+{% assign x = true %}{% if x == true %}TRUE{% else %}FALSE{% endif %}
+#
+{% assign x = false %}{% if x == true %}TRUE{% else %}FALSE{% endif %}
+#
+{% assign x = true %}{% if x %}TRUE{% else %}FALSE{% endif %}
+#
+{% assign x = false %}{% if x  %}TRUE{% else %}FALSE{% endif %}
+#
+{% if myundefined == true %}TRUE{% else %}FALSE{% endif %}
+#
+{% if myundefined == false %}TRUE{% else %}FALSE{% endif %}
+#
+{% if myundefined %}TRUE{% else %}FALSE{% endif %}
+#
+{% if myundefined %}TRUE{% else %}FALSE{% endif %}
+#
+{% if myundefined == null %}TRUE{% else %}FALSE{% endif %}
+#
+{% if "myundefined" == null %}TRUE{% else %}FALSE{% endif %}
+#
+{% assign x = "" %}{% if x == null %}TRUE{% else %}FALSE{% endif %}
+#
+{% assign x = null %}{% if x == null %}TRUE{% else %}FALSE{% endif %}
+#
+{% assign x = 0 %}{% if x == null %}TRUE{% else %}FALSE{% endif %}

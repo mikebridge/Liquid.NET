@@ -2,7 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web.UI.WebControls;
+
 using Liquid.NET.Constants;
 using Liquid.NET.Expressions;
 using Liquid.NET.Rendering;
@@ -325,10 +325,10 @@ namespace Liquid.NET
         {
             Console.WriteLine("Rendering IExpressionConstant " + result.Value);
 
-            if (result.HasError)
-            {
-                return result.ErrorMessage;
-            }
+//            if (result.HasError)
+//            {
+//                return result.ErrorMessage;
+//            }
 
             return ValueCaster.RenderAsString(result);
         }

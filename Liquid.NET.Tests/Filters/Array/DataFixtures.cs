@@ -15,5 +15,18 @@ namespace Liquid.NET.Tests.Filters.Array
 
             });
         }
+
+        public static ArrayValue CreateArrayValue()
+        {
+            IList<IExpressionConstant> objlist = new List<IExpressionConstant>
+            {
+                new StringValue("a string"), 
+                new NumericValue(123), 
+                new NumericValue(456m),
+                new BooleanValue(false)
+            };
+           return new ArrayValue(objlist);
+        }
+
     }
 }

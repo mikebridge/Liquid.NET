@@ -1,0 +1,16 @@
+#
+{% assign myarray = "" |split: "," %}{{ myarray[0] }}
+#
+{% assign myarray = "1,2,3,4" |split: "," %}{{ myarray[-2] }}
+#
+{% assign myarray = "1,2,3,4" |split: "," %}{{ myarray[-10] }}
+#
+{% assign myarray = "1,2,3,4" |split: "," %}{{ myarray.size }}
+#
+{% assign myarray = "" |split: "," %}{{ myarray.first }}
+#
+{% assign myarray = "" |split: "," %}{{ myarray.last }}
+#
+{{ myarray.first }}
+#
+{{ myarray.last }}

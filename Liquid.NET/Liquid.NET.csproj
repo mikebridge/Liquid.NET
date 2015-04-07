@@ -69,6 +69,7 @@
     <Compile Include="src\Constants\DateValue.cs" />
     <Compile Include="src\Constants\DictionaryValue.cs" />
     <Compile Include="src\Constants\EasyValueComparer.cs" />
+    <Compile Include="src\Constants\EmptyChecker.cs" />
     <Compile Include="src\Constants\ExpressionConstant.cs" />
     <Compile Include="src\Constants\FieldAccessor.cs" />
     <Compile Include="src\Constants\GeneratorValue.cs" />
@@ -82,11 +83,12 @@
     <Compile Include="src\Constants\StringValue.cs" />
     <Compile Include="src\Constants\Undefined.cs" />
     <Compile Include="src\Constants\ValueCaster.cs" />
+    <Compile Include="src\Expressions\IsEmptyExpression - Copy.cs" />
+    <Compile Include="src\Expressions\IsEmptyExpression.cs" />
     <Compile Include="src\Expressions\AndExpression.cs" />
     <Compile Include="src\Expressions\EqualsExpression.cs" />
     <Compile Include="src\Expressions\ExpressionBuilder.cs" />
     <Compile Include="src\Expressions\ExpressionDescription.cs" />
-    <Compile Include="src\Expressions\ExpressionEvalVisitor.cs" />
     <Compile Include="src\Expressions\GeneratorCreator.cs" />
     <Compile Include="src\Expressions\ComparisonExpressions.cs" />
     <Compile Include="src\Expressions\GroupedExpression.cs" />
@@ -163,6 +165,7 @@
     <Compile Include="src\LiquidParserException.cs" />
     <Compile Include="src\OnParsingErrorEventHandler.cs" />
     <Compile Include="src\RenderingVisitor.cs" />
+    <Compile Include="src\Rendering\Expressions\VariableReferenceResolver.cs" />
     <Compile Include="src\Rendering\ForRenderer.cs" />
     <Compile Include="src\Rendering\MacroRenderer.cs" />
     <Compile Include="src\Symbols\ErrorNode.cs" />

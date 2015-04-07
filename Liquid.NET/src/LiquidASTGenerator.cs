@@ -900,6 +900,34 @@ namespace Liquid.NET
             MarkCurrentExpressionComplete();
         }
 
+        public override void EnterIsEmptyExpr(LiquidParser.IsEmptyExprContext isEmptyExprContext)
+        {
+            base.EnterIsEmptyExpr(isEmptyExprContext);
+            AddExpressionToCurrentExpressionBuilder(new IsEmptyExpression());
+        }
+
+        public override void ExitIsEmptyExpr(LiquidParser.IsEmptyExprContext context)
+        {
+            base.ExitIsEmptyExpr(context);
+            Console.WriteLine(" --- exiting IS EMPTY expression >" + context.GetText() + "<");
+            MarkCurrentExpressionComplete();
+        }
+
+        public override void EnterIsNullExpr(LiquidParser.IsNullExprContext isNullExprContext)
+        {
+            base.EnterIsNullExpr(isNullExprContext);
+            AddExpressionToCurrentExpressionBuilder(new IsNullExpression());
+        }
+
+        public override void ExitIsNullExpr(LiquidParser.IsNullExprContext isNullExprContext)
+        {
+            base.ExitIsNullExpr(isNullExprContext);
+            Console.WriteLine(" --- exiting IS EMPTY expression >" + isNullExprContext.GetText() + "<");
+            MarkCurrentExpressionComplete();
+        }
+
+
+
         public override void EnterComparisonExpr(LiquidParser.ComparisonExprContext comparisonContext)
         {
             base.EnterComparisonExpr(comparisonContext);
@@ -940,6 +968,7 @@ namespace Liquid.NET
             Console.WriteLine(" --- exiting COMPARISON expression >" + context.GetText() + "<");
             MarkCurrentExpressionComplete();
         }
+
 
         // todo: rename this "Object" or something to indicate it's just teh Object part of the expression.
         public override void EnterOutputExpression(LiquidParser.OutputExpressionContext context)
@@ -997,16 +1026,26 @@ namespace Liquid.NET
 
         public override void EnterStringObject(LiquidParser.StringObjectContext context)
         {
-            //Console.WriteLine("CREATING STRING OBJECT" + context.GetText() + "<");
-            // TODO: Figure out how to strip the quotes in the g4 file
-            base.EnterStringObject(context);
-         
+            base.EnterStringObject(context);         
             AddExpressionToCurrentExpressionBuilder(GenerateStringSymbol(context.GetText()));
         }
 
         public override void ExitStringObject(LiquidParser.StringObjectContext context)
         {
             base.ExitStringObject(context);
+            MarkCurrentExpressionComplete();
+        }
+
+        public override void EnterNullObject(LiquidParser.NullObjectContext context)
+        {
+            base.EnterNullObject(context);
+            var nullObj = new StringValue(null) {IsUndefined = true};
+            AddExpressionToCurrentExpressionBuilder(nullObj);
+        }
+
+        public override void ExitNullObject(LiquidParser.NullObjectContext context)
+        {
+            base.ExitNullObject(context);
             MarkCurrentExpressionComplete();
         }
 

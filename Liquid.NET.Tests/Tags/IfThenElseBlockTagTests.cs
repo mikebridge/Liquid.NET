@@ -127,27 +127,7 @@ namespace Liquid.NET.Tests.Tags
             Assert.That(result, Is.EqualTo("you never paid !"));
 
         }
-
-        /// <summary>
-        /// https://github.com/Shopify/liquid/wiki/Liquid-for-Designers
-        /// </summary>
-        [Test]
-        public void It_Should_Throw_An_Error_If_Invalid_Key()
-        {
-            // Arrange
-            var ctx = CreateContextWithDictionary();
-
-
-            const String str = "{% if user.payments == wfwefewf %}you never paid !{% endif %}";
-
-            // Act
-            var result = RenderingHelper.RenderTemplate(str, ctx);
-
-            // Assert
-            Assert.That(result, Is.EqualTo("you never paid !"));
-
-        }
-
+        
         private static TemplateContext CreateContextWithDictionary()
         {
             var ctx = new TemplateContext();

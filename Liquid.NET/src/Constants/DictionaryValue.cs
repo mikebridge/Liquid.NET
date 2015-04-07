@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web.UI.WebControls;
+using Liquid.NET.Filters;
 using Liquid.NET.Symbols;
 
 namespace Liquid.NET.Constants
@@ -31,7 +33,9 @@ namespace Liquid.NET.Constants
         public IExpressionConstant ValueAt(String key)
         {
             //Console.WriteLine("VALUE AT " + key);
+            // TODO: Fix this.
             var result = _value.ContainsKey(key) ? _value[key] : new Undefined(key);
+            //var result = _value.ContainsKey(key) ? _value[key] : FilterFactory.CreateUndefinedForType(typeof(StringValue))
             //Console.WriteLine("IS " + result);
             return result;
         }

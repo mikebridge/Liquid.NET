@@ -31,5 +31,11 @@ namespace Liquid.NET.Expressions
         void Visit(LessThanOrEqualsExpression expressionDescription);
 
         void Visit(GreaterThanOrEqualsExpression expressionDescription);
+
+        void Visit(IsEmptyExpression expressionDescription);
+
+        void Visit(IsNullExpression expressionDescription);
+
+
     }
 }

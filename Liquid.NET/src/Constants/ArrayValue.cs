@@ -21,6 +21,7 @@ namespace Liquid.NET.Constants
         }
 
         // TODO: Is this correct?
+        // No it isn't: https://docs.shopify.com/themes/liquid-documentation/basics/true-and-false
         public override bool IsTrue
         {
             get { return _values.Count != 0; }

@@ -6,7 +6,7 @@ using Liquid.NET.Symbols;
 
 namespace Liquid.NET.Expressions
 {
-    public class AndExpression : ExpressionDescription
+    public class IsNullExpression : ExpressionDescription
     {
         public override void Accept(IExpressionDescriptionVisitor expressionDescriptionVisitor)
         {
@@ -15,11 +15,14 @@ namespace Liquid.NET.Expressions
 
         public override IExpressionConstant Eval(SymbolTableStack symbolTableStack, IEnumerable<IExpressionConstant> expressions)
         {
-            if (!expressions.Any() || expressions.Count() == 1)
+            var list = expressions.ToList();
+            if (list.Count() != 1)
             {
-                throw new Exception("An AND expression must have two values"); // TODO: when the Eval is separated this will be redundant.
+                throw new Exception("Expected one variable to compare with \"null\""); // this will be obsolete when the lexer/parser is split
             }
-            return new BooleanValue(expressions.All(x => x.IsTrue));
+            return new BooleanValue(list[0].IsUndefined);
+
+            //throw new NotImplementedException();
         }
     }
 }

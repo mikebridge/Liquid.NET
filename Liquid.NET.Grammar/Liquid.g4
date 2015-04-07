@@ -162,7 +162,7 @@ filterargs:			filterarg (COMMA filterarg)* ;
 object:				STRING									# StringObject
 					| NUMBER								# NumberObject
 					| BOOLEAN								# BooleanObject
-					//| 'nil'								# NilObject TODO						
+					| NULL									# NullObject		
 					| variable								# VariableObject
 					;
  
@@ -185,12 +185,16 @@ filterarg:			STRING								# StringFilterArg
 					| LABEL objectvariableindex*		# VariableFilterArg 
 					;	 
 
-expr:				PARENOPEN expr PARENCLOSE			# GroupedExpr // TODO is this in regular Liquid?
+expr:				PARENOPEN expr PARENCLOSE			# GroupedExpr 
 					| outputexpression					# OutputExpression
 					| NOT expr					        # NotExpr
 					//	|  typecast?
 					| expr (MULT | DIV | MOD) expr      # MultExpr
-					| expr (MINUS | ADD) expr             # AddSubExpr
+					| expr (MINUS | ADD) expr           # AddSubExpr
+					| expr EQ EMPTY						# IsEmptyExpr // TODO can 'empty' be used anywhere else?
+					| EMPTY EQ expr						# IsEmptyExpr 
+					| expr EQ NULL						# IsNullExpr // TODO can 'empty' be used anywhere else?
+					| NULL EQ expr						# IsNullExpr 
 					| expr (GT | LT | GTE | LTE | EQ | NEQ) expr      # ComparisonExpr
 					| expr AND expr                     # AndExpr
 					| expr OR expr                      # OrExpr

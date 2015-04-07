@@ -40,7 +40,8 @@ namespace Liquid.NET.Tests.Expressions
             {
                 var result = RenderingHelper.RenderTemplate("Result : {% if " + arg1 + " " + op + " " + arg2 +
                                                             " %}TRUE{% else %}FALSE{% endif %}");
-                Assert.Fail("Expected an error but none was thrown.");
+                Console.WriteLine(result);
+                Assert.Fail("Expected an error but none was thrown: " + result);
             }
             catch (LiquidParserException ex)
             {

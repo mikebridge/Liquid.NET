@@ -26,7 +26,10 @@ namespace Liquid.NET.Expressions
                 // This shouldn't happen if the parser is correct.
                 return ConstantFactory.CreateError<BooleanValue>("Equals is a binary expression but received " + exprList.Count() + "."); 
             }
-
+            if (exprList[0].IsUndefined && exprList[1].IsUndefined)
+            {
+                return new BooleanValue(true);
+            }
             if (exprList[0].IsUndefined)
             {
                 return ConstantFactory.CreateError<BooleanValue>(exprList[0].ErrorMessage);

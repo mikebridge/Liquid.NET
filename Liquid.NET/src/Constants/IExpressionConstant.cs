@@ -11,8 +11,6 @@ namespace Liquid.NET.Constants
 
         bool IsUndefined { get; set; }
 
-        bool IsNil { get; }
-
         IExpressionConstant Bind(Func<IExpressionConstant, IExpressionConstant> f);
 
         TOut Bind<TOut>(Func<IExpressionConstant, TOut> f)

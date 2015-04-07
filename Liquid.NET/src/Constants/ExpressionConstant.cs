@@ -21,6 +21,10 @@ namespace Liquid.NET.Constants
             get;
         }
 
+        /// <summary>
+        /// This should correspond to this:
+        /// https://docs.shopify.com/themes/liquid-documentation/basics/true-and-false
+        /// </summary>
         public abstract bool IsTrue
         {
             get;

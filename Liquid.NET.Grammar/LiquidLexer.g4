@@ -142,6 +142,9 @@ INCREMENT_TAG :			'increment';
 DECREMENT_TAG :			'decrement';
 MACRO_TAG :				'macro' ;
 ENDMACRO_TAG :			'endmacro' ;
+EMPTY :					'empty';
+NULL :					'null'|'nil'; // Liquid uses both?
+BLANK :					'blank';
 ENDLABEL:				END LABEL;
 
 COLON1 :				':' -> type(COLON);

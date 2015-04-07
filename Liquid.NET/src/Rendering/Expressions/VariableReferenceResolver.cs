@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Liquid.NET.Expressions
+namespace Liquid.NET.Rendering.Expressions
 {
-    public class ExpressionEvalVisitor
+    class VariableReferenceResolver
     {
     }
 }

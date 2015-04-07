@@ -272,7 +272,7 @@ namespace Liquid.NET.Constants
         public static string RenderAsString(IExpressionConstant val)
         {
             // These don't render in liquid
-            if (val.IsUndefined || val.IsNil || val.HasError)
+            if (val.IsUndefined || val.HasError)
             {
                 return "";
             }

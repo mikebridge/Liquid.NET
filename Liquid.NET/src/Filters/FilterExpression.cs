@@ -1,6 +1,5 @@
 ﻿using System;
 using Liquid.NET.Constants;
-using Liquid.NET.Expressions;
 
 namespace Liquid.NET.Filters
 {

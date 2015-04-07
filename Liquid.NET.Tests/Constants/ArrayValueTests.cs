@@ -40,8 +40,10 @@ namespace Liquid.NET.Tests.Constants
                 new BooleanValue(false)
             };
             ArrayValue arrayValue = new ArrayValue(objlist);
+            var ctx = new TemplateContext().WithAllFilters();
+            ctx.Define("myarray", arrayValue);
             // Act
-            var result = RenderingHelper.RenderTemplate("Result : {{ myarray.size }}");
+            var result = RenderingHelper.RenderTemplate("Result : {{ myarray.size }}", ctx);
 
             // Assert
           

@@ -38,6 +38,10 @@ namespace :gen do
     create_test_file('truthy.txt', 'TruthyTests')
   end
 
+  task :tags do
+    create_test_file('types.txt', 'TypeTests')
+  end
+
   task :all => [:errors, :filters, :tags]
 
 end

@@ -21,6 +21,7 @@ namespace Liquid.NET.Constants
         public Undefined(String name)
         {
             Name = name;
+            IsUndefined = true;
         }
 
 

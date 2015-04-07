@@ -86,8 +86,7 @@ namespace Liquid.NET
 
         public override void EnterTag(LiquidParser.TagContext tagContext)
         {
-            base.EnterTag(tagContext);
-            // Console.WriteLine("CREATING TAG *" + tagContext.GetText() + "*");            
+            base.EnterTag(tagContext);          
         }
 
         public override void EnterRaw_tag(LiquidParser.Raw_tagContext context)
@@ -1019,7 +1018,7 @@ namespace Liquid.NET
             //return new StringValue(text);
         }
 
-        private string StripQuotes(String str)
+        private static string StripQuotes(String str)
         {
             return str.Substring(1, str.Length - 2);
         }
@@ -1070,8 +1069,8 @@ namespace Liquid.NET
                 }
                 if (arrayIndex.STRING() != null)
                 {
-                    Console.WriteLine("...");
-                    indexingFilter.AddArg(new StringValue(arrayIndex.STRING().GetText()));
+                    Console.WriteLine("...");                    
+                    indexingFilter.AddArg(new StringValue(StripQuotes(arrayIndex.STRING().GetText())));
                     return indexingFilter;
                 }
                 // TODO: Rewrite this using "variable"

@@ -63,6 +63,7 @@
     <Compile Include="..\Liquid.NET.Grammar\obj\Debug\LiquidVisitor.cs">
       <Link>src\LiquidVisitor.cs</Link>
     </Compile>
+    <Compile Include="src\Constants\ArrayIndexer.cs" />
     <Compile Include="src\Constants\ArrayValue.cs" />
     <Compile Include="src\Constants\BooleanValue.cs" />
     <Compile Include="src\Constants\ConstantFactory.cs" />

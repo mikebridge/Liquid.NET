@@ -75,12 +75,43 @@ namespace Liquid.NET.Filters
             return result;
         }
 
+        // TODO: this is inefficient and ugly and duplicates much of ArrayValue
         public override IExpressionConstant ApplyTo(StringValue strValue)
         {
-            var result = strValue.StringVal.ToCharArray().Select(ch => (IExpressionConstant) new StringValue(ch.ToString())).ToList();
-            var arrayStr = new ArrayValue(result);
-            var newArray = ApplyTo(arrayStr);
-            throw new Exception("NOT IMPLEMENTED YET");
+            var strValues = strValue.StringVal.ToCharArray().Select(ch => (IExpressionConstant) new StringValue(ch.ToString())).ToList();
+            String propertyNameString = ValueCaster.RenderAsString(_propertyName);
+            int index;
+            if (propertyNameString.ToLower().Equals("first"))
+            {
+                index = 0;
+            }
+            else if (propertyNameString.ToLower().Equals("last"))
+            {
+                index = strValues.Count - 1;
+            }
+            else if (propertyNameString.ToLower().Equals("size"))
+            {
+                return new NumericValue(strValues.Count);
+            }
+            else
+            {
+                var maybeIndex = ValueCaster.Cast<IExpressionConstant, NumericValue>(_propertyName);
+                if (!maybeIndex.IsUndefined)
+                {
+                    index = maybeIndex.IntValue;
+                }
+                else
+                {
+                    return ConstantFactory.CreateUndefined<StringValue>("invalid array index: " + propertyNameString);
+                }
+            }
+
+            if (strValues.Count == 0)
+            {
+                return ConstantFactory.CreateUndefined<StringValue>("Empty string: " + propertyNameString);
+            }
+            return ArrayIndexer.ValueAt(strValues, index);
+
         }
 
 

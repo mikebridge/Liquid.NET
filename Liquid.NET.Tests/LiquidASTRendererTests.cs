@@ -165,7 +165,7 @@ namespace Liquid.NET.Tests
 
    
         [Test]
-        public void It_Should_Render_An_Undefined_Variable_In_A_LiquidExpression()
+        public void It_Should_Not_Render_An_Undefined_Variable_In_A_LiquidExpression()
         {
             // Arrange
             TemplateContext templateContext = new TemplateContext();
@@ -177,7 +177,7 @@ namespace Liquid.NET.Tests
 
             // Assert
             // TODO: What is this supposed to do?
-            Assert.That(result, Is.EqualTo("Result : UNDEFINED: myUndefinedVar"));
+            Assert.That(result, Is.EqualTo("Result : "));
 
         }
 

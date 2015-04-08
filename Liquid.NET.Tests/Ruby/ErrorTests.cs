@@ -43,6 +43,8 @@ namespace Liquid.NET.Tests.Ruby
         [TestCase(@"{% assign x = """" %}{% if x == null %}TRUE{% else %}FALSE{% endif %}", @"FALSE")]
         [TestCase(@"{% assign x = null %}{% if x == null %}TRUE{% else %}FALSE{% endif %}", @"TRUE")]
         [TestCase(@"{% assign x = 0 %}{% if x == null %}TRUE{% else %}FALSE{% endif %}", @"FALSE")]
+        [TestCase(@"{% if myundefined != null %}TRUE{% else %}FALSE{% endif %}", @"FALSE")]
+        [TestCase(@"{% if ""myundefined"" != null %}TRUE{% else %}FALSE{% endif %}", @"TRUE")]
         public void It_Should_Match_Ruby_Output(String input, String expected) {
 
             // Arrange

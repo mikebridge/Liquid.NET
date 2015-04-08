@@ -56,13 +56,13 @@ namespace Liquid.NET.Filters
                 }
                 else
                 {                    
-                    return ConstantFactory.CreateError<StringValue>("invalid array index: " + propertyNameString);
+                    return ConstantFactory.CreateUndefined<StringValue>("invalid array index: " + propertyNameString);
                 }
             }
 
             if (arrayValue.ArrValue.Count == 0)
             {
-                return ConstantFactory.CreateError<StringValue>("array is empty: " + propertyNameString);
+                return ConstantFactory.CreateUndefined<StringValue>("array is empty: " + propertyNameString);
             }
             var result = arrayValue.ValueAt(index); 
             return result;

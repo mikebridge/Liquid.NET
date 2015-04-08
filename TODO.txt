@@ -1,17 +1,12 @@
 
-- Better error handling / nulls / undefined
-
 - Write the filters
 
-- WRite the std tags
+- Write the std tags
 
 - Write the std blocks
   - include
   - table?
 
-- Set up custom blocks/filters
-     - ability to define a keyword in a block
-    
 
 EXTRA
 
@@ -27,4 +22,6 @@ EXTRA
 
 - Can use generator anywhere
 
-- foR/else loops 
+CLEANUP
+
+- remove "warning" in types

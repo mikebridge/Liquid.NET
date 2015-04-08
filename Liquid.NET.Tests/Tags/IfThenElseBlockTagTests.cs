@@ -124,7 +124,7 @@ namespace Liquid.NET.Tests.Tags
             var result = RenderingHelper.RenderTemplate(str, ctx );
 
             // Assert
-            Assert.That(result, Is.EqualTo("you never paid !"));
+            Assert.That(result, Is.EqualTo(""));
 
         }
         

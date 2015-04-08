@@ -41,6 +41,10 @@ namespace Liquid.NET.Tests.Ruby
         [TestCase(@"{% if "" "" == empty %}EMPTY{% else %}NOT EMPTY{% endif %}", @"NOT EMPTY")]
         [TestCase(@"{% if "" "" == empty %}EMPTY{% else %}NOT EMPTY{% endif %}", @"NOT EMPTY")]
         [TestCase(@"{% if null == empty %}EMPTY{% else %}NOT EMPTY{% endif %}", @"NOT EMPTY")]
+        [TestCase(@"{% assign myarray = ""1"" |split: "","" %}{% if x != empty %}NOT EMPTY{% else %}EMPTY{% endif %}", @"NOT EMPTY")]
+        [TestCase(@"{% if "" "" != empty %}NOT EMPTY{% else %}EMPTY{% endif %}", @"NOT EMPTY")]
+        [TestCase(@"{% if "" "" != empty %}NOT EMPTY{% else %}EMPTY{% endif %}", @"NOT EMPTY")]
+        [TestCase(@"{% if null != empty %}NOT EMPTY{% else %}EMPTY{% endif %}", @"NOT EMPTY")]
         public void It_Should_Match_Ruby_Output(String input, String expected) {
 
             // Arrange
@@ -54,28 +58,6 @@ namespace Liquid.NET.Tests.Ruby
             Assert.That(result, Is.EqualTo(expected));
         }
 
-        [Test]
-        public void It_Should_Generate_An_Exception(String input, String expectedMessage) {
-
-            // Arrange
-            ITemplateContext ctx = new TemplateContext().WithAllFilters();
-
-            try
-            {
-                var result = RenderingHelper.RenderTemplate(input);
-                Assert.Fail("Expected exception: "+expectedMessage);
-            }
-            catch (LiquidParserException ex)
-            {
-                // Assert
-                Assert.That(ex.LiquidErrors[0].ToString(), Is.StringContaining(expectedMessage));
-            }
-            catch (LiquidRendererException ex)
-            {
-                // Assert
-                Assert.That(ex.LiquidErrors[0].ToString(), Is.StringContaining(expectedMessage));
-            }
-        }
         
     }
 }

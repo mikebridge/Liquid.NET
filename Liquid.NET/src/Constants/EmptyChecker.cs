@@ -14,7 +14,7 @@ namespace Liquid.NET.Constants
         {
             if (val == null || val.IsUndefined)
             {
-                return true;
+                return false; // this appears to be the case in liquid?
             }
             return CheckIsEmpty((dynamic)val);
         }

@@ -13,7 +13,7 @@ namespace Liquid.NET.Tests.Expressions
         [Test]
         [TestCase("\"\"", true)]
         [TestCase("\"x\"", false)]
-        [TestCase("x", true)] 
+        [TestCase("x", false)]  // nil != empty
         [TestCase("0", false)]
         [TestCase("-1", false)]
         [TestCase("\"  \"", false)]

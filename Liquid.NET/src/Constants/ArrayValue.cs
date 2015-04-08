@@ -20,11 +20,10 @@ namespace Liquid.NET.Constants
             get { return _values; }
         }
 
-        // TODO: Is this correct?
-        // No it isn't: https://docs.shopify.com/themes/liquid-documentation/basics/true-and-false
+        // https://docs.shopify.com/themes/liquid-documentation/basics/true-and-false
         public override bool IsTrue
         {
-            get { return _values.Count != 0; }
+            get { return _values != null; }
         }
 
         public IList<IExpressionConstant> ArrValue { get { return _values; } }
@@ -33,7 +32,7 @@ namespace Liquid.NET.Constants
         {
             if (key >= _values.Count || key < -_values.Count)
             {
-                return ConstantFactory.CreateError<StringValue>("index "+key+" is outside the bounds of the array.");
+                return ConstantFactory.CreateUndefined<StringValue>("index "+key+" is outside the bounds of the array.");
             }
             key = WrapMod(key, _values.Count);
             

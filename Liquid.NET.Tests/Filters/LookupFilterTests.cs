@@ -22,7 +22,7 @@ namespace Liquid.NET.Tests.Filters
         [TestCase("-4", "a string")]
         [TestCase("-5", "")]
         [TestCase("4", "")]
-        [TestCase("-30", "")] // TODO: WHat does this do in liquid?
+        [TestCase("-30", "")]
         public void It_Should_Look_Up_ArrayValues(String index, String expected)
         {
             // Arrange

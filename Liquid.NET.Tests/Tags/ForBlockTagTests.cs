@@ -139,7 +139,7 @@ namespace Liquid.NET.Tests.Tags
             String result = template.Render(ctx);
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : Inside: a string Inside: 123 Inside: 456 Inside: false Outside: " + Undefined.CreateUndefinedMessage("item")));
+            Assert.That(result, Is.EqualTo("Result : Inside: a string Inside: 123 Inside: 456 Inside: false Outside: ")); // undefined is blank.
         }
 
         [Test]

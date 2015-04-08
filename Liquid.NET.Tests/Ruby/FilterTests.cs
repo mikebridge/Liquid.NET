@@ -40,28 +40,6 @@ namespace Liquid.NET.Tests.Ruby
             Assert.That(result, Is.EqualTo(expected));
         }
 
-        [Test]
-        public void It_Should_Generate_An_Exception(String input, String expectedMessage) {
-
-            // Arrange
-            ITemplateContext ctx = new TemplateContext().WithAllFilters();
-
-            try
-            {
-                var result = RenderingHelper.RenderTemplate(input);
-                Assert.Fail("Expected exception: "+expectedMessage);
-            }
-            catch (LiquidParserException ex)
-            {
-                // Assert
-                Assert.That(ex.LiquidErrors[0].ToString(), Is.StringContaining(expectedMessage));
-            }
-            catch (LiquidRendererException ex)
-            {
-                // Assert
-                Assert.That(ex.LiquidErrors[0].ToString(), Is.StringContaining(expectedMessage));
-            }
-        }
         
     }
 }

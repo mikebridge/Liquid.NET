@@ -36,3 +36,7 @@
 {% assign x = null %}{% if x == null %}TRUE{% else %}FALSE{% endif %}
 #
 {% assign x = 0 %}{% if x == null %}TRUE{% else %}FALSE{% endif %}
+#
+{% if myundefined != null %}TRUE{% else %}FALSE{% endif %}
+#
+{% if "myundefined" != null %}TRUE{% else %}FALSE{% endif %}

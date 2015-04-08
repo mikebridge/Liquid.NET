@@ -30,3 +30,12 @@
 {% if " " == empty %}EMPTY{% else %}NOT EMPTY{% endif %}
 #
 {% if null == empty %}EMPTY{% else %}NOT EMPTY{% endif %}
+#
+{% assign myarray = "1" |split: "," %}{% if x != empty %}NOT EMPTY{% else %}EMPTY{% endif %}
+#
+{% if " " != empty %}NOT EMPTY{% else %}EMPTY{% endif %}
+#
+{% if " " != empty %}NOT EMPTY{% else %}EMPTY{% endif %}
+#
+{% if null != empty %}NOT EMPTY{% else %}EMPTY{% endif %}
+#

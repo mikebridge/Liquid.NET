@@ -64,7 +64,6 @@ namespace Liquid.NET.Tests.Constants
         }
 
         [Test]
-        [Ignore]
         public void String_Should_Be_Enumerable()
         {
             // Arrange

@@ -302,8 +302,7 @@ namespace Liquid.NET.Tests
         }
 
         [Test]
-        [Ignore]
-        public void It_Should_Return_Unknown_When_Nested_Dictionaries_Pipe_Into_Each_Other_But_Have_Missing_Key()
+        public void It_Should_Return_Nothing_When_Nested_Dictionaries_Pipe_Into_Each_Other_But_Have_Missing_Key()
         {
             // Arrange
             TemplateContext templateContext = new TemplateContext();
@@ -322,7 +321,7 @@ namespace Liquid.NET.Tests
             String result = new LiquidASTRenderer().Render(templateContext, ast);
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : UNDEFINED: zzz"));
+            Assert.That(result, Is.EqualTo("Result : "));
 
         }
 

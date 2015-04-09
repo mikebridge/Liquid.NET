@@ -84,6 +84,7 @@
     <Compile Include="src\Constants\StringValue.cs" />
     <Compile Include="src\Constants\Undefined.cs" />
     <Compile Include="src\Constants\ValueCaster.cs" />
+    <Compile Include="src\Expressions\NotEqualsExpression.cs" />
     <Compile Include="src\Expressions\IsEmptyExpression - Copy.cs" />
     <Compile Include="src\Expressions\IsEmptyExpression.cs" />
     <Compile Include="src\Expressions\AndExpression.cs" />

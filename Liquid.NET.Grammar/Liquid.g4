@@ -193,12 +193,13 @@ expr:				PARENOPEN expr PARENCLOSE			# GroupedExpr
 					| expr (MINUS | ADD) expr           # AddSubExpr
 					| expr EQ EMPTY						# IsEmptyExpr // TODO can 'empty' be used anywhere else?
 					| EMPTY EQ expr						# IsEmptyExpr 
-					| expr EQ NULL						# IsNullExpr // TODO can 'empty' be used anywhere else?
+					| expr NEQ EMPTY					# IsEmptyExpr
+					| EMPTY NEQ expr					# IsEmptyExpr 
+					| expr NEQ NULL						# IsNullExpr 
+					| NULL NEQ expr						# IsNullExpr
+					| expr EQ NULL						# IsNullExpr 
 					| NULL EQ expr						# IsNullExpr 
-					| expr NEQ EMPTY						# IsEmptyExpr // TODO can 'empty' be used anywhere else?
-					| EMPTY NEQ expr						# IsEmptyExpr 
-					| expr NEQ NULL						# IsNullExpr // TODO can 'empty' be used anywhere else?
-					| NULL NEQ expr						# IsNullExpr 
+
 					| expr (GT | LT | GTE | LTE | EQ | NEQ) expr      # ComparisonExpr
 					| expr AND expr                     # AndExpr
 					| expr OR expr                      # OrExpr

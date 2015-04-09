@@ -9,7 +9,6 @@ using NUnit.Framework;
 namespace Liquid.NET.Tests.Expressions
 {
     [TestFixture]
-    [Ignore("Need to write these")]
     public class LiquidExpressionTreeBuilderTests
     {
         [Test]

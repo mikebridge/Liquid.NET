@@ -20,7 +20,11 @@ namespace Liquid.NET.Expressions
             {
                 throw new Exception("Expected one variable to compare with \"null\""); // this will be obsolete when the lexer/parser is split
             }
-            return new BooleanValue(list[0].IsUndefined);
+            if (list[0].IsUndefined)
+            {
+                return new BooleanValue(false);
+            }
+            return new BooleanValue(list[0].Value == null);
 
             //throw new NotImplementedException();
         }

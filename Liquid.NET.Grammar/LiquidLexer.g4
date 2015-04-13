@@ -38,6 +38,10 @@ fragment EXP :			[Ee] [+\-]? INT ; // \- since - means "range" inside [...]
 
 BOOLEAN :				'true' | 'false' ;
 
+EMPTY :					'empty';
+NULL :					'null'|'nil'; // Liquid uses both?
+BLANK :					'blank';
+
 STRING :				'"' STRDOUBLE '"' | '\'' STRSINGLE '\'' ;  
 fragment STRDOUBLE :	(ESC | ~["\\])* ;
 fragment STRSINGLE :	(ESC | ~['\\])* ;
@@ -83,6 +87,8 @@ OUTPUTMKUPEND :			'}}'            -> popMode ;
 FILTERPIPE1 :			FILTERPIPE -> type(FILTERPIPE) ;
 
 PERIOD1:				PERIOD -> type(PERIOD) ;
+
+NULL1:					NULL -> type(NULL);
 
 NUMBER1:				NUMBER -> type(NUMBER);
 
@@ -145,10 +151,10 @@ INCREMENT_TAG :			'increment';
 DECREMENT_TAG :			'decrement';
 MACRO_TAG :				'macro' ;
 ENDMACRO_TAG :			'endmacro' ;
-EMPTY :					'empty';
-NULL :					'null'|'nil'; // Liquid uses both?
-BLANK :					'blank';
+
 ENDLABEL:				END LABEL;
+
+NULL2:					NULL -> type(NULL);
 
 COLON1 :				':' -> type(COLON);
 COMMA1 :				',' -> type(COMMA);

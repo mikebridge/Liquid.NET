@@ -188,22 +188,12 @@ filterarg:			STRING								# StringFilterArg
 expr:				PARENOPEN expr PARENCLOSE			# GroupedExpr 
 					| outputexpression					# OutputExpression
 					| NOT expr					        # NotExpr
-					//	|  typecast?
 					| expr (MULT | DIV | MOD) expr      # MultExpr
 					| expr (MINUS | ADD) expr           # AddSubExpr
-					| expr EQ EMPTY						# IsEmptyExpr // TODO can 'empty' be used anywhere else?
-					| EMPTY EQ expr						# IsEmptyExpr 
-					| expr NEQ EMPTY					# IsEmptyExpr
-					| EMPTY NEQ expr					# IsEmptyExpr 
-					| expr NEQ NULL						# IsNullExpr 
-					| NULL NEQ expr						# IsNullExpr
-					| expr EQ NULL						# IsNullExpr 
-					| NULL EQ expr						# IsNullExpr 
-
+					//| expr (NEQ | EQ) (EMPTY | NULL)    # IsEmptyOrNullExpr // TODO can 'empty' be used anywhere else? 
 					| expr (GT | LT | GTE | LTE | EQ | NEQ) expr      # ComparisonExpr
 					| expr AND expr                     # AndExpr
 					| expr OR expr                      # OrExpr
-					// todo: nil
 					;	
 
 tagname:			LABEL ; 

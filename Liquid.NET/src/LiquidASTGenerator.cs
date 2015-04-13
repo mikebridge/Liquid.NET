@@ -899,49 +899,55 @@ namespace Liquid.NET
             MarkCurrentExpressionComplete();
         }
 
-        public override void EnterIsEmptyExpr(LiquidParser.IsEmptyExprContext isEmptyExprContext)
-        {
-            base.EnterIsEmptyExpr(isEmptyExprContext);
-            if (isEmptyExprContext.NEQ() != null)
-            {
-                AddExpressionToCurrentExpressionBuilder(new NotExpression());
-            }
-            AddExpressionToCurrentExpressionBuilder(new IsEmptyExpression());
-        }
+//        public override void EnterIsEmptyOrNullExpr(LiquidParser.IsEmptyOrNullExprContext context)
+//        {
+//            Console.WriteLine("Is empty or null...");
+//            base.EnterIsEmptyOrNullExpr(context);
+//        }
 
-        public override void ExitIsEmptyExpr(LiquidParser.IsEmptyExprContext context)
-        {
-            base.ExitIsEmptyExpr(context);
-            //Console.WriteLine(" --- exiting IS EMPTY expression >" + context.GetText() + "<");
-            MarkCurrentExpressionComplete();
-            if (context.NEQ() != null)
-            {
-                MarkCurrentExpressionComplete();
-            }
-        }
-
-        public override void EnterIsNullExpr(LiquidParser.IsNullExprContext isNullExprContext)
-        {
-
-            Console.WriteLine("Is NULL CHECK!!");
-            base.EnterIsNullExpr(isNullExprContext);
-            if (isNullExprContext.NEQ() != null)
-            {
-                AddExpressionToCurrentExpressionBuilder(new NotExpression());
-            }
-            AddExpressionToCurrentExpressionBuilder(new IsNullExpression());
-        }
-
-        public override void ExitIsNullExpr(LiquidParser.IsNullExprContext isNullExprContext)
-        {
-            base.ExitIsNullExpr(isNullExprContext);
-            Console.WriteLine(" --- exiting IS NULL expression >" + isNullExprContext.GetText() + "<");
-            MarkCurrentExpressionComplete();
-            if (isNullExprContext.NEQ() != null)
-            {
-                MarkCurrentExpressionComplete();
-            }
-        }
+//        public override void EnterIsEmptyExpr(LiquidParser.IsEmptyExprContext isEmptyExprContext)
+//        {
+//            base.EnterIsEmptyExpr(isEmptyExprContext);
+//            if (isEmptyExprContext.NEQ() != null)
+//            {
+//                AddExpressionToCurrentExpressionBuilder(new NotExpression());
+//            }
+//            AddExpressionToCurrentExpressionBuilder(new IsEmptyExpression());
+//        }
+//
+//        public override void ExitIsEmptyExpr(LiquidParser.IsEmptyExprContext context)
+//        {
+//            base.ExitIsEmptyExpr(context);
+//            //Console.WriteLine(" --- exiting IS EMPTY expression >" + context.GetText() + "<");
+//            MarkCurrentExpressionComplete();
+//            if (context.NEQ() != null)
+//            {
+//                MarkCurrentExpressionComplete();
+//            }
+//        }
+//
+//        public override void EnterIsNullExpr(LiquidParser.IsNullExprContext isNullExprContext)
+//        {
+//
+//            Console.WriteLine("Is NULL CHECK!!");
+//            base.EnterIsNullExpr(isNullExprContext);
+//            if (isNullExprContext.NEQ() != null)
+//            {
+//                AddExpressionToCurrentExpressionBuilder(new NotExpression());
+//            }
+//            AddExpressionToCurrentExpressionBuilder(new IsNullExpression());
+//        }
+//
+//        public override void ExitIsNullExpr(LiquidParser.IsNullExprContext isNullExprContext)
+//        {
+//            base.ExitIsNullExpr(isNullExprContext);
+//            Console.WriteLine(" --- exiting IS NULL expression >" + isNullExprContext.GetText() + "<");
+//            MarkCurrentExpressionComplete();
+//            if (isNullExprContext.NEQ() != null)
+//            {
+//                MarkCurrentExpressionComplete();
+//            }
+//        }
 
 
 
@@ -1061,7 +1067,7 @@ namespace Liquid.NET
         public override void EnterNullObject(LiquidParser.NullObjectContext context)
         {
             base.EnterNullObject(context);
-            var nullObj = new StringValue(null) {IsUndefined = true};
+            var nullObj = new StringValue(null) {IsUndefined = true}; // TODO: Is null undefined??
             AddExpressionToCurrentExpressionBuilder(nullObj);
         }
 

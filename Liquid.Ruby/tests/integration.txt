@@ -1,0 +1,22 @@
+## Assign_test
+{% assign this-thing = 'Print this-thing' %}{{ this-thing }}
+#
+{% assign foo = "foo,bar,baz" | split: "|" %}.{{ foo[0] }}.
+#
+{% assign foo = "foo,bar,baz" | split: "|" %}.{{ foo[1] }}.
+#
+{% assign foo not values %}.
+#
+{% assign foo = ('X' | downcase) %}
+#
+{% assign foo = ('X' | downcase) %}
+## Blank Test
+{% for i in (1..10) %}{% foobar %}{% endfor %}
+#
+{% for i in (1..10) %} {% endfor %}
+#
+{% if true %} {% elsif false %} {% else %} {% endif %}
+#
+{% unless true %} {% endunless %}
+#
+ {% if false %} this never happens, but still, this block is not blank {% endif %}

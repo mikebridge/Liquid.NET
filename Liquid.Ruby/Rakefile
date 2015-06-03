@@ -20,6 +20,16 @@ def create_test_file(input, classname)
 
 end
 
+def create_liquid_test_file(input, classname)
+
+  test_template = File.read(File.join(PROJECTDIR, 'tests.liquid'))
+  test_case_input = File.join(TESTDIR, input)
+  csharp_output_file = File.join(OUTPUTDIR, classname + '.cs')
+  puts("WRITING #{csharp_output_file}")
+  create_liquid_test_file_from_cases test_case_input, csharp_output_file, classname, test_template
+
+end
+
 namespace :gen do
 
   task :errors do
@@ -40,6 +50,10 @@ namespace :gen do
 
   task :tags do
     create_test_file('types.txt', 'TypeTests')
+  end
+
+  task :liquid do
+    create_liquid_test_file('liquid.txt', 'LiquidTests')
   end
 
   task :all => [:errors, :filters, :tags]

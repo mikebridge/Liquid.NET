@@ -56,50 +56,41 @@ def create_test_file_from_cases(inputfile, outputfile, classname, test_template)
 
 end
 
-# FILTER TESTS
-
-# filters = {
-#     'classname' => 'FilterTests',
-#     'tests' => [
-#     test_line("{{ \"3\" | times: \"3\" }}")
-# ]}
-#
-# filter_output = File.join(homedir, 'Liquid.NET.Tests/Ruby/FilterTests.cs')
-# File.open(filter_output, 'w') {
-#    |file| file.write(eval_tmpl(test_template, filters))
-# }
-
-# ERROR TESTS
-
-# filters = {
-#     'classname' => 'ErrorTests',
-#     'tests' => [
-#         test_line("{{ \"1\" | divided_by: \"0\" }}"),
-#         test_line("{{ \"x\" | divided_by: \"1\" }}"),
-#         test_line('{{ 1 | unk_filter }}'),
-#         test_line("{{ \"test,test\" | split: }}"),
-#         test_line('{% unknown_tag %}')
-# ]}
-
-#error_output = File.join(homedir, 'Liquid.NET.Tests/Ruby/ErrorTests.cs')
-#error_input = File.join(testdir, "errors.txt")
-#File.open(error_output, 'w') {
-#    |file| file.write(eval_tmpl(test_template, read_tests_into_array(error_input)))
-#}
+def liquid_test_case(template, assigns, expected, empty=nil)
+  {
+      "input" => escape(template),
+      "assigns" => escape(assigns),
+      "expected" => escape(expected)
+  }
 
 
-#puts filters
-#puts eval_tmpl(test_template, filters)
+end
 
-#
-# filters = { 'errortests' => [
-#     { "input" => escape("{{ \"\" | times: \"3\" }}"), "expected" => escape('9') }
-# ]}
-#
-# test_template = File.read('tests.liquid')
-# filter_output = File.join(home, 'Liquid.NET.Tests/Ruby/ErrorTests.cs')
-# File.open(filter_output, 'w') {
-#     |file| file.write(write_test_file(test_template, filters))
-# }
-# #puts write_test_file(test_template, filters)
+def create_liquid_test_file_from_cases(inputfile, outputfile, classname, test_template)
+  #puts inputfile
+  #puts outputfile
+  #puts test_template
+  test_cases = read_tests_into_array(inputfile).each_slice(4).to_a.collect do |line|
+     liquid_test_case(*line)
+  end
+  vars = {'classname' => classname,
+          'sourcefile' => File.basename(inputfile),
+          'tests' => test_cases,
+          'exceptions' => []
+  }
+  #puts vars
+  write_test_file(outputfile, vars, test_template)
+
+  # .collect{ |x| test_line(x) }
+  # #puts test_cases
+  # vars = {'classname' => classname,
+  #         'sourcefile' => File.basename(inputfile),
+  #         'tests' => non_exception_results(test_cases),
+  #         'exceptions' => exception_results(test_cases)
+  # }
+  # #puts(vars)
+  #
+  # write_test_file(outputfile, vars, test_template)
+
+end
 

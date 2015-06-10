@@ -35,11 +35,15 @@ module Minitest
 
     def assert_template_result(expected, template, assigns = {}, message = nil)
       puts "# TEMPLATE"
-      puts ">#{template}"
+      puts template
       puts "# ASSIGNS"
-      puts ">#{assigns.to_json}"
+      puts assigns.to_json
       puts "#EXPECTED"
-      puts ">{Template.parse(template).render!(assigns)}"
+      begin
+        puts Template.parse(template).render!(assigns)
+      rescue Error => err
+        puts "EXCEPTION:#{err}"
+      end
       puts "# END"
       assert_equal expected, Template.parse(template).render!(assigns), message
     end

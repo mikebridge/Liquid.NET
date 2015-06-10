@@ -1,898 +1,96 @@
-........# TEMPLATE
->{% include 'locale_variables' echo1: 'test123' %}
+...............................................# TEMPLATE
+>{% tablerow n in numbers cols:2%}{{tablerowloop.col}}{% endtablerow %}
 # ASSIGNS
->{}
+>{"numbers":[1,2,3,4,5,6]}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+><tr class="row1">
+<td class="col1">1</td><td class="col2">2</td></tr>
+<tr class="row2"><td class="col1">1</td><td class="col2">2</td></tr>
+<tr class="row3"><td class="col1">1</td><td class="col2">2</td></tr>
 # END
 .# TEMPLATE
->{% include 'product' for products %}
+>{% tablerow char in characters cols:3 %}I WILL NOT BE OUTPUT{% endtablerow %}
 # ASSIGNS
->{"products":[{"title":"Draft 151cm"},{"title":"Element 155cm"}]}
+>{"characters":""}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+><tr class="row1">
+</tr>
+# END
+.# TEMPLATE
+>{% tablerow n in numbers cols:3 offset:1 limit:6%} {{n}} {% endtablerow %}
+# ASSIGNS
+>{"numbers":[0,1,2,3,4,5,6,7]}
+#EXPECTED
+><tr class="row1">
+<td class="col1"> 1 </td><td class="col2"> 2 </td><td class="col3"> 3 </td></tr>
+<tr class="row2"><td class="col1"> 4 </td><td class="col2"> 5 </td><td class="col3"> 6 </td></tr>
+# END
+.# TEMPLATE
+>{% tablerow n in numbers cols:5%} {{n}} {% endtablerow %}
+# ASSIGNS
+>{"numbers":[1,2,3,4,5,6]}
+#EXPECTED
+><tr class="row1">
+<td class="col1"> 1 </td><td class="col2"> 2 </td><td class="col3"> 3 </td><td class="col4"> 4 </td><td class="col5"> 5 </td></tr>
+<tr class="row2"><td class="col1"> 6 </td></tr>
+# END
+.# TEMPLATE
+>{% tablerow n in numbers cols:3%} {{n}} {% endtablerow %}
+# ASSIGNS
+>{"numbers":"TableRowTest::ArrayDrop"}
+#EXPECTED
+><tr class="row1">
+<td class="col1"> 1 </td><td class="col2"> 2 </td><td class="col3"> 3 </td></tr>
+<tr class="row2"><td class="col1"> 4 </td><td class="col2"> 5 </td><td class="col3"> 6 </td></tr>
+# END
+.# TEMPLATE
+>{% tablerow n in collections.frontpage cols:3%} {{n}} {% endtablerow %}
+# ASSIGNS
+>{"collections":{"frontpage":[1,2,3,4,5,6]}}
+#EXPECTED
+><tr class="row1">
+<td class="col1"> 1 </td><td class="col2"> 2 </td><td class="col3"> 3 </td></tr>
+<tr class="row2"><td class="col1"> 4 </td><td class="col2"> 5 </td><td class="col3"> 6 </td></tr>
+# END
+# TEMPLATE
+>{% tablerow n in collections['frontpage'] cols:3%} {{n}} {% endtablerow %}
+# ASSIGNS
+>{"collections":{"frontpage":[1,2,3,4,5,6]}}
+#EXPECTED
+><tr class="row1">
+<td class="col1"> 1 </td><td class="col2"> 2 </td><td class="col3"> 3 </td></tr>
+<tr class="row2"><td class="col1"> 4 </td><td class="col2"> 5 </td><td class="col3"> 6 </td></tr>
+# END
+.# TEMPLATE
+>{% tablerow n in numbers cols:3%} {{n}} {% endtablerow %}
+# ASSIGNS
+>{"numbers":[1,2,3,4,5,6]}
+#EXPECTED
+><tr class="row1">
+<td class="col1"> 1 </td><td class="col2"> 2 </td><td class="col3"> 3 </td></tr>
+<tr class="row2"><td class="col1"> 4 </td><td class="col2"> 5 </td><td class="col3"> 6 </td></tr>
+# END
+# TEMPLATE
+>{% tablerow n in numbers cols:3%} {{n}} {% endtablerow %}
+# ASSIGNS
+>{"numbers":[]}
+#EXPECTED
+><tr class="row1">
+</tr>
 # END
 ...# TEMPLATE
->{% if true %}{% include 'foo_if_true' %}{% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% include template %}
-# ASSIGNS
->{"template":"Test123"}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% include template %}
-# ASSIGNS
->{"template":"Test321"}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% include template for product %}
-# ASSIGNS
->{"template":"product","product":{"title":"Draft 151cm"}}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% include 'product' with products[0] %}
-# ASSIGNS
->{"products":[{"title":"Draft 151cm"},{"title":"Element 155cm"}]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-...# TEMPLATE
->{% include 'assignments' %}{{ foo }}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-...# TEMPLATE
->{% assign page = 'pick_a_source' %}{% include page %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% assign page = 'product' %}{% include page %}
-# ASSIGNS
->{"product":{"title":"Draft 151cm"}}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% assign page = 'product' %}{% include page for foo %}
-# ASSIGNS
->{"foo":{"title":"Draft 151cm"}}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-..# TEMPLATE
->{% include 'locale_variables' echo1: 'test123', echo2: 'test321' %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% include 'locale_variables' echo1: echo1, echo2: more_echos.echo2 %}
-# ASSIGNS
->{"echo1":"test123","more_echos":{"echo2":"test321"}}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-..# TEMPLATE
->{% include 'body' %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% include 'nested_template' %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% include 'nested_product_template' with product %}
-# ASSIGNS
->{"product":{"title":"Draft 151cm"}}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% include 'nested_product_template' for products %}
-# ASSIGNS
->{"products":[{"title":"Draft 151cm"},{"title":"Element 155cm"}]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% include 'product' %}
-# ASSIGNS
->{"product":{"title":"Draft 151cm"}}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-....# TEMPLATE
->{% for i in (1...5) %}{{ i }}{% endfor %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-......# TEMPLATE
->{{ 'hi there' | split$$$:' ' | first }}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{{ 'X' | downcase) }}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{{ 'hi there' | split:"t"" | reverse | first}}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{{ 'hi there' | split:"t"" | remove:"i" | first}}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% if a == 'foo' or (b == 'bar' and c == 'baz') or false %} YES {% endif %}
-# ASSIGNS
->{"b":"bar","c":"baz"}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% if true && false %} YES {% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if false || true %} YES {% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% assign 123foo = 'bar' %}{{ 123foo }}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% assign 123 = 'bar' %}{{ 123 }}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-................................................................................# TEMPLATE
->{{ foo }}
-# ASSIGNS
->{"foo":"#<ThingWithToLiquid:0x0000000242f098>"}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-................# TEMPLATE
->{% capture 'var' %}test string{% endcapture %}{{var}}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-..# TEMPLATE
->{% if a or b and c %}true{% else %}false{% endif %}
-# ASSIGNS
->{"a":true,"b":true,"c":true}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if a or b and c %}true{% else %}false{% endif %}
-# ASSIGNS
->{"a":true,"b":true,"c":false}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if a or b and c %}true{% else %}false{% endif %}
-# ASSIGNS
->{"a":true,"b":false,"c":true}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if a or b and c %}true{% else %}false{% endif %}
-# ASSIGNS
->{"a":true,"b":false,"c":false}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if a or b and c %}true{% else %}false{% endif %}
-# ASSIGNS
->{"a":false,"b":true,"c":true}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if a or b and c %}true{% else %}false{% endif %}
-# ASSIGNS
->{"a":false,"b":true,"c":false}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if a or b and c %}true{% else %}false{% endif %}
-# ASSIGNS
->{"a":false,"b":false,"c":true}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if a or b and c %}true{% else %}false{% endif %}
-# ASSIGNS
->{"a":false,"b":false,"c":false}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% if false %}{% if false %} NO {% endif %}{% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if false %}{% if true %} NO {% endif %}{% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if true %}{% if false %} NO {% endif %}{% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if true %}{% if true %} YES {% endif %}{% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if true %}{% if true %} YES {% else %} NO {% endif %}{% else %} NO {% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if true %}{% if false %} NO {% else %} YES {% endif %}{% else %} NO {% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if false %}{% if true %} NO {% else %} NONO {% endif %}{% else %} YES {% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% if a == 'and' and b == 'or' and c == 'foo and bar' and d == 'bar or baz' and e == 'foo' and foo and bar %} YES {% endif %}
-# ASSIGNS
->{"a":"and","b":"or","c":"foo and bar","d":"bar or baz","e":"foo","foo":true,"bar":true}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% if 0 == 0 %}0{% elsif 1 == 1%}1{% else %}2{% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if 0 != 0 %}0{% elsif 1 == 1%}1{% else %}2{% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if 0 != 0 %}0{% elsif 1 != 1%}1{% else %}2{% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if false %}if{% elsif true %}elsif{% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% if android.name == 'Roy' %}YES{% endif %}
-# ASSIGNS
->{"order":{"items_count":0},"android":{"name":"Roy"}}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if order.items_count == 0 %}YES{% endif %}
-# ASSIGNS
->{"order":{"items_count":0},"android":{"name":"Roy"}}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% assign v = false %}{% if v %} YES {% else %} NO {% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% assign v = nil %}{% if v == nil %} YES {% else %} NO {% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% if var %} NO {% endif %}
-# ASSIGNS
->{"var":false}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if var %} NO {% endif %}
-# ASSIGNS
->{"var":null}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if foo.bar %} NO {% endif %}
-# ASSIGNS
->{"foo":{"bar":false}}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if foo.bar %} NO {% endif %}
-# ASSIGNS
->{"foo":{}}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if foo.bar %} NO {% endif %}
-# ASSIGNS
->{"foo":null}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if foo.bar %} NO {% endif %}
-# ASSIGNS
->{"foo":true}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if var %} YES {% endif %}
-# ASSIGNS
->{"var":"text"}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if var %} YES {% endif %}
-# ASSIGNS
->{"var":true}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if var %} YES {% endif %}
-# ASSIGNS
->{"var":1}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if var %} YES {% endif %}
-# ASSIGNS
->{"var":{}}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if var %} YES {% endif %}
-# ASSIGNS
->{"var":[]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if "foo" %} YES {% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if foo.bar %} YES {% endif %}
-# ASSIGNS
->{"foo":{"bar":true}}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if foo.bar %} YES {% endif %}
-# ASSIGNS
->{"foo":{"bar":"text"}}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if foo.bar %} YES {% endif %}
-# ASSIGNS
->{"foo":{"bar":1}}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if foo.bar %} YES {% endif %}
-# ASSIGNS
->{"foo":{"bar":{}}}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if foo.bar %} YES {% endif %}
-# ASSIGNS
->{"foo":{"bar":[]}}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if var %} NO {% else %} YES {% endif %}
-# ASSIGNS
->{"var":false}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if var %} NO {% else %} YES {% endif %}
-# ASSIGNS
->{"var":null}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if var %} YES {% else %} NO {% endif %}
-# ASSIGNS
->{"var":true}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if "foo" %} YES {% else %} NO {% endif %}
-# ASSIGNS
->{"var":"text"}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if foo.bar %} NO {% else %} YES {% endif %}
-# ASSIGNS
->{"foo":{"bar":false}}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if foo.bar %} YES {% else %} NO {% endif %}
-# ASSIGNS
->{"foo":{"bar":true}}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if foo.bar %} YES {% else %} NO {% endif %}
-# ASSIGNS
->{"foo":{"bar":"text"}}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if foo.bar %} NO {% else %} YES {% endif %}
-# ASSIGNS
->{"foo":{"notbar":true}}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if foo.bar %} NO {% else %} YES {% endif %}
-# ASSIGNS
->{"foo":{}}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if foo.bar %} NO {% else %} YES {% endif %}
-# ASSIGNS
->{"notfoo":{"bar":true}}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% if a == true or b == true %} YES {% endif %}
-# ASSIGNS
->{"a":true,"b":true}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if a == true or b == false %} YES {% endif %}
-# ASSIGNS
->{"a":true,"b":true}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if a == false or b == false %} YES {% endif %}
-# ASSIGNS
->{"a":true,"b":true}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% if 'gnomeslab-and-or-liquid' contains 'gnomeslab-and-or-liquid' %}yes{% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% if null < 10 %} NO {% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if null <= 10 %} NO {% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if null >= 10 %} NO {% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if null > 10 %} NO {% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if 10 < null %} NO {% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if 10 <= null %} NO {% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if 10 >= null %} NO {% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if 10 > null %} NO {% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% if true and true %} YES {% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if false and true %} YES {% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if false and true %} YES {% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% if %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% if false %} NO {% else %} YES {% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if true %} YES {% else %} NO {% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if "foo" %} YES {% else %} NO {% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% if 'bob' contains 'o' %}yes{% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if 'bob' contains 'f' %}yes{% else %}no{% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% if foo.bar %} NO {% endif %}
-# ASSIGNS
->{"foo":{}}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
-> {% if false %} this text should not go into the output {% endif %} 
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
-> {% if true %} this text should go into the output {% endif %} 
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if false %} you suck {% endif %} {% if true %} you rock {% endif %}?
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% if a or b %} YES {% endif %}
-# ASSIGNS
->{"a":true,"b":true}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if a or b %} YES {% endif %}
-# ASSIGNS
->{"a":true,"b":false}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if a or b %} YES {% endif %}
-# ASSIGNS
->{"a":false,"b":true}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if a or b %} YES {% endif %}
-# ASSIGNS
->{"a":false,"b":false}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if a or b or c %} YES {% endif %}
-# ASSIGNS
->{"a":false,"b":false,"c":true}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if a or b or c %} YES {% endif %}
-# ASSIGNS
->{"a":false,"b":false,"c":false}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% if jerry == 1 %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% if var %} YES {% endif %}
-# ASSIGNS
->{"var":true}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% if 1 or throw or or 1 %}yes{% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% for i in (1..10) %} {% assign foo = "bar" %} {% endfor %}{% if true %} {% assign foo = "bar" %} {% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
 >{% for i in (1..10) %}{% cycle ' ', ' ' %}{% endfor %}{% if true %}{% cycle ' ', ' ' %}{% endif %}
 # ASSIGNS
 >{}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% for i in (1..10) %} {% endfor %}{% if true %} {% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% for i in (1..10) %}	{% endfor %}{% if true %}	{% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% for i in (1..10) %}{% foobar %}{% endfor %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% for i in (1..10) %}{% unless true %} {% endunless %}{% endfor %}{% if true %}{% unless true %} {% endunless %}{% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% for i in (1..10) %}{% assign foo = 0 %} {% increment foo %} {% decrement foo %}{% endfor %}{% if true %}{% assign foo = 0 %} {% increment foo %} {% decrement foo %}{% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% for i in (1..10) %}{% include 'foobar' %}{% endfor %}{% if true %}{% include 'foobar' %}{% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% for i in (1..10) %}{% include ' foobar ' %}{% endfor %}{% if true %}{% include ' foobar ' %}{% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% for i in (1..10) %} {% include ' ' %} {% endfor %}{% if true %} {% include ' ' %} {% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% for i in (1..10) %}     x {% endfor %}{% if true %}     x {% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% for i in (1..10) %} {% comment %} whatever {% endcomment %} {% endfor %}{% if true %} {% comment %} whatever {% endcomment %} {% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
+>           
 # END
 .# TEMPLATE
 >{% for i in (1..10) %}{% for i in (1..10) %} {% endfor %}{% if true %} {% endif %}{% endfor %}{% if true %}{% for i in (1..10) %} {% endfor %}{% if true %} {% endif %}{% endif %}
 # ASSIGNS
 >{}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>
 # END
 # TEMPLATE
 >{% for i in (1..10) %}{% if true %} {% comment %} this is blank {% endcomment %} {% endif %}
@@ -901,2455 +99,914 @@
 # ASSIGNS
 >{}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% for i in (1..10) %} {% raw %} {% endraw %}{% endfor %}{% if true %} {% raw %} {% endraw %}{% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
+>
+       but this is not 
+       but this is not 
+       but this is not 
+       but this is not 
+       but this is not 
+       but this is not 
+       but this is not 
+       but this is not 
+       but this is not 
+       but this is not 
+       but this is not 
 # END
 .# TEMPLATE
 >{% if true %} {% elsif false %} {% else %} {% endif %}
 # ASSIGNS
 >{}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% for i in (1..10) %} {% capture foo %} whatever {% endcapture %} {% endfor %}{% if true %} {% capture foo %} whatever {% endcapture %} {% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
+>
 # END
 .# TEMPLATE
 >{% for i in (1..10) %} {% endfor %}
 # ASSIGNS
 >{}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>
 # END
 .# TEMPLATE
->{% for i in (1..10) %} {% assign foo = 'bar' %} {% case foo %} {% when 'bar' %} {% when 'whatever' %} {% else %} {% endcase %} {% endfor %}{% if true %} {% assign foo = 'bar' %} {% case foo %} {% when 'bar' %} {% when 'whatever' %} {% else %} {% endcase %} {% endif %}
+>{% for i in (1..10) %}{% unless true %} {% endunless %}{% endfor %}{% if true %}{% unless true %} {% endunless %}{% endif %}
 # ASSIGNS
 >{}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>
+# END
+.# TEMPLATE
+>{% for i in (1..10) %}{% include 'foobar' %}{% endfor %}{% if true %}{% include 'foobar' %}{% endif %}
+# ASSIGNS
+>{}
+#EXPECTED
+>foobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobar
 # END
 # TEMPLATE
->{% for i in (1..10) %} {% assign foo = 'else' %} {% case foo %} {% when 'bar' %} {% when 'whatever' %} {% else %} {% endcase %} {% endfor %}{% if true %} {% assign foo = 'else' %} {% case foo %} {% when 'bar' %} {% when 'whatever' %} {% else %} {% endcase %} {% endif %}
+>{% for i in (1..10) %}{% include ' foobar ' %}{% endfor %}{% if true %}{% include ' foobar ' %}{% endif %}
 # ASSIGNS
 >{}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+> foobar  foobar  foobar  foobar  foobar  foobar  foobar  foobar  foobar  foobar  foobar 
 # END
 # TEMPLATE
->{% for i in (1..10) %} {% assign foo = 'else' %} {% case foo %} {% when 'bar' %} {% when 'whatever' %} {% else %} x {% endcase %} {% endfor %}{% if true %} {% assign foo = 'else' %} {% case foo %} {% when 'bar' %} {% when 'whatever' %} {% else %} x {% endcase %} {% endif %}
+>{% for i in (1..10) %} {% include ' ' %} {% endfor %}{% if true %} {% include ' ' %} {% endif %}
 # ASSIGNS
 >{}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>                                 
+# END
+.# TEMPLATE
+>{% for i in (1..10) %}{% assign foo = 0 %} {% increment foo %} {% decrement foo %}{% endfor %}{% if true %}{% assign foo = 0 %} {% increment foo %} {% decrement foo %}{% endif %}
+# ASSIGNS
+>{}
+#EXPECTED
+> 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+# END
+.# TEMPLATE
+>{% for i in (1..10) %} {% capture foo %} whatever {% endcapture %} {% endfor %}{% if true %} {% capture foo %} whatever {% endcapture %} {% endif %}
+# ASSIGNS
+>{}
+#EXPECTED
+>
 # END
 .# TEMPLATE
 >{% for i in (1..10) %} {% if false %} this never happens, but still, this block is not blank {% endif %}{% endfor %}{% if true %} {% if false %} this never happens, but still, this block is not blank {% endif %}{% endif %}
 # ASSIGNS
 >{}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>           
 # END
-...# TEMPLATE
->{%increment port %}
+.# TEMPLATE
+>{% for i in (1..10) %} {% comment %} whatever {% endcomment %} {% endfor %}{% if true %} {% comment %} whatever {% endcomment %} {% endif %}
 # ASSIGNS
 >{}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>
 # END
-# TEMPLATE
->{%increment port %} {%increment port%}
+.# TEMPLATE
+>{% for i in (1..10) %}     x {% endfor %}{% if true %}     x {% endif %}
 # ASSIGNS
 >{}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>     x      x      x      x      x      x      x      x      x      x      x 
 # END
-# TEMPLATE
->{%increment port %} {%increment starboard%} {%increment port %} {%increment port%} {%increment starboard %}
+.# TEMPLATE
+>{% for i in (1..10) %} {% endfor %}{% if true %} {% endif %}
 # ASSIGNS
 >{}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{%decrement port %}
-# ASSIGNS
->{"port":10}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
+>
 # END
 # TEMPLATE
->{%decrement port %} {%decrement port%}
+>{% for i in (1..10) %}	{% endfor %}{% if true %}	{% endif %}
 # ASSIGNS
 >{}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>
+# END
+.# TEMPLATE
+>{% for i in (1..10) %} {% assign foo = 'bar' %} {% case foo %} {% when 'bar' %} {% when 'whatever' %} {% else %} {% endcase %} {% endfor %}{% if true %} {% assign foo = 'bar' %} {% case foo %} {% when 'bar' %} {% when 'whatever' %} {% else %} {% endcase %} {% endif %}
+# ASSIGNS
+>{}
+#EXPECTED
+>
 # END
 # TEMPLATE
->{%increment port %} {%increment starboard%} {%increment port %} {%decrement port%} {%decrement starboard %}
+>{% for i in (1..10) %} {% assign foo = 'else' %} {% case foo %} {% when 'bar' %} {% when 'whatever' %} {% else %} {% endcase %} {% endfor %}{% if true %} {% assign foo = 'else' %} {% case foo %} {% when 'bar' %} {% when 'whatever' %} {% else %} {% endcase %} {% endif %}
 # ASSIGNS
->{"port":1,"starboard":5}
+>{}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.................................# TEMPLATE
->{% tablerow n in numbers cols:3%} {{n}} {% endtablerow %}
-# ASSIGNS
->{"numbers":"TableRowTest::ArrayDrop"}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% tablerow n in numbers cols:3 offset:1 limit:6%} {{n}} {% endtablerow %}
-# ASSIGNS
->{"numbers":[0,1,2,3,4,5,6,7]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% tablerow n in numbers cols:2%}{{tablerowloop.col}}{% endtablerow %}
-# ASSIGNS
->{"numbers":[1,2,3,4,5,6]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% tablerow char in characters cols:3 %}I WILL NOT BE OUTPUT{% endtablerow %}
-# ASSIGNS
->{"characters":""}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% tablerow n in numbers cols:3%} {{n}} {% endtablerow %}
-# ASSIGNS
->{"numbers":[1,2,3,4,5,6]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
+>
 # END
 # TEMPLATE
->{% tablerow n in numbers cols:3%} {{n}} {% endtablerow %}
+>{% for i in (1..10) %} {% assign foo = 'else' %} {% case foo %} {% when 'bar' %} {% when 'whatever' %} {% else %} x {% endcase %} {% endfor %}{% if true %} {% assign foo = 'else' %} {% case foo %} {% when 'bar' %} {% when 'whatever' %} {% else %} x {% endcase %} {% endif %}
 # ASSIGNS
->{"numbers":[]}
+>{}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>   x     x     x     x     x     x     x     x     x     x     x  
 # END
 .# TEMPLATE
->{% tablerow n in numbers cols:5%} {{n}} {% endtablerow %}
+>{% for i in (1..10) %}{% foobar %}{% endfor %}
 # ASSIGNS
->{"numbers":[1,2,3,4,5,6]}
+>{}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>          
 # END
 .# TEMPLATE
->{% tablerow n in collections.frontpage cols:3%} {{n}} {% endtablerow %}
+>{% for i in (1..10) %} {% raw %} {% endraw %}{% endfor %}{% if true %} {% raw %} {% endraw %}{% endif %}
 # ASSIGNS
->{"collections":{"frontpage":[1,2,3,4,5,6]}}
+>{}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>                      
+# END
+.# TEMPLATE
+>{% for i in (1..10) %} {% assign foo = "bar" %} {% endfor %}{% if true %} {% assign foo = "bar" %} {% endif %}
+# ASSIGNS
+>{}
+#EXPECTED
+>
+# END
+...........................# TEMPLATE
+> {% unless true %} this text should not go into the output {% endunless %} 
+# ASSIGNS
+>{}
+#EXPECTED
+>  
 # END
 # TEMPLATE
->{% tablerow n in collections['frontpage'] cols:3%} {{n}} {% endtablerow %}
+> {% unless false %} this text should go into the output {% endunless %} 
 # ASSIGNS
->{"collections":{"frontpage":[1,2,3,4,5,6]}}
+>{}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>  this text should go into the output  
 # END
-..# TEMPLATE
+# TEMPLATE
+>{% unless true %} you suck {% endunless %} {% unless false %} you rock {% endunless %}?
+# ASSIGNS
+>{}
+#EXPECTED
+>  you rock ?
+# END
+.# TEMPLATE
+>{% unless true %} NO {% else %} YES {% endunless %}
+# ASSIGNS
+>{}
+#EXPECTED
+> YES 
+# END
+# TEMPLATE
+>{% unless false %} YES {% else %} NO {% endunless %}
+# ASSIGNS
+>{}
+#EXPECTED
+> YES 
+# END
+# TEMPLATE
+>{% unless "foo" %} NO {% else %} YES {% endunless %}
+# ASSIGNS
+>{}
+#EXPECTED
+> YES 
+# END
+.# TEMPLATE
+>{% for i in choices %}{% unless i %} {{ forloop.index }} {% else %} TRUE {% endunless %}{% endfor %}
+# ASSIGNS
+>{"choices":[1,null,false]}
+#EXPECTED
+> TRUE  2  3 
+# END
+.# TEMPLATE
+>{% for i in choices %}{% unless i %}{{ forloop.index }}{% endunless %}{% endfor %}
+# ASSIGNS
+>{"choices":[1,null,false]}
+#EXPECTED
+>23
+# END
+.# TEMPLATE
 >{% assign foo = values | split: "," %}.{{ foo[1] }}.
 # ASSIGNS
 >{"values":"foo,bar,baz"}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>.bar.
 # END
-...# TEMPLATE
+....# TEMPLATE
 >{% assign foo = values %}.{{ foo[0] }}.
 # ASSIGNS
 >{"values":["foo","bar","baz"]}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>.foo.
 # END
 # TEMPLATE
 >{% assign foo = values %}.{{ foo[1] }}.
 # ASSIGNS
 >{"values":["foo","bar","baz"]}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>.bar.
 # END
-........# TEMPLATE
+............# TEMPLATE
 >{% continue %}
 # ASSIGNS
 >{}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>
 # END
 ...# TEMPLATE
->{% break %}
+>{{ foo }}
 # ASSIGNS
->{"i":1}
+>{"foo":"#<ThingWithToLiquid:0x000000029d7810>"}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>foobar
 # END
-.# TEMPLATE
-> {% if 0 >= 0 %} true {% else %} false {% endif %} 
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
-> {% if 'test' == 'test' %} true {% else %} false {% endif %} 
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
-> {% if null <= 0 %} true {% else %} false {% endif %} 
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
-> {% if 0 <= null %} true {% else %} false {% endif %} 
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
-> {% if var != nil %} true {% else %} false {% endif %} 
-# ASSIGNS
->{"var":1}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
-> {% if var != null %} true {% else %} false {% endif %} 
-# ASSIGNS
->{"var":1}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
-> {% if var == 'hello there!' %} true {% else %} false {% endif %} 
-# ASSIGNS
->{"var":"hello there!"}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
-> {% if 'test' != 'test' %} true {% else %} false {% endif %} 
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
-> {% if true != true %} true {% else %} false {% endif %} 
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
-> {% if var == nil %} true {% else %} false {% endif %} 
-# ASSIGNS
->{"var":null}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
-> {% if var == null %} true {% else %} false {% endif %} 
-# ASSIGNS
->{"var":null}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
-> {% if true == true %} true {% else %} false {% endif %} 
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
-> {% if "hello there!" == var %} true {% else %} false {% endif %} 
-# ASSIGNS
->{"var":"hello there!"}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
-> {% if var == "hello there!" %} true {% else %} false {% endif %} 
-# ASSIGNS
->{"var":"hello there!"}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
-> {% if 0 < 1 %} true {% else %} false {% endif %} 
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
-> {% if 1 > 0 %} true {% else %} false {% endif %} 
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
-> {% if 0 <= 0 %} true {% else %} false {% endif %} 
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
-> {% if array == empty %} true {% else %} false {% endif %} 
-# ASSIGNS
->{"array":[1,2,3]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
-> {% if array == empty %} true {% else %} false {% endif %} 
-# ASSIGNS
->{"array":[]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
-> {% if 0 > 0 %} true {% else %} false {% endif %} 
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
-> {% if 'hello there!' == var %} true {% else %} false {% endif %} 
-# ASSIGNS
->{"var":"hello there!"}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.........................................................# TEMPLATE
->{%for item in array%} yo {%endfor%}
-# ASSIGNS
->{"array":[1,2,3,4]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{%for item in array%}yo{%endfor%}
-# ASSIGNS
->{"array":[1,2]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{%for item in array%} yo {%endfor%}
-# ASSIGNS
->{"array":[1]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{%for item in array%}{%endfor%}
-# ASSIGNS
->{"array":[1,2]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{%for item in array%}
-  yo
-{%endfor%}
-# ASSIGNS
->{"array":[1,2,3]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% for       item   in   items %}{{item}}{% endfor %}
-# ASSIGNS
->{"items":[1,2,3,4,5]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% for inner in outer %}{{ forloop.parentloop.index }}.{{ forloop.index }} {% endfor %}
-# ASSIGNS
->{"outer":[[1,1,1],[1,1,1]]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{%for item in array%}{% if forloop.first %}+{% else %}-{% endif %}{%endfor%}
-# ASSIGNS
->{"array":[1,2,3]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-..# TEMPLATE
->{% for item in items %}{{item}}{% endfor %}
-# ASSIGNS
->{"items":"ForTagTest::LoaderDrop"}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{%for val in string%}{{val}}{%endfor%}
-# ASSIGNS
->{"string":"test string"}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{%for val in string limit:1%}{{val}}{%endfor%}
-# ASSIGNS
->{"string":"test string"}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{%for val in string%}{{forloop.name}}-{{forloop.index}}-{{forloop.length}}-{{forloop.index0}}-{{forloop.rindex}}-{{forloop.rindex0}}-{{forloop.first}}-{{forloop.last}}-{{val}}{%endfor%}
-# ASSIGNS
->{"string":"test string"}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{%for i in array limit:2 %}{{ i }}{%endfor%}
-# ASSIGNS
->{"array":[1,2,3,4,5,6,7,8,9,0]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{%for i in array limit:4 %}{{ i }}{%endfor%}
-# ASSIGNS
->{"array":[1,2,3,4,5,6,7,8,9,0]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{%for i in array limit:4 offset:2 %}{{ i }}{%endfor%}
-# ASSIGNS
->{"array":[1,2,3,4,5,6,7,8,9,0]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{%for i in array limit: 4 offset: 2 %}{{ i }}{%endfor%}
-# ASSIGNS
->{"array":[1,2,3,4,5,6,7,8,9,0]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% for i in array.items %}{% break %}{% endfor %}
-# ASSIGNS
->{"array":{"items":[1,2,3,4,5,6,7,8,9,10]}}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% for i in array.items %}{{ i }}{% break %}{% endfor %}
-# ASSIGNS
->{"array":{"items":[1,2,3,4,5,6,7,8,9,10]}}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% for i in array.items %}{% break %}{{ i }}{% endfor %}
-# ASSIGNS
->{"array":{"items":[1,2,3,4,5,6,7,8,9,10]}}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% for i in array.items %}{{ i }}{% if i > 3 %}{% break %}{% endif %}{% endfor %}
-# ASSIGNS
->{"array":{"items":[1,2,3,4,5,6,7,8,9,10]}}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% for item in array %}{% for i in item %}{% if i == 1 %}{% break %}{% endif %}{{ i }}{% endfor %}{% endfor %}
-# ASSIGNS
->{"array":[[1,2],[3,4],[5,6]]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% for i in array.items %}{% if i == 9999 %}{% break %}{% endif %}{{ i }}{% endfor %}
-# ASSIGNS
->{"array":{"items":[1,2,3,4,5]}}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->      {%for i in array.items limit:3 %}{{i}}{%endfor%}
-      next
-      {%for i in array.items offset:continue limit:3 %}{{i}}{%endfor%}
-      next
-      {%for i in array.items offset:continue limit:1 %}{{i}}{%endfor%}
-# ASSIGNS
->{"array":{"items":[1,2,3,4,5,6,7,8,9,0]}}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% for char in characters %}I WILL NOT BE OUTPUT{% endfor %}
-# ASSIGNS
->{"characters":""}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{%for i in array limit: limit offset: offset %}{{ i }}{%endfor%}
-# ASSIGNS
->{"array":[1,2,3,4,5,6,7,8,9,0],"limit":2,"offset":2}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{%for item in array reversed %}{{item}}{%endfor%}
-# ASSIGNS
->{"array":[1,2,3]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{%for item in array%}{%for i in item%}{{ i }}{%endfor%}{%endfor%}
-# ASSIGNS
->{"array":[[1,2],[3,4],[5,6]]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% for a in (1..2) %}o{% for b in empty %}{% endfor %}{% endfor %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{%for i in array offset:7 %}{{ i }}{%endfor%}
-# ASSIGNS
->{"array":[1,2,3,4,5,6,7,8,9,0]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% for item in items limit:1 %}{{item}}{% endfor %}
-# ASSIGNS
->{"items":"ForTagTest::LoaderDrop"}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{%for item in (1..foobar.value) %} {{item}} {%endfor%}
-# ASSIGNS
->{"foobar":{"value":3}}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{%for item in array%}+{%else%}-{%endfor%}
-# ASSIGNS
->{"array":[1,2,3]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{%for item in array%}+{%else%}-{%endfor%}
-# ASSIGNS
->{"array":[]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{%for item in array%}+{%else%}-{%endfor%}
-# ASSIGNS
->{"array":null}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->      {%for i in array.items limit:3 %}{{i}}{%endfor%}
-      next
-      {%for i in array.items offset:continue limit:3 %}{{i}}{%endfor%}
-      next
-      {%for i in array.items offset:continue limit:1000 %}{{i}}{%endfor%}
-# ASSIGNS
->{"array":{"items":[1,2,3,4,5,6,7,8,9,0]}}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{%for item in array%} {{item}} {%endfor%}
-# ASSIGNS
->{"array":[1,2,3]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{%for item in array%}{{item}}{%endfor%}
-# ASSIGNS
->{"array":[1,2,3]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% for item in array %}{{item}}{% endfor %}
-# ASSIGNS
->{"array":[1,2,3]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{%for item in array%}{{item}}{%endfor%}
-# ASSIGNS
->{"array":["a","b","c","d"]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{%for item in array%}{{item}}{%endfor%}
-# ASSIGNS
->{"array":["a"," ","b"," ","c"]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{%for item in array%}{{item}}{%endfor%}
-# ASSIGNS
->{"array":["a","","b","","c"]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->      {%for i in array.items limit: 3 %}{{i}}{%endfor%}
-      next
-      {%for i in array.items offset:continue limit: 3 %}{{i}}{%endfor%}
-      next
-      {%for i in array.items offset:continue limit: 3 %}{{i}}{%endfor%}
-# ASSIGNS
->{"array":{"items":[1,2,3,4,5,6,7,8,9,0]}}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{%for i in array.items limit:3 %}{{i}}{%endfor%}
-      next
-      {%for i in array.items offset:continue limit:3 %}{{i}}{%endfor%}
-      next
-      {%for i in array.items offset:continue limit:3 offset:1000 %}{{i}}{%endfor%}
-# ASSIGNS
->{"array":{"items":[1,2,3,4,5,6,7,8,9,0]}}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{%for item in (1..3) %} {{item}} {%endfor%}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{%for item in (1..foobar) %} {{item}} {%endfor%}
-# ASSIGNS
->{"foobar":3}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% for item in items offset:2 limit:2 %}{{item}}{% endfor %}
-# ASSIGNS
->{"items":"ForTagTest::LoaderDrop"}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% for i in array.items %}{% continue %}{% endfor %}
-# ASSIGNS
->{"array":{"items":[1,2,3,4,5]}}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% for i in array.items %}{{ i }}{% continue %}{% endfor %}
-# ASSIGNS
->{"array":{"items":[1,2,3,4,5]}}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% for i in array.items %}{% continue %}{{ i }}{% endfor %}
-# ASSIGNS
->{"array":{"items":[1,2,3,4,5]}}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% for i in array.items %}{% if i > 3 %}{% continue %}{% endif %}{{ i }}{% endfor %}
-# ASSIGNS
->{"array":{"items":[1,2,3,4,5]}}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% for i in array.items %}{% if i == 3 %}{% continue %}{% else %}{{ i }}{% endif %}{% endfor %}
-# ASSIGNS
->{"array":{"items":[1,2,3,4,5]}}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% for item in array %}{% for i in item %}{% if i == 1 %}{% continue %}{% endif %}{{ i }}{% endfor %}{% endfor %}
-# ASSIGNS
->{"array":[[1,2],[3,4],[5,6]]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% for i in array.items %}{% if i == 9999 %}{% continue %}{% endif %}{{ i }}{% endfor %}
-# ASSIGNS
->{"array":{"items":[1,2,3,4,5]}}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{%for item in (1..foobar.value) %} {{item}} {%endfor%}
-# ASSIGNS
->{"foobar":"ThingWithValue"}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% for item in items offset:2 limit:2 %}{{item}}{% endfor %}
-# ASSIGNS
->{"items":"ForTagTest::LoaderDrop"}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% for item in items offset:2 limit:2 %}{{item}}{% endfor %}
-# ASSIGNS
->{"items":[1,2,3,4,5]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{%for item in array%} {{forloop.index}}/{{forloop.length}} {%endfor%}
-# ASSIGNS
->{"array":[1,2,3]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{%for item in array%} {{forloop.index}} {%endfor%}
-# ASSIGNS
->{"array":[1,2,3]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{%for item in array%} {{forloop.index0}} {%endfor%}
-# ASSIGNS
->{"array":[1,2,3]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{%for item in array%} {{forloop.rindex0}} {%endfor%}
-# ASSIGNS
->{"array":[1,2,3]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{%for item in array%} {{forloop.rindex}} {%endfor%}
-# ASSIGNS
->{"array":[1,2,3]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{%for item in array%} {{forloop.first}} {%endfor%}
-# ASSIGNS
->{"array":[1,2,3]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{%for item in array%} {{forloop.last}} {%endfor%}
-# ASSIGNS
->{"array":[1,2,3]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-..# TEMPLATE
->{% for inner in outer %}{% for k in inner %}{{ forloop.parentloop.index }}.{{ forloop.index }} {% endfor %}{% endfor %}
-# ASSIGNS
->{"outer":[[1,1,1],[1,1,1]]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.......# TEMPLATE
->{% raw %}{% comment %} test {% endcomment %}{% endraw %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% raw %}{{ test }}{% endraw %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% raw %} Foobar {% invalid {% endraw %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% raw %} Foobar invalid %} {% endraw %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% raw %} Foobar {{ invalid {% endraw %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% raw %} Foobar invalid }} {% endraw %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% raw %} Foobar {% invalid {% {% endraw {% endraw %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% raw %} Foobar {% {% {% {% endraw %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% raw %} test {% raw %} {% {% endraw %}endraw %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% raw %} Foobar {{ invalid {% endraw %}{{ 1 }}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-............................# TEMPLATE
->{{ a | append: 'd'}}
-# ASSIGNS
->{"a":"bc","b":"d"}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{{ a | append: b}}
-# ASSIGNS
->{"a":"bc","b":"d"}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-..# TEMPLATE
->{{ 3 | modulo:2 }}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{{ 1 | modulo: 0 }}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-...# TEMPLATE
->{{ foo | map: "foo" }}
-# ASSIGNS
->{"foo":"TestEnumerable"}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-...# TEMPLATE
->{{ foo | first }}
-# ASSIGNS
->{"foo":["#<ThingWithToLiquid:0x00000002340240>"]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{{ foo | last }}
-# ASSIGNS
->{"foo":["#<ThingWithToLiquid:0x0000000233b038>"]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-..# TEMPLATE
->{{ source | strip_newlines }}
-# ASSIGNS
->{"source":"a\nb\nc"}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{{ source | strip_newlines }}
-# ASSIGNS
->{"source":"a\r\nb\nc"}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-..# TEMPLATE
->{{ ary | map:'foo' | map:'bar' }}
-# ASSIGNS
->{"ary":[{"foo":{"bar":"a"}},{"foo":{"bar":"b"}},{"foo":{"bar":"c"}}]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-..# TEMPLATE
->{{ "foo" | map: "__id__" }}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{{ "foo" | map: "inspect" }}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{{ source | rstrip }}
-# ASSIGNS
->{"source":" ab c  "}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{{ source | rstrip }}
-# ASSIGNS
->{"source":" \tab c  \n \t"}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{{ 3 | times:4 }}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{{ 'foo' | times:4 }}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{{ '2.1' | times:3 | replace: '.','-' | plus:0}}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{{ 0.0725 | times:100 }}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{{ procs | map: "test" }}
-# ASSIGNS
->{"procs":["#<Proc:0x000000022ff060@/home/bridge/work/liquid/test/integration/standard_filter_test.rb:215>"]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{{ 12 | divided_by:3 }}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{{ 14 | divided_by:3 }}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{{ 15 | divided_by:3 }}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{{ 2.0 | divided_by:4 }}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{{ 1 | modulo: 0 }}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-...# TEMPLATE
->{{ 'a' | to_number }}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-....# TEMPLATE
->{{ foo | map: "whatever" }}
-# ASSIGNS
->{"foo":["woot: 0"]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-...# TEMPLATE
->{{ thing | map: "foo" | map: "bar" }}
-# ASSIGNS
->{"thing":{"foo":[{"bar":42},{"bar":17}]}}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{{ 'a a a a' | remove_first: 'a ' }}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{{ source | newline_to_br }}
-# ASSIGNS
->{"source":"a\nb\nc"}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-..# TEMPLATE
->{{ 'foo|bar' | remove: '|' }}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
+...................# TEMPLATE
 >{{ input | round }}
 # ASSIGNS
 >{"input":4.6}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>5
 # END
 # TEMPLATE
 >{{ '4.3' | round }}
 # ASSIGNS
 >{}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>4
 # END
 # TEMPLATE
 >{{ input | round: 2 }}
 # ASSIGNS
 >{"input":4.5612}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>4.56
 # END
 # TEMPLATE
 >{{ 1.0 | divided_by: 0.0 | round }}
 # ASSIGNS
 >{}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+.# TEMPLATE
+>{{ 'foo|bar' | remove: '|' }}
+# ASSIGNS
+>{}
+#EXPECTED
+>foobar
+# END
+.# TEMPLATE
+>{{ input | ceil }}
+# ASSIGNS
+>{"input":4.6}
+#EXPECTED
+>5
+# END
+# TEMPLATE
+>{{ '4.3' | ceil }}
+# ASSIGNS
+>{}
+#EXPECTED
+>5
+# END
+# TEMPLATE
+>{{ 1.0 | divided_by: 0.0 | ceil }}
+# ASSIGNS
+>{}
+#EXPECTED
+.....# TEMPLATE
+>{{ 3 | modulo:2 }}
+# ASSIGNS
+>{}
+#EXPECTED
+>1
+# END
+# TEMPLATE
+>{{ 1 | modulo: 0 }}
+# ASSIGNS
+>{}
+#EXPECTED
+..# TEMPLATE
+>{{ foo | first }}
+# ASSIGNS
+>{"foo":["#<ThingWithToLiquid:0x000000024155a8>"]}
+#EXPECTED
+>foobar
+# END
+# TEMPLATE
+>{{ foo | last }}
+# ASSIGNS
+>{"foo":["#<ThingWithToLiquid:0x00000002410558>"]}
+#EXPECTED
+>foobar
+# END
+...# TEMPLATE
+>{{ "foo" | map: "__id__" }}
+# ASSIGNS
+>{}
+#EXPECTED
+>
+# END
+# TEMPLATE
+>{{ "foo" | map: "inspect" }}
+# ASSIGNS
+>{}
+#EXPECTED
+>
+# END
+.# TEMPLATE
+>{{ source | strip }}
+# ASSIGNS
+>{"source":" ab c  "}
+#EXPECTED
+>ab c
+# END
+# TEMPLATE
+>{{ source | strip }}
+# ASSIGNS
+>{"source":" \tab c  \n \t"}
+#EXPECTED
+>ab c
 # END
 ..# TEMPLATE
+>{{ foo | map: "foo" }}
+# ASSIGNS
+>{"foo":"TestEnumerable"}
+#EXPECTED
+>123
+# END
+.# TEMPLATE
 >{{ 1 | plus:1 }}
 # ASSIGNS
 >{}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>2
 # END
 # TEMPLATE
 >{{ '1' | plus:'1.0' }}
 # ASSIGNS
 >{}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-..# TEMPLATE
->{{ input | floor }}
-# ASSIGNS
->{"input":4.6}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{{ '4.3' | floor }}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{{ 1.0 | divided_by: 0.0 | floor }}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{{ source | lstrip }}
-# ASSIGNS
->{"source":" ab c  "}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{{ source | lstrip }}
-# ASSIGNS
->{"source":" \tab c  \n \t"}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% assign key = 'foo' %}{{ thing | map: key | map: 'bar' }}
-# ASSIGNS
->{"thing":{"foo":{"bar":42}}}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{{ input | minus:operand }}
-# ASSIGNS
->{"input":5,"operand":1}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{{ '4.3' | minus:'2' }}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
+>2.0
 # END
 .....# TEMPLATE
->{{ '1 1 1 1' | replace_first: '1', 2 }}
+>{{ source | newline_to_br }}
 # ASSIGNS
->{}
+>{"source":"a\nb\nc"}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>a<br />
+b<br />
+c
 # END
 .# TEMPLATE
->{{ source | strip }}
+>{{ procs | map: "test" }}
 # ASSIGNS
->{"source":" ab c  "}
+>{"procs":["#<Proc:0x000000021d71b0@/home/bridge/work/liquid/test/integration/standard_filter_test.rb:215>"]}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{{ source | strip }}
-# ASSIGNS
->{"source":" \tab c  \n \t"}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
+>testfoo
 # END
 .# TEMPLATE
->{{ input | ceil }}
+>{{ source | strip_newlines }}
 # ASSIGNS
->{"input":4.6}
+>{"source":"a\nb\nc"}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>abc
 # END
 # TEMPLATE
->{{ '4.3' | ceil }}
+>{{ source | strip_newlines }}
 # ASSIGNS
->{}
+>{"source":"a\r\nb\nc"}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>abc
 # END
-# TEMPLATE
->{{ 1.0 | divided_by: 0.0 | ceil }}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
+...# TEMPLATE
 >{{ a | prepend: 'a'}}
 # ASSIGNS
 >{"a":"bc","b":"a"}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>abc
 # END
 # TEMPLATE
 >{{ a | prepend: b}}
 # ASSIGNS
 >{"a":"bc","b":"a"}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>abc
+# END
+..# TEMPLATE
+>{{ source | lstrip }}
+# ASSIGNS
+>{"source":" ab c  "}
+#EXPECTED
+>ab c  
+# END
+# TEMPLATE
+>{{ source | lstrip }}
+# ASSIGNS
+>{"source":" \tab c  \n \t"}
+#EXPECTED
+>ab c  
+ 	
 # END
 .# TEMPLATE
+>{{ ary | map:'foo' | map:'bar' }}
+# ASSIGNS
+>{"ary":[{"foo":{"bar":"a"}},{"foo":{"bar":"b"}},{"foo":{"bar":"c"}}]}
+#EXPECTED
+>abc
+# END
+..# TEMPLATE
+>{{ input | minus:operand }}
+# ASSIGNS
+>{"input":5,"operand":1}
+#EXPECTED
+>4
+# END
+# TEMPLATE
+>{{ '4.3' | minus:'2' }}
+# ASSIGNS
+>{}
+#EXPECTED
+>2.3
+# END
+.# TEMPLATE
+>{{ 12 | divided_by:3 }}
+# ASSIGNS
+>{}
+#EXPECTED
+>4
+# END
+# TEMPLATE
+>{{ 14 | divided_by:3 }}
+# ASSIGNS
+>{}
+#EXPECTED
+>4
+# END
+# TEMPLATE
+>{{ 15 | divided_by:3 }}
+# ASSIGNS
+>{}
+#EXPECTED
+>5
+# END
+# TEMPLATE
+>{{ 2.0 | divided_by:4 }}
+# ASSIGNS
+>{}
+#EXPECTED
+>0.5
+# END
+# TEMPLATE
+>{{ 1 | modulo: 0 }}
+# ASSIGNS
+>{}
+#EXPECTED
+.# TEMPLATE
+>{% assign key = 'foo' %}{{ thing | map: key | map: 'bar' }}
+# ASSIGNS
+>{"thing":{"foo":{"bar":42}}}
+#EXPECTED
+>42
+# END
+...# TEMPLATE
+>{{ 'a' | to_number }}
+# ASSIGNS
+>{}
+#EXPECTED
+>a
+# END
+...# TEMPLATE
+>{{ foo | map: "whatever" }}
+# ASSIGNS
+>{"foo":["woot: 0"]}
+#EXPECTED
+>woot: 1
+# END
+F.# TEMPLATE
+>{{ '1 1 1 1' | replace_first: '1', 2 }}
+# ASSIGNS
+>{}
+#EXPECTED
+>2 1 1 1
+# END
+..# TEMPLATE
+>{{ 'a a a a' | remove_first: 'a ' }}
+# ASSIGNS
+>{}
+#EXPECTED
+>a a a
+# END
+.# TEMPLATE
+>{{ 3 | times:4 }}
+# ASSIGNS
+>{}
+#EXPECTED
+>12
+# END
+# TEMPLATE
+>{{ 'foo' | times:4 }}
+# ASSIGNS
+>{}
+#EXPECTED
+>0
+# END
+# TEMPLATE
+>{{ '2.1' | times:3 | replace: '.','-' | plus:0}}
+# ASSIGNS
+>{}
+#EXPECTED
+>6
+# END
+# TEMPLATE
+>{{ 0.0725 | times:100 }}
+# ASSIGNS
+>{}
+#EXPECTED
+>7.25
+# END
+.# TEMPLATE
+>{{ input | floor }}
+# ASSIGNS
+>{"input":4.6}
+#EXPECTED
+>4
+# END
+# TEMPLATE
+>{{ '4.3' | floor }}
+# ASSIGNS
+>{}
+#EXPECTED
+>4
+# END
+# TEMPLATE
+>{{ 1.0 | divided_by: 0.0 | floor }}
+# ASSIGNS
+>{}
+#EXPECTED
+.# TEMPLATE
+>{{ source | rstrip }}
+# ASSIGNS
+>{"source":" ab c  "}
+#EXPECTED
+> ab c
+# END
+# TEMPLATE
+>{{ source | rstrip }}
+# ASSIGNS
+>{"source":" \tab c  \n \t"}
+#EXPECTED
+> 	ab c
+# END
+.# TEMPLATE
+>{{ a | append: 'd'}}
+# ASSIGNS
+>{"a":"bc","b":"d"}
+#EXPECTED
+>bcd
+# END
+# TEMPLATE
+>{{ a | append: b}}
+# ASSIGNS
+>{"a":"bc","b":"d"}
+#EXPECTED
+>bcd
+# END
+..# TEMPLATE
+>{{ thing | map: "foo" | map: "bar" }}
+# ASSIGNS
+>{"thing":{"foo":[{"bar":42},{"bar":17}]}}
+#EXPECTED
+>4217
+# END
+..# TEMPLATE
 >{{ foo | sort: "bar" | map: "foo" }}
 # ASSIGNS
 >{"foo":"TestEnumerable"}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-...# TEMPLATE
->{% for i in choices %}{% unless i %}{{ forloop.index }}{% endunless %}{% endfor %}
-# ASSIGNS
->{"choices":[1,null,false]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
+>213
 # END
 .# TEMPLATE
->{% for i in choices %}{% unless i %} {{ forloop.index }} {% else %} TRUE {% endunless %}{% endfor %}
+> {% if var == 'hello there!' %} true {% else %} false {% endif %} 
 # ASSIGNS
->{"choices":[1,null,false]}
+>{"var":"hello there!"}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>  true  
 # END
 .# TEMPLATE
-> {% unless true %} this text should not go into the output {% endunless %} 
+> {% if 'test' != 'test' %} true {% else %} false {% endif %} 
 # ASSIGNS
 >{}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
-> {% unless false %} this text should go into the output {% endunless %} 
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% unless true %} you suck {% endunless %} {% unless false %} you rock {% endunless %}?
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
+>  false  
 # END
 .# TEMPLATE
->{% unless true %} NO {% else %} YES {% endunless %}
+> {% if null <= 0 %} true {% else %} false {% endif %} 
 # ASSIGNS
 >{}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>  false  
 # END
 # TEMPLATE
->{% unless false %} YES {% else %} NO {% endunless %}
+> {% if 0 <= null %} true {% else %} false {% endif %} 
 # ASSIGNS
 >{}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% unless "foo" %} NO {% else %} YES {% endunless %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-...................................# TEMPLATE
->a-b:{{a-b}} {%assign a-b = 2 %}a-b:{{a-b}}
-# ASSIGNS
->{"a-b":"1"}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
+>  false  
 # END
 .# TEMPLATE
->{%cycle 1: "one", "two" %} {%cycle 2: "one", "two" %} {%cycle 1: "one", "two" %} {%cycle 2: "one", "two" %} {%cycle 1: "one", "two" %} {%cycle 2: "one", "two" %}
+> {% if true != true %} true {% else %} false {% endif %} 
 # ASSIGNS
 >{}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>  false  
 # END
 .# TEMPLATE
->{{ var2 }}{% capture %}{{ var }} foo {% endcapture %}{{ var2 }}{{ var2 }}
+> {% if 0 <= 0 %} true {% else %} false {% endif %} 
 # ASSIGNS
->{"var":"content"}
+>{}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>  true  
 # END
 .# TEMPLATE
->{% case a.size %}{% when 1 %}1{% when 2 %}2{% endcase %}
+> {% if array == empty %} true {% else %} false {% endif %} 
 # ASSIGNS
->{"a":[]}
+>{"array":[1,2,3]}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% case a.size %}{% when 1 %}1{% when 2 %}2{% endcase %}
-# ASSIGNS
->{"a":[1]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% case a.size %}{% when 1 %}1{% when 2 %}2{% endcase %}
-# ASSIGNS
->{"a":[1,1]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% case a.size %}{% when 1 %}1{% when 2 %}2{% endcase %}
-# ASSIGNS
->{"a":[1,1,1]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% case a.size %}{% when 1 %}1{% when 2 %}2{% endcase %}
-# ASSIGNS
->{"a":[1,1,1,1]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% case a.size %}{% when 1 %}1{% when 2 %}2{% endcase %}
-# ASSIGNS
->{"a":[1,1,1,1,1]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
+>  false  
 # END
 .# TEMPLATE
->{% assign a = "variable"%}{{a}}
+> {% if var == "hello there!" %} true {% else %} false {% endif %} 
 # ASSIGNS
->{}
+>{"var":"hello there!"}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>  true  
 # END
 .# TEMPLATE
->{% case condition %}{% when 1, 2, 3 %} its 1 or 2 or 3 {% when 4 %} its 4 {% endcase %}
+> {% if var == nil %} true {% else %} false {% endif %} 
 # ASSIGNS
->{"condition":1}
+>{"var":null}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>  true  
 # END
 # TEMPLATE
->{% case condition %}{% when 1, 2, 3 %} its 1 or 2 or 3 {% when 4 %} its 4 {% endcase %}
+> {% if var == null %} true {% else %} false {% endif %} 
 # ASSIGNS
->{"condition":2}
+>{"var":null}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% case condition %}{% when 1, 2, 3 %} its 1 or 2 or 3 {% when 4 %} its 4 {% endcase %}
-# ASSIGNS
->{"condition":3}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% case condition %}{% when 1, 2, 3 %} its 1 or 2 or 3 {% when 4 %} its 4 {% endcase %}
-# ASSIGNS
->{"condition":4}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% case condition %}{% when 1, 2, 3 %} its 1 or 2 or 3 {% when 4 %} its 4 {% endcase %}
-# ASSIGNS
->{"condition":5}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% case condition %}{% when 1, "string", null %} its 1 or 2 or 3 {% when 4 %} its 4 {% endcase %}
-# ASSIGNS
->{"condition":1}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% case condition %}{% when 1, "string", null %} its 1 or 2 or 3 {% when 4 %} its 4 {% endcase %}
-# ASSIGNS
->{"condition":"string"}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% case condition %}{% when 1, "string", null %} its 1 or 2 or 3 {% when 4 %} its 4 {% endcase %}
-# ASSIGNS
->{"condition":null}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% case condition %}{% when 1, "string", null %} its 1 or 2 or 3 {% when 4 %} its 4 {% endcase %}
-# ASSIGNS
->{"condition":"something else"}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
+>  true  
 # END
 .# TEMPLATE
->{%for item in array%}{%ifchanged%}{{item}}{% endifchanged %}{%endfor%}
+> {% if "hello there!" == var %} true {% else %} false {% endif %} 
 # ASSIGNS
->{"array":[1,1,2,2,3,3]}
+>{"var":"hello there!"}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{%for item in array%}{%ifchanged%}{{item}}{% endifchanged %}{%endfor%}
-# ASSIGNS
->{"array":[1,1,1,1]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
+>  true  
 # END
 .# TEMPLATE
->{% case condition %}{% when 1 or 2 or 3 %} its 1 or 2 or 3 {% when 4 %} its 4 {% endcase %}
+> {% if true == true %} true {% else %} false {% endif %} 
 # ASSIGNS
->{"condition":1}
+>{}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% case condition %}{% when 1 or 2 or 3 %} its 1 or 2 or 3 {% when 4 %} its 4 {% endcase %}
-# ASSIGNS
->{"condition":2}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% case condition %}{% when 1 or 2 or 3 %} its 1 or 2 or 3 {% when 4 %} its 4 {% endcase %}
-# ASSIGNS
->{"condition":3}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% case condition %}{% when 1 or 2 or 3 %} its 1 or 2 or 3 {% when 4 %} its 4 {% endcase %}
-# ASSIGNS
->{"condition":4}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% case condition %}{% when 1 or 2 or 3 %} its 1 or 2 or 3 {% when 4 %} its 4 {% endcase %}
-# ASSIGNS
->{"condition":5}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% case condition %}{% when 1 or "string" or null %} its 1 or 2 or 3 {% when 4 %} its 4 {% endcase %}
-# ASSIGNS
->{"condition":1}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% case condition %}{% when 1 or "string" or null %} its 1 or 2 or 3 {% when 4 %} its 4 {% endcase %}
-# ASSIGNS
->{"condition":"string"}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% case condition %}{% when 1 or "string" or null %} its 1 or 2 or 3 {% when 4 %} its 4 {% endcase %}
-# ASSIGNS
->{"condition":null}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% case condition %}{% when 1 or "string" or null %} its 1 or 2 or 3 {% when 4 %} its 4 {% endcase %}
-# ASSIGNS
->{"condition":"something else"}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
+>  true  
 # END
 .# TEMPLATE
->the comment block should be removed {%comment%} be gone.. {%endcomment%} .. right?
+> {% if 'hello there!' == var %} true {% else %} false {% endif %} 
 # ASSIGNS
->{}
+>{"var":"hello there!"}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{%comment%}{%endcomment%}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{%comment%}{% endcomment %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% comment %}{%endcomment%}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% comment %}{% endcomment %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{%comment%}comment{%endcomment%}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% comment %}comment{% endcomment %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% comment %} 1 {% comment %} 2 {% endcomment %} 3 {% endcomment %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{%comment%}{%blabla%}{%endcomment%}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% comment %}{% blabla %}{% endcomment %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{%comment%}{% endif %}{%endcomment%}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% comment %}{% endwhatever %}{% endcomment %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% comment %}{% raw %} {{%%%%}}  }} { {% endcomment %} {% comment {% endraw %} {% endcomment %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->foo{%comment%}comment{%endcomment%}bar
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->foo{% comment %}comment{% endcomment %}bar
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->foo{%comment%} comment {%endcomment%}bar
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->foo{% comment %} comment {% endcomment %}bar
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->foo {%comment%} {%endcomment%} bar
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->foo {%comment%}comment{%endcomment%} bar
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->foo {%comment%} comment {%endcomment%} bar
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->foo{%comment%}
-                                     {%endcomment%}bar
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
+>  true  
 # END
 .# TEMPLATE
->{%cycle 1,2%} {%cycle 1,2%} {%cycle 1,2%} {%cycle 1,2,3%} {%cycle 1,2,3%} {%cycle 1,2,3%} {%cycle 1,2,3%}
+> {% if 0 >= 0 %} true {% else %} false {% endif %} 
 # ASSIGNS
 >{}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>  true  
 # END
 .# TEMPLATE
->{%assign var2 = var["a:b c"].paged %}var2: {{var2}}
+> {% if var != nil %} true {% else %} false {% endif %} 
 # ASSIGNS
->{"var":{"a:b c":{"paged":"1"}}}
+>{"var":1}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>  true  
+# END
+# TEMPLATE
+> {% if var != null %} true {% else %} false {% endif %} 
+# ASSIGNS
+>{"var":1}
+#EXPECTED
+>  true  
 # END
 .# TEMPLATE
->{% case a.size %}{% when 1 %}1{% when 2 %}2{% else %}else{% endcase %}
+> {% if array == empty %} true {% else %} false {% endif %} 
 # ASSIGNS
->{"a":[]}
+>{"array":[]}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% case a.size %}{% when 1 %}1{% when 2 %}2{% else %}else{% endcase %}
-# ASSIGNS
->{"a":[1]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% case a.size %}{% when 1 %}1{% when 2 %}2{% else %}else{% endcase %}
-# ASSIGNS
->{"a":[1,1]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% case a.size %}{% when 1 %}1{% when 2 %}2{% else %}else{% endcase %}
-# ASSIGNS
->{"a":[1,1,1]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% case a.size %}{% when 1 %}1{% when 2 %}2{% else %}else{% endcase %}
-# ASSIGNS
->{"a":[1,1,1,1]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% case a.size %}{% when 1 %}1{% when 2 %}2{% else %}else{% endcase %}
-# ASSIGNS
->{"a":[1,1,1,1,1]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
+>  true  
 # END
 .# TEMPLATE
->{%cycle var1: "one", "two" %} {%cycle var2: "one", "two" %} {%cycle var1: "one", "two" %} {%cycle var2: "one", "two" %} {%cycle var1: "one", "two" %} {%cycle var2: "one", "two" %}
+> {% if 0 < 1 %} true {% else %} false {% endif %} 
 # ASSIGNS
->{"var1":1,"var2":2}
+>{}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>  true  
 # END
 .# TEMPLATE
->var2:{{var2}} {%assign var2 = var%} var2:{{var2}}
+> {% if 1 > 0 %} true {% else %} false {% endif %} 
 # ASSIGNS
->{"var":"content"}
+>{}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>  true  
 # END
 .# TEMPLATE
->{% case a.empty? %}{% when true %}true{% when false %}false{% else %}else{% endcase %}
+> {% if 'test' == 'test' %} true {% else %} false {% endif %} 
 # ASSIGNS
 >{}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% case false %}{% when true %}true{% when false %}false{% else %}else{% endcase %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% case true %}{% when true %}true{% when false %}false{% else %}else{% endcase %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% case NULL %}{% when true %}true{% when false %}false{% else %}else{% endcase %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
+>  true  
 # END
 .# TEMPLATE
->0{%
-for i in (1..3)
-%} {{
-i
-}}{%
-endfor
-%}
+> {% if 0 > 0 %} true {% else %} false {% endif %} 
 # ASSIGNS
 >{}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>  false  
 # END
-.# TEMPLATE
->array has {{ array.size }} elements
+....# TEMPLATE
+>{% if a == 'foo' or (b == 'bar' and c == 'baz') or false %} YES {% endif %}
 # ASSIGNS
->{"array":[1,2,3,4]}
+>{"b":"bar","c":"baz"}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+> YES 
 # END
-.# TEMPLATE
->{%for i in (1..2) %}{% assign a = "variable"%}{% endfor %}{{a}}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->this text should come out of the template without change...
+....# TEMPLATE
+>{% if true && false %} YES {% endif %}
 # ASSIGNS
 >{}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+> YES 
 # END
 # TEMPLATE
->blah
+>{% if false || true %} YES {% endif %}
 # ASSIGNS
 >{}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
-><blah>
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->|,.:
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
 >
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->this shouldnt see any transformation either but has multiple lines
-              as you can clearly see here ...
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
 # END
 .# TEMPLATE
->{% case false %}{% when %}true{% endcase %}
+>{% assign 123foo = 'bar' %}{{ 123foo }}
 # ASSIGNS
 >{}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>bar
 # END
 # TEMPLATE
->{% case false %}{% huh %}true{% endcase %}
+>{% assign 123 = 'bar' %}{{ 123 }}
 # ASSIGNS
 >{}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>123
 # END
 .# TEMPLATE
->{{ var2 }}{% capture var2 %}{{ var }} foo {% endcapture %}{{ var2 }}{{ var2 }}
+>{{ 'hi there' | split$$$:' ' | first }}
 # ASSIGNS
->{"var":"content"}
+>{}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>hi
+# END
+# TEMPLATE
+>{{ 'X' | downcase) }}
+# ASSIGNS
+>{}
+#EXPECTED
+>x
+# END
+# TEMPLATE
+>{{ 'hi there' | split:"t"" | reverse | first}}
+# ASSIGNS
+>{}
+#EXPECTED
+>here
+# END
+# TEMPLATE
+>{{ 'hi there' | split:"t"" | remove:"i" | first}}
+# ASSIGNS
+>{}
+#EXPECTED
+>hi 
 # END
 .# TEMPLATE
->{% case condition %}{% when 1 %} its 1 {% when 2 %} its 2 {% endcase %}
-# ASSIGNS
->{"condition":2}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% case condition %}{% when 1 %} its 1 {% when 2 %} its 2 {% endcase %}
-# ASSIGNS
->{"condition":1}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% case condition %}{% when 1 %} its 1 {% when 2 %} its 2 {% endcase %}
-# ASSIGNS
->{"condition":3}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% case condition %}{% when "string here" %} hit {% endcase %}
-# ASSIGNS
->{"condition":"string here"}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% case condition %}{% when "string here" %} hit {% endcase %}
-# ASSIGNS
->{"condition":"bad string here"}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{%cycle "one", "two"%}
+>{% for i in (1...5) %}{{ i }}{% endfor %}
 # ASSIGNS
 >{}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>12345
 # END
-# TEMPLATE
->{%cycle "one", "two"%} {%cycle "one", "two"%}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{%cycle "", "two"%} {%cycle "", "two"%}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{%cycle "one", "two"%} {%cycle "one", "two"%} {%cycle "one", "two"%}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{%cycle "text-align: left", "text-align: right" %} {%cycle "text-align: left", "text-align: right"%}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->hash has {{ hash.size }} elements
-# ASSIGNS
->{"hash":{"a":1,"b":2,"c":3,"d":4}}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% case condition %}{% when 5 %} hit {% else %} else {% endcase %}
-# ASSIGNS
->{"condition":5}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% case condition %}{% when 5 %} hit {% else %} else {% endcase %}
-# ASSIGNS
->{"condition":6}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% case condition %} {% when 5 %} hit {% else %} else {% endcase %}
-# ASSIGNS
->{"condition":6}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% if true == empty %}?{% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if true == null %}?{% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if empty == true %}?{% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if null == true %}?{% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% assign a = ""%}{{a}}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.
-
-Finished in 0.110928s, 4435.3075 runs/s, 11025.1647 assertions/s.
-
-492 runs, 1223 assertions, 0 failures, 0 errors, 0 skips
--- STRICT ERROR MODE
-Run options: --seed 45919
-
-# Running:
-
-.........# TEMPLATE
-> {% unless true %} this text should not go into the output {% endunless %} 
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
-> {% unless false %} this text should go into the output {% endunless %} 
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% unless true %} you suck {% endunless %} {% unless false %} you rock {% endunless %}?
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% unless true %} NO {% else %} YES {% endunless %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% unless false %} YES {% else %} NO {% endunless %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% unless "foo" %} NO {% else %} YES {% endunless %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% for i in choices %}{% unless i %} {{ forloop.index }} {% else %} TRUE {% endunless %}{% endfor %}
-# ASSIGNS
->{"choices":[1,null,false]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% for i in choices %}{% unless i %}{{ forloop.index }}{% endunless %}{% endfor %}
-# ASSIGNS
->{"choices":[1,null,false]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% for inner in outer %}{% for k in inner %}{{ forloop.parentloop.index }}.{{ forloop.index }} {% endfor %}{% endfor %}
-# ASSIGNS
->{"outer":[[1,1,1],[1,1,1]]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
+.....# TEMPLATE
 >{%for item in array reversed %}{{item}}{%endfor%}
 # ASSIGNS
 >{"array":[1,2,3]}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% for i in array.items %}{% continue %}{% endfor %}
-# ASSIGNS
->{"array":{"items":[1,2,3,4,5]}}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% for i in array.items %}{{ i }}{% continue %}{% endfor %}
-# ASSIGNS
->{"array":{"items":[1,2,3,4,5]}}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% for i in array.items %}{% continue %}{{ i }}{% endfor %}
-# ASSIGNS
->{"array":{"items":[1,2,3,4,5]}}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% for i in array.items %}{% if i > 3 %}{% continue %}{% endif %}{{ i }}{% endfor %}
-# ASSIGNS
->{"array":{"items":[1,2,3,4,5]}}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% for i in array.items %}{% if i == 3 %}{% continue %}{% else %}{{ i }}{% endif %}{% endfor %}
-# ASSIGNS
->{"array":{"items":[1,2,3,4,5]}}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% for item in array %}{% for i in item %}{% if i == 1 %}{% continue %}{% endif %}{{ i }}{% endfor %}{% endfor %}
-# ASSIGNS
->{"array":[[1,2],[3,4],[5,6]]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% for i in array.items %}{% if i == 9999 %}{% continue %}{% endif %}{{ i }}{% endfor %}
-# ASSIGNS
->{"array":{"items":[1,2,3,4,5]}}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{%for item in (1..foobar.value) %} {{item}} {%endfor%}
-# ASSIGNS
->{"foobar":{"value":3}}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{%for item in array%}{% if forloop.first %}+{% else %}-{% endif %}{%endfor%}
-# ASSIGNS
->{"array":[1,2,3]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% for inner in outer %}{{ forloop.parentloop.index }}.{{ forloop.index }} {% endfor %}
-# ASSIGNS
->{"outer":[[1,1,1],[1,1,1]]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-..# TEMPLATE
->{% for item in items offset:2 limit:2 %}{{item}}{% endfor %}
-# ASSIGNS
->{"items":"ForTagTest::LoaderDrop"}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-..# TEMPLATE
->{% for char in characters %}I WILL NOT BE OUTPUT{% endfor %}
-# ASSIGNS
->{"characters":""}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
+>321
 # END
 .# TEMPLATE
 >{% for i in array.items %}{% break %}{% endfor %}
 # ASSIGNS
 >{"array":{"items":[1,2,3,4,5,6,7,8,9,10]}}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>
 # END
 # TEMPLATE
 >{% for i in array.items %}{{ i }}{% break %}{% endfor %}
 # ASSIGNS
 >{"array":{"items":[1,2,3,4,5,6,7,8,9,10]}}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>1
 # END
 # TEMPLATE
 >{% for i in array.items %}{% break %}{{ i }}{% endfor %}
 # ASSIGNS
 >{"array":{"items":[1,2,3,4,5,6,7,8,9,10]}}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>
 # END
 # TEMPLATE
 >{% for i in array.items %}{{ i }}{% if i > 3 %}{% break %}{% endif %}{% endfor %}
 # ASSIGNS
 >{"array":{"items":[1,2,3,4,5,6,7,8,9,10]}}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>1234
 # END
 # TEMPLATE
 >{% for item in array %}{% for i in item %}{% if i == 1 %}{% break %}{% endif %}{{ i }}{% endfor %}{% endfor %}
 # ASSIGNS
 >{"array":[[1,2],[3,4],[5,6]]}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>3456
 # END
 # TEMPLATE
 >{% for i in array.items %}{% if i == 9999 %}{% break %}{% endif %}{{ i }}{% endfor %}
 # ASSIGNS
 >{"array":{"items":[1,2,3,4,5]}}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->      {%for i in array.items limit:3 %}{{i}}{%endfor%}
-      next
-      {%for i in array.items offset:continue limit:3 %}{{i}}{%endfor%}
-      next
-      {%for i in array.items offset:continue limit:1000 %}{{i}}{%endfor%}
-# ASSIGNS
->{"array":{"items":[1,2,3,4,5,6,7,8,9,0]}}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{%for item in (1..foobar.value) %} {{item}} {%endfor%}
-# ASSIGNS
->{"foobar":"ThingWithValue"}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{%for val in string%}{{val}}{%endfor%}
-# ASSIGNS
->{"string":"test string"}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{%for val in string limit:1%}{{val}}{%endfor%}
-# ASSIGNS
->{"string":"test string"}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{%for val in string%}{{forloop.name}}-{{forloop.index}}-{{forloop.length}}-{{forloop.index0}}-{{forloop.rindex}}-{{forloop.rindex0}}-{{forloop.first}}-{{forloop.last}}-{{val}}{%endfor%}
-# ASSIGNS
->{"string":"test string"}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{%for item in array%} {{item}} {%endfor%}
-# ASSIGNS
->{"array":[1,2,3]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{%for item in array%}{{item}}{%endfor%}
-# ASSIGNS
->{"array":[1,2,3]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% for item in array %}{{item}}{% endfor %}
-# ASSIGNS
->{"array":[1,2,3]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{%for item in array%}{{item}}{%endfor%}
-# ASSIGNS
->{"array":["a","b","c","d"]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{%for item in array%}{{item}}{%endfor%}
-# ASSIGNS
->{"array":["a"," ","b"," ","c"]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{%for item in array%}{{item}}{%endfor%}
-# ASSIGNS
->{"array":["a","","b","","c"]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{%for item in array%} {{forloop.index}}/{{forloop.length}} {%endfor%}
-# ASSIGNS
->{"array":[1,2,3]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{%for item in array%} {{forloop.index}} {%endfor%}
-# ASSIGNS
->{"array":[1,2,3]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{%for item in array%} {{forloop.index0}} {%endfor%}
-# ASSIGNS
->{"array":[1,2,3]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{%for item in array%} {{forloop.rindex0}} {%endfor%}
-# ASSIGNS
->{"array":[1,2,3]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{%for item in array%} {{forloop.rindex}} {%endfor%}
-# ASSIGNS
->{"array":[1,2,3]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{%for item in array%} {{forloop.first}} {%endfor%}
-# ASSIGNS
->{"array":[1,2,3]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{%for item in array%} {{forloop.last}} {%endfor%}
-# ASSIGNS
->{"array":[1,2,3]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% for item in items limit:1 %}{{item}}{% endfor %}
-# ASSIGNS
->{"items":"ForTagTest::LoaderDrop"}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
+>12345
 # END
 .# TEMPLATE
 >{%for item in array%}{%for i in item%}{{ i }}{%endfor%}{%endfor%}
 # ASSIGNS
 >{"array":[[1,2],[3,4],[5,6]]}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{%for i in array limit:2 %}{{ i }}{%endfor%}
-# ASSIGNS
->{"array":[1,2,3,4,5,6,7,8,9,0]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{%for i in array limit:4 %}{{ i }}{%endfor%}
-# ASSIGNS
->{"array":[1,2,3,4,5,6,7,8,9,0]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{%for i in array limit:4 offset:2 %}{{ i }}{%endfor%}
-# ASSIGNS
->{"array":[1,2,3,4,5,6,7,8,9,0]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{%for i in array limit: 4 offset: 2 %}{{ i }}{%endfor%}
-# ASSIGNS
->{"array":[1,2,3,4,5,6,7,8,9,0]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
+>123456
 # END
 .# TEMPLATE
 >{%for i in array offset:7 %}{{ i }}{%endfor%}
 # ASSIGNS
 >{"array":[1,2,3,4,5,6,7,8,9,0]}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{%for item in (1..foobar) %} {{item}} {%endfor%}
-# ASSIGNS
->{"foobar":3}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{%for i in array limit: limit offset: offset %}{{ i }}{%endfor%}
-# ASSIGNS
->{"array":[1,2,3,4,5,6,7,8,9,0],"limit":2,"offset":2}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{%for item in array%}+{%else%}-{%endfor%}
-# ASSIGNS
->{"array":[1,2,3]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{%for item in array%}+{%else%}-{%endfor%}
-# ASSIGNS
->{"array":[]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{%for item in array%}+{%else%}-{%endfor%}
-# ASSIGNS
->{"array":null}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{%for item in (1..3) %} {{item}} {%endfor%}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% for       item   in   items %}{{item}}{% endfor %}
-# ASSIGNS
->{"items":[1,2,3,4,5]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
+>890
 # END
 .# TEMPLATE
 >{%for item in array%} yo {%endfor%}
 # ASSIGNS
 >{"array":[1,2,3,4]}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+> yo  yo  yo  yo 
 # END
 # TEMPLATE
 >{%for item in array%}yo{%endfor%}
 # ASSIGNS
 >{"array":[1,2]}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>yoyo
 # END
 # TEMPLATE
 >{%for item in array%} yo {%endfor%}
 # ASSIGNS
 >{"array":[1]}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+> yo 
 # END
 # TEMPLATE
 >{%for item in array%}{%endfor%}
 # ASSIGNS
 >{"array":[1,2]}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>
 # END
 # TEMPLATE
 >{%for item in array%}
@@ -3358,57 +1015,69 @@ Run options: --seed 45919
 # ASSIGNS
 >{"array":[1,2,3]}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>
+  yo
+
+  yo
+
+  yo
+
 # END
 .# TEMPLATE
->{% for a in (1..2) %}o{% for b in empty %}{% endfor %}{% endfor %}
+>{% for i in array.items %}{% continue %}{% endfor %}
 # ASSIGNS
->{}
+>{"array":{"items":[1,2,3,4,5]}}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% for item in items offset:2 limit:2 %}{{item}}{% endfor %}
-# ASSIGNS
->{"items":"ForTagTest::LoaderDrop"}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
+>
 # END
 # TEMPLATE
+>{% for i in array.items %}{{ i }}{% continue %}{% endfor %}
+# ASSIGNS
+>{"array":{"items":[1,2,3,4,5]}}
+#EXPECTED
+>12345
+# END
+# TEMPLATE
+>{% for i in array.items %}{% continue %}{{ i }}{% endfor %}
+# ASSIGNS
+>{"array":{"items":[1,2,3,4,5]}}
+#EXPECTED
+>
+# END
+# TEMPLATE
+>{% for i in array.items %}{% if i > 3 %}{% continue %}{% endif %}{{ i }}{% endfor %}
+# ASSIGNS
+>{"array":{"items":[1,2,3,4,5]}}
+#EXPECTED
+>123
+# END
+# TEMPLATE
+>{% for i in array.items %}{% if i == 3 %}{% continue %}{% else %}{{ i }}{% endif %}{% endfor %}
+# ASSIGNS
+>{"array":{"items":[1,2,3,4,5]}}
+#EXPECTED
+>1245
+# END
+# TEMPLATE
+>{% for item in array %}{% for i in item %}{% if i == 1 %}{% continue %}{% endif %}{{ i }}{% endfor %}{% endfor %}
+# ASSIGNS
+>{"array":[[1,2],[3,4],[5,6]]}
+#EXPECTED
+>23456
+# END
+# TEMPLATE
+>{% for i in array.items %}{% if i == 9999 %}{% continue %}{% endif %}{{ i }}{% endfor %}
+# ASSIGNS
+>{"array":{"items":[1,2,3,4,5]}}
+#EXPECTED
+>12345
+# END
+.# TEMPLATE
 >{% for item in items offset:2 limit:2 %}{{item}}{% endfor %}
-# ASSIGNS
->{"items":[1,2,3,4,5]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{%for i in array.items limit:3 %}{{i}}{%endfor%}
-      next
-      {%for i in array.items offset:continue limit:3 %}{{i}}{%endfor%}
-      next
-      {%for i in array.items offset:continue limit:3 offset:1000 %}{{i}}{%endfor%}
-# ASSIGNS
->{"array":{"items":[1,2,3,4,5,6,7,8,9,0]}}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->      {%for i in array.items limit:3 %}{{i}}{%endfor%}
-      next
-      {%for i in array.items offset:continue limit:3 %}{{i}}{%endfor%}
-      next
-      {%for i in array.items offset:continue limit:1 %}{{i}}{%endfor%}
-# ASSIGNS
->{"array":{"items":[1,2,3,4,5,6,7,8,9,0]}}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% for item in items %}{{item}}{% endfor %}
 # ASSIGNS
 >{"items":"ForTagTest::LoaderDrop"}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>34
 # END
 .# TEMPLATE
 >      {%for i in array.items limit: 3 %}{{i}}{%endfor%}
@@ -3419,1121 +1088,885 @@ Run options: --seed 45919
 # ASSIGNS
 >{"array":{"items":[1,2,3,4,5,6,7,8,9,0]}}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>      123
+      next
+      456
+      next
+      789
 # END
-.................................# TEMPLATE
->{% continue %}
+.# TEMPLATE
+>      {%for i in array.items limit:3 %}{{i}}{%endfor%}
+      next
+      {%for i in array.items offset:continue limit:3 %}{{i}}{%endfor%}
+      next
+      {%for i in array.items offset:continue limit:1 %}{{i}}{%endfor%}
+# ASSIGNS
+>{"array":{"items":[1,2,3,4,5,6,7,8,9,0]}}
+#EXPECTED
+>      123
+      next
+      456
+      next
+      7
+# END
+.# TEMPLATE
+>{%for val in string%}{{val}}{%endfor%}
+# ASSIGNS
+>{"string":"test string"}
+#EXPECTED
+>test string
+# END
+# TEMPLATE
+>{%for val in string limit:1%}{{val}}{%endfor%}
+# ASSIGNS
+>{"string":"test string"}
+#EXPECTED
+>test string
+# END
+# TEMPLATE
+>{%for val in string%}{{forloop.name}}-{{forloop.index}}-{{forloop.length}}-{{forloop.index0}}-{{forloop.rindex}}-{{forloop.rindex0}}-{{forloop.first}}-{{forloop.last}}-{{val}}{%endfor%}
+# ASSIGNS
+>{"string":"test string"}
+#EXPECTED
+>val-string-1-1-0-1-0-true-true-test string
+# END
+.# TEMPLATE
+>{% for inner in outer %}{% for k in inner %}{{ forloop.parentloop.index }}.{{ forloop.index }} {% endfor %}{% endfor %}
+# ASSIGNS
+>{"outer":[[1,1,1],[1,1,1]]}
+#EXPECTED
+>1.1 1.2 1.3 2.1 2.2 2.3 
+# END
+.# TEMPLATE
+>{%for item in (1..foobar.value) %} {{item}} {%endfor%}
+# ASSIGNS
+>{"foobar":"ThingWithValue"}
+#EXPECTED
+> 1  2  3 
+# END
+.# TEMPLATE
+>{%for i in array limit:2 %}{{ i }}{%endfor%}
+# ASSIGNS
+>{"array":[1,2,3,4,5,6,7,8,9,0]}
+#EXPECTED
+>12
+# END
+# TEMPLATE
+>{%for i in array limit:4 %}{{ i }}{%endfor%}
+# ASSIGNS
+>{"array":[1,2,3,4,5,6,7,8,9,0]}
+#EXPECTED
+>1234
+# END
+# TEMPLATE
+>{%for i in array limit:4 offset:2 %}{{ i }}{%endfor%}
+# ASSIGNS
+>{"array":[1,2,3,4,5,6,7,8,9,0]}
+#EXPECTED
+>3456
+# END
+# TEMPLATE
+>{%for i in array limit: 4 offset: 2 %}{{ i }}{%endfor%}
+# ASSIGNS
+>{"array":[1,2,3,4,5,6,7,8,9,0]}
+#EXPECTED
+>3456
+# END
+.# TEMPLATE
+>{% for char in characters %}I WILL NOT BE OUTPUT{% endfor %}
+# ASSIGNS
+>{"characters":""}
+#EXPECTED
+>
+# END
+.# TEMPLATE
+>      {%for i in array.items limit:3 %}{{i}}{%endfor%}
+      next
+      {%for i in array.items offset:continue limit:3 %}{{i}}{%endfor%}
+      next
+      {%for i in array.items offset:continue limit:1000 %}{{i}}{%endfor%}
+# ASSIGNS
+>{"array":{"items":[1,2,3,4,5,6,7,8,9,0]}}
+#EXPECTED
+>      123
+      next
+      456
+      next
+      7890
+# END
+.# TEMPLATE
+>{%for item in (1..3) %} {{item}} {%endfor%}
 # ASSIGNS
 >{}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+> 1  2  3 
 # END
 .# TEMPLATE
->{{ foo | sort: "bar" | map: "foo" }}
+>{% for item in items limit:1 %}{{item}}{% endfor %}
 # ASSIGNS
->{"foo":"TestEnumerable"}
+>{"items":"ForTagTest::LoaderDrop"}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>1
 # END
 .# TEMPLATE
->{{ ary | map:'foo' | map:'bar' }}
+>{% for item in items %}{{item}}{% endfor %}
 # ASSIGNS
->{"ary":[{"foo":{"bar":"a"}},{"foo":{"bar":"b"}},{"foo":{"bar":"c"}}]}
+>{"items":"ForTagTest::LoaderDrop"}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>12345
 # END
 .# TEMPLATE
->{{ foo | map: "foo" }}
-# ASSIGNS
->{"foo":"TestEnumerable"}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{{ source | lstrip }}
-# ASSIGNS
->{"source":" ab c  "}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{{ source | lstrip }}
-# ASSIGNS
->{"source":" \tab c  \n \t"}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{{ thing | map: "foo" | map: "bar" }}
-# ASSIGNS
->{"thing":{"foo":[{"bar":42},{"bar":17}]}}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{{ '1 1 1 1' | replace_first: '1', 2 }}
+>{% for a in (1..2) %}o{% for b in empty %}{% endfor %}{% endfor %}
 # ASSIGNS
 >{}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>oo
 # END
 .# TEMPLATE
->{{ source | rstrip }}
+>{% for       item   in   items %}{{item}}{% endfor %}
 # ASSIGNS
->{"source":" ab c  "}
+>{"items":[1,2,3,4,5]}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>12345
+# END
+.# TEMPLATE
+>{%for item in array%} {{item}} {%endfor%}
+# ASSIGNS
+>{"array":[1,2,3]}
+#EXPECTED
+> 1  2  3 
 # END
 # TEMPLATE
->{{ source | rstrip }}
+>{%for item in array%}{{item}}{%endfor%}
 # ASSIGNS
->{"source":" \tab c  \n \t"}
+>{"array":[1,2,3]}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>123
+# END
+# TEMPLATE
+>{% for item in array %}{{item}}{% endfor %}
+# ASSIGNS
+>{"array":[1,2,3]}
+#EXPECTED
+>123
+# END
+# TEMPLATE
+>{%for item in array%}{{item}}{%endfor%}
+# ASSIGNS
+>{"array":["a","b","c","d"]}
+#EXPECTED
+>abcd
+# END
+# TEMPLATE
+>{%for item in array%}{{item}}{%endfor%}
+# ASSIGNS
+>{"array":["a"," ","b"," ","c"]}
+#EXPECTED
+>a b c
+# END
+# TEMPLATE
+>{%for item in array%}{{item}}{%endfor%}
+# ASSIGNS
+>{"array":["a","","b","","c"]}
+#EXPECTED
+>abc
+# END
+.# TEMPLATE
+>{%for i in array.items limit:3 %}{{i}}{%endfor%}
+      next
+      {%for i in array.items offset:continue limit:3 %}{{i}}{%endfor%}
+      next
+      {%for i in array.items offset:continue limit:3 offset:1000 %}{{i}}{%endfor%}
+# ASSIGNS
+>{"array":{"items":[1,2,3,4,5,6,7,8,9,0]}}
+#EXPECTED
+>123
+      next
+      456
+      next
+      
+# END
+.# TEMPLATE
+>{%for i in array limit: limit offset: offset %}{{ i }}{%endfor%}
+# ASSIGNS
+>{"array":[1,2,3,4,5,6,7,8,9,0],"limit":2,"offset":2}
+#EXPECTED
+>34
+# END
+.# TEMPLATE
+>{%for item in array%} {{forloop.index}}/{{forloop.length}} {%endfor%}
+# ASSIGNS
+>{"array":[1,2,3]}
+#EXPECTED
+> 1/3  2/3  3/3 
+# END
+# TEMPLATE
+>{%for item in array%} {{forloop.index}} {%endfor%}
+# ASSIGNS
+>{"array":[1,2,3]}
+#EXPECTED
+> 1  2  3 
+# END
+# TEMPLATE
+>{%for item in array%} {{forloop.index0}} {%endfor%}
+# ASSIGNS
+>{"array":[1,2,3]}
+#EXPECTED
+> 0  1  2 
+# END
+# TEMPLATE
+>{%for item in array%} {{forloop.rindex0}} {%endfor%}
+# ASSIGNS
+>{"array":[1,2,3]}
+#EXPECTED
+> 2  1  0 
+# END
+# TEMPLATE
+>{%for item in array%} {{forloop.rindex}} {%endfor%}
+# ASSIGNS
+>{"array":[1,2,3]}
+#EXPECTED
+> 3  2  1 
+# END
+# TEMPLATE
+>{%for item in array%} {{forloop.first}} {%endfor%}
+# ASSIGNS
+>{"array":[1,2,3]}
+#EXPECTED
+> true  false  false 
+# END
+# TEMPLATE
+>{%for item in array%} {{forloop.last}} {%endfor%}
+# ASSIGNS
+>{"array":[1,2,3]}
+#EXPECTED
+> false  false  true 
+# END
+.# TEMPLATE
+>{% for inner in outer %}{{ forloop.parentloop.index }}.{{ forloop.index }} {% endfor %}
+# ASSIGNS
+>{"outer":[[1,1,1],[1,1,1]]}
+#EXPECTED
+>.1 .2 
+# END
+.# TEMPLATE
+>{% for item in items offset:2 limit:2 %}{{item}}{% endfor %}
+# ASSIGNS
+>{"items":"ForTagTest::LoaderDrop"}
+#EXPECTED
+>34
+# END
+# TEMPLATE
+>{% for item in items offset:2 limit:2 %}{{item}}{% endfor %}
+# ASSIGNS
+>{"items":[1,2,3,4,5]}
+#EXPECTED
+>34
 # END
 ..# TEMPLATE
->{{ 3 | times:4 }}
+>{%for item in array%}+{%else%}-{%endfor%}
 # ASSIGNS
->{}
+>{"array":[1,2,3]}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>+++
 # END
 # TEMPLATE
->{{ 'foo' | times:4 }}
+>{%for item in array%}+{%else%}-{%endfor%}
 # ASSIGNS
->{}
+>{"array":[]}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>-
 # END
 # TEMPLATE
->{{ '2.1' | times:3 | replace: '.','-' | plus:0}}
+>{%for item in array%}+{%else%}-{%endfor%}
 # ASSIGNS
->{}
+>{"array":null}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{{ 0.0725 | times:100 }}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-....# TEMPLATE
->{{ a | prepend: 'a'}}
-# ASSIGNS
->{"a":"bc","b":"a"}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{{ a | prepend: b}}
-# ASSIGNS
->{"a":"bc","b":"a"}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-..# TEMPLATE
->{{ procs | map: "test" }}
-# ASSIGNS
->{"procs":["#<Proc:0x00000002c8b570@/home/bridge/work/liquid/test/integration/standard_filter_test.rb:215>"]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-..# TEMPLATE
->{{ foo | first }}
-# ASSIGNS
->{"foo":["#<ThingWithToLiquid:0x00000002c883c0>"]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{{ foo | last }}
-# ASSIGNS
->{"foo":["#<ThingWithToLiquid:0x00000002c7b148>"]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
+>-
 # END
 .# TEMPLATE
->{{ source | strip_newlines }}
+>{%for item in array%}{% if forloop.first %}+{% else %}-{% endif %}{%endfor%}
 # ASSIGNS
->{"source":"a\nb\nc"}
+>{"array":[1,2,3]}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{{ source | strip_newlines }}
-# ASSIGNS
->{"source":"a\r\nb\nc"}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
+>+--
 # END
 .# TEMPLATE
->{{ input | floor }}
+>{%for item in (1..foobar.value) %} {{item}} {%endfor%}
 # ASSIGNS
->{"input":4.6}
+>{"foobar":{"value":3}}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{{ '4.3' | floor }}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{{ 1.0 | divided_by: 0.0 | floor }}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
+> 1  2  3 
 # END
 .# TEMPLATE
->{{ foo | map: "whatever" }}
+>{%for item in (1..foobar) %} {{item}} {%endfor%}
 # ASSIGNS
->{"foo":["woot: 0"]}
+>{"foobar":3}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+> 1  2  3 
 # END
-...# TEMPLATE
->{% assign key = 'foo' %}{{ thing | map: key | map: 'bar' }}
+............................# TEMPLATE
+>{% include 'product' for products %}
 # ASSIGNS
->{"thing":{"foo":{"bar":42}}}
+>{"products":[{"title":"Draft 151cm"},{"title":"Element 155cm"}]}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-...# TEMPLATE
->{{ 1 | plus:1 }}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{{ '1' | plus:'1.0' }}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-...# TEMPLATE
->{{ 'a a a a' | remove_first: 'a ' }}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-..# TEMPLATE
->{{ source | strip }}
-# ASSIGNS
->{"source":" ab c  "}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{{ source | strip }}
-# ASSIGNS
->{"source":" \tab c  \n \t"}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-...# TEMPLATE
->{{ 3 | modulo:2 }}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{{ 1 | modulo: 0 }}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-..# TEMPLATE
->{{ 'foo|bar' | remove: '|' }}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-....# TEMPLATE
->{{ input | minus:operand }}
-# ASSIGNS
->{"input":5,"operand":1}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{{ '4.3' | minus:'2' }}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-...# TEMPLATE
->{{ source | newline_to_br }}
-# ASSIGNS
->{"source":"a\nb\nc"}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-..# TEMPLATE
->{{ 12 | divided_by:3 }}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{{ 14 | divided_by:3 }}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{{ 15 | divided_by:3 }}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{{ 2.0 | divided_by:4 }}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{{ 1 | modulo: 0 }}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
+>Product: Draft 151cm Product: Element 155cm 
 # END
 .# TEMPLATE
->{{ "foo" | map: "__id__" }}
+>{% if true %}{% include 'foo_if_true' %}{% endif %}
 # ASSIGNS
 >{}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{{ "foo" | map: "inspect" }}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{{ 'a' | to_number }}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{{ input | round }}
-# ASSIGNS
->{"input":4.6}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{{ '4.3' | round }}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{{ input | round: 2 }}
-# ASSIGNS
->{"input":4.5612}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{{ 1.0 | divided_by: 0.0 | round }}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-..# TEMPLATE
->{{ input | ceil }}
-# ASSIGNS
->{"input":4.6}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{{ '4.3' | ceil }}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{{ 1.0 | divided_by: 0.0 | ceil }}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-..# TEMPLATE
->{{ a | append: 'd'}}
-# ASSIGNS
->{"a":"bc","b":"d"}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{{ a | append: b}}
-# ASSIGNS
->{"a":"bc","b":"d"}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-..................................................# TEMPLATE
->{% include 'locale_variables' echo1: 'test123' %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
+>foo_if_true
 # END
 .# TEMPLATE
 >{% include 'assignments' %}{{ foo }}
 # ASSIGNS
 >{}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-..# TEMPLATE
->{% include 'locale_variables' echo1: echo1, echo2: more_echos.echo2 %}
-# ASSIGNS
->{"echo1":"test123","more_echos":{"echo2":"test321"}}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-..# TEMPLATE
->{% include template %}
-# ASSIGNS
->{"template":"Test123"}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% include template %}
-# ASSIGNS
->{"template":"Test321"}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% include template for product %}
-# ASSIGNS
->{"template":"product","product":{"title":"Draft 151cm"}}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% include 'product' %}
-# ASSIGNS
->{"product":{"title":"Draft 151cm"}}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
+>bar
 # END
 ...# TEMPLATE
->{% include 'product' for products %}
-# ASSIGNS
->{"products":[{"title":"Draft 151cm"},{"title":"Element 155cm"}]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
 >{% include 'locale_variables' echo1: 'test123', echo2: 'test321' %}
 # ASSIGNS
 >{}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>Locale: test123 test321
+# END
+...# TEMPLATE
+>{% include 'locale_variables' echo1: echo1, echo2: more_echos.echo2 %}
+# ASSIGNS
+>{"echo1":"test123","more_echos":{"echo2":"test321"}}
+#EXPECTED
+>Locale: test123 test321
+# END
+.# TEMPLATE
+>{% include 'locale_variables' echo1: 'test123' %}
+# ASSIGNS
+>{}
+#EXPECTED
+>Locale: test123 
 # END
 ..# TEMPLATE
->{% include 'body' %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% include 'nested_template' %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% include 'product' with products[0] %}
-# ASSIGNS
->{"products":[{"title":"Draft 151cm"},{"title":"Element 155cm"}]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-....# TEMPLATE
->{% if true %}{% include 'foo_if_true' %}{% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% assign page = 'pick_a_source' %}{% include page %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% assign page = 'product' %}{% include page %}
-# ASSIGNS
->{"product":{"title":"Draft 151cm"}}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% assign page = 'product' %}{% include page for foo %}
-# ASSIGNS
->{"foo":{"title":"Draft 151cm"}}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
 >{% include 'nested_product_template' with product %}
 # ASSIGNS
 >{"product":{"title":"Draft 151cm"}}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>Product: Draft 151cm details 
 # END
 # TEMPLATE
 >{% include 'nested_product_template' for products %}
 # ASSIGNS
 >{"products":[{"title":"Draft 151cm"},{"title":"Element 155cm"}]}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>Product: Draft 151cm details Product: Element 155cm details 
 # END
-...# TEMPLATE
->{% assign foo = values | split: "," %}.{{ foo[1] }}.
+.# TEMPLATE
+>{% include 'product' %}
 # ASSIGNS
->{"values":"foo,bar,baz"}
+>{"product":{"title":"Draft 151cm"}}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>Product: Draft 151cm 
 # END
-..# TEMPLATE
->{% assign foo = values %}.{{ foo[0] }}.
+.# TEMPLATE
+>{% include 'body' %}
 # ASSIGNS
->{"values":["foo","bar","baz"]}
+>{}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>body body_detail
 # END
 # TEMPLATE
->{% assign foo = values %}.{{ foo[1] }}.
+>{% include 'nested_template' %}
 # ASSIGNS
->{"values":["foo","bar","baz"]}
+>{}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>header body body_detail footer
 # END
-......................# TEMPLATE
+...# TEMPLATE
+>{% include template %}
+# ASSIGNS
+>{"template":"Test123"}
+#EXPECTED
+>Test123
+# END
+# TEMPLATE
+>{% include template %}
+# ASSIGNS
+>{"template":"Test321"}
+#EXPECTED
+>Test321
+# END
+# TEMPLATE
+>{% include template for product %}
+# ASSIGNS
+>{"template":"product","product":{"title":"Draft 151cm"}}
+#EXPECTED
+>Product: Draft 151cm 
+# END
+.# TEMPLATE
+>{% include 'product' with products[0] %}
+# ASSIGNS
+>{"products":[{"title":"Draft 151cm"},{"title":"Element 155cm"}]}
+#EXPECTED
+>Product: Draft 151cm 
+# END
+.# TEMPLATE
+>{% assign page = 'pick_a_source' %}{% include page %}
+# ASSIGNS
+>{}
+#EXPECTED
+>from TestFileSystem
+# END
+# TEMPLATE
+>{% assign page = 'product' %}{% include page %}
+# ASSIGNS
+>{"product":{"title":"Draft 151cm"}}
+#EXPECTED
+>Product: Draft 151cm 
+# END
+# TEMPLATE
+>{% assign page = 'product' %}{% include page for foo %}
+# ASSIGNS
+>{"foo":{"title":"Draft 151cm"}}
+#EXPECTED
+>Product: Draft 151cm 
+# END
+.....................................................# TEMPLATE
 >{%increment port %}
 # ASSIGNS
 >{}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>0
 # END
-# TEMPLATE
->{%increment port %} {%increment port%}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{%increment port %} {%increment starboard%} {%increment port %} {%increment port%} {%increment starboard %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
+F# TEMPLATE
 >{%decrement port %}
 # ASSIGNS
 >{"port":10}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>9
 # END
-# TEMPLATE
->{%decrement port %} {%decrement port%}
+F.......................# TEMPLATE
+>{% assign a = "variable"%}{{a}}
 # ASSIGNS
 >{}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{%increment port %} {%increment starboard%} {%increment port %} {%decrement port%} {%decrement starboard %}
-# ASSIGNS
->{"port":1,"starboard":5}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% case false %}{% when %}true{% endcase %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% case false %}{% huh %}true{% endcase %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->array has {{ array.size }} elements
-# ASSIGNS
->{"array":[1,2,3,4]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{%for i in (1..2) %}{% assign a = "variable"%}{% endfor %}{{a}}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% case a.size %}{% when 1 %}1{% when 2 %}2{% endcase %}
-# ASSIGNS
->{"a":[]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% case a.size %}{% when 1 %}1{% when 2 %}2{% endcase %}
-# ASSIGNS
->{"a":[1]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% case a.size %}{% when 1 %}1{% when 2 %}2{% endcase %}
-# ASSIGNS
->{"a":[1,1]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% case a.size %}{% when 1 %}1{% when 2 %}2{% endcase %}
-# ASSIGNS
->{"a":[1,1,1]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% case a.size %}{% when 1 %}1{% when 2 %}2{% endcase %}
-# ASSIGNS
->{"a":[1,1,1,1]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% case a.size %}{% when 1 %}1{% when 2 %}2{% endcase %}
-# ASSIGNS
->{"a":[1,1,1,1,1]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
+>variable
 # END
 .# TEMPLATE
 >{% case condition %}{% when 1, 2, 3 %} its 1 or 2 or 3 {% when 4 %} its 4 {% endcase %}
 # ASSIGNS
 >{"condition":1}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+> its 1 or 2 or 3 
 # END
 # TEMPLATE
 >{% case condition %}{% when 1, 2, 3 %} its 1 or 2 or 3 {% when 4 %} its 4 {% endcase %}
 # ASSIGNS
 >{"condition":2}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+> its 1 or 2 or 3 
 # END
 # TEMPLATE
 >{% case condition %}{% when 1, 2, 3 %} its 1 or 2 or 3 {% when 4 %} its 4 {% endcase %}
 # ASSIGNS
 >{"condition":3}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+> its 1 or 2 or 3 
 # END
 # TEMPLATE
 >{% case condition %}{% when 1, 2, 3 %} its 1 or 2 or 3 {% when 4 %} its 4 {% endcase %}
 # ASSIGNS
 >{"condition":4}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+> its 4 
 # END
 # TEMPLATE
 >{% case condition %}{% when 1, 2, 3 %} its 1 or 2 or 3 {% when 4 %} its 4 {% endcase %}
 # ASSIGNS
 >{"condition":5}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>
 # END
 # TEMPLATE
 >{% case condition %}{% when 1, "string", null %} its 1 or 2 or 3 {% when 4 %} its 4 {% endcase %}
 # ASSIGNS
 >{"condition":1}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+> its 1 or 2 or 3 
 # END
 # TEMPLATE
 >{% case condition %}{% when 1, "string", null %} its 1 or 2 or 3 {% when 4 %} its 4 {% endcase %}
 # ASSIGNS
 >{"condition":"string"}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+> its 1 or 2 or 3 
 # END
 # TEMPLATE
 >{% case condition %}{% when 1, "string", null %} its 1 or 2 or 3 {% when 4 %} its 4 {% endcase %}
 # ASSIGNS
 >{"condition":null}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+> its 1 or 2 or 3 
 # END
 # TEMPLATE
 >{% case condition %}{% when 1, "string", null %} its 1 or 2 or 3 {% when 4 %} its 4 {% endcase %}
 # ASSIGNS
 >{"condition":"something else"}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>
 # END
 .# TEMPLATE
->{% if true == empty %}?{% endif %}
+>{%cycle 1: "one", "two" %} {%cycle 2: "one", "two" %} {%cycle 1: "one", "two" %} {%cycle 2: "one", "two" %} {%cycle 1: "one", "two" %} {%cycle 2: "one", "two" %}
 # ASSIGNS
 >{}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if true == null %}?{% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if empty == true %}?{% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if null == true %}?{% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-..# TEMPLATE
->{%for item in array%}{%ifchanged%}{{item}}{% endifchanged %}{%endfor%}
-# ASSIGNS
->{"array":[1,1,2,2,3,3]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{%for item in array%}{%ifchanged%}{{item}}{% endifchanged %}{%endfor%}
-# ASSIGNS
->{"array":[1,1,1,1]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
+>one one two two one one
 # END
 .# TEMPLATE
->{%assign var2 = var["a:b c"].paged %}var2: {{var2}}
-# ASSIGNS
->{"var":{"a:b c":{"paged":"1"}}}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{{ var2 }}{% capture var2 %}{{ var }} foo {% endcapture %}{{ var2 }}{{ var2 }}
-# ASSIGNS
->{"var":"content"}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{%cycle "one", "two"%}
+>this text should come out of the template without change...
 # ASSIGNS
 >{}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>this text should come out of the template without change...
 # END
 # TEMPLATE
->{%cycle "one", "two"%} {%cycle "one", "two"%}
+>blah
 # ASSIGNS
 >{}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>blah
 # END
 # TEMPLATE
->{%cycle "", "two"%} {%cycle "", "two"%}
+><blah>
 # ASSIGNS
 >{}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+><blah>
 # END
 # TEMPLATE
->{%cycle "one", "two"%} {%cycle "one", "two"%} {%cycle "one", "two"%}
+>|,.:
 # ASSIGNS
 >{}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>|,.:
 # END
 # TEMPLATE
->{%cycle "text-align: left", "text-align: right" %} {%cycle "text-align: left", "text-align: right"%}
+>
 # ASSIGNS
 >{}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>
+# END
+# TEMPLATE
+>this shouldnt see any transformation either but has multiple lines
+              as you can clearly see here ...
+# ASSIGNS
+>{}
+#EXPECTED
+>this shouldnt see any transformation either but has multiple lines
+              as you can clearly see here ...
 # END
 .# TEMPLATE
 >{% case a.size %}{% when 1 %}1{% when 2 %}2{% else %}else{% endcase %}
 # ASSIGNS
 >{"a":[]}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>else
 # END
 # TEMPLATE
 >{% case a.size %}{% when 1 %}1{% when 2 %}2{% else %}else{% endcase %}
 # ASSIGNS
 >{"a":[1]}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>1
 # END
 # TEMPLATE
 >{% case a.size %}{% when 1 %}1{% when 2 %}2{% else %}else{% endcase %}
 # ASSIGNS
 >{"a":[1,1]}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>2
 # END
 # TEMPLATE
 >{% case a.size %}{% when 1 %}1{% when 2 %}2{% else %}else{% endcase %}
 # ASSIGNS
 >{"a":[1,1,1]}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>else
 # END
 # TEMPLATE
 >{% case a.size %}{% when 1 %}1{% when 2 %}2{% else %}else{% endcase %}
 # ASSIGNS
 >{"a":[1,1,1,1]}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>else
 # END
 # TEMPLATE
 >{% case a.size %}{% when 1 %}1{% when 2 %}2{% else %}else{% endcase %}
 # ASSIGNS
 >{"a":[1,1,1,1,1]}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>else
 # END
 .# TEMPLATE
->the comment block should be removed {%comment%} be gone.. {%endcomment%} .. right?
+>{%cycle var1: "one", "two" %} {%cycle var2: "one", "two" %} {%cycle var1: "one", "two" %} {%cycle var2: "one", "two" %} {%cycle var1: "one", "two" %} {%cycle var2: "one", "two" %}
 # ASSIGNS
->{}
+>{"var1":1,"var2":2}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>one one two two one one
+# END
+.# TEMPLATE
+>{% case condition %}{% when 1 %} its 1 {% when 2 %} its 2 {% endcase %}
+# ASSIGNS
+>{"condition":2}
+#EXPECTED
+> its 2 
 # END
 # TEMPLATE
->{%comment%}{%endcomment%}
+>{% case condition %}{% when 1 %} its 1 {% when 2 %} its 2 {% endcase %}
 # ASSIGNS
->{}
+>{"condition":1}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+> its 1 
 # END
 # TEMPLATE
->{%comment%}{% endcomment %}
+>{% case condition %}{% when 1 %} its 1 {% when 2 %} its 2 {% endcase %}
 # ASSIGNS
->{}
+>{"condition":3}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>
 # END
 # TEMPLATE
->{% comment %}{%endcomment%}
+>{% case condition %}{% when "string here" %} hit {% endcase %}
 # ASSIGNS
->{}
+>{"condition":"string here"}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+> hit 
 # END
 # TEMPLATE
->{% comment %}{% endcomment %}
+>{% case condition %}{% when "string here" %} hit {% endcase %}
 # ASSIGNS
->{}
+>{"condition":"bad string here"}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{%comment%}comment{%endcomment%}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% comment %}comment{% endcomment %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% comment %} 1 {% comment %} 2 {% endcomment %} 3 {% endcomment %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{%comment%}{%blabla%}{%endcomment%}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% comment %}{% blabla %}{% endcomment %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{%comment%}{% endif %}{%endcomment%}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% comment %}{% endwhatever %}{% endcomment %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% comment %}{% raw %} {{%%%%}}  }} { {% endcomment %} {% comment {% endraw %} {% endcomment %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->foo{%comment%}comment{%endcomment%}bar
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->foo{% comment %}comment{% endcomment %}bar
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->foo{%comment%} comment {%endcomment%}bar
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->foo{% comment %} comment {% endcomment %}bar
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->foo {%comment%} {%endcomment%} bar
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->foo {%comment%}comment{%endcomment%} bar
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->foo {%comment%} comment {%endcomment%} bar
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->foo{%comment%}
-                                     {%endcomment%}bar
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
+>
 # END
 .# TEMPLATE
 >{% case a.empty? %}{% when true %}true{% when false %}false{% else %}else{% endcase %}
 # ASSIGNS
 >{}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>else
 # END
 # TEMPLATE
 >{% case false %}{% when true %}true{% when false %}false{% else %}else{% endcase %}
 # ASSIGNS
 >{}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>false
 # END
 # TEMPLATE
 >{% case true %}{% when true %}true{% when false %}false{% else %}else{% endcase %}
 # ASSIGNS
 >{}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>true
 # END
 # TEMPLATE
 >{% case NULL %}{% when true %}true{% when false %}false{% else %}else{% endcase %}
 # ASSIGNS
 >{}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>else
 # END
 .# TEMPLATE
->{%cycle 1,2%} {%cycle 1,2%} {%cycle 1,2%} {%cycle 1,2,3%} {%cycle 1,2,3%} {%cycle 1,2,3%} {%cycle 1,2,3%}
+>{% if true == empty %}?{% endif %}
 # ASSIGNS
 >{}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>
+# END
+# TEMPLATE
+>{% if true == null %}?{% endif %}
+# ASSIGNS
+>{}
+#EXPECTED
+>
+# END
+# TEMPLATE
+>{% if empty == true %}?{% endif %}
+# ASSIGNS
+>{}
+#EXPECTED
+>
+# END
+# TEMPLATE
+>{% if null == true %}?{% endif %}
+# ASSIGNS
+>{}
+#EXPECTED
+>
+# END
+.# TEMPLATE
+>{%assign var2 = var["a:b c"].paged %}var2: {{var2}}
+# ASSIGNS
+>{"var":{"a:b c":{"paged":"1"}}}
+#EXPECTED
+>var2: 1
 # END
 .# TEMPLATE
 >hash has {{ hash.size }} elements
 # ASSIGNS
 >{"hash":{"a":1,"b":2,"c":3,"d":4}}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>hash has 4 elements
 # END
 .# TEMPLATE
->{% assign a = ""%}{{a}}
+>{{ var2 }}{% capture var2 %}{{ var }} foo {% endcapture %}{{ var2 }}{{ var2 }}
 # ASSIGNS
->{}
+>{"var":"content"}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>content foo content foo 
 # END
 .# TEMPLATE
 >{% case condition %}{% when 1 or 2 or 3 %} its 1 or 2 or 3 {% when 4 %} its 4 {% endcase %}
 # ASSIGNS
 >{"condition":1}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+> its 1 or 2 or 3 
 # END
 # TEMPLATE
 >{% case condition %}{% when 1 or 2 or 3 %} its 1 or 2 or 3 {% when 4 %} its 4 {% endcase %}
 # ASSIGNS
 >{"condition":2}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+> its 1 or 2 or 3 
 # END
 # TEMPLATE
 >{% case condition %}{% when 1 or 2 or 3 %} its 1 or 2 or 3 {% when 4 %} its 4 {% endcase %}
 # ASSIGNS
 >{"condition":3}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+> its 1 or 2 or 3 
 # END
 # TEMPLATE
 >{% case condition %}{% when 1 or 2 or 3 %} its 1 or 2 or 3 {% when 4 %} its 4 {% endcase %}
 # ASSIGNS
 >{"condition":4}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+> its 4 
 # END
 # TEMPLATE
 >{% case condition %}{% when 1 or 2 or 3 %} its 1 or 2 or 3 {% when 4 %} its 4 {% endcase %}
 # ASSIGNS
 >{"condition":5}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>
 # END
 # TEMPLATE
 >{% case condition %}{% when 1 or "string" or null %} its 1 or 2 or 3 {% when 4 %} its 4 {% endcase %}
 # ASSIGNS
 >{"condition":1}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+> its 1 or 2 or 3 
 # END
 # TEMPLATE
 >{% case condition %}{% when 1 or "string" or null %} its 1 or 2 or 3 {% when 4 %} its 4 {% endcase %}
 # ASSIGNS
 >{"condition":"string"}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+> its 1 or 2 or 3 
 # END
 # TEMPLATE
 >{% case condition %}{% when 1 or "string" or null %} its 1 or 2 or 3 {% when 4 %} its 4 {% endcase %}
 # ASSIGNS
 >{"condition":null}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+> its 1 or 2 or 3 
 # END
 # TEMPLATE
 >{% case condition %}{% when 1 or "string" or null %} its 1 or 2 or 3 {% when 4 %} its 4 {% endcase %}
 # ASSIGNS
 >{"condition":"something else"}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>
 # END
+.# TEMPLATE
+>{{ var2 }}{% capture %}{{ var }} foo {% endcapture %}{{ var2 }}{{ var2 }}
+# ASSIGNS
+>{"var":"content"}
+#EXPECTED
 .# TEMPLATE
 >{% case condition %}{% when 5 %} hit {% else %} else {% endcase %}
 # ASSIGNS
 >{"condition":5}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+> hit 
 # END
 # TEMPLATE
 >{% case condition %}{% when 5 %} hit {% else %} else {% endcase %}
 # ASSIGNS
 >{"condition":6}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+> else 
 # END
 # TEMPLATE
 >{% case condition %} {% when 5 %} hit {% else %} else {% endcase %}
 # ASSIGNS
 >{"condition":6}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+> else 
+# END
+.# TEMPLATE
+>{%for i in (1..2) %}{% assign a = "variable"%}{% endfor %}{{a}}
+# ASSIGNS
+>{}
+#EXPECTED
+>variable
+# END
+.# TEMPLATE
+>{% case false %}{% when %}true{% endcase %}
+# ASSIGNS
+>{}
+#EXPECTED
+# TEMPLATE
+>{% case false %}{% huh %}true{% endcase %}
+# ASSIGNS
+>{}
+#EXPECTED
+.# TEMPLATE
+>{%cycle "one", "two"%}
+# ASSIGNS
+>{}
+#EXPECTED
+>one
+# END
+# TEMPLATE
+>{%cycle "one", "two"%} {%cycle "one", "two"%}
+# ASSIGNS
+>{}
+#EXPECTED
+>one two
+# END
+# TEMPLATE
+>{%cycle "", "two"%} {%cycle "", "two"%}
+# ASSIGNS
+>{}
+#EXPECTED
+> two
+# END
+# TEMPLATE
+>{%cycle "one", "two"%} {%cycle "one", "two"%} {%cycle "one", "two"%}
+# ASSIGNS
+>{}
+#EXPECTED
+>one two one
+# END
+# TEMPLATE
+>{%cycle "text-align: left", "text-align: right" %} {%cycle "text-align: left", "text-align: right"%}
+# ASSIGNS
+>{}
+#EXPECTED
+>text-align: left text-align: right
 # END
 .# TEMPLATE
 >0{%
@@ -4546,1247 +1979,917 @@ endfor
 # ASSIGNS
 >{}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>0 1 2 3
+# END
+..# TEMPLATE
+>a-b:{{a-b}} {%assign a-b = 2 %}a-b:{{a-b}}
+# ASSIGNS
+>{"a-b":"1"}
+#EXPECTED
+>a-b:1 a-b:2
 # END
 .# TEMPLATE
->this text should come out of the template without change...
+>array has {{ array.size }} elements
+# ASSIGNS
+>{"array":[1,2,3,4]}
+#EXPECTED
+>array has 4 elements
+# END
+.# TEMPLATE
+>{% assign a = ""%}{{a}}
 # ASSIGNS
 >{}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->blah
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
-><blah>
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->|,.:
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
 >
+# END
+.# TEMPLATE
+>{% case a.size %}{% when 1 %}1{% when 2 %}2{% endcase %}
 # ASSIGNS
->{}
+>{"a":[]}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>
 # END
 # TEMPLATE
->this shouldnt see any transformation either but has multiple lines
-              as you can clearly see here ...
+>{% case a.size %}{% when 1 %}1{% when 2 %}2{% endcase %}
 # ASSIGNS
->{}
+>{"a":[1]}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>1
 # END
-.# TEMPLATE
->{%cycle 1: "one", "two" %} {%cycle 2: "one", "two" %} {%cycle 1: "one", "two" %} {%cycle 2: "one", "two" %} {%cycle 1: "one", "two" %} {%cycle 2: "one", "two" %}
+# TEMPLATE
+>{% case a.size %}{% when 1 %}1{% when 2 %}2{% endcase %}
 # ASSIGNS
->{}
+>{"a":[1,1]}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>2
 # END
-.# TEMPLATE
->{%cycle var1: "one", "two" %} {%cycle var2: "one", "two" %} {%cycle var1: "one", "two" %} {%cycle var2: "one", "two" %} {%cycle var1: "one", "two" %} {%cycle var2: "one", "two" %}
+# TEMPLATE
+>{% case a.size %}{% when 1 %}1{% when 2 %}2{% endcase %}
 # ASSIGNS
->{"var1":1,"var2":2}
+>{"a":[1,1,1]}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>
+# END
+# TEMPLATE
+>{% case a.size %}{% when 1 %}1{% when 2 %}2{% endcase %}
+# ASSIGNS
+>{"a":[1,1,1,1]}
+#EXPECTED
+>
+# END
+# TEMPLATE
+>{% case a.size %}{% when 1 %}1{% when 2 %}2{% endcase %}
+# ASSIGNS
+>{"a":[1,1,1,1,1]}
+#EXPECTED
+>
 # END
 .# TEMPLATE
 >var2:{{var2}} {%assign var2 = var%} var2:{{var2}}
 # ASSIGNS
 >{"var":"content"}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>var2:  var2:content
 # END
 .# TEMPLATE
->a-b:{{a-b}} {%assign a-b = 2 %}a-b:{{a-b}}
+>{%for item in array%}{%ifchanged%}{{item}}{% endifchanged %}{%endfor%}
 # ASSIGNS
->{"a-b":"1"}
+>{"array":[1,1,2,2,3,3]}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>123
+# END
+# TEMPLATE
+>{%for item in array%}{%ifchanged%}{{item}}{% endifchanged %}{%endfor%}
+# ASSIGNS
+>{"array":[1,1,1,1]}
+#EXPECTED
+>1
 # END
 .# TEMPLATE
->{% assign a = "variable"%}{{a}}
+>{%cycle 1,2%} {%cycle 1,2%} {%cycle 1,2%} {%cycle 1,2,3%} {%cycle 1,2,3%} {%cycle 1,2,3%} {%cycle 1,2,3%}
 # ASSIGNS
 >{}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>1 2 1 1 2 3 1
 # END
 .# TEMPLATE
->{{ var2 }}{% capture %}{{ var }} foo {% endcapture %}{{ var2 }}{{ var2 }}
+>the comment block should be removed {%comment%} be gone.. {%endcomment%} .. right?
 # ASSIGNS
->{"var":"content"}
+>{}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% case condition %}{% when 1 %} its 1 {% when 2 %} its 2 {% endcase %}
-# ASSIGNS
->{"condition":2}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
+>the comment block should be removed  .. right?
 # END
 # TEMPLATE
->{% case condition %}{% when 1 %} its 1 {% when 2 %} its 2 {% endcase %}
+>{%comment%}{%endcomment%}
 # ASSIGNS
->{"condition":1}
+>{}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>
 # END
 # TEMPLATE
->{% case condition %}{% when 1 %} its 1 {% when 2 %} its 2 {% endcase %}
+>{%comment%}{% endcomment %}
 # ASSIGNS
->{"condition":3}
+>{}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>
 # END
 # TEMPLATE
->{% case condition %}{% when "string here" %} hit {% endcase %}
+>{% comment %}{%endcomment%}
 # ASSIGNS
->{"condition":"string here"}
+>{}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>
 # END
 # TEMPLATE
->{% case condition %}{% when "string here" %} hit {% endcase %}
+>{% comment %}{% endcomment %}
 # ASSIGNS
->{"condition":"bad string here"}
+>{}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>
 # END
-...............# TEMPLATE
+# TEMPLATE
+>{%comment%}comment{%endcomment%}
+# ASSIGNS
+>{}
+#EXPECTED
+>
+# END
+# TEMPLATE
+>{% comment %}comment{% endcomment %}
+# ASSIGNS
+>{}
+#EXPECTED
+>
+# END
+# TEMPLATE
+>{% comment %} 1 {% comment %} 2 {% endcomment %} 3 {% endcomment %}
+# ASSIGNS
+>{}
+#EXPECTED
+>
+# END
+# TEMPLATE
+>{%comment%}{%blabla%}{%endcomment%}
+# ASSIGNS
+>{}
+#EXPECTED
+>
+# END
+# TEMPLATE
+>{% comment %}{% blabla %}{% endcomment %}
+# ASSIGNS
+>{}
+#EXPECTED
+>
+# END
+# TEMPLATE
+>{%comment%}{% endif %}{%endcomment%}
+# ASSIGNS
+>{}
+#EXPECTED
+>
+# END
+# TEMPLATE
+>{% comment %}{% endwhatever %}{% endcomment %}
+# ASSIGNS
+>{}
+#EXPECTED
+>
+# END
+# TEMPLATE
+>{% comment %}{% raw %} {{%%%%}}  }} { {% endcomment %} {% comment {% endraw %} {% endcomment %}
+# ASSIGNS
+>{}
+#EXPECTED
+>
+# END
+# TEMPLATE
+>foo{%comment%}comment{%endcomment%}bar
+# ASSIGNS
+>{}
+#EXPECTED
+>foobar
+# END
+# TEMPLATE
+>foo{% comment %}comment{% endcomment %}bar
+# ASSIGNS
+>{}
+#EXPECTED
+>foobar
+# END
+# TEMPLATE
+>foo{%comment%} comment {%endcomment%}bar
+# ASSIGNS
+>{}
+#EXPECTED
+>foobar
+# END
+# TEMPLATE
+>foo{% comment %} comment {% endcomment %}bar
+# ASSIGNS
+>{}
+#EXPECTED
+>foobar
+# END
+# TEMPLATE
+>foo {%comment%} {%endcomment%} bar
+# ASSIGNS
+>{}
+#EXPECTED
+>foo  bar
+# END
+# TEMPLATE
+>foo {%comment%}comment{%endcomment%} bar
+# ASSIGNS
+>{}
+#EXPECTED
+>foo  bar
+# END
+# TEMPLATE
+>foo {%comment%} comment {%endcomment%} bar
+# ASSIGNS
+>{}
+#EXPECTED
+>foo  bar
+# END
+# TEMPLATE
+>foo{%comment%}
+                                     {%endcomment%}bar
+# ASSIGNS
+>{}
+#EXPECTED
+>foobar
+# END
+.................................................# TEMPLATE
 >{% capture 'var' %}test string{% endcapture %}{{var}}
 # ASSIGNS
 >{}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>test string
 # END
 .# TEMPLATE
-> {% if "hello there!" == var %} true {% else %} false {% endif %} 
+>{% break %}
 # ASSIGNS
->{"var":"hello there!"}
+>{"i":1}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>
 # END
-.# TEMPLATE
-> {% if 0 > 0 %} true {% else %} false {% endif %} 
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
-> {% if true != true %} true {% else %} false {% endif %} 
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
-> {% if 0 < 1 %} true {% else %} false {% endif %} 
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
-> {% if var == 'hello there!' %} true {% else %} false {% endif %} 
-# ASSIGNS
->{"var":"hello there!"}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
-> {% if var == "hello there!" %} true {% else %} false {% endif %} 
-# ASSIGNS
->{"var":"hello there!"}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
-> {% if 'test' != 'test' %} true {% else %} false {% endif %} 
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
-> {% if array == empty %} true {% else %} false {% endif %} 
-# ASSIGNS
->{"array":[1,2,3]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
-> {% if 'test' == 'test' %} true {% else %} false {% endif %} 
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
-> {% if true == true %} true {% else %} false {% endif %} 
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
-> {% if 'hello there!' == var %} true {% else %} false {% endif %} 
-# ASSIGNS
->{"var":"hello there!"}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
-> {% if 1 > 0 %} true {% else %} false {% endif %} 
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
-> {% if var == nil %} true {% else %} false {% endif %} 
-# ASSIGNS
->{"var":null}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
-> {% if var == null %} true {% else %} false {% endif %} 
-# ASSIGNS
->{"var":null}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
-> {% if var != nil %} true {% else %} false {% endif %} 
-# ASSIGNS
->{"var":1}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
-> {% if var != null %} true {% else %} false {% endif %} 
-# ASSIGNS
->{"var":1}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
-> {% if 0 <= 0 %} true {% else %} false {% endif %} 
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
-> {% if 0 >= 0 %} true {% else %} false {% endif %} 
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
-> {% if array == empty %} true {% else %} false {% endif %} 
-# ASSIGNS
->{"array":[]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
-> {% if null <= 0 %} true {% else %} false {% endif %} 
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
-> {% if 0 <= null %} true {% else %} false {% endif %} 
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-....# TEMPLATE
->{% if a == 'foo' or (b == 'bar' and c == 'baz') or false %} YES {% endif %}
-# ASSIGNS
->{"b":"bar","c":"baz"}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-..# TEMPLATE
->{% assign 123foo = 'bar' %}{{ 123foo }}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% assign 123 = 'bar' %}{{ 123 }}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-..# TEMPLATE
->{% for i in (1...5) %}{{ i }}{% endfor %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-..# TEMPLATE
->{{ 'hi there' | split$$$:' ' | first }}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{{ 'X' | downcase) }}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{{ 'hi there' | split:"t"" | reverse | first}}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{{ 'hi there' | split:"t"" | remove:"i" | first}}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-...# TEMPLATE
->{% if true && false %} YES {% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if false || true %} YES {% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.....................................# TEMPLATE
->{% for i in (1..10) %} {% assign foo = "bar" %} {% endfor %}{% if true %} {% assign foo = "bar" %} {% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% for i in (1..10) %} {% assign foo = 'bar' %} {% case foo %} {% when 'bar' %} {% when 'whatever' %} {% else %} {% endcase %} {% endfor %}{% if true %} {% assign foo = 'bar' %} {% case foo %} {% when 'bar' %} {% when 'whatever' %} {% else %} {% endcase %} {% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% for i in (1..10) %} {% assign foo = 'else' %} {% case foo %} {% when 'bar' %} {% when 'whatever' %} {% else %} {% endcase %} {% endfor %}{% if true %} {% assign foo = 'else' %} {% case foo %} {% when 'bar' %} {% when 'whatever' %} {% else %} {% endcase %} {% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% for i in (1..10) %} {% assign foo = 'else' %} {% case foo %} {% when 'bar' %} {% when 'whatever' %} {% else %} x {% endcase %} {% endfor %}{% if true %} {% assign foo = 'else' %} {% case foo %} {% when 'bar' %} {% when 'whatever' %} {% else %} x {% endcase %} {% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% for i in (1..10) %}{% assign foo = 0 %} {% increment foo %} {% decrement foo %}{% endfor %}{% if true %}{% assign foo = 0 %} {% increment foo %} {% decrement foo %}{% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% for i in (1..10) %}{% unless true %} {% endunless %}{% endfor %}{% if true %}{% unless true %} {% endunless %}{% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% if true %} {% elsif false %} {% else %} {% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% for i in (1..10) %} {% comment %} whatever {% endcomment %} {% endfor %}{% if true %} {% comment %} whatever {% endcomment %} {% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% for i in (1..10) %}{% include 'foobar' %}{% endfor %}{% if true %}{% include 'foobar' %}{% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% for i in (1..10) %}{% include ' foobar ' %}{% endfor %}{% if true %}{% include ' foobar ' %}{% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% for i in (1..10) %} {% include ' ' %} {% endfor %}{% if true %} {% include ' ' %} {% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% for i in (1..10) %} {% capture foo %} whatever {% endcapture %} {% endfor %}{% if true %} {% capture foo %} whatever {% endcapture %} {% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% for i in (1..10) %} {% endfor %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% for i in (1..10) %}{% cycle ' ', ' ' %}{% endfor %}{% if true %}{% cycle ' ', ' ' %}{% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% for i in (1..10) %} {% if false %} this never happens, but still, this block is not blank {% endif %}{% endfor %}{% if true %} {% if false %} this never happens, but still, this block is not blank {% endif %}{% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% for i in (1..10) %} {% raw %} {% endraw %}{% endfor %}{% if true %} {% raw %} {% endraw %}{% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% for i in (1..10) %}     x {% endfor %}{% if true %}     x {% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% for i in (1..10) %}{% for i in (1..10) %} {% endfor %}{% if true %} {% endif %}{% endfor %}{% if true %}{% for i in (1..10) %} {% endfor %}{% if true %} {% endif %}{% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% for i in (1..10) %}{% if true %} {% comment %} this is blank {% endcomment %} {% endif %}
-      {% if true %} but this is not {% endif %}{% endfor %}{% if true %}{% if true %} {% comment %} this is blank {% endcomment %} {% endif %}
-      {% if true %} but this is not {% endif %}{% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% for i in (1..10) %}{% foobar %}{% endfor %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% for i in (1..10) %} {% endfor %}{% if true %} {% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% for i in (1..10) %}	{% endfor %}{% if true %}	{% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% if var %} NO {% endif %}
-# ASSIGNS
->{"var":false}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if var %} NO {% endif %}
-# ASSIGNS
->{"var":null}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if foo.bar %} NO {% endif %}
-# ASSIGNS
->{"foo":{"bar":false}}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if foo.bar %} NO {% endif %}
-# ASSIGNS
->{"foo":{}}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if foo.bar %} NO {% endif %}
-# ASSIGNS
->{"foo":null}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if foo.bar %} NO {% endif %}
-# ASSIGNS
->{"foo":true}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if var %} YES {% endif %}
-# ASSIGNS
->{"var":"text"}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if var %} YES {% endif %}
-# ASSIGNS
->{"var":true}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if var %} YES {% endif %}
-# ASSIGNS
->{"var":1}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if var %} YES {% endif %}
-# ASSIGNS
->{"var":{}}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if var %} YES {% endif %}
-# ASSIGNS
->{"var":[]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if "foo" %} YES {% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if foo.bar %} YES {% endif %}
-# ASSIGNS
->{"foo":{"bar":true}}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if foo.bar %} YES {% endif %}
-# ASSIGNS
->{"foo":{"bar":"text"}}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if foo.bar %} YES {% endif %}
-# ASSIGNS
->{"foo":{"bar":1}}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if foo.bar %} YES {% endif %}
-# ASSIGNS
->{"foo":{"bar":{}}}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if foo.bar %} YES {% endif %}
-# ASSIGNS
->{"foo":{"bar":[]}}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if var %} NO {% else %} YES {% endif %}
-# ASSIGNS
->{"var":false}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if var %} NO {% else %} YES {% endif %}
-# ASSIGNS
->{"var":null}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if var %} YES {% else %} NO {% endif %}
-# ASSIGNS
->{"var":true}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if "foo" %} YES {% else %} NO {% endif %}
-# ASSIGNS
->{"var":"text"}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if foo.bar %} NO {% else %} YES {% endif %}
-# ASSIGNS
->{"foo":{"bar":false}}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if foo.bar %} YES {% else %} NO {% endif %}
-# ASSIGNS
->{"foo":{"bar":true}}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if foo.bar %} YES {% else %} NO {% endif %}
-# ASSIGNS
->{"foo":{"bar":"text"}}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if foo.bar %} NO {% else %} YES {% endif %}
-# ASSIGNS
->{"foo":{"notbar":true}}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if foo.bar %} NO {% else %} YES {% endif %}
-# ASSIGNS
->{"foo":{}}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if foo.bar %} NO {% else %} YES {% endif %}
-# ASSIGNS
->{"notfoo":{"bar":true}}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% if android.name == 'Roy' %}YES{% endif %}
-# ASSIGNS
->{"order":{"items_count":0},"android":{"name":"Roy"}}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if order.items_count == 0 %}YES{% endif %}
-# ASSIGNS
->{"order":{"items_count":0},"android":{"name":"Roy"}}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
-> {% if false %} this text should not go into the output {% endif %} 
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
-> {% if true %} this text should go into the output {% endif %} 
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if false %} you suck {% endif %} {% if true %} you rock {% endif %}?
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% if 'gnomeslab-and-or-liquid' contains 'gnomeslab-and-or-liquid' %}yes{% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% if a == true or b == true %} YES {% endif %}
-# ASSIGNS
->{"a":true,"b":true}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if a == true or b == false %} YES {% endif %}
-# ASSIGNS
->{"a":true,"b":true}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if a == false or b == false %} YES {% endif %}
-# ASSIGNS
->{"a":true,"b":true}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% if a or b and c %}true{% else %}false{% endif %}
-# ASSIGNS
->{"a":true,"b":true,"c":true}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if a or b and c %}true{% else %}false{% endif %}
-# ASSIGNS
->{"a":true,"b":true,"c":false}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if a or b and c %}true{% else %}false{% endif %}
-# ASSIGNS
->{"a":true,"b":false,"c":true}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if a or b and c %}true{% else %}false{% endif %}
-# ASSIGNS
->{"a":true,"b":false,"c":false}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if a or b and c %}true{% else %}false{% endif %}
-# ASSIGNS
->{"a":false,"b":true,"c":true}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if a or b and c %}true{% else %}false{% endif %}
-# ASSIGNS
->{"a":false,"b":true,"c":false}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if a or b and c %}true{% else %}false{% endif %}
-# ASSIGNS
->{"a":false,"b":false,"c":true}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if a or b and c %}true{% else %}false{% endif %}
-# ASSIGNS
->{"a":false,"b":false,"c":false}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% if foo.bar %} NO {% endif %}
-# ASSIGNS
->{"foo":{}}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% if false %}{% if false %} NO {% endif %}{% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if false %}{% if true %} NO {% endif %}{% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if true %}{% if false %} NO {% endif %}{% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if true %}{% if true %} YES {% endif %}{% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if true %}{% if true %} YES {% else %} NO {% endif %}{% else %} NO {% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if true %}{% if false %} NO {% else %} YES {% endif %}{% else %} NO {% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if false %}{% if true %} NO {% else %} NONO {% endif %}{% else %} YES {% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% if var %} YES {% endif %}
-# ASSIGNS
->{"var":true}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% if 'bob' contains 'o' %}yes{% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if 'bob' contains 'f' %}yes{% else %}no{% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% if 1 or throw or or 1 %}yes{% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% if a == 'and' and b == 'or' and c == 'foo and bar' and d == 'bar or baz' and e == 'foo' and foo and bar %} YES {% endif %}
-# ASSIGNS
->{"a":"and","b":"or","c":"foo and bar","d":"bar or baz","e":"foo","foo":true,"bar":true}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% if null < 10 %} NO {% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if null <= 10 %} NO {% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if null >= 10 %} NO {% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if null > 10 %} NO {% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if 10 < null %} NO {% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if 10 <= null %} NO {% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if 10 >= null %} NO {% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if 10 > null %} NO {% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% if %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% if a or b %} YES {% endif %}
-# ASSIGNS
->{"a":true,"b":true}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if a or b %} YES {% endif %}
-# ASSIGNS
->{"a":true,"b":false}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if a or b %} YES {% endif %}
-# ASSIGNS
->{"a":false,"b":true}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if a or b %} YES {% endif %}
-# ASSIGNS
->{"a":false,"b":false}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if a or b or c %} YES {% endif %}
-# ASSIGNS
->{"a":false,"b":false,"c":true}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if a or b or c %} YES {% endif %}
-# ASSIGNS
->{"a":false,"b":false,"c":false}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% assign v = false %}{% if v %} YES {% else %} NO {% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% assign v = nil %}{% if v == nil %} YES {% else %} NO {% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% if true and true %} YES {% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if false and true %} YES {% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if false and true %} YES {% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% if 0 == 0 %}0{% elsif 1 == 1%}1{% else %}2{% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if 0 != 0 %}0{% elsif 1 == 1%}1{% else %}2{% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if 0 != 0 %}0{% elsif 1 != 1%}1{% else %}2{% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% if false %}if{% elsif true %}elsif{% endif %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% if jerry == 1 %}
-# ASSIGNS
->{}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
+.........# TEMPLATE
 >{% if false %} NO {% else %} YES {% endif %}
 # ASSIGNS
 >{}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+> YES 
 # END
 # TEMPLATE
 >{% if true %} YES {% else %} NO {% endif %}
 # ASSIGNS
 >{}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+> YES 
 # END
 # TEMPLATE
 >{% if "foo" %} YES {% else %} NO {% endif %}
 # ASSIGNS
 >{}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+> YES 
 # END
-.....................# TEMPLATE
->{% break %}
+.# TEMPLATE
+>{% if a == true or b == true %} YES {% endif %}
 # ASSIGNS
->{"i":1}
+>{"a":true,"b":true}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+> YES 
 # END
-.........# TEMPLATE
->{% raw %}{{ test }}{% endraw %}
+# TEMPLATE
+>{% if a == true or b == false %} YES {% endif %}
+# ASSIGNS
+>{"a":true,"b":true}
+#EXPECTED
+> YES 
+# END
+# TEMPLATE
+>{% if a == false or b == false %} YES {% endif %}
+# ASSIGNS
+>{"a":true,"b":true}
+#EXPECTED
+>
+# END
+.# TEMPLATE
+> {% if false %} this text should not go into the output {% endif %} 
 # ASSIGNS
 >{}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>  
 # END
-..# TEMPLATE
+# TEMPLATE
+> {% if true %} this text should go into the output {% endif %} 
+# ASSIGNS
+>{}
+#EXPECTED
+>  this text should go into the output  
+# END
+# TEMPLATE
+>{% if false %} you suck {% endif %} {% if true %} you rock {% endif %}?
+# ASSIGNS
+>{}
+#EXPECTED
+>  you rock ?
+# END
+.# TEMPLATE
+>{% if var %} NO {% endif %}
+# ASSIGNS
+>{"var":false}
+#EXPECTED
+>
+# END
+# TEMPLATE
+>{% if var %} NO {% endif %}
+# ASSIGNS
+>{"var":null}
+#EXPECTED
+>
+# END
+# TEMPLATE
+>{% if foo.bar %} NO {% endif %}
+# ASSIGNS
+>{"foo":{"bar":false}}
+#EXPECTED
+>
+# END
+# TEMPLATE
+>{% if foo.bar %} NO {% endif %}
+# ASSIGNS
+>{"foo":{}}
+#EXPECTED
+>
+# END
+# TEMPLATE
+>{% if foo.bar %} NO {% endif %}
+# ASSIGNS
+>{"foo":null}
+#EXPECTED
+>
+# END
+# TEMPLATE
+>{% if foo.bar %} NO {% endif %}
+# ASSIGNS
+>{"foo":true}
+#EXPECTED
+>
+# END
+# TEMPLATE
+>{% if var %} YES {% endif %}
+# ASSIGNS
+>{"var":"text"}
+#EXPECTED
+> YES 
+# END
+# TEMPLATE
+>{% if var %} YES {% endif %}
+# ASSIGNS
+>{"var":true}
+#EXPECTED
+> YES 
+# END
+# TEMPLATE
+>{% if var %} YES {% endif %}
+# ASSIGNS
+>{"var":1}
+#EXPECTED
+> YES 
+# END
+# TEMPLATE
+>{% if var %} YES {% endif %}
+# ASSIGNS
+>{"var":{}}
+#EXPECTED
+> YES 
+# END
+# TEMPLATE
+>{% if var %} YES {% endif %}
+# ASSIGNS
+>{"var":[]}
+#EXPECTED
+> YES 
+# END
+# TEMPLATE
+>{% if "foo" %} YES {% endif %}
+# ASSIGNS
+>{}
+#EXPECTED
+> YES 
+# END
+# TEMPLATE
+>{% if foo.bar %} YES {% endif %}
+# ASSIGNS
+>{"foo":{"bar":true}}
+#EXPECTED
+> YES 
+# END
+# TEMPLATE
+>{% if foo.bar %} YES {% endif %}
+# ASSIGNS
+>{"foo":{"bar":"text"}}
+#EXPECTED
+> YES 
+# END
+# TEMPLATE
+>{% if foo.bar %} YES {% endif %}
+# ASSIGNS
+>{"foo":{"bar":1}}
+#EXPECTED
+> YES 
+# END
+# TEMPLATE
+>{% if foo.bar %} YES {% endif %}
+# ASSIGNS
+>{"foo":{"bar":{}}}
+#EXPECTED
+> YES 
+# END
+# TEMPLATE
+>{% if foo.bar %} YES {% endif %}
+# ASSIGNS
+>{"foo":{"bar":[]}}
+#EXPECTED
+> YES 
+# END
+# TEMPLATE
+>{% if var %} NO {% else %} YES {% endif %}
+# ASSIGNS
+>{"var":false}
+#EXPECTED
+> YES 
+# END
+# TEMPLATE
+>{% if var %} NO {% else %} YES {% endif %}
+# ASSIGNS
+>{"var":null}
+#EXPECTED
+> YES 
+# END
+# TEMPLATE
+>{% if var %} YES {% else %} NO {% endif %}
+# ASSIGNS
+>{"var":true}
+#EXPECTED
+> YES 
+# END
+# TEMPLATE
+>{% if "foo" %} YES {% else %} NO {% endif %}
+# ASSIGNS
+>{"var":"text"}
+#EXPECTED
+> YES 
+# END
+# TEMPLATE
+>{% if foo.bar %} NO {% else %} YES {% endif %}
+# ASSIGNS
+>{"foo":{"bar":false}}
+#EXPECTED
+> YES 
+# END
+# TEMPLATE
+>{% if foo.bar %} YES {% else %} NO {% endif %}
+# ASSIGNS
+>{"foo":{"bar":true}}
+#EXPECTED
+> YES 
+# END
+# TEMPLATE
+>{% if foo.bar %} YES {% else %} NO {% endif %}
+# ASSIGNS
+>{"foo":{"bar":"text"}}
+#EXPECTED
+> YES 
+# END
+# TEMPLATE
+>{% if foo.bar %} NO {% else %} YES {% endif %}
+# ASSIGNS
+>{"foo":{"notbar":true}}
+#EXPECTED
+> YES 
+# END
+# TEMPLATE
+>{% if foo.bar %} NO {% else %} YES {% endif %}
+# ASSIGNS
+>{"foo":{}}
+#EXPECTED
+> YES 
+# END
+# TEMPLATE
+>{% if foo.bar %} NO {% else %} YES {% endif %}
+# ASSIGNS
+>{"notfoo":{"bar":true}}
+#EXPECTED
+> YES 
+# END
+.# TEMPLATE
+>{% if 0 == 0 %}0{% elsif 1 == 1%}1{% else %}2{% endif %}
+# ASSIGNS
+>{}
+#EXPECTED
+>0
+# END
+# TEMPLATE
+>{% if 0 != 0 %}0{% elsif 1 == 1%}1{% else %}2{% endif %}
+# ASSIGNS
+>{}
+#EXPECTED
+>1
+# END
+# TEMPLATE
+>{% if 0 != 0 %}0{% elsif 1 != 1%}1{% else %}2{% endif %}
+# ASSIGNS
+>{}
+#EXPECTED
+>2
+# END
+# TEMPLATE
+>{% if false %}if{% elsif true %}elsif{% endif %}
+# ASSIGNS
+>{}
+#EXPECTED
+>elsif
+# END
+.# TEMPLATE
+>{% if a == 'and' and b == 'or' and c == 'foo and bar' and d == 'bar or baz' and e == 'foo' and foo and bar %} YES {% endif %}
+# ASSIGNS
+>{"a":"and","b":"or","c":"foo and bar","d":"bar or baz","e":"foo","foo":true,"bar":true}
+#EXPECTED
+> YES 
+# END
+.# TEMPLATE
+>{% if var %} YES {% endif %}
+# ASSIGNS
+>{"var":true}
+#EXPECTED
+> YES 
+# END
+.# TEMPLATE
+>{% if true and true %} YES {% endif %}
+# ASSIGNS
+>{}
+#EXPECTED
+> YES 
+# END
+# TEMPLATE
+>{% if false and true %} YES {% endif %}
+# ASSIGNS
+>{}
+#EXPECTED
+>
+# END
+# TEMPLATE
+>{% if false and true %} YES {% endif %}
+# ASSIGNS
+>{}
+#EXPECTED
+>
+# END
+.# TEMPLATE
+>{% assign v = false %}{% if v %} YES {% else %} NO {% endif %}
+# ASSIGNS
+>{}
+#EXPECTED
+> NO 
+# END
+# TEMPLATE
+>{% assign v = nil %}{% if v == nil %} YES {% else %} NO {% endif %}
+# ASSIGNS
+>{}
+#EXPECTED
+> YES 
+# END
+.# TEMPLATE
+>{% if 1 or throw or or 1 %}yes{% endif %}
+# ASSIGNS
+>{}
+#EXPECTED
+.# TEMPLATE
+>{% if %}
+# ASSIGNS
+>{}
+#EXPECTED
+.# TEMPLATE
+>{% if jerry == 1 %}
+# ASSIGNS
+>{}
+#EXPECTED
+.# TEMPLATE
+>{% if foo.bar %} NO {% endif %}
+# ASSIGNS
+>{"foo":{}}
+#EXPECTED
+>
+# END
+.# TEMPLATE
+>{% if 'bob' contains 'o' %}yes{% endif %}
+# ASSIGNS
+>{}
+#EXPECTED
+>yes
+# END
+# TEMPLATE
+>{% if 'bob' contains 'f' %}yes{% else %}no{% endif %}
+# ASSIGNS
+>{}
+#EXPECTED
+>no
+# END
+.# TEMPLATE
+>{% if a or b and c %}true{% else %}false{% endif %}
+# ASSIGNS
+>{"a":true,"b":true,"c":true}
+#EXPECTED
+>true
+# END
+# TEMPLATE
+>{% if a or b and c %}true{% else %}false{% endif %}
+# ASSIGNS
+>{"a":true,"b":true,"c":false}
+#EXPECTED
+>true
+# END
+# TEMPLATE
+>{% if a or b and c %}true{% else %}false{% endif %}
+# ASSIGNS
+>{"a":true,"b":false,"c":true}
+#EXPECTED
+>true
+# END
+# TEMPLATE
+>{% if a or b and c %}true{% else %}false{% endif %}
+# ASSIGNS
+>{"a":true,"b":false,"c":false}
+#EXPECTED
+>true
+# END
+# TEMPLATE
+>{% if a or b and c %}true{% else %}false{% endif %}
+# ASSIGNS
+>{"a":false,"b":true,"c":true}
+#EXPECTED
+>true
+# END
+# TEMPLATE
+>{% if a or b and c %}true{% else %}false{% endif %}
+# ASSIGNS
+>{"a":false,"b":true,"c":false}
+#EXPECTED
+>false
+# END
+# TEMPLATE
+>{% if a or b and c %}true{% else %}false{% endif %}
+# ASSIGNS
+>{"a":false,"b":false,"c":true}
+#EXPECTED
+>false
+# END
+# TEMPLATE
+>{% if a or b and c %}true{% else %}false{% endif %}
+# ASSIGNS
+>{"a":false,"b":false,"c":false}
+#EXPECTED
+>false
+# END
+.# TEMPLATE
+>{% if a or b %} YES {% endif %}
+# ASSIGNS
+>{"a":true,"b":true}
+#EXPECTED
+> YES 
+# END
+# TEMPLATE
+>{% if a or b %} YES {% endif %}
+# ASSIGNS
+>{"a":true,"b":false}
+#EXPECTED
+> YES 
+# END
+# TEMPLATE
+>{% if a or b %} YES {% endif %}
+# ASSIGNS
+>{"a":false,"b":true}
+#EXPECTED
+> YES 
+# END
+# TEMPLATE
+>{% if a or b %} YES {% endif %}
+# ASSIGNS
+>{"a":false,"b":false}
+#EXPECTED
+>
+# END
+# TEMPLATE
+>{% if a or b or c %} YES {% endif %}
+# ASSIGNS
+>{"a":false,"b":false,"c":true}
+#EXPECTED
+> YES 
+# END
+# TEMPLATE
+>{% if a or b or c %} YES {% endif %}
+# ASSIGNS
+>{"a":false,"b":false,"c":false}
+#EXPECTED
+>
+# END
+.# TEMPLATE
+>{% if 'gnomeslab-and-or-liquid' contains 'gnomeslab-and-or-liquid' %}yes{% endif %}
+# ASSIGNS
+>{}
+#EXPECTED
+>yes
+# END
+.# TEMPLATE
+>{% if android.name == 'Roy' %}YES{% endif %}
+# ASSIGNS
+>{"order":{"items_count":0},"android":{"name":"Roy"}}
+#EXPECTED
+>YES
+# END
+# TEMPLATE
+>{% if order.items_count == 0 %}YES{% endif %}
+# ASSIGNS
+>{"order":{"items_count":0},"android":{"name":"Roy"}}
+#EXPECTED
+>YES
+# END
+.# TEMPLATE
+>{% if null < 10 %} NO {% endif %}
+# ASSIGNS
+>{}
+#EXPECTED
+>
+# END
+# TEMPLATE
+>{% if null <= 10 %} NO {% endif %}
+# ASSIGNS
+>{}
+#EXPECTED
+>
+# END
+# TEMPLATE
+>{% if null >= 10 %} NO {% endif %}
+# ASSIGNS
+>{}
+#EXPECTED
+>
+# END
+# TEMPLATE
+>{% if null > 10 %} NO {% endif %}
+# ASSIGNS
+>{}
+#EXPECTED
+>
+# END
+# TEMPLATE
+>{% if 10 < null %} NO {% endif %}
+# ASSIGNS
+>{}
+#EXPECTED
+>
+# END
+# TEMPLATE
+>{% if 10 <= null %} NO {% endif %}
+# ASSIGNS
+>{}
+#EXPECTED
+>
+# END
+# TEMPLATE
+>{% if 10 >= null %} NO {% endif %}
+# ASSIGNS
+>{}
+#EXPECTED
+>
+# END
+# TEMPLATE
+>{% if 10 > null %} NO {% endif %}
+# ASSIGNS
+>{}
+#EXPECTED
+>
+# END
+.# TEMPLATE
+>{% if false %}{% if false %} NO {% endif %}{% endif %}
+# ASSIGNS
+>{}
+#EXPECTED
+>
+# END
+# TEMPLATE
+>{% if false %}{% if true %} NO {% endif %}{% endif %}
+# ASSIGNS
+>{}
+#EXPECTED
+>
+# END
+# TEMPLATE
+>{% if true %}{% if false %} NO {% endif %}{% endif %}
+# ASSIGNS
+>{}
+#EXPECTED
+>
+# END
+# TEMPLATE
+>{% if true %}{% if true %} YES {% endif %}{% endif %}
+# ASSIGNS
+>{}
+#EXPECTED
+> YES 
+# END
+# TEMPLATE
+>{% if true %}{% if true %} YES {% else %} NO {% endif %}{% else %} NO {% endif %}
+# ASSIGNS
+>{}
+#EXPECTED
+> YES 
+# END
+# TEMPLATE
+>{% if true %}{% if false %} NO {% else %} YES {% endif %}{% else %} NO {% endif %}
+# ASSIGNS
+>{}
+#EXPECTED
+> YES 
+# END
+# TEMPLATE
+>{% if false %}{% if true %} NO {% else %} NONO {% endif %}{% else %} YES {% endif %}
+# ASSIGNS
+>{}
+#EXPECTED
+> YES 
+# END
+.# TEMPLATE
 >{% raw %} Foobar {% invalid {% endraw %}
 # ASSIGNS
 >{}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+> Foobar {% invalid 
 # END
 # TEMPLATE
 >{% raw %} Foobar invalid %} {% endraw %}
 # ASSIGNS
 >{}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+> Foobar invalid %} 
 # END
 # TEMPLATE
 >{% raw %} Foobar {{ invalid {% endraw %}
 # ASSIGNS
 >{}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+> Foobar {{ invalid 
 # END
 # TEMPLATE
 >{% raw %} Foobar invalid }} {% endraw %}
 # ASSIGNS
 >{}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+> Foobar invalid }} 
 # END
 # TEMPLATE
 >{% raw %} Foobar {% invalid {% {% endraw {% endraw %}
 # ASSIGNS
 >{}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+> Foobar {% invalid {% {% endraw 
 # END
 # TEMPLATE
 >{% raw %} Foobar {% {% {% {% endraw %}
 # ASSIGNS
 >{}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+> Foobar {% {% {% 
 # END
 # TEMPLATE
 >{% raw %} test {% raw %} {% {% endraw %}endraw %}
 # ASSIGNS
 >{}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+> test {% raw %} {% endraw %}
 # END
 # TEMPLATE
 >{% raw %} Foobar {{ invalid {% endraw %}{{ 1 }}
 # ASSIGNS
 >{}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+> Foobar {{ invalid 1
 # END
 .# TEMPLATE
 >{% raw %}{% comment %} test {% endcomment %}{% endraw %}
 # ASSIGNS
 >{}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
+>{% comment %} test {% endcomment %}
 # END
-......................................................# TEMPLATE
->{{ foo }}
+..# TEMPLATE
+>{% raw %}{{ test }}{% endraw %}
 # ASSIGNS
->{"foo":"#<ThingWithToLiquid:0x00000002b77710>"}
+>{}
 #EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-..........................# TEMPLATE
->{% tablerow n in numbers cols:2%}{{tablerowloop.col}}{% endtablerow %}
-# ASSIGNS
->{"numbers":[1,2,3,4,5,6]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% tablerow char in characters cols:3 %}I WILL NOT BE OUTPUT{% endtablerow %}
-# ASSIGNS
->{"characters":""}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% tablerow n in numbers cols:3%} {{n}} {% endtablerow %}
-# ASSIGNS
->{"numbers":"TableRowTest::ArrayDrop"}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% tablerow n in numbers cols:3 offset:1 limit:6%} {{n}} {% endtablerow %}
-# ASSIGNS
->{"numbers":[0,1,2,3,4,5,6,7]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% tablerow n in collections.frontpage cols:3%} {{n}} {% endtablerow %}
-# ASSIGNS
->{"collections":{"frontpage":[1,2,3,4,5,6]}}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% tablerow n in collections['frontpage'] cols:3%} {{n}} {% endtablerow %}
-# ASSIGNS
->{"collections":{"frontpage":[1,2,3,4,5,6]}}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% tablerow n in numbers cols:3%} {{n}} {% endtablerow %}
-# ASSIGNS
->{"numbers":[1,2,3,4,5,6]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-# TEMPLATE
->{% tablerow n in numbers cols:3%} {{n}} {% endtablerow %}
-# ASSIGNS
->{"numbers":[]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
-# END
-.# TEMPLATE
->{% tablerow n in numbers cols:5%} {{n}} {% endtablerow %}
-# ASSIGNS
->{"numbers":[1,2,3,4,5,6]}
-#EXPECTED
->{Template.parse(template).render!(assigns)}
+>{{ test }}
 # END

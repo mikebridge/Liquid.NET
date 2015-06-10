@@ -24,8 +24,8 @@ namespace Liquid.NET.Tests.Ruby
     public class {{ classname }} {
 
         [Test]{% for test in tests %}
-        [TestCase(@"{{test.input}}", @"{{test.expected}}")]{% endfor %}
-        public void It_Should_Match_Ruby_Output(String input, String expected) {
+        [TestCase(@"{{test.input}}", @"{{test.assigns}}", @"{{test.expected}}")]{% endfor %}
+        public void It_Should_Match_Ruby_Output(String input, String assigns, String expected) {
 
             // Arrange
             ITemplateContext ctx = new TemplateContext().WithAllFilters();
@@ -39,8 +39,8 @@ namespace Liquid.NET.Tests.Ruby
         }
 
         {% if exceptions != empty %}[Test]{% for test in exceptions %}
-        [TestCase(@"{{test.input}}", @"{{test.expected | remove: 'EXCEPTION: '}}")]{% endfor %}
-        public void It_Should_Generate_An_Exception(String input, String expectedMessage) {
+        [TestCase(@"{{test.input}}", @"{{test.assigns}}", @"{{test.expected | remove: 'EXCEPTION: '}}")]{% endfor %}
+        public void It_Should_Generate_An_Exception(String input, String assigns, String expectedMessage) {
 
             // Arrange
             ITemplateContext ctx = new TemplateContext().WithAllFilters();

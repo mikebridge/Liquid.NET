@@ -15,7 +15,7 @@ def eval_tmpl(tmpl, vars = {})
 end
 
 def read_tests_into_array(file)
-  File.open(file, 'r').read.split(/^#.*\n/).collect{ |x| x.strip }
+  File.open(file, 'r').read.split(/^[F.]*#.*\n/).drop(1).collect{ |x| x.strip }
 end
 
 def write_test_file(output_filename, vars, test_template)

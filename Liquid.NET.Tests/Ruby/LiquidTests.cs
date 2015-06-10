@@ -511,7 +511,7 @@ endfor
             // Arrange
             ITemplateContext ctx = new TemplateContext().WithAllFilters();
             var template = LiquidTemplate.Create(input);
-        
+
             // Act
             String result = template.Render(ctx);
         

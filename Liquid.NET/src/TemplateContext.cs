@@ -195,7 +195,7 @@ namespace Liquid.NET
         ITemplateContext WithShopifyFilters();
         ITemplateContext WithAllFilters();
         ITemplateContext WithFilter<T>(String name) where T : IFilterExpression;
-        ITemplateContext Define(string array, IExpressionConstant createArrayValues);
+        ITemplateContext Define(String name, IExpressionConstant constant);
         ITemplateContext WithCustomTagRenderer<T>(string echoargs) where T: ICustomTagRenderer;
         ITemplateContext WithCustomTagBlockRenderer<T>(string echoargs)  where T: ICustomBlockTagRenderer;
     }

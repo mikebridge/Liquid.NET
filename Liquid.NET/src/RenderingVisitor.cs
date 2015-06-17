@@ -149,7 +149,7 @@ namespace Liquid.NET
         public void Visit(IncrementTag incrementTag)
         {
             int currentIndex;
-            var key = "incr_" + incrementTag.VarName;
+            var key = incrementTag.VarName;
 
             while (true)
             {
@@ -173,7 +173,7 @@ namespace Liquid.NET
         public void Visit(DecrementTag decrementTag)
         {
             int currentIndex;
-            var key = "decr_" + decrementTag.VarName;
+            var key = decrementTag.VarName;
 
             while (true)
             {

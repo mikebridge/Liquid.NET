@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Liquid.NET.Constants;
 using NUnit.Framework;
 
@@ -112,7 +109,7 @@ namespace Liquid.NET.Tests.Tags
         /// https://github.com/Shopify/liquid/wiki/Liquid-for-Designers
         /// </summary>
         [Test]
-        public void It_Should_Test_An_Array_Against_Empty()
+        public void It_Should_Test_An_Array_Against_NotEmpty()
         {
             // Arrange
             var ctx = CreateContextWithDictionary();
@@ -127,7 +124,24 @@ namespace Liquid.NET.Tests.Tags
             Assert.That(result, Is.EqualTo(""));
 
         }
-        
+
+        [Test]
+        public void It_Should_Test_An_Array_Against_Empty()
+        {
+            // Arrange
+            var ctx = new TemplateContext();
+            ctx.Define("payments", new ArrayValue(new List<IExpressionConstant>()));
+
+            const String str = "{% if payments == empty %}This is empty{% endif %}";
+
+            // Act
+            var result = RenderingHelper.RenderTemplate(str, ctx);
+
+            // Assert
+            Assert.That(result, Is.EqualTo("This is empty"));
+
+        }
+
         private static TemplateContext CreateContextWithDictionary()
         {
             var ctx = new TemplateContext();

@@ -510,15 +510,20 @@ endfor
 
             // Arrange
             ITemplateContext ctx = new TemplateContext().WithAllFilters();
-            var template = LiquidTemplate.Create(input);
+            
+            foreach (var tuple in DictionaryFactory.CreateFromJson(assigns))
+            {
+                ctx.Define(tuple.Item1, tuple.Item2);
+            }
 
+            
+            var template = LiquidTemplate.Create(input);
+            
             // Act
             String result = template.Render(ctx);
         
             // Assert
-            Assert.That(result, Is.EqualTo(expected));
+            Assert.That(result.Trim(), Is.EqualTo(expected));
         }
-
-        
     }
 }

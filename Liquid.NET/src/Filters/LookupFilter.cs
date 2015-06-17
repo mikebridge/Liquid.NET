@@ -71,7 +71,11 @@ namespace Liquid.NET.Filters
         public override IExpressionConstant ApplyTo(DictionaryValue dictionaryValue)
         {
             var result = dictionaryValue.ValueAt(_propertyName.Value.ToString());
-
+            String propertyNameString = ValueCaster.RenderAsString(_propertyName);
+            if (propertyNameString.ToLower().Equals("size"))
+            {
+                return new NumericValue(dictionaryValue.DictValue.Keys.Count());
+            }
             return result;
         }
 

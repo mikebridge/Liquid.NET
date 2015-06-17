@@ -95,22 +95,22 @@ namespace Liquid.NET.Tests.Filters
             Assert.That(result, Is.EqualTo(expected));          
         }
 
-//        [Test]
-//        [TestCase("size", "4")]
-//        public void It_Should_Dereference_Properties_Of_Dictionary(String property, String expected)
-//        {
-//            // Arrange
-//            TemplateContext ctx = new TemplateContext();
-//            var dictValue = DataFixtures.CreateDictionary(1, "Property 1", "prop2");
-//            ctx.Define("mydict", dictValue);
-//            String tmpl = "{{ mydict." + property + " }}";
-//
-//            // Act
-//            var result = RenderingHelper.RenderTemplate(tmpl, ctx);
-//
-//            // Assert
-//            Assert.That(result, Is.EqualTo(expected));
-//        }
+        [Test]
+        [TestCase("size", "4")]
+        public void It_Should_Dereference_Properties_Of_Dictionary(String property, String expected)
+        {
+            // Arrange
+            TemplateContext ctx = new TemplateContext();
+            var dictValue = DataFixtures.CreateDictionary(1, "Property 1", "prop2");
+            ctx.Define("mydict", dictValue);
+            String tmpl = "{{ mydict." + property + " }}";
+
+            // Act
+            var result = RenderingHelper.RenderTemplate(tmpl, ctx);
+
+            // Assert
+            Assert.That(result, Is.EqualTo(expected));
+        }
 
         public ArrayValue CreateArrayOfDicts()
         {

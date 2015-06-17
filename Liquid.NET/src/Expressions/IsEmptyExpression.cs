@@ -22,8 +22,6 @@ namespace Liquid.NET.Expressions
                 throw new Exception("Expected one variable to compare with \"empty\""); // this will be obsolete when the lexer/parser is split
             }
             return new BooleanValue(EmptyChecker.IsEmpty(list[0]));
-
-            //throw new NotImplementedException();
         }
     }
 }

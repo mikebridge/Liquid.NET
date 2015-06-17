@@ -119,9 +119,15 @@ namespace Liquid.NET
         public override void EnterAssign_tag(LiquidParser.Assign_tagContext context)
         {
             base.EnterAssign_tag(context);
+            var label = context.LABEL();
+            if (label == null)
+            {
+                // ignore the assignment
+                return;
+            }
             var assignTag = new AssignTag
             {
-                VarName = context.LABEL().GetText()
+                VarName = label.GetText()
             };
             //assignTag.
 

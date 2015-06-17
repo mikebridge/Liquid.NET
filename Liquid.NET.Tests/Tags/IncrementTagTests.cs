@@ -55,5 +55,35 @@ namespace Liquid.NET.Tests.Tags
 
         }
 
+        [Test]
+        public void It_Should_Increment_And_Decrement_The_Same_Variable()
+        {
+            // Arrange
+            TemplateContext ctx = new TemplateContext();
+            var template = LiquidTemplate.Create("{% increment varname %}{% decrement varname %}");
+
+            // Act
+            String result = template.Render(ctx);
+
+            // Assert
+            Assert.That(result, Is.EqualTo("0-1"));
+
+        }
+
+        [Test]
+        public void It_Should_Increment_An_Assigned_Variable_Variable()
+        {
+            // Arrange
+            TemplateContext ctx = new TemplateContext();
+            var template = LiquidTemplate.Create("{% assign varname = 3 %}{% increment varname %}{% decrement varname %}");
+
+            // Act
+            String result = template.Render(ctx);
+
+            // Assert
+            Assert.That(result, Is.EqualTo("43"));
+
+        }
+
     }
 }

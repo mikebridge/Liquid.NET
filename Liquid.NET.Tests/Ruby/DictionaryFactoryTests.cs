@@ -18,22 +18,38 @@ namespace Liquid.NET.Tests.Ruby
             String json = "[1,2,3]";
  
             // Act
-            var result = ConstantFactory.CreateFromJson(json);
+            var result = DictionaryFactory.Transform(json);
 
             // Assert
             Console.WriteLine(result);
             Assert.That(result, Is.TypeOf<ArrayValue>());
-            var expected = new ArrayValue(new List<IExpressionConstant>
-            {
-                new NumericValue(1), 
-                new NumericValue(2),
-                new NumericValue(3)
-            });
-            Assert.That(((ArrayValue) result).ArrValue, Is.EquivalentTo(expected));
-            Assert.Fail("Not Implemented Yet");
+            
+            Assert.That(((ArrayValue) result).Select(x => x.Value), Is.EquivalentTo(new List<int> {1,2,3}));            
 
 
         }
+
+        [Test]
+        public void It_Should_Convert_A_Dictionary_Containing_An_Array()
+        {
+            // Arrange
+            String json = "{\"array\": [1,2,3]}";
+
+            // Act
+            IList<Tuple<String, IExpressionConstant>> result = DictionaryFactory.CreateFromJson(json);
+
+            // Assert
+            Console.WriteLine(result);
+            
+
+            Assert.That(result[0].Item1, Is.EqualTo("array"));
+            Assert.That(result[0].Item2, Is.TypeOf<ArrayValue>());
+            var array = (ArrayValue)result[0].Item2;
+            Assert.That(array.Select(x => x.Value), Is.EquivalentTo(new List<int> {1,2,3}));
+
+
+        }
+
     }
 }
 

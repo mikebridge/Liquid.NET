@@ -167,7 +167,8 @@ object:				STRING									# StringObject
 					;
  
 objectvariableindex : ARRAYSTART arrayindex ARRAYEND
-					| PERIOD objectproperty 
+					//| PERIOD (objectproperty | ISEMPTY) 
+					| PERIOD objectproperty
 					;
 
 					// TODO: change LABEL... to variable

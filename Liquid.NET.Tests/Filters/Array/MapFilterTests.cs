@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
 using Liquid.NET.Constants;
 using Liquid.NET.Filters.Array;
 using NUnit.Framework;
@@ -23,7 +19,7 @@ namespace Liquid.NET.Tests.Filters.Array
             var mapFilter = new MapFilter(new StringValue(field));
 
             // Act
-            var result = mapFilter.Apply(array);
+            var result = (ArrayValue) mapFilter.Apply(array);
 
             // Assert
             var expected = array.ArrValue.Cast<DictionaryValue>().Select(x => x.DictValue[field].Value.ToString());
@@ -41,7 +37,7 @@ namespace Liquid.NET.Tests.Filters.Array
             var mapFilter = new MapFilter(new StringValue(field));
 
             // Act
-            var result = mapFilter.Apply(array).ToList();
+            var result = ( (ArrayValue) mapFilter.Apply(array)).ToList();
 
             // Assert
             var expected = array.ArrValue.Cast<DictionaryValue>().Select(
@@ -57,9 +53,6 @@ namespace Liquid.NET.Tests.Filters.Array
 
         }
 
-
-
-
         [Test]
         public void It_Should_Return_An_Error_When_Trying_To_Map_A_Non_Dictionary()
         {
@@ -71,12 +64,27 @@ namespace Liquid.NET.Tests.Filters.Array
                 new StringValue("Test")
             };
             // Act
-            var result = mapFilter.Apply(new ArrayValue(objlist));
+            var result = (ArrayValue) mapFilter.Apply(new ArrayValue(objlist));
 
             // Assert
             Assert.That(result.ArrValue.Count, Is.EqualTo(objlist.Count()));
             Assert.That(result.ArrValue[0].Value.ToString(), Is.EqualTo(UndefinedMessage("field1")));
             Assert.That(result.ArrValue[1].Value.ToString(), Is.EqualTo(UndefinedMessage("field1")));
+        }
+
+        [Test]
+        public void It_Should_Do_The_Same_As_Lookup_When_Dictionary()
+        {
+            // Arrange
+            var dict = DataFixtures.CreateDictionary(1, "Value 1 A", "Value 1 B");
+            var field = "field1";
+            var mapFilter = new MapFilter(new StringValue(field));
+
+            // Act
+            var result = (StringValue) mapFilter.Apply(dict);
+
+            // Assert
+            Assert.That(result, Is.EquivalentTo("Value 1 A"));
         }
 
         private static string UndefinedMessage(string field)

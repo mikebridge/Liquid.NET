@@ -32,5 +32,31 @@ namespace Liquid.NET.Tests.Expressions
 
                 
         }
+
+        [Test]
+        [TestCase("\"\"", true)]
+        [TestCase("\"x\"", false)]
+        [TestCase("x", false)]  // nil != empty
+        [TestCase("0", false)]
+        [TestCase("-1", false)]
+        [TestCase("\"  \"", false)]
+        public void It_Should_Test_That_Empty_WIth_Question_Mark_Is_Alias(String val, bool expected)
+        {
+            // Arrange
+            var expectedStr = expected ? "EMPTY" : "NOT EMPTY";
+
+            // Act
+            var tmpl = @"Result : {% if " + val + ".empty? %}EMPTY{% else %}NOT EMPTY{% endif %}";
+            Console.WriteLine(tmpl);
+            var result = RenderingHelper.RenderTemplate(tmpl);
+            Console.WriteLine("Value is " + result);
+            // Assert
+            Assert.That(result, Is.EqualTo("Result : " + expectedStr));
+
+
+        }
+
     }
+
+
 }

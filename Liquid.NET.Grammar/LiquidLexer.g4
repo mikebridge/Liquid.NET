@@ -38,6 +38,7 @@ fragment EXP :			[Ee] [+\-]? INT ; // \- since - means "range" inside [...]
 
 BOOLEAN :				'true' | 'false' ;
 
+ISEMPTY:				'empty?'; 
 EMPTY :					'empty';
 NULL :					'null'|'nil'; // Liquid uses both?
 BLANK :					'blank';
@@ -65,6 +66,7 @@ ARRAYEND :				']' ;
 GENERATORSTART : 		'(';
 GENERATOREND :			')';
 GENERATORRANGE :		'..';
+
 
 // SEE: http://stackoverflow.com/questions/18782388/antlr4-lexer-error-reporting-length-of-offending-characters#answer-18797779
 ERRORCHAR :				. ;

@@ -172,11 +172,20 @@ namespace Liquid.NET
 
         public void Visit(DecrementTag decrementTag)
         {
+            String result = "";
             int currentIndex;
             var key = decrementTag.VarName;
+            var theval = _symbolTableStack.Reference(decrementTag.VarName);
+            var numref = theval as NumericValue;
+            if (numref != null)
+            {
+                // TODO: THis needs to change the value in the stack.
+                numref. = numref.IntValue + 1;
+            }
 
             while (true)
             {
+                
                 currentIndex = _counters.GetOrAdd(key, -1);
                 var newindex = (currentIndex - 1);
                 if (_counters.TryUpdate(key, newindex, currentIndex))

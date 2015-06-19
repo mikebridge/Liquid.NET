@@ -189,6 +189,7 @@ filterarg:			STRING								# StringFilterArg
 expr:				PARENOPEN expr PARENCLOSE			# GroupedExpr 
 					| outputexpression					# OutputExpression
 					| NOT expr					        # NotExpr
+					// | expr CONTAINS expr				# ContainsExpression   // TODO: implement this
 					| expr (MULT | DIV | MOD) expr      # MultExpr
 					| expr (MINUS | ADD) expr           # AddSubExpr
 					//| expr (NEQ | EQ) (EMPTY | NULL)    # IsEmptyOrNullExpr // TODO can 'empty' be used anywhere else? 

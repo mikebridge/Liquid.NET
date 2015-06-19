@@ -361,20 +361,70 @@ namespace Liquid.NET
         public override void EnterCycle_tag(LiquidParser.Cycle_tagContext context)
         {
             base.EnterCycle_tag(context);
-            
+            var cycleList = new List<TreeNode<LiquidExpression>>();
+            foreach (var obj in context.cycle_value())
+            {
+                if (obj.BOOLEAN() != null)
+                {
+                    cycleList.Add(CreateObjectSimpleExpressionNode(new BooleanValue(Convert.ToBoolean(obj.GetText()))));
+                }
+                if (obj.STRING() != null)
+                {
+                    cycleList.Add(CreateObjectSimpleExpressionNode(GenerateStringSymbol(obj.STRING().GetText())));
+                }
+                if (obj.NUMBER() != null)
+                {
+                    var num = CreateIntNumericValueFromString(obj.NUMBER().ToString());
+                    cycleList.Add(CreateObjectSimpleExpressionNode(num));
+                }
+                if (obj.variable() != null)
+                {
+                    StartNewLiquidExpressionTree(x => cycleList.Add(x));
+                    StartCapturingVariable(obj.variable());
+                    MarkCurrentExpressionComplete();
+                }
+                if (obj.NULL() != null)
+                {
+                    throw new Exception("Null not implemented yet");
+                    //cycleList.Add(CreateObjectSimpleExpressionNode());
+                }   
+            }
             var cycleTag = new CycleTag
-            {                
-                // TODO: Allow variables in cycle?
-                CycleList = context.cycle_string().Select(str => (IExpressionConstant) GenerateStringSymbol(str.GetText())).ToList()
+            {                     
+                CycleList = cycleList
+                //CycleList = context.cycle_string().Select(str => (IExpressionConstant) GenerateStringSymbol(str.GetText())).ToList()
             };
             if (context.cycle_group() != null)
             {
-                cycleTag.Group = context.cycle_group().STRING().GetText();
+                if (context.cycle_group().STRING() != null)
+                {
+                    cycleTag.GroupNameExpressionTree =
+                        CreateObjectSimpleExpressionNode(new StringValue(context.cycle_group().STRING().GetText()));
+                }
+                if (context.cycle_group().NUMBER() != null)
+                {
+                    var number = CreateIntNumericValueFromString(context.cycle_group().NUMBER().ToString());
+                    cycleTag.GroupNameExpressionTree = CreateObjectSimpleExpressionNode(number);
+                }
+                if (context.cycle_group().variable() != null)
+                {
+                    StartNewLiquidExpressionTree(x => cycleTag.GroupNameExpressionTree = x);
+                    StartCapturingVariable(context.cycle_group().variable());
+                }
             }
 
             CurrentAstNode.AddChild(CreateTreeNode<IASTNode>(cycleTag));
-            //_astNodeStack.Push();
         }
+
+        public override void ExitCycle_tag(LiquidParser.Cycle_tagContext context)
+        {
+            base.ExitCycle_tag(context);
+            if (context.cycle_group() != null  && context.cycle_group().variable() != null)
+            {                
+                MarkCurrentExpressionComplete();
+            }
+        }
+      
 
         #endregion
 
@@ -549,7 +599,7 @@ namespace Liquid.NET
             //Console.WriteLine("End Expression Builder");
             
             //CurrentBuilderContext.LiquidExpressionBuilder.StartLiquidExpression();
-//            CurrentBuilderContext.IfThenElseBlockStack.Peek().IfElseClauses.Last().LiquidExpressionTree =
+//            CurrentBuilderContext.IfThenElseBlockStack.Peek().IfElseClauses.Last().GroupNameExpressionTree =
 //                CurrentBuilderContext.LiquidExpressionBuilder.ConstructedLiquidExpressionTree;
                 
 
@@ -689,7 +739,7 @@ namespace Liquid.NET
             //Console.WriteLine("New Expression Builder");
             //InitiateExpressionBuilder();
             var ifexpr = CurrentBuilderContext.IfThenElseBlockStack.Peek().IfElseClauses.Last();
-            StartNewLiquidExpressionTree(x => ifexpr.LiquidExpressionTree = x);
+            StartNewLiquidExpressionTree(x => ifexpr.GroupNameExpressionTree = x);
         }
 
         public override void ExitIfexpr(LiquidParser.IfexprContext context)
@@ -698,7 +748,7 @@ namespace Liquid.NET
             //Console.WriteLine("End Expression Builder");
             
             //CurrentBuilderContext.LiquidExpressionBuilder.StartLiquidExpression();
-//            CurrentBuilderContext.IfThenElseBlockStack.Peek().IfElseClauses.Last().LiquidExpressionTree =
+//            CurrentBuilderContext.IfThenElseBlockStack.Peek().IfElseClauses.Last().GroupNameExpressionTree =
 //                CurrentBuilderContext.LiquidExpressionBuilder.ConstructedLiquidExpressionTree;
                 
 
@@ -749,7 +799,7 @@ namespace Liquid.NET
             //var symbol = new BooleanValue(true);
 //            CurrentBuilderContext.CaseWhenElseBlockStack.Peek()
 //                .ElseClause
-//                .LiquidExpressionTree = CreateObjectSimpleExpressionNode(symbol);
+//                .GroupNameExpressionTree = CreateObjectSimpleExpressionNode(symbol);
         }
 
         public override void ExitWhen_else_tag(LiquidParser.When_else_tagContext context)

@@ -2,20 +2,26 @@
 using System.Collections.Generic;
 using Liquid.NET.Constants;
 using Liquid.NET.Symbols;
+using Liquid.NET.Utils;
 
 namespace Liquid.NET.Tags
 {
     public class CycleTag : IASTNode
     {
-        public IList<IExpressionConstant> CycleList = new List<IExpressionConstant>();
+        public CycleTag()
+        {
+            CycleList = new List<TreeNode<LiquidExpression>>();
+        }
+        //public IList<IExpressionConstant> CycleList = new List<IExpressionConstant>();
+        public  IList<TreeNode<LiquidExpression>> CycleList { get; set; }
 
-        public String Group = "";
-
+        //public String Group = "";
+        public TreeNode<LiquidExpression> GroupNameExpressionTree { get; set; }
 
         public int Length { get { return CycleList.Count; } }
         //private int _index = 0;
 
-        public IExpressionConstant ElementAt(int index)
+        public TreeNode<LiquidExpression> ElementAt(int index)
         {
            return CycleList[index];
 

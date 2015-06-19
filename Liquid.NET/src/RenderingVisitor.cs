@@ -123,7 +123,7 @@ namespace Liquid.NET
 
         public void Visit(CycleTag cycleTag)
         {
-
+            
             _result += GetNextCycleText(cycleTag);
         }
 
@@ -196,7 +196,13 @@ namespace Liquid.NET
         private String GetNextCycleText(CycleTag cycleTag)
         {
             int currentIndex;
-            var key = "cycle_" + cycleTag.Group +"_"+String.Join("|", cycleTag.CycleList.Select(x => x.Value.ToString()));
+            var groupName = cycleTag.GroupNameExpressionTree==null ?
+                null :
+                LiquidExpressionEvaluator.Eval(cycleTag.GroupNameExpressionTree, _symbolTableStack);
+            var groupNameAsString = groupName== null ? "" : ValueCaster.RenderAsString(groupName);
+            Console.WriteLine("Evaluating " + groupName);
+            //var key = "cycle_" + groupNameAsString + "_" + String.Join("|", cycleTag.CycleList.Select(x => x.Value.ToString()));
+            var key = "cycle_" + groupNameAsString + "_" + String.Join("|", cycleTag.CycleList.Select(x => x.Data.Expression.ToString()));
             
             while (true)
             {                
@@ -210,7 +216,8 @@ namespace Liquid.NET
                 }
             }
 
-            return cycleTag.ElementAt(currentIndex).Value.ToString();
+            return ValueCaster.RenderAsString(LiquidExpressionEvaluator.Eval(cycleTag.ElementAt(currentIndex), _symbolTableStack));
+            //return cycleTag.ElementAt(currentIndex).Value.ToString();
 
         }
 
@@ -240,7 +247,7 @@ namespace Liquid.NET
                 caseWhenElseBlockTag.WhenClauses.FirstOrDefault(
                     expr =>
                         // Take the valueToMatch "Case" expression result value
-                        // and check if it's equal to the expr.LiquidExpressionTree expression.
+                        // and check if it's equal to the expr.GroupNameExpressionTree expression.
                         // THe "EasyValueComparer" is supposed to match stuff fairly liberally,
                         // though it doesn't cast values---TODO: probably it should.
                         new EasyValueComparer().Equals(valueToMatch,

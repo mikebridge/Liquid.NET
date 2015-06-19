@@ -9,7 +9,7 @@ namespace Liquid.NET.Tags
     /// The difference between case expressions and if/unless expressions is that
     /// while the if/else/elsif expressions return a boolean value (and an "else" just 
     /// returns true, since it always matches), a case expression might be any kind of 
-    /// value.  That value gets compared to the CaseWhenElseBlockTag.LiquidExpressionTree
+    /// value.  That value gets compared to the CaseWhenElseBlockTag.GroupNameExpressionTree
     /// result.
     /// </summary>
     public class CaseWhenElseBlockTag : IASTNode

@@ -96,11 +96,11 @@ when_tag:			TAGSTART WHEN_TAG outputexpression TAGEND whenblock;
 
 whenblock:			block*;
 
-cycle_tag:			TAGSTART CYCLE_TAG cycle_group? cycle_string (COMMA cycle_string)* TAGEND ;
+cycle_tag:			TAGSTART CYCLE_TAG cycle_group? cycle_value (COMMA cycle_value)* TAGEND ;
 
-cycle_group:		STRING COLON ;
+cycle_group:		(STRING | variable | NUMBER) COLON ;
 
-cycle_string:		STRING;
+cycle_value:		STRING | variable | NUMBER | BOOLEAN | NULL;
 
 assign_tag :		TAGSTART ASSIGN_TAG LABEL ASSIGNEQUALS outputexpression TAGEND ;
 

@@ -145,7 +145,35 @@ namespace Liquid.NET
             }
         }
 
+//        public void Visit(DecrementTag decrementTag)
+//        {
+//            var key = decrementTag.VarName;
+//            AlterNumericvalue(key, -1, n => new NumericValue(n.IntValue - 1));
+//            _result += ValueCaster.RenderAsString(_symbolTableStack.Reference(key));
+//        }
+        public void Visit(DecrementTag decrementTag)
+        {
+            int currentIndex;
+            var key = decrementTag.VarName;
 
+            while (true)
+            {
+                currentIndex = _counters.GetOrAdd(key, -1);
+                var newindex = (currentIndex - 1);
+                if (_counters.TryUpdate(key, newindex, currentIndex))
+                {
+                    break;
+                }
+            }
+
+            _result += currentIndex;
+        }
+//        public void Visit(IncrementTag decrementTag)
+//        {
+//            var key = decrementTag.VarName;
+//            AlterNumericvalue(key, 0, n => new NumericValue(n.IntValue + 1));
+//            _result += ValueCaster.RenderAsString(_symbolTableStack.Reference(key));
+//        }
         public void Visit(IncrementTag incrementTag)
         {
             int currentIndex;
@@ -170,31 +198,17 @@ namespace Liquid.NET
         }
 
 
-        public void Visit(DecrementTag decrementTag)
+
+        private void AlterNumericvalue(string key, int defaultValue, Func<NumericValue, NumericValue> newValueFunc)
         {
-            String result = "";
-            int currentIndex;
-            var key = decrementTag.VarName;
-            var theval = _symbolTableStack.Reference(decrementTag.VarName);
-            var numref = theval as NumericValue;
-            if (numref != null)
-            {
-                // TODO: THis needs to change the value in the stack.
-                numref. = numref.IntValue + 1;
-            }
-
-            while (true)
-            {
-                
-                currentIndex = _counters.GetOrAdd(key, -1);
-                var newindex = (currentIndex - 1);
-                if (_counters.TryUpdate(key, newindex, currentIndex))
+            _symbolTableStack.FindVariable(key,
+                (st, foundExpression) =>
                 {
-                    break;
-                }
-            }
-
-            _result += currentIndex;
+                    var numref = foundExpression as NumericValue;
+                    st.DefineVariable(key,
+                        numref != null ? newValueFunc(numref) : new NumericValue(defaultValue));
+                },
+                () => _symbolTableStack.Define(key, new NumericValue(defaultValue)));
         }
 
         /// <summary>

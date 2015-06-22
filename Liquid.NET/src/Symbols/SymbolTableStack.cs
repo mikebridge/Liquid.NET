@@ -11,13 +11,6 @@ namespace Liquid.NET.Symbols
     {
         private readonly IList<SymbolTable> _symbolTables = new List<SymbolTable>();
 
-        //public TemplateContext TemplateContext { get; private set; }
-
-//        public SymbolTableStack()
-//        {
-//            //TemplateContext = templateContext;
-//        }
-
         public void Push(SymbolTable symbolTable)
         {
             _symbolTables.Add(symbolTable);
@@ -40,14 +33,27 @@ namespace Liquid.NET.Symbols
                     return _symbolTables[i].ReferenceVariable(reference);
                 }
             }
-            // TODO: Can the template context be merged with a symbolstack?
-            //var result = TemplateContext.Reference(reference);
-            //if (result.GetType() != typeof (Undefined))
-            //{
-                //return result;
-            //}
             
             return new Undefined(reference); 
+        }
+
+        public void FindVariable(String reference, 
+            Action<SymbolTable, IExpressionConstant> ifFoundAction, 
+            Action ifNotFoundAction)
+        {
+
+            for (int i = _symbolTables.Count() - 1; i >= 0; i--) // iterate backwards from most-specific scope
+            {
+                Console.WriteLine("Looking up" + reference);
+                if (_symbolTables[i].HasVariableReference(reference))
+                {
+                    ifFoundAction(_symbolTables[i], _symbolTables[i].ReferenceVariable(reference));
+                    return;
+                }
+            }
+
+            ifNotFoundAction();
+            
         }
 
         public void Define(string reference, IExpressionConstant obj)
@@ -113,9 +119,13 @@ namespace Liquid.NET.Symbols
         }
 
         //        public void DefineCustomTag<T>(string name)
+
         //            where T: ICustomTagRenderer
+
         //        {
+
         //            _symbolTables.Last().DefineCustomTag<T>(name);
+
         //        }
 
         public void DefineMacro(string name, MacroBlockTag macro)

@@ -1,4 +1,6 @@
-﻿using Liquid.NET.Constants;
+﻿using System;
+using System.Globalization;
+using Liquid.NET.Constants;
 using Liquid.NET.Symbols;
 using Liquid.NET.Tests.Helpers;
 using NUnit.Framework;
@@ -97,6 +99,41 @@ namespace Liquid.NET.Tests.Symbols
 
         }
 
+
+        [Test]
+        public void It_Should_Find_A_Variable_On_The_Top_Of_The_Stack()
+        {
+            // Arrange
+            var stack = StackHelper.CreateSymbolTableStack();
+            stack.Define("hello", new StringValue("HELLO"));
+
+            bool found = false;
+            
+            // Act
+            stack.FindVariable("hello", (st, v) => found = true, () => { throw new Exception("This shouldn't happen"); });
+
+            // Assert
+            Assert.That(found, Is.True);
+
+        }
+
+        [Test]
+        public void It_Should_Find_A_Variable_Nested()
+        {
+            // Arrange
+            var stack = StackHelper.CreateSymbolTableStack();
+            stack.Define("hello", new StringValue("HELLO"));
+            var localScope = new SymbolTable();
+            stack.Push(localScope);
+            bool found = false;
+
+            // Act
+            stack.FindVariable("hello", (st, v) => found = true, () => { throw new Exception("This shouldn't happen"); });
+
+            // Assert
+            Assert.That(found, Is.True);
+
+        }
 
 
 

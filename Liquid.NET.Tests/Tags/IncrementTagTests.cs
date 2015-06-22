@@ -66,24 +66,29 @@ namespace Liquid.NET.Tests.Tags
             String result = template.Render(ctx);
 
             // Assert
-            Assert.That(result, Is.EqualTo("0-1"));
+            Assert.That(result, Is.EqualTo("01"));
 
         }
 
         [Test]
-        public void It_Should_Increment_An_Assigned_Variable_Variable()
+        public void Rendering_Repeatedly_Will_Use_The_Same_Context()
         {
             // Arrange
             TemplateContext ctx = new TemplateContext();
-            var template = LiquidTemplate.Create("{% assign varname = 3 %}{% increment varname %}{% decrement varname %}");
+            var tmpl = "{% increment a %}";
+            var template = LiquidTemplate.Create(tmpl);
+            var template2 = LiquidTemplate.Create(tmpl);
 
             // Act
             String result = template.Render(ctx);
+            String result2 = template2.Render(ctx);
 
             // Assert
-            Assert.That(result, Is.EqualTo("43"));
+            Assert.That(result, Is.EqualTo("0"));
+            Assert.That(result2, Is.EqualTo("1"));
 
         }
+
 
     }
 }

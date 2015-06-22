@@ -1,6 +1,6 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Net;
 using Liquid.NET.Constants;
 using Liquid.NET.Filters;
 using Liquid.NET.Filters.Array;
@@ -27,6 +27,8 @@ namespace Liquid.NET
 
         private readonly Registry<ICustomBlockTagRenderer> _customBlockTagRegistry = new Registry<ICustomBlockTagRenderer>();
 
+        private readonly ConcurrentDictionary<String, int> _counters = new ConcurrentDictionary<string, int>();
+
         public ITemplateContext Define(String name, IExpressionConstant constant)
         {
             if (_varDictionary.ContainsKey(name))
@@ -46,6 +48,16 @@ namespace Liquid.NET
             return this;
         }
 
+//        public int GetOrAddCounter(String key, int val)
+//        {
+//            return _counters.GetOrAdd(key, val);;
+//        }
+//
+//        public bool TryUpdateCounter(String key, int newVal, int comparisonValue)
+//        {
+//            return _counters.TryUpdate(key, newVal, comparisonValue); ;
+//        }
+
         public ITemplateContext WithCustomTagBlockRenderer<T>(string name) where T : ICustomBlockTagRenderer
         {
             _customBlockTagRegistry.Register<T>(name);
@@ -59,6 +71,8 @@ namespace Liquid.NET
         internal Registry<ICustomTagRenderer> CustomTagRendererRegistry { get { return _customTagRegistry; } }
 
         internal Registry<ICustomBlockTagRenderer> CustomBlockTagRendererRegistry { get { return _customBlockTagRegistry; } }
+
+        
 
         [Obsolete] // this should be transferred to the ScopeStack
         public IExpressionConstant Reference(String name)

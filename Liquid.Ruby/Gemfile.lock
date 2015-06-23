@@ -5,6 +5,10 @@ GEM
 
 PLATFORMS
   java
+  ruby
 
 DEPENDENCIES
   liquid
+
+BUNDLED WITH
+   1.10.4

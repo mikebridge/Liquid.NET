@@ -9,6 +9,21 @@ $:.unshift(File.join(File.expand_path(__dir__), '..', 'lib'))
 require 'liquid.rb'
 require 'liquid/profiler'
 
+
+# MONKEY PATCH Liquid::Drop.to_json
+module Liquid
+  class Drop
+    def to_json x
+      self.instance_variables.to_json       
+    end
+  end
+end
+#  Liquid::Drop.to_json do
+#    puts "MONKEYPATCH"
+#    self.instance_variables.to_json       
+#  end
+
+
 mode = :strict
 if env_mode = ENV['LIQUID_PARSER_MODE']
   puts "-- #{env_mode.upcase} ERROR MODE"
@@ -30,6 +45,8 @@ module Minitest
     end
   end
 
+  # MONKEY PATCH ALERT
+
   module Assertions
     include Liquid
 
@@ -37,7 +54,12 @@ module Minitest
       puts "# TEMPLATE"
       puts template
       puts "# ASSIGNS"
-      puts assigns.to_json
+      #if (assigns.is_a?(Liquid::Drop)) 
+      #  puts "DROP!!#{x}"
+      #  puts assigns.instance_variables.to_json       
+      #else
+        puts assigns.to_json
+      #end
       puts "#EXPECTED"
       begin
         puts Template.parse(template).render!(assigns)

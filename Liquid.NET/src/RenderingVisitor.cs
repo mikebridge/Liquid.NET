@@ -193,16 +193,39 @@ namespace Liquid.NET
 
         public void Visit(IncludeTag includeTag)
         {
-            var virtualFilenameVar = LiquidExpressionEvaluator.Eval(includeTag.VirtualFileExpression, _symbolTableStack);
-            String virtualFileName = ValueCaster.RenderAsString(virtualFilenameVar);
-            //Console.WriteLine("LOADING " + virtualFileName);
-            //_result += " TODO: Load file '" + virtualFileName+"'";
-            if (_symbolTableStack.FileSystem == null)
-            {
-                _result += " ERROR: FileSystem is not defined";
-                return;
-            }
-            _result += _symbolTableStack.FileSystem.Include(virtualFileName);
+
+            var includeRenderer = new IncludeRenderer(this, _astRenderer);
+            includeRenderer.Render(includeTag, _symbolTableStack);
+//            var virtualFilenameVar = LiquidExpressionEvaluator.Eval(includeTag.VirtualFileExpression, _symbolTableStack);
+//            IExpressionConstant withExpression = null;
+//            IExpressionConstant forExpression = null;
+//            if (includeTag.WithExpression != null)
+//            {
+//                withExpression = LiquidExpressionEvaluator.Eval(includeTag.WithExpression, _symbolTableStack);
+//            }
+//            if (includeTag.ForExpression != null)
+//            {
+//                forExpression = LiquidExpressionEvaluator.Eval(includeTag.ForExpression, _symbolTableStack);
+//            }
+//            String virtualFileName = ValueCaster.RenderAsString(virtualFilenameVar);
+//            Console.WriteLine("Loading Template '" + virtualFileName+"'");
+//
+//            if (_symbolTableStack.FileSystem == null)
+//            {
+//                _result += " ERROR: FileSystem is not defined";
+//                return;
+//            }
+//
+//            String snippet = _symbolTableStack.FileSystem.Include(virtualFileName);
+//            Console.WriteLine("   snippet: " + snippet);
+//            var snippetAst = new LiquidASTGenerator().Generate(snippet);
+//            var localBlockScope = new SymbolTable();
+//            localBlockScope.DefineVariable(virtualFileName, withExpression);
+//            _symbolTableStack.Push(localBlockScope);
+//
+//            _astRenderer.StartVisiting(this, snippetAst.RootNode);
+//            _symbolTableStack.Pop();
+            
         }
 
 

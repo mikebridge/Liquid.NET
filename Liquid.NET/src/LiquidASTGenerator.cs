@@ -120,30 +120,80 @@ namespace Liquid.NET
         {
             base.EnterInclude_tag(context);
             Console.WriteLine("Creating an include tag");
-            var label = context.outputexpression();
-            if (label == null)
-            {
-                // ignore the assignment
-                return;
-            }
 
             var includeTag = new IncludeTag();
-            StartNewLiquidExpressionTree(result =>
-            {
-                //Console.WriteLine("Setting ExpRESSION TREE TO " + result);
-                includeTag.VirtualFileExpression = result;
-            });
-            var newNode = CreateTreeNode<IASTNode>(includeTag);
-            CurrentAstNode.AddChild(newNode);
+            AddNodeToAST(includeTag);
+
+            // put the block we're currently configuring on the "for block" stack.
+            CurrentBuilderContext.IncludeTagStack.Push(includeTag);
+
+            //context.outputexpression();
+//            StartNewLiquidExpressionTree(result =>
+//            {
+//                Console.WriteLine("Setting ExpRESSION TREE ");
+//                includeTag.VirtualFileExpression = result;
+//            });
+            //FinishLiquidExpressionTree();
+            //var newNode = CreateTreeNode<IASTNode>(includeTag);
+            //CurrentAstNode.AddChild(newNode);
             //_astNodeStack.Push(includeTag.RootContentNode);
             
         }
 
+        public override void EnterInclude_expr(LiquidParser.Include_exprContext context)
+        {
+            base.EnterInclude_expr(context);
+            StartNewLiquidExpressionTree(result =>
+            {
+                Console.WriteLine("+_+ Setting INCLUDE value ");
+                CurrentBuilderContext.IncludeTagStack.Last().VirtualFileExpression = result;
+            });
+
+        }
+
+        public override void ExitInclude_expr(LiquidParser.Include_exprContext context)
+        {
+            base.ExitInclude_expr(context);
+            FinishLiquidExpressionTree();
+        }
+
+        public override void EnterInclude_with(LiquidParser.Include_withContext context)
+        {
+            base.EnterInclude_with(context);
+            StartNewLiquidExpressionTree(result =>
+            {
+                Console.WriteLine("Setting INCLUDE WITH");
+                CurrentBuilderContext.IncludeTagStack.Last().WithExpression = result;
+            });
+        }
+
+        public override void ExitInclude_with(LiquidParser.Include_withContext context)
+        {
+            base.ExitInclude_with(context);
+            FinishLiquidExpressionTree();
+        }
+
+        public override void EnterInclude_for(LiquidParser.Include_forContext context)
+        {
+            base.EnterInclude_for(context);
+            StartNewLiquidExpressionTree(result =>
+            {
+                Console.WriteLine("Setting INCLUDE for");
+                CurrentBuilderContext.IncludeTagStack.Last().ForExpression = result;
+            });
+        }
+
+        public override void ExitInclude_for(LiquidParser.Include_forContext context)
+        {
+            base.ExitInclude_for(context);
+            FinishLiquidExpressionTree();
+        }
+
+
         public override void ExitInclude_tag(LiquidParser.Include_tagContext context)
         {
             base.ExitInclude_tag(context);
-
-            //FinishLiquidExpressionTree();
+            CurrentBuilderContext.IncludeTagStack.Pop();
         }
 
         public override void EnterAssign_tag(LiquidParser.Assign_tagContext context)
@@ -713,7 +763,7 @@ namespace Liquid.NET
 
         private void StartNewLiquidExpressionTree(Action<TreeNode<LiquidExpression>> setExpression)
         {
-            Console.WriteLine("Set Expressiuon " + setExpression);
+            Console.WriteLine("Set Expression " + setExpression);
             CurrentBuilderContext.LiquidExpressionBuilder = new LiquidExpressionTreeBuilder();
             
             CurrentBuilderContext.LiquidExpressionBuilder.ExpressionCompleteEvent += new OnExpressionCompleteEventHandler(setExpression);
@@ -1461,6 +1511,7 @@ namespace Liquid.NET
             public readonly Stack<CaseWhenElseBlockTag> CaseWhenElseBlockStack = new Stack<CaseWhenElseBlockTag>();
             public readonly Stack<MacroBlockTag> MacroBlockTagStack = new Stack<MacroBlockTag>();
             public readonly Stack<ForBlockTag> ForBlockStack = new Stack<ForBlockTag>();
+            public readonly Stack<IncludeTag> IncludeTagStack = new Stack<IncludeTag>();
 
             public LiquidExpressionTreeBuilder LiquidExpressionBuilder { get; set; }
         }

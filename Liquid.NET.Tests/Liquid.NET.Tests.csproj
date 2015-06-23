@@ -151,6 +151,7 @@
     <Compile Include="Ruby\FilterTests.cs" />
     <Compile Include="Ruby\LiquidTests.cs" />
     <Compile Include="Ruby\TagTests.cs" />
+    <Compile Include="Ruby\TestFileSystem.cs" />
     <Compile Include="Ruby\TruthyTests.cs" />
     <Compile Include="Ruby\TypeTests.cs" />
     <Compile Include="Symbols\SymbolTableStackFactoryTests.cs" />

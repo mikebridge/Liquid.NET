@@ -509,7 +509,9 @@ c")]
 public void It_Should_Match_Ruby_Output(String input, String assigns, String expected) {
 
             // Arrange
-            ITemplateContext ctx = new TemplateContext().WithAllFilters();
+            ITemplateContext ctx = new TemplateContext()
+                .WithAllFilters()
+                .WithFileSystem(new TestFileSystem());
             
             foreach (var tuple in DictionaryFactory.CreateFromJson(assigns))
             {

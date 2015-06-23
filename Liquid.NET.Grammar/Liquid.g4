@@ -110,7 +110,9 @@ capture_tag :		TAGSTART CAPTURE_TAG LABEL TAGEND capture_block TAGSTART ENDCAPTU
 
 capture_block:		block* ;
 
-include_tag :		TAGSTART INCLUDE_TAG outputexpression (include_with | include_for | include_param_pair* ) TAGEND ;
+include_tag :		TAGSTART INCLUDE_TAG include_expr (include_with | include_for | include_param_pair* ) TAGEND ;
+
+include_expr:		outputexpression;
 
 include_with :		WITH outputexpression;
 

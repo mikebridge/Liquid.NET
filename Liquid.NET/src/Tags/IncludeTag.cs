@@ -16,6 +16,10 @@ namespace Liquid.NET.Tags
         /// </summary>
         public TreeNode<LiquidExpression> VirtualFileExpression { get; set; }
 
+        public TreeNode<LiquidExpression> WithExpression { get; set; }
+
+        public TreeNode<LiquidExpression> ForExpression { get; set; }
+
         public void Accept(IASTVisitor visitor)
         {
             visitor.Visit(this);

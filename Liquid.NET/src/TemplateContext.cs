@@ -220,5 +220,6 @@ namespace Liquid.NET
         ITemplateContext Define(String name, IExpressionConstant constant);
         ITemplateContext WithCustomTagRenderer<T>(string echoargs) where T: ICustomTagRenderer;
         ITemplateContext WithCustomTagBlockRenderer<T>(string echoargs)  where T: ICustomBlockTagRenderer;
+        ITemplateContext WithFileSystem(IFileSystem fileSystem);
     }
 }

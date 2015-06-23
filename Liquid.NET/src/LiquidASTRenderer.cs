@@ -14,7 +14,7 @@ namespace Liquid.NET
             return EvalTree(symbolTableStack, liquidAst);
         }
 
-        private string EvalTree(SymbolTableStack symbolStack, LiquidAST liquidAst)
+        public string EvalTree(SymbolTableStack symbolStack, LiquidAST liquidAst)
         {
             var renderingVisitor = new RenderingVisitor(this, symbolStack);
             StartVisiting(renderingVisitor, liquidAst.RootNode);

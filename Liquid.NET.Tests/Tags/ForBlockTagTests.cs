@@ -391,6 +391,21 @@ namespace Liquid.NET.Tests.Tags
 
         }
 
+        [Test]
+        [TestCase("\'\'", "")]
+        [TestCase("\'abc\'", "char:a char:b char:c ")]
+        public void It_Should_Iterate_Over_A_Strings_Characters(String str, String expected)
+        {
+            //[TestCase(@"{% for char in characters %}I WILL NOT BE OUTPUT{% endfor %}", @"{""characters"":""""}", @"")]
+            TemplateContext ctx = new TemplateContext();
+            var template = LiquidTemplate.Create(@"{% for char in "+str+" %}char:{{char}} {% endfor %}");
+            // Act
+            String result = template.Render(ctx);
+
+            // Assert
+            Assert.That(result, Is.EqualTo(expected));
+        }
+
         private static string GetForLoop(string txt)
         {
             return @"Result : {%assign coll = ""1,2,3,4"" | split: ','%}"

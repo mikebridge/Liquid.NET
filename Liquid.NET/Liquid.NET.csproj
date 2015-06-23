@@ -154,6 +154,7 @@
     <Compile Include="src\Filters\Strings\UrlParamEscapeFilter.cs" />
     <Compile Include="src\Filters\ToDecimalFilter.cs" />
     <Compile Include="src\Filters\ToIntFilter.cs" />
+    <Compile Include="src\IFileSystem.cs" />
     <Compile Include="src\LiquidAST.cs" />
     <Compile Include="src\LiquidASTGenerator.cs" />
     <Compile Include="src\LiquidError.cs" />

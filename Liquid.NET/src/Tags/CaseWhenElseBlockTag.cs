@@ -47,8 +47,9 @@ namespace Liquid.NET.Tags
             // the blocks to render when this WHEN expression result matches the where 
             public TreeNode<IASTNode> LiquidBlock = new TreeNode<IASTNode>(new RootDocumentNode());
 
-            // The expression to evaluate
-            public TreeNode<LiquidExpression> LiquidExpressionTree { get; set; }
+            // The expressions to evaluate.  One should match (e.g. when A or B or C")
+            //public TreeNode<LiquidExpression> LiquidExpressionTree { get; set; }
+            public readonly IList<TreeNode<LiquidExpression>> LiquidExpressionTree = new List<TreeNode<LiquidExpression>>();
 
         }
 

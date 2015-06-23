@@ -145,12 +145,9 @@ namespace Liquid.NET
             }
         }
 
-//        public void Visit(DecrementTag decrementTag)
-//        {
-//            var key = decrementTag.VarName;
-//            AlterNumericvalue(key, -1, n => new NumericValue(n.IntValue - 1));
-//            _result += ValueCaster.RenderAsString(_symbolTableStack.Reference(key));
-//        }
+        /// <summary>
+        /// Pre-decrement the counter, i.e. --i
+        /// </summary>
         public void Visit(DecrementTag decrementTag)
         {
             int currentIndex;
@@ -158,22 +155,23 @@ namespace Liquid.NET
 
             while (true)
             {
-                currentIndex = _counters.GetOrAdd(key, -1);
+                currentIndex = _counters.GetOrAdd(key, 0);
                 var newindex = (currentIndex - 1);
                 if (_counters.TryUpdate(key, newindex, currentIndex))
                 {
+                    currentIndex = newindex;
                     break;
                 }
+
             }
 
             _result += currentIndex;
         }
-//        public void Visit(IncrementTag decrementTag)
-//        {
-//            var key = decrementTag.VarName;
-//            AlterNumericvalue(key, 0, n => new NumericValue(n.IntValue + 1));
-//            _result += ValueCaster.RenderAsString(_symbolTableStack.Reference(key));
-//        }
+
+        /// <summary>
+        /// Post-increment the counter i.e. i++
+        /// </summary>
+        /// <param name="incrementTag"></param>
         public void Visit(IncrementTag incrementTag)
         {
             int currentIndex;
@@ -185,6 +183,7 @@ namespace Liquid.NET
                 var newindex = (currentIndex + 1);                
                 if (_counters.TryUpdate(key, newindex, currentIndex))
                 {
+                    //currentIndex = newindex;
                     break;
                 }
             }
@@ -194,7 +193,16 @@ namespace Liquid.NET
 
         public void Visit(IncludeTag includeTag)
         {
-            throw new NotImplementedException();
+            var virtualFilenameVar = LiquidExpressionEvaluator.Eval(includeTag.VirtualFileExpression, _symbolTableStack);
+            String virtualFileName = ValueCaster.RenderAsString(virtualFilenameVar);
+            //Console.WriteLine("LOADING " + virtualFileName);
+            //_result += " TODO: Load file '" + virtualFileName+"'";
+            if (_symbolTableStack.FileSystem == null)
+            {
+                _result += " ERROR: FileSystem is not defined";
+                return;
+            }
+            _result += _symbolTableStack.FileSystem.Include(virtualFileName);
         }
 
 
@@ -273,8 +281,12 @@ namespace Liquid.NET
                         // and check if it's equal to the expr.GroupNameExpressionTree expression.
                         // THe "EasyValueComparer" is supposed to match stuff fairly liberally,
                         // though it doesn't cast values---TODO: probably it should.
-                        new EasyValueComparer().Equals(valueToMatch,
-                            LiquidExpressionEvaluator.Eval(expr.LiquidExpressionTree, _symbolTableStack)));
+                        //new EasyValueComparer().Equals(valueToMatch,
+                        //    LiquidExpressionEvaluator.Eval(expr.LiquidExpressionTree, _symbolTableStack)));
+                        expr.LiquidExpressionTree.Any(val =>
+                            new EasyValueComparer().Equals(valueToMatch,
+                                        LiquidExpressionEvaluator.Eval(val, _symbolTableStack))));
+
 
             if (match != null)
             {

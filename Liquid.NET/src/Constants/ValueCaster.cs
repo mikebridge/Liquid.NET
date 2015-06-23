@@ -179,6 +179,11 @@ namespace Liquid.NET.Constants
                     return new NumericValue(0);  // liquid to_numeric seems to convert these to 0.
                 }
             }
+
+            if (destType == typeof (ArrayValue))
+            {
+                return new ArrayValue(str.StringVal.Select(x => (IExpressionConstant) new StringValue(x.ToString())).ToList());
+            }
             return ConstantFactory.CreateError<TDest>("Can't convert from string to " + destType);
            
         }

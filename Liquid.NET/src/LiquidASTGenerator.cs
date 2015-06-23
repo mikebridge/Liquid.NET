@@ -115,7 +115,37 @@ namespace Liquid.NET
             var str2 = Regex.Replace(str1, "{%\\s*endraw\\s%}$", "", RegexOptions.IgnoreCase);
             return str2;
         }
-        
+
+        public override void EnterInclude_tag(LiquidParser.Include_tagContext context)
+        {
+            base.EnterInclude_tag(context);
+            Console.WriteLine("Creating an include tag");
+            var label = context.outputexpression();
+            if (label == null)
+            {
+                // ignore the assignment
+                return;
+            }
+
+            var includeTag = new IncludeTag();
+            StartNewLiquidExpressionTree(result =>
+            {
+                //Console.WriteLine("Setting ExpRESSION TREE TO " + result);
+                includeTag.VirtualFileExpression = result;
+            });
+            var newNode = CreateTreeNode<IASTNode>(includeTag);
+            CurrentAstNode.AddChild(newNode);
+            //_astNodeStack.Push(includeTag.RootContentNode);
+            
+        }
+
+        public override void ExitInclude_tag(LiquidParser.Include_tagContext context)
+        {
+            base.ExitInclude_tag(context);
+
+            //FinishLiquidExpressionTree();
+        }
+
         public override void EnterAssign_tag(LiquidParser.Assign_tagContext context)
         {
             base.EnterAssign_tag(context);
@@ -683,6 +713,7 @@ namespace Liquid.NET
 
         private void StartNewLiquidExpressionTree(Action<TreeNode<LiquidExpression>> setExpression)
         {
+            Console.WriteLine("Set Expressiuon " + setExpression);
             CurrentBuilderContext.LiquidExpressionBuilder = new LiquidExpressionTreeBuilder();
             
             CurrentBuilderContext.LiquidExpressionBuilder.ExpressionCompleteEvent += new OnExpressionCompleteEventHandler(setExpression);
@@ -726,34 +757,8 @@ namespace Liquid.NET
             base.ExitCase_tag(context);
             Console.WriteLine("<<<Exit Case Tag");
             CurrentBuilderContext.CaseWhenElseBlockStack.Pop();
-            //Console.WriteLine(context.whenblock().)
-            //CurrentBuilderContext.CaseWhenElseBlockStack.Pop();
-
             FinishLiquidExpressionTree();
         }
-     
-        /*
-         * public override void EnterIfexpr(LiquidParser.IfexprContext context)
-        {
-            base.EnterIfexpr(context);
-            //Console.WriteLine("New Expression Builder");
-            //InitiateExpressionBuilder();
-            var ifexpr = CurrentBuilderContext.IfThenElseBlockStack.Peek().IfElseClauses.Last();
-            StartNewLiquidExpressionTree(x => ifexpr.GroupNameExpressionTree = x);
-        }
-
-        public override void ExitIfexpr(LiquidParser.IfexprContext context)
-        {
-            base.ExitIfexpr(context);
-            //Console.WriteLine("End Expression Builder");
-            
-            //CurrentBuilderContext.LiquidExpressionBuilder.StartLiquidExpression();
-//            CurrentBuilderContext.IfThenElseBlockStack.Peek().IfElseClauses.Last().GroupNameExpressionTree =
-//                CurrentBuilderContext.LiquidExpressionBuilder.ConstructedLiquidExpressionTree;
-                
-
-            FinishLiquidExpressionTree();
-        }*/
 
         public override void EnterCase_tag_contents(LiquidParser.Case_tag_contentsContext context)
         {
@@ -770,7 +775,9 @@ namespace Liquid.NET
             StartNewLiquidExpressionTree(result =>
             {
                 Console.WriteLine("Setting Expression tree to" + result);
-                CurrentBuilderContext.CaseWhenElseBlockStack.Peek().WhenClauses.Last().LiquidExpressionTree = result;
+                // TODO: make when clauses multiple.
+                //CurrentBuilderContext.CaseWhenElseBlockStack.Peek().WhenClauses.Last().LiquidExpressionTree = result;
+                CurrentBuilderContext.CaseWhenElseBlockStack.Peek().WhenClauses.Last().LiquidExpressionTree.Add(result);
             });
 
         }
@@ -896,6 +903,19 @@ namespace Liquid.NET
         public override void ExitGroupedExpr(LiquidParser.GroupedExprContext context)
         {
             base.ExitGroupedExpr(context);
+            MarkCurrentExpressionComplete();
+        }
+
+        public override void EnterContainsExpression(LiquidParser.ContainsExpressionContext context)
+        {
+            base.EnterContainsExpression(context);
+            Console.WriteLine(" === creating CONTAINS expression >" + context.GetText() + "<");
+            AddExpressionToCurrentExpressionBuilder(new ContainsExpression());
+        }
+
+        public override void ExitContainsExpression(LiquidParser.ContainsExpressionContext context)
+        {
+            base.ExitContainsExpression(context);
             MarkCurrentExpressionComplete();
         }
 

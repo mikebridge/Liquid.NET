@@ -21,6 +21,8 @@ namespace Liquid.NET.Symbols
                 ((TemplateContext) templateContext).CustomBlockTagRendererRegistry
                 );
 
+            result.FileSystem = ((TemplateContext)templateContext).FileSystem;
+
             // TODO: make this less prone to collision:
             globalScopeSymbolTable.DefineFilter<LookupFilter>("lookup");
 

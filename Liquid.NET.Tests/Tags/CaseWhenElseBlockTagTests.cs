@@ -57,6 +57,32 @@ namespace Liquid.NET.Tests.Tags
 
         }
 
+        [Test]
+        public void It_Should_Allow_Multiple_Cases_Separated_By_Commas()
+        {
+            // Arrange
+            var result = RenderingHelper.RenderTemplate("{% case 1%}{% when 1,2,3 %}One{%else%}Not One{%endcase%}");
+
+            // Act
+            Console.WriteLine(result);
+
+            // Assert
+            Assert.That(result.Trim(), Is.EqualTo("One"));
+        }
+
+        [Test]
+        public void It_Should_Allow_Multiple_Cases_Separated_By_Or()
+        {
+            // Arrange
+            var result = RenderingHelper.RenderTemplate("{% case 1%}{% when 1 or 2 or 3 %}One{%else%}Not One{%endcase%}");
+
+            // Act
+            Console.WriteLine(result);
+
+            // Assert
+            Assert.That(result.Trim(), Is.EqualTo("One"));
+        }
+
         private String GetTestData(String handle)
         {
             return @"{% assign handle = '"+handle+@"' %}

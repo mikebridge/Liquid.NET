@@ -136,6 +136,7 @@
     <Compile Include="Grammar\ExpressionParsingTests.cs" />
     <Compile Include="Grammar\GrammarTests.cs" />
     <Compile Include="Helpers\StackHelper.cs" />
+    <Compile Include="Helpers\TestFileSystem.cs" />
     <Compile Include="LiquidASTExpressionParsingTests.cs" />
     <Compile Include="LiquidASTGeneratorTests.cs" />
     <Compile Include="LiquidASTRendererTests.cs" />

@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Security.Cryptography.X509Certificates;
 using Liquid.NET.Constants;
 using NUnit.Framework;
 
@@ -128,6 +130,21 @@ namespace Liquid.NET.Tests.Constants
 
         }
 
+        [Test]
+        public void It_Should_Cast_A_String_To_An_Array_Of_Strings()
+        {
+            // Arrange
+            var str = new StringValue("Hello");
+
+            // Act
+            var array = ValueCaster.Cast<StringValue, ArrayValue>(str);
+            Assert.That(array.HasError, Is.False, array.ErrorMessage);
+
+            // Assert
+            Assert.That(array.ArrValue.Count, Is.EqualTo(5));
+            Assert.That(String.Join(",", array.ArrValue.Select(x => ((StringValue) x).StringVal)), Is.EqualTo("H,e,l,l,o"));
+
+        }
 
         [Test]
         // SEE: https://github.com/Shopify/liquid/wiki/Liquid-for-Designers

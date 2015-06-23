@@ -66,7 +66,7 @@ namespace Liquid.NET.Tests.Tags
             String result = template.Render(ctx);
 
             // Assert
-            Assert.That(result, Is.EqualTo("01"));
+            Assert.That(result, Is.EqualTo("00"));
 
         }
 

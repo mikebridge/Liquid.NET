@@ -29,6 +29,8 @@ namespace Liquid.NET
 
         private readonly ConcurrentDictionary<String, int> _counters = new ConcurrentDictionary<string, int>();
 
+        private IFileSystem _fileSystem = null;
+
         public ITemplateContext Define(String name, IExpressionConstant constant)
         {
             if (_varDictionary.ContainsKey(name))
@@ -45,6 +47,12 @@ namespace Liquid.NET
         public ITemplateContext WithCustomTagRenderer<T>(string name) where T : ICustomTagRenderer
         {
             _customTagRegistry.Register<T>(name);
+            return this;
+        }
+
+        public ITemplateContext WithFileSystem(IFileSystem fileSystem)
+        {
+            _fileSystem = fileSystem;
             return this;
         }
 
@@ -72,7 +80,7 @@ namespace Liquid.NET
 
         internal Registry<ICustomBlockTagRenderer> CustomBlockTagRendererRegistry { get { return _customBlockTagRegistry; } }
 
-        
+        internal IFileSystem FileSystem { get { return _fileSystem; } }
 
         [Obsolete] // this should be transferred to the ScopeStack
         public IExpressionConstant Reference(String name)

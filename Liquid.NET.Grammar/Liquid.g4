@@ -37,7 +37,7 @@ tag:				raw_tag
 					| unless_tag										
 					| case_tag
 					// | table_tag
-					// | include_tag
+					| include_tag
 					| break_tag
 					| continue_tag
 					| macro_tag
@@ -92,7 +92,9 @@ case_tag_contents:	when_tag* when_else_tag? ;
 
 when_else_tag:		TAGSTART ELSE_TAG TAGEND block*;
 
-when_tag:			TAGSTART WHEN_TAG outputexpression TAGEND whenblock;
+when_tag:			TAGSTART WHEN_TAG when_expressions TAGEND whenblock;
+
+when_expressions:	outputexpression ((COMMA | OR) outputexpression)*;
 
 whenblock:			block*;
 
@@ -107,6 +109,14 @@ assign_tag :		TAGSTART ASSIGN_TAG LABEL ASSIGNEQUALS outputexpression TAGEND ;
 capture_tag :		TAGSTART CAPTURE_TAG LABEL TAGEND capture_block TAGSTART ENDCAPTURE_TAG TAGEND;
 
 capture_block:		block* ;
+
+include_tag :		TAGSTART INCLUDE_TAG outputexpression (include_with | include_for | include_param_pair* ) TAGEND ;
+
+include_with :		WITH outputexpression;
+
+include_for :		FOR_TAG outputexpression;
+
+include_param_pair : LABEL COLON outputexpression;
 
 for_tag:			TAGSTART FOR_TAG for_label FOR_IN for_iterable for_params* TAGEND for_block for_else? TAGSTART ENDFOR_TAG TAGEND ;
 
@@ -189,7 +199,7 @@ filterarg:			STRING								# StringFilterArg
 expr:				PARENOPEN expr PARENCLOSE			# GroupedExpr 
 					| outputexpression					# OutputExpression
 					| NOT expr					        # NotExpr
-					// | expr CONTAINS expr				# ContainsExpression   // TODO: implement this
+					| expr CONTAINS expr				# ContainsExpression   // TODO: implement this
 					| expr (MULT | DIV | MOD) expr      # MultExpr
 					| expr (MINUS | ADD) expr           # AddSubExpr
 					//| expr (NEQ | EQ) (EMPTY | NULL)    # IsEmptyOrNullExpr // TODO can 'empty' be used anywhere else? 
@@ -199,4 +209,6 @@ expr:				PARENOPEN expr PARENCLOSE			# GroupedExpr
 					;	
 
 tagname:			LABEL ; 
+
+
 

@@ -25,17 +25,24 @@ namespace Liquid.NET.Tests.Ruby
 
         [Test]{% for test in tests %}
         [TestCase(@"{{test.input}}", @"{{test.assigns}}", @"{{test.expected}}")]{% endfor %}
-        public void It_Should_Match_Ruby_Output(String input, String assigns, String expected) {
+public void It_Should_Match_Ruby_Output(String input, String assigns, String expected) {
 
             // Arrange
             ITemplateContext ctx = new TemplateContext().WithAllFilters();
+            
+            foreach (var tuple in DictionaryFactory.CreateFromJson(assigns))
+            {
+                ctx.Define(tuple.Item1, tuple.Item2);
+            }
+
+            
             var template = LiquidTemplate.Create(input);
-        
+            
             // Act
             String result = template.Render(ctx);
         
             // Assert
-            Assert.That(result, Is.EqualTo(expected));
+            Assert.That(result.Trim(), Is.EqualTo(expected));
         }
 
         {% if exceptions != empty %}[Test]{% for test in exceptions %}

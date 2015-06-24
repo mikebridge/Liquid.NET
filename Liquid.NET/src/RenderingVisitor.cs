@@ -109,8 +109,7 @@ namespace Liquid.NET
             var tagRenderer = CustomBlockTagRendererFactory.Create(tagType);
             if (tagRenderer == null)
             {
-                AddError("Liquid syntax error: Unknown tag '" + customBlockTag.TagName + "'", customBlockTag);
-                //throw new Exception("Unregistered Tag: " + customBlockTag.TagName);
+                AddError("Liquid syntax error: Unknown tag '" + customBlockTag.TagName + "'", customBlockTag);              
                 return;
             }
             IEnumerable<IExpressionConstant> args =
@@ -183,7 +182,6 @@ namespace Liquid.NET
                 var newindex = (currentIndex + 1);                
                 if (_counters.TryUpdate(key, newindex, currentIndex))
                 {
-                    //currentIndex = newindex;
                     break;
                 }
             }
@@ -196,36 +194,7 @@ namespace Liquid.NET
 
             var includeRenderer = new IncludeRenderer(this, _astRenderer);
             includeRenderer.Render(includeTag, _symbolTableStack);
-//            var virtualFilenameVar = LiquidExpressionEvaluator.Eval(includeTag.VirtualFileExpression, _symbolTableStack);
-//            IExpressionConstant withExpression = null;
-//            IExpressionConstant forExpression = null;
-//            if (includeTag.WithExpression != null)
-//            {
-//                withExpression = LiquidExpressionEvaluator.Eval(includeTag.WithExpression, _symbolTableStack);
-//            }
-//            if (includeTag.ForExpression != null)
-//            {
-//                forExpression = LiquidExpressionEvaluator.Eval(includeTag.ForExpression, _symbolTableStack);
-//            }
-//            String virtualFileName = ValueCaster.RenderAsString(virtualFilenameVar);
-//            Console.WriteLine("Loading Template '" + virtualFileName+"'");
-//
-//            if (_symbolTableStack.FileSystem == null)
-//            {
-//                _result += " ERROR: FileSystem is not defined";
-//                return;
-//            }
-//
-//            String snippet = _symbolTableStack.FileSystem.Include(virtualFileName);
-//            Console.WriteLine("   snippet: " + snippet);
-//            var snippetAst = new LiquidASTGenerator().Generate(snippet);
-//            var localBlockScope = new SymbolTable();
-//            localBlockScope.DefineVariable(virtualFileName, withExpression);
-//            _symbolTableStack.Push(localBlockScope);
-//
-//            _astRenderer.StartVisiting(this, snippetAst.RootNode);
-//            _symbolTableStack.Pop();
-            
+ 
         }
 
 

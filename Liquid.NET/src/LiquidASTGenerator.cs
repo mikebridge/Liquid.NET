@@ -116,6 +116,7 @@ namespace Liquid.NET
             return str2;
         }
 
+        #region Include
         public override void EnterInclude_tag(LiquidParser.Include_tagContext context)
         {
             base.EnterInclude_tag(context);
@@ -127,17 +128,13 @@ namespace Liquid.NET
             // put the block we're currently configuring on the "for block" stack.
             CurrentBuilderContext.IncludeTagStack.Push(includeTag);
 
-            //context.outputexpression();
-//            StartNewLiquidExpressionTree(result =>
-//            {
-//                Console.WriteLine("Setting ExpRESSION TREE ");
-//                includeTag.VirtualFileExpression = result;
-//            });
-            //FinishLiquidExpressionTree();
-            //var newNode = CreateTreeNode<IASTNode>(includeTag);
-            //CurrentAstNode.AddChild(newNode);
-            //_astNodeStack.Push(includeTag.RootContentNode);
             
+        }
+
+        public override void ExitInclude_tag(LiquidParser.Include_tagContext context)
+        {
+            base.ExitInclude_tag(context);
+            CurrentBuilderContext.IncludeTagStack.Pop();
         }
 
         public override void EnterInclude_expr(LiquidParser.Include_exprContext context)
@@ -148,7 +145,6 @@ namespace Liquid.NET
                 Console.WriteLine("+_+ Setting INCLUDE value ");
                 CurrentBuilderContext.IncludeTagStack.Last().VirtualFileExpression = result;
             });
-
         }
 
         public override void ExitInclude_expr(LiquidParser.Include_exprContext context)
@@ -189,12 +185,26 @@ namespace Liquid.NET
             FinishLiquidExpressionTree();
         }
 
-
-        public override void ExitInclude_tag(LiquidParser.Include_tagContext context)
+        public override void EnterInclude_param_pair(LiquidParser.Include_param_pairContext context)
         {
-            base.ExitInclude_tag(context);
-            CurrentBuilderContext.IncludeTagStack.Pop();
+            base.EnterInclude_param_pair(context);
+            String label = context.LABEL().GetText();
+            StartNewLiquidExpressionTree(result =>
+            {
+                Console.WriteLine(" ---> Setting INCLUDE for "+label + " = " + result );
+                CurrentBuilderContext.IncludeTagStack.Last().Definitions.Add(label, result);
+                Console.WriteLine("THere are " + CurrentBuilderContext.IncludeTagStack.Last().Definitions.Count() +
+                                  " definitions");
+            });
         }
+
+        public override void ExitInclude_param_pair(LiquidParser.Include_param_pairContext context)
+        {
+            base.ExitInclude_param_pair(context);
+            FinishLiquidExpressionTree();
+        }
+
+        #endregion
 
         public override void EnterAssign_tag(LiquidParser.Assign_tagContext context)
         {

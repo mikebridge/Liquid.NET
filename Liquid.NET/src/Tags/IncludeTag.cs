@@ -20,6 +20,9 @@ namespace Liquid.NET.Tags
 
         public TreeNode<LiquidExpression> ForExpression { get; set; }
 
+        public readonly IDictionary<String, TreeNode<LiquidExpression>> Definitions =
+            new Dictionary<string, TreeNode<LiquidExpression>>();
+
         public void Accept(IASTVisitor visitor)
         {
             visitor.Visit(this);

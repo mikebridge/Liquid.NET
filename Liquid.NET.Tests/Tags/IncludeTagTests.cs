@@ -53,7 +53,7 @@ namespace Liquid.NET.Tests.Tags
         public void It_Should_Include_A_Virtual_File_With_For()
         {
             // Arrange
-            var ctx = CreateContext(new Dictionary<String, String> { { "test", "Test Snippet: {% for z in test %}{{z}}{% endfor %}" } });
+            var ctx = CreateContext(new Dictionary<String, String> { { "test", "Test Snippet: {{ test }} " } });
             ctx.Define("array",CreateArrayValues());
             //ctx.Define("payments", new ArrayValue(new List<IExpressionConstant>()));
 
@@ -63,7 +63,7 @@ namespace Liquid.NET.Tests.Tags
             var result = RenderingHelper.RenderTemplate(str, ctx);
 
             // Assert
-            Assert.That(result, Is.EqualTo("Test Snippet: 1234"));
+            Assert.That(result, Is.EqualTo("Test Snippet: 1 Test Snippet: 2 Test Snippet: 3 Test Snippet: 4 "));
 
         }
 
@@ -82,6 +82,23 @@ namespace Liquid.NET.Tests.Tags
 
             // Assert
             Assert.That(result, Is.EqualTo("Test Snippet: green"));
+
+        }
+
+        [Test]
+        public void It_Should_Define_Variables_In_Include()
+        {
+            // Arrange
+            var ctx = CreateContext(new Dictionary<String, String> { { "test", "Colour: {{ colour }}, Width: {{ width }}" } });
+            //ctx.Define("payments", new ArrayValue(new List<IExpressionConstant>()));
+
+            const String str = "{% include 'test' colour: 'Green', width: 10 %}";
+
+            // Act
+            var result = RenderingHelper.RenderTemplate(str, ctx);
+
+            // Assert
+            Assert.That(result, Is.EqualTo("Colour: Green, Width: 10"));
 
         }
 

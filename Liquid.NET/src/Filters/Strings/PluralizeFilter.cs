@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Liquid.NET.Constants;
+using Liquid.NET.Utils;
 
 namespace Liquid.NET.Filters.Strings
 {
@@ -21,10 +22,10 @@ namespace Liquid.NET.Filters.Strings
             _plural = plural;
         }
 
-        public override StringValue ApplyTo(NumericValue numericValue)
+        public override LiquidExpressionResult ApplyTo(NumericValue numericValue)
         {
             var str = new StringValue(ValueCaster.RenderAsString(numericValue)+" ");
-            return str.Join(numericValue.DecimalValue == 1 ? _single : _plural);
+            return LiquidExpressionResult.Success(str.Join(numericValue.DecimalValue == 1 ? _single : _plural));
         }
     }
 }

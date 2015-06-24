@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Liquid.NET.Constants;
+using Liquid.NET.Utils;
 
 namespace Liquid.NET.Filters.Array
 {
@@ -16,7 +17,7 @@ namespace Liquid.NET.Filters.Array
             _positionFilter = new PositionFilter(new NumericValue(0));
         }
         
-        public override IExpressionConstant Apply(ExpressionConstant liquidConstantExpression)
+        public override LiquidExpressionResult Apply(ExpressionConstant liquidConstantExpression)
         {
             return _positionFilter.Apply(liquidConstantExpression);
         }

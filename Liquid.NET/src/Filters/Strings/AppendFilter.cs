@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Liquid.NET.Constants;
+using Liquid.NET.Utils;
 
 namespace Liquid.NET.Filters.Strings
 {
@@ -19,9 +20,9 @@ namespace Liquid.NET.Filters.Strings
             _strToAppend = strToAppend;
         }
 
-        public override StringValue ApplyTo(IExpressionConstant liquidExpression)
+        public override LiquidExpressionResult ApplyTo(IExpressionConstant liquidExpression)
         {
-            return StringUtils.Eval(liquidExpression, x => x + _strToAppend.StringVal);            
+            return LiquidExpressionResult.Success(StringUtils.Eval(liquidExpression, x => x + _strToAppend.StringVal)); 
         }
     }
 }

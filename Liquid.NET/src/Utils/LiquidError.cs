@@ -4,18 +4,18 @@ using Liquid.NET.Constants;
 
 namespace Liquid.NET.Utils
 {
-    public class LiquidExpressionResult<T>: Either<LiquidError, Option<T>> where T: IExpressionConstant
+    public class LiquidExpressionResult: Either<LiquidError, Option<IExpressionConstant>>
     {
         internal LiquidExpressionResult(LiquidError err) : base(err)
         {
         }
 
-        internal LiquidExpressionResult(Option<T> success)
+        internal LiquidExpressionResult(Option<IExpressionConstant> success)
             : base(success)
         {
         }
 
-        public LiquidExpressionResult<T> WhenError(Action<LiquidError> fn)
+        public LiquidExpressionResult WhenError(Action<LiquidError> fn)
         {
             if (IsLeft)
             {
@@ -23,7 +23,7 @@ namespace Liquid.NET.Utils
             }
             return this;
         }
-        public LiquidExpressionResult<T> WhenSuccess(Action<Option<T>> fn)
+        public LiquidExpressionResult WhenSuccess(Action<Option<IExpressionConstant>> fn)
         {
             if (IsRight)
             {
@@ -32,7 +32,7 @@ namespace Liquid.NET.Utils
             return this;
         }
 
-        public Option<T> SuccessResult
+        public Option<IExpressionConstant> SuccessResult
         {
             get { return Right; }
         }
@@ -47,19 +47,19 @@ namespace Liquid.NET.Utils
         public bool IsSuccess { get { return IsRight; } }
 
 
-        public static LiquidExpressionResult<T> Error(String msg)
+        public static LiquidExpressionResult Error(String msg)
         {
-            return new LiquidExpressionResult<T>(new LiquidError { Message = msg });
+            return new LiquidExpressionResult(new LiquidError { Message = msg });
         }
 
-        public static LiquidExpressionResult<T> Success(Option<T> success)
+        public static LiquidExpressionResult Success(Option<IExpressionConstant> success)
         {
-            return new LiquidExpressionResult<T>(success);
+            return new LiquidExpressionResult(success);
         }
 
-        public static LiquidExpressionResult<T> Success(T success)
+        public static LiquidExpressionResult Success(IExpressionConstant success)
         {
-            return Success(new Some<T>(success));
+            return Success(new Some<IExpressionConstant>(success));
         }
     }
 }

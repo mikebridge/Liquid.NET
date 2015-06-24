@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Liquid.NET.Constants;
 using Liquid.NET.Filters.Strings;
+using Liquid.NET.Utils;
 
 namespace Liquid.NET.Filters.Math
 {
@@ -19,9 +20,9 @@ namespace Liquid.NET.Filters.Math
         }
 
 
-        public override NumericValue ApplyTo(NumericValue addend2)
+        public override LiquidExpressionResult ApplyTo(NumericValue addend2)
         {
-            return new NumericValue(_addend1.DecimalValue * addend2.DecimalValue);
+            return LiquidExpressionResult.Success(new NumericValue(_addend1.DecimalValue * addend2.DecimalValue));
         }
 
     }

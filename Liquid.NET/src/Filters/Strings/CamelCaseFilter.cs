@@ -5,6 +5,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using Liquid.NET.Constants;
+using Liquid.NET.Utils;
 
 namespace Liquid.NET.Filters.Strings
 {
@@ -16,14 +17,14 @@ namespace Liquid.NET.Filters.Strings
     public class CamelCaseFilter : FilterExpression<IExpressionConstant, StringValue>
     {
 
-        public override StringValue ApplyTo(IExpressionConstant liquidExpression)
+        public override LiquidExpressionResult ApplyTo(IExpressionConstant liquidExpression)
         {
 
-            return StringUtils.Eval(liquidExpression, before =>
+            return LiquidExpressionResult.Success(StringUtils.Eval(liquidExpression, before =>
             {
                 return String.Concat(before.Split(new[] {' ', '-', '_'}, StringSplitOptions.RemoveEmptyEntries)
                     .Select(x => char.ToUpper(x[0]) + x.Substring(1).ToLower()));
-            });
+            }));
         }
 
     }

@@ -12,10 +12,10 @@ namespace Liquid.NET.Filters
 {
     public class CastFilter<TSource, TResult> : FilterExpression<TSource, TResult>
         where TSource : IExpressionConstant
-        where TResult : LiquidExpressionResult
+        where TResult : IExpressionConstant
     {
 
-        public override TResult Apply(TSource liquidExpression)
+        public override LiquidExpressionResult Apply(TSource liquidExpression)
         {
             Console.WriteLine("Casting from " + typeof(TSource) + " to " + typeof(TResult));
             var result= ValueCaster.Cast<TSource, TResult>(liquidExpression);

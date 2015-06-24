@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Liquid.NET.Constants;
+using Liquid.NET.Utils;
 
 namespace Liquid.NET.Filters.Math
 {
@@ -13,7 +14,7 @@ namespace Liquid.NET.Filters.Math
 
         public ModuloFilter(NumericValue operand) { _operand = operand; }
 
-        public override NumericValue Apply(NumericValue numericValue)
+        public override LiquidExpressionResult Apply(NumericValue numericValue)
         {
             if (_operand == null)
             {

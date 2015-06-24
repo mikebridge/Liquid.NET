@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Liquid.NET.Constants;
+using Liquid.NET.Utils;
 
 namespace Liquid.NET.Filters.Array 
 {
@@ -16,22 +17,22 @@ namespace Liquid.NET.Filters.Array
             _selector = selector;
         }
 
-        public override IExpressionConstant ApplyTo(IExpressionConstant liquidExpression)
+        public override LiquidExpressionResult ApplyTo(IExpressionConstant liquidExpression)
         {
-            return ConstantFactory.CreateError<ArrayValue>("Can't map that object type.  It is not an array or a hash.");
+            return LiquidExpressionResult.Error("Can't map that object type.  It is not an array or a hash.");
         }
 
-        public override IExpressionConstant ApplyTo(ArrayValue liquidArrayExpression)
+        public override LiquidExpressionResult ApplyTo(ArrayValue liquidArrayExpression)
         {
             if (liquidArrayExpression == null || liquidArrayExpression.Value == null)
             {
-                return ConstantFactory.CreateError<ArrayValue>("Array is nil");
+                return LiquidExpressionResult.Error("Array is nil");
             }
             var list = liquidArrayExpression.ArrValue.Select(x => FieldAccessor.TryField(x, _selector.StringVal)).ToList();
-            return new ArrayValue(list);
+            return LiquidExpressionResult.Success(new ArrayValue(list));
         }
 
-        public override IExpressionConstant ApplyTo(DictionaryValue liquidDictionaryValue)
+        public override LiquidExpressionResult ApplyTo(DictionaryValue liquidDictionaryValue)
         {
             if (liquidDictionaryValue == null || liquidDictionaryValue.Value == null)
             {

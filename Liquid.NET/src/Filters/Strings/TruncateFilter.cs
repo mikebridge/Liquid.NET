@@ -6,6 +6,7 @@ using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 using Liquid.NET.Constants;
+using Liquid.NET.Utils;
 
 namespace Liquid.NET.Filters.Strings
 {
@@ -20,9 +21,9 @@ namespace Liquid.NET.Filters.Strings
             _truncateString = truncateString.IsUndefined ? new StringValue("...") : truncateString;
         }
 
-        public override StringValue ApplyTo(IExpressionConstant liquidExpression)
+        public override LiquidExpressionResult ApplyTo(IExpressionConstant liquidExpression)
         {
-            return StringUtils.Eval(liquidExpression, Truncate);
+            return LiquidExpressionResult.Success(StringUtils.Eval(liquidExpression, Truncate));
         }
 
         private string Truncate(string s)

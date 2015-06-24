@@ -12,7 +12,7 @@ namespace Liquid.NET.Constants
 
         public static TDest Cast<TSource, TDest>(TSource src)
             where TDest : IExpressionConstant
-            where TSource : LiquidExpressionResult
+            where TSource : IExpressionConstant
         {
             if (src is TDest)
             {
@@ -262,10 +262,10 @@ namespace Liquid.NET.Constants
         {
             // These don't render in liquid
             //if (val.IsUndefined || val.HasError)
-            if (val.IsUndefined)
-            {
-                return "";
-            }
+//            if (val.IsUndefined)
+//            {
+//                return "";
+//            }
 
             if (val.HasError)
             {

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Liquid.NET.Constants;
+using Liquid.NET.Utils;
 
 namespace Liquid.NET.Filters.Math
 {
@@ -16,7 +17,7 @@ namespace Liquid.NET.Filters.Math
             _divisor = divisor;
         }
 
-        public override NumericValue Apply(NumericValue dividend)
+        public override LiquidExpressionResult Apply(NumericValue dividend)
         {
             if (dividend == null)
             {

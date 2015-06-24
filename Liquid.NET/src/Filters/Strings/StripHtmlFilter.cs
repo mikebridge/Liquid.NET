@@ -6,16 +6,17 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
 using Liquid.NET.Constants;
+using Liquid.NET.Utils;
 
 namespace Liquid.NET.Filters.Strings
 {
     public class StripHtmlFilter : FilterExpression<StringValue, StringValue>
     {
 
-        public override StringValue ApplyTo(StringValue liquidStringExpression)
+        public override LiquidExpressionResult ApplyTo(StringValue liquidStringExpression)
         {
             //input.to_s.gsub(/<script.*?<\/script>/m, empty).gsub(/<!--.*?-->/m, empty).gsub(/<style.*?<\/style>/m, empty).gsub(/<.*?>/m, empty)
-            return StringUtils.Eval(liquidStringExpression, UnHtml);
+            return LiquidExpressionResult.Success(StringUtils.Eval(liquidStringExpression, UnHtml));
         }
 
 

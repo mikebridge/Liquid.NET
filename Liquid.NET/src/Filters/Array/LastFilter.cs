@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Liquid.NET.Constants;
+using Liquid.NET.Utils;
 
 namespace Liquid.NET.Filters.Array
 {
@@ -13,34 +10,34 @@ namespace Liquid.NET.Filters.Array
         ///  TODO: Update to new structure
         /// </summary>
         /// <returns></returns>
-        public override IExpressionConstant Apply(ExpressionConstant liquidExpression)
+        public override LiquidExpressionResult Apply(ExpressionConstant liquidExpression)
         {
             return ApplyTo((dynamic)liquidExpression);
 
 
         }
 
-        public override IExpressionConstant ApplyTo(IExpressionConstant liquidExpression)
+        public override LiquidExpressionResult ApplyTo(IExpressionConstant liquidExpression)
         {
-            return ConstantFactory.CreateError<ArrayValue>("Can't ask for an element at that index.  This is not an array or a string.");
+            return LiquidExpressionResult.Error("Can't ask for an element at that index.  This is not an array or a string.");
 
         }
 
-        public IExpressionConstant ApplyTo(ArrayValue liquidArrayExpression)
+        public override LiquidExpressionResult ApplyTo(ArrayValue liquidArrayExpression)
         {
             if (liquidArrayExpression == null || liquidArrayExpression.Value == null)
             {
-                return ConstantFactory.CreateError<ArrayValue>("Array is nil");
+                return LiquidExpressionResult.Error("Array is nil");
             }
             var positionFilter = new PositionFilter(new NumericValue(liquidArrayExpression.ArrValue.Count - 1));
             return positionFilter.ApplyTo(liquidArrayExpression);
         }
 
-        public IExpressionConstant ApplyTo(StringValue liquidStringExpression)
+        public override LiquidExpressionResult ApplyTo(StringValue liquidStringExpression)
         {
             if (liquidStringExpression == null || String.IsNullOrEmpty(liquidStringExpression.StringVal))
             {
-                return ConstantFactory.CreateError<StringValue>("String is nil");
+                return LiquidExpressionResult.Error("String is nil");
             }
             var positionFilter = new PositionFilter(new NumericValue(liquidStringExpression.StringVal.Length - 1));
             return positionFilter.ApplyTo(liquidStringExpression);

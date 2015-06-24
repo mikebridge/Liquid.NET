@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 using Liquid.NET.Constants;
+using Liquid.NET.Utils;
 
 namespace Liquid.NET.Filters.Strings
 {
@@ -23,38 +24,38 @@ namespace Liquid.NET.Filters.Strings
             _length = length;
         }
 
-        public override IExpressionConstant ApplyTo(IExpressionConstant liquidExpression)
+        public override LiquidExpressionResult ApplyTo(IExpressionConstant liquidExpression)
         {
-            return ConstantFactory.CreateError<ArrayValue>("Can't find sub-elements from that object.  It is not an array or a string.");
+            return LiquidExpressionResult.Error("Can't find sub-elements from that object.  It is not an array or a string.");
         }
 
-        public override IExpressionConstant ApplyTo(ArrayValue liquidArrayExpression)
+        public override LiquidExpressionResult ApplyTo(ArrayValue liquidArrayExpression)
         {
             if (liquidArrayExpression == null || liquidArrayExpression.Value == null)
             {
-                return ConstantFactory.CreateError<ArrayValue>("Array is nil");
+                return LiquidExpressionResult.Error("Array is nil");
             }
             var list = liquidArrayExpression.ArrValue;
 
             if (_start == null || _start.IsUndefined)
             {
-                return ConstantFactory.CreateError<ArrayValue>("Please pass a start parameter.");
+                return LiquidExpressionResult.Error("Please pass a start parameter.");
             }
 
-            return new ArrayValue(SliceList(list));
+            return LiquidExpressionResult.Success(new ArrayValue(SliceList(list)));
         }
 
-        public override IExpressionConstant ApplyTo(StringValue stringValue)
+        public override  LiquidExpressionResult ApplyTo(StringValue stringValue)
         {
             if (stringValue == null || stringValue.Value == null)
             {
-                return ConstantFactory.CreateError<StringValue>("String is null");
+                return LiquidExpressionResult.Error("String is null");
             }
             var list = stringValue.StringVal.ToCharArray().ToList();
 
             if (_start == null || _start.IsUndefined)
             {
-                return ConstantFactory.CreateError<StringValue>("Please pass a start parameter.");
+                return LiquidExpressionResult.Error("Please pass a start parameter.");
             }
 
             return new StringValue(String.Concat(SliceList(list)));

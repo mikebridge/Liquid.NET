@@ -21,6 +21,12 @@ namespace Liquid.NET.Utils
                 new Some<T>(val) as Option<T>;
                 
         }
+
+        public static Option<T> None()
+        {
+            return new None<T>();
+        }
+
     }
 
     public class Some<T> : Option<T>
@@ -85,6 +91,7 @@ namespace Liquid.NET.Utils
         /// <param name="self"></param>
         /// <param name="f"></param>
         /// <returns></returns>
+        //public static Option<T> Bind<T>(this Option<T> self, Func<T, Option<T>> f)
         public static Option<T> Bind<T>(this Option<T> self, Func<T, Option<T>> f)
         {
             if (f == null) throw new ArgumentNullException("f");

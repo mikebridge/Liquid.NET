@@ -6,14 +6,15 @@ using System.Threading.Tasks;
 using Antlr4.Runtime.Misc;
 using Liquid.NET.Constants;
 using Liquid.NET.Expressions;
+using Liquid.NET.Utils;
 
 namespace Liquid.NET.Filters
 {
     public class ToIntFilter : FilterExpression<ExpressionConstant, NumericValue>
     {
-        public override NumericValue Apply([NotNull] ExpressionConstant liquidExpression)
+        public override LiquidExpressionResult Apply(ExpressionConstant liquidExpression)
         {
-            return new NumericValue(ToDecimalFilter.ConvertToDecimal(liquidExpression).IntValue);
+            return LiquidExpressionResult.Success(new NumericValue(ToDecimalFilter.ConvertToDecimal(liquidExpression).IntValue));
         }
     }
 }

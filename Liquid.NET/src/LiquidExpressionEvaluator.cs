@@ -7,6 +7,8 @@ using Liquid.NET.Filters;
 using Liquid.NET.Symbols;
 using Liquid.NET.Utils;
 
+//using ExpressionResult = Liquid.NET.Utils.Either<Liquid.NET.LiquidError, Liquid.NET.Utils.Option<Liquid.NET.Constants.IExpressionConstant>>;
+
 namespace Liquid.NET
 {
     // Take an AST Expression and turn it into something
@@ -14,7 +16,7 @@ namespace Liquid.NET
     public static class LiquidExpressionEvaluator
     {
         
-        public static IExpressionConstant Eval(
+        public static LiquidExpressionResult Eval(
             TreeNode<LiquidExpression> expr, 
             SymbolTableStack symbolTableStack)
         {
@@ -24,7 +26,7 @@ namespace Liquid.NET
             return Eval(expr.Data, leaves, symbolTableStack);
         }
 
-        public static IExpressionConstant Eval(
+        public static LiquidExpressionResult Eval(
             LiquidExpressionTree expressiontree, 
             SymbolTableStack symbolTableStack)
         {
@@ -35,13 +37,13 @@ namespace Liquid.NET
             return Eval(expressiontree.ExpressionTree.Data, leaves, symbolTableStack);
         }
 
-        public static IExpressionConstant Eval(
-            LiquidExpression expression, 
-            IEnumerable<IExpressionConstant> leaves, 
+        public static LiquidExpressionResult Eval(
+            LiquidExpression expression,
+            IEnumerable<Option<IExpressionConstant>> leaves, 
             SymbolTableStack symbolTableStack)
         {
 
-            IExpressionConstant objResult = expression.Expression.Eval(symbolTableStack, leaves);
+            LiquidExpressionResult objResult = expression.Expression.Eval(symbolTableStack, leaves);
            
             // Compose a chain of filters, making sure type-casting
             // is done between them.
@@ -54,7 +56,8 @@ namespace Liquid.NET
             if (erroringFilternames.Any())
             {
                 //throw new Exception("Missing filters..."); 
-                return ConstantFactory.CreateError<StringValue>("Missing filters: "+String.Join(", ", erroringFilternames.Select(x => x.Name)));
+                //return ConstantFactory.CreateError<StringValue>();
+                return LiquidExpressionResult.Error("Missing filters: " + String.Join(", ", erroringFilternames.Select(x => x.Name)));
             }
 
             var filterChain = FilterChain.CreateChain(
@@ -77,8 +80,9 @@ namespace Liquid.NET
                 //return new Tuple<String, IFilterExpression>(filterSymbol.Name, null);
                 return null;
             }
-            var expressionConstants = filterSymbol.Args.Select(x => x.Eval(stack, new List<IExpressionConstant>()));
-            return FilterFactory.InstantiateFilter(filterSymbol.Name, filterType, expressionConstants);
+            var expressionConstants = filterSymbol.Args.Select(x => x.Eval(stack, new List<LiquidExpressionResult>()));
+            // TODO: Handle the error if any
+            return FilterFactory.InstantiateFilter(filterSymbol.Name, filterType, expressionConstants.Select(x => x.SuccessResult));
         }
 
 

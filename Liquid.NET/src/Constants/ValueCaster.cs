@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 using Liquid.NET.Filters;
+using Liquid.NET.Utils;
 
 namespace Liquid.NET.Constants
 {
@@ -11,7 +12,7 @@ namespace Liquid.NET.Constants
 
         public static TDest Cast<TSource, TDest>(TSource src)
             where TDest : IExpressionConstant
-            where TSource : IExpressionConstant
+            where TSource : LiquidExpressionResult
         {
             if (src is TDest)
             {
@@ -186,23 +187,6 @@ namespace Liquid.NET.Constants
             }
             return ConstantFactory.CreateError<TDest>("Can't convert from string to " + destType);
            
-        }
-
-        
-
-        // TODO: phase out Objectvalue.
-        private static IExpressionConstant Convert<TDest>(ObjectValue source)
-            where TDest : IExpressionConstant
-        {
-            var destType = typeof(TDest);
-            if (destType == typeof(StringValue))
-            {
-                //return new StringValue(Stringify(source));
-                return Convert<TDest>((dynamic) source.Value);
-            }
-            //source.
-            return ConstantFactory.CreateError<TDest>("Can't convert from " + source.GetType() + " to " + destType);
-
         }
 
 

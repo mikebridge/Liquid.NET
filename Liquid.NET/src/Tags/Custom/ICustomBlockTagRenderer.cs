@@ -22,7 +22,7 @@ namespace Liquid.NET.Tags.Custom
         StringValue Render(
                     SymbolTableStack symbolTablestack,
                     TreeNode<IASTNode> liquidBlock,
-                    IList<IExpressionConstant> args);
+                    IList<Option<IExpressionConstant>> args);
 
     }
 }

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Liquid.NET.Constants;
 using Liquid.NET.Symbols;
+using Liquid.NET.Utils;
 
 namespace Liquid.NET.Expressions
 {
@@ -15,7 +16,7 @@ namespace Liquid.NET.Expressions
             expressionDescriptionVisitor.Visit(this);
         }
 
-        public override IExpressionConstant Eval(SymbolTableStack symbolTableStack, IEnumerable<IExpressionConstant> expressions)
+        public override LiquidExpressionResult Eval(SymbolTableStack symbolTableStack, IEnumerable<Option<IExpressionConstant>> expressions)
         {
             
             IList<IExpressionConstant> exprList = expressions.ToList();

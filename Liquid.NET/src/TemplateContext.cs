@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
+
 using Liquid.NET.Constants;
 using Liquid.NET.Filters;
 using Liquid.NET.Filters.Array;
@@ -27,9 +27,9 @@ namespace Liquid.NET
 
         private readonly Registry<ICustomBlockTagRenderer> _customBlockTagRegistry = new Registry<ICustomBlockTagRenderer>();
 
-        private readonly ConcurrentDictionary<String, int> _counters = new ConcurrentDictionary<string, int>();
+        //private readonly ConcurrentDictionary<String, int> _counters = new ConcurrentDictionary<string, int>();
 
-        private IFileSystem _fileSystem = null;
+        private IFileSystem _fileSystem;
 
         public ITemplateContext Define(String name, IExpressionConstant constant)
         {

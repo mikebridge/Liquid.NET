@@ -233,27 +233,27 @@ namespace Liquid.NET.Tests
 
         }
 
-        [Test]
-        public void It_Should_Render_A_Dictionary()
-        {
-            // Arrange
-            TemplateContext templateContext = new TemplateContext();
-            var dict = new Dictionary<String, String> { { "test1", "test element" } };
-
-            templateContext.Define("mydict", new ObjectValue(dict));
-
-            // Arrange
-            var ast = _generator.Generate("Result : {{ mydict }}");
-
-            // Act
-            String result = new LiquidASTRenderer().Render(templateContext, ast);
-            // Act
-
-            // Assert
-            Assert.That(result, Is.EqualTo("Result : { \"test1\" : \"test element\" }"));
-
-
-        }
+//        [Test]
+//        public void It_Should_Render_A_Dictionary()
+//        {
+//            // Arrange
+//            TemplateContext templateContext = new TemplateContext();
+//            var dict = new Dictionary<String, String> { { "test1", "test element" } };
+//
+//            templateContext.Define("mydict", new ObjectValue(dict));
+//
+//            // Arrange
+//            var ast = _generator.Generate("Result : {{ mydict }}");
+//
+//            // Act
+//            String result = new LiquidASTRenderer().Render(templateContext, ast);
+//            // Act
+//
+//            // Assert
+//            Assert.That(result, Is.EqualTo("Result : { \"test1\" : \"test element\" }"));
+//
+//
+//        }
 
         [Test]
         public void It_Should_Render_A_Dictionary_Element()

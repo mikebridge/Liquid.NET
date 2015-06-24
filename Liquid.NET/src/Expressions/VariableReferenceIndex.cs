@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 using Liquid.NET.Constants;
 using Liquid.NET.Symbols;
+using Liquid.NET.Utils;
+
 
 namespace Liquid.NET.Expressions
 {
@@ -19,8 +19,10 @@ namespace Liquid.NET.Expressions
             _index = index;
         }
 
-        public override IExpressionConstant Eval(SymbolTableStack symbolTableStack, IEnumerable<IExpressionConstant> expressions)
+        public override LiquidExpressionResult Eval(SymbolTableStack symbolTableStack, IEnumerable<Option<IExpressionConstant>> expressions)
         {
+            //_variableReference.Eval(symbolTableStack, new List<IExpressionConstant>())
+
             DictionaryValue dict = _variableReference.Eval(symbolTableStack, new List<IExpressionConstant>()) as DictionaryValue;
             if (dict != null)
             {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Liquid.NET.Constants;
 using Liquid.NET.Expressions;
+using Liquid.NET.Utils;
 
 namespace Liquid.NET.Filters
 {
@@ -14,7 +15,7 @@ namespace Liquid.NET.Filters
         /// return a T, a casting function will be interpolated into the chain.
         /// </summary>
         /// <returns></returns>
-        public static Func<IExpressionConstant, IExpressionConstant> CreateChain(
+        public static Func<Option<IExpressionConstant>, LiquidExpressionResult> CreateChain(
             Type objExprType,
             IEnumerable<IFilterExpression> filterExpressions)
         {
@@ -35,12 +36,12 @@ namespace Liquid.NET.Filters
         }
 
 
-        public static Func<IExpressionConstant, IExpressionConstant> CreateChain(IEnumerable<IFilterExpression> filterExpressions)
+        public static Func<Option<IExpressionConstant>, LiquidExpressionResult> CreateChain(IEnumerable<IFilterExpression> filterExpressions)
         {
             return x => BindAll(InterpolateCastFilters(filterExpressions))(x);
         }
 
-        public static Func<IExpressionConstant, IExpressionConstant> BindAll(
+        public static Func<Option<IExpressionConstant>, LiquidExpressionResult> BindAll(
             IEnumerable<IFilterExpression> filterExpressions)
         {
             return exprConstant => filterExpressions.Aggregate(exprConstant, (current, expression) => current.Bind(expression.Apply));

@@ -56,13 +56,13 @@ namespace Liquid.NET.Filters
                 }
                 else
                 {                    
-                    return ConstantFactory.CreateUndefined<StringValue>("invalid array index: " + propertyNameString);
+                    return ConstantFactory.CreateNilValueOfType<StringValue>("invalid array index: " + propertyNameString);
                 }
             }
 
             if (arrayValue.ArrValue.Count == 0)
             {
-                return ConstantFactory.CreateUndefined<StringValue>("array is empty: " + propertyNameString);
+                return ConstantFactory.CreateNilValueOfType<StringValue>("array is empty: " + propertyNameString);
             }
             var result = arrayValue.ValueAt(index); 
             return result;
@@ -108,13 +108,13 @@ namespace Liquid.NET.Filters
                 }
                 else
                 {
-                    return ConstantFactory.CreateUndefined<StringValue>("invalid array index: " + propertyNameString);
+                    return ConstantFactory.CreateNilValueOfType<StringValue>("invalid array index: " + propertyNameString);
                 }
             }
 
             if (strValues.Count == 0)
             {
-                return ConstantFactory.CreateUndefined<StringValue>("Empty string: " + propertyNameString);
+                return ConstantFactory.CreateNilValueOfType<StringValue>("Empty string: " + propertyNameString);
             }
             return ArrayIndexer.ValueAt(strValues, index);
 

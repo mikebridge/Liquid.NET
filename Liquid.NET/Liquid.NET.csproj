@@ -69,6 +69,7 @@
     <Compile Include="src\Constants\ConstantFactory.cs" />
     <Compile Include="src\Constants\DateValue.cs" />
     <Compile Include="src\Constants\DictionaryValue.cs" />
+    <Compile Include="src\Constants\EasyOptionComparer.cs" />
     <Compile Include="src\Constants\EasyValueComparer.cs" />
     <Compile Include="src\Constants\EmptyChecker.cs" />
     <Compile Include="src\Constants\ExpressionConstant.cs" />
@@ -77,9 +78,9 @@
     <Compile Include="src\Constants\IExpressionConstant.cs" />
     <Compile Include="src\Constants\IIndexable.cs" />
     <Compile Include="src\Constants\KeyValueArg.cs" />
+    <Compile Include="src\Constants\NilValue.cs" />
     <Compile Include="src\Constants\NumericValue.cs" />
     <Compile Include="src\Constants\FilterArgumentAttribute.cs" />
-    <Compile Include="src\Constants\ObjectValue.cs" />
     <Compile Include="src\Constants\Reflector.cs" />
     <Compile Include="src\Constants\StringValue.cs" />
     <Compile Include="src\Constants\Undefined.cs" />
@@ -206,7 +207,10 @@
     <Compile Include="src\Tags\RawBlockTag.cs" />
     <Compile Include="src\TemplateContext.cs" />
     <Compile Include="src\Symbols\IASTVisitor.cs" />
+    <Compile Include="src\Utils\Either.cs" />
+    <Compile Include="src\Utils\LiquidError.cs" />
     <Compile Include="src\Utils\LiquidVersionAttribute.cs" />
+    <Compile Include="src\Utils\Option.cs" />
     <Compile Include="src\Utils\Registry.cs" />
     <Compile Include="src\Utils\StrFTime.cs" />
     <Compile Include="src\Utils\TreeNode.cs" />

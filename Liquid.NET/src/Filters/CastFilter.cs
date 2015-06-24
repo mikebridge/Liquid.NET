@@ -6,12 +6,13 @@ using System.Text;
 using System.Threading.Tasks;
 using Liquid.NET.Constants;
 using Liquid.NET.Expressions;
+using Liquid.NET.Utils;
 
 namespace Liquid.NET.Filters
 {
-    public class CastFilter<TSource, TResult> :FilterExpression<TSource, TResult>
+    public class CastFilter<TSource, TResult> : FilterExpression<TSource, TResult>
         where TSource : IExpressionConstant
-        where TResult : IExpressionConstant
+        where TResult : LiquidExpressionResult
     {
 
         public override TResult Apply(TSource liquidExpression)

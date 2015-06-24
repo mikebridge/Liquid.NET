@@ -1,5 +1,7 @@
 ﻿using System;
 using Liquid.NET.Expressions;
+using Liquid.NET.Utils;
+
 
 namespace Liquid.NET.Constants
 {
@@ -9,11 +11,11 @@ namespace Liquid.NET.Constants
 
         bool IsTrue { get; }
 
-        bool IsUndefined { get; set; }
+        //bool IsNil { get; set; }
 
-        IExpressionConstant Bind(Func<IExpressionConstant, IExpressionConstant> f);
+        LiquidExpressionResult Bind(Func<IExpressionConstant, LiquidExpressionResult> f);
 
-        TOut Bind<TOut>(Func<IExpressionConstant, TOut> f)
-            where TOut : IExpressionConstant;
+        TOut Bind<TOut>(Func<LiquidExpressionResult, TOut> f)
+            where TOut : LiquidExpressionResult;
     }
 }

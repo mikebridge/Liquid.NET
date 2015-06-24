@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Web.UI.WebControls;
 using Liquid.NET.Constants;
 using Liquid.NET.Symbols;
+using Liquid.NET.Utils;
 
 namespace Liquid.NET.Expressions
 {
@@ -17,8 +18,8 @@ namespace Liquid.NET.Expressions
             expressionDescriptionVisitor.Visit(this);
         }
 
-        public override IExpressionConstant Eval(SymbolTableStack symbolTableStack,
-            IEnumerable<IExpressionConstant> expressions)
+        public override LiquidExpressionResult Eval(SymbolTableStack symbolTableStack,
+            IEnumerable<Option<IExpressionConstant>> expressions)
         {
             var expressionList = expressions.ToList();
             return ComparisonExpressions.Compare(expressionList[0], expressionList[1], (x, y) => x > y);
@@ -32,8 +33,8 @@ namespace Liquid.NET.Expressions
             expressionDescriptionVisitor.Visit(this);
         }
 
-        public override IExpressionConstant Eval(SymbolTableStack symbolTableStack,
-            IEnumerable<IExpressionConstant> expressions)
+        public override LiquidExpressionResult Eval(SymbolTableStack symbolTableStack,
+            IEnumerable<Option<IExpressionConstant>> expressions)
         {
             var expressionList = expressions.ToList();
             return ComparisonExpressions.Compare(expressionList[0], expressionList[1], (x, y) => x <= y);
@@ -47,8 +48,8 @@ namespace Liquid.NET.Expressions
             expressionDescriptionVisitor.Visit(this);
         }
 
-        public override IExpressionConstant Eval(SymbolTableStack symbolTableStack,
-            IEnumerable<IExpressionConstant> expressions)
+        public override LiquidExpressionResult Eval(SymbolTableStack symbolTableStack,
+            IEnumerable<Option<IExpressionConstant>> expressions)
         {
             var expressionList = expressions.ToList();
             return ComparisonExpressions.Compare(expressionList[0], expressionList[1], (x, y) => x >= y);
@@ -62,8 +63,8 @@ namespace Liquid.NET.Expressions
             expressionDescriptionVisitor.Visit(this);
         }
 
-        public override IExpressionConstant Eval(SymbolTableStack symbolTableStack,
-            IEnumerable<IExpressionConstant> expressions)
+        public override LiquidExpressionResult Eval(SymbolTableStack symbolTableStack,
+            IEnumerable<Option<IExpressionConstant>> expressions)
         {
             var expressionList = expressions.ToList();
             return ComparisonExpressions.Compare(expressionList[0], expressionList[1], (x, y) => x < y);

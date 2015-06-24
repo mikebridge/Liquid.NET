@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Liquid.NET.Constants;
 using Liquid.NET.Symbols;
+using Liquid.NET.Utils;
 
 namespace Liquid.NET.Expressions
 {
@@ -13,7 +14,9 @@ namespace Liquid.NET.Expressions
         }
 
         // TODO: Move this out of here.  This should be on the Evaluator class, not in the AST.
-        public abstract IExpressionConstant Eval(SymbolTableStack symbolTableStack, IEnumerable<IExpressionConstant> expressions);
+        public abstract LiquidExpressionResult Eval(
+            SymbolTableStack symbolTableStack,
+            IEnumerable<Option<IExpressionConstant>> expressions);
 
         public bool HasError
         {
@@ -27,13 +30,7 @@ namespace Liquid.NET.Expressions
             get { return WarningMessage != null; }
         }
 
-
         public string WarningMessage { get; set; }
-//
-//        public IExpressionDescription Bind(Func<IExpressionDescription, IExpressionDescription> f)
-//        {
-//            return HasError ? this : f(this);
-//        }
-        
+
     }
 }

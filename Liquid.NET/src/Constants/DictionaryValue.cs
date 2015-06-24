@@ -34,7 +34,7 @@ namespace Liquid.NET.Constants
         {
             //Console.WriteLine("VALUE AT " + key);
             // TODO: Fix this.
-            var result = _value.ContainsKey(key) ? _value[key] : new Undefined(key);
+            var result = _value.ContainsKey(key) ? _value[key] : new NilValue(); // new Undefined(key);
             //var result = _value.ContainsKey(key) ? _value[key] : FilterFactory.CreateUndefinedForType(typeof(StringValue))
             //Console.WriteLine("IS " + result);
             return result;

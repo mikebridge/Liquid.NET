@@ -1,5 +1,6 @@
 ﻿using System;
 using Liquid.NET.Constants;
+using Liquid.NET.Utils;
 
 namespace Liquid.NET.Filters
 {
@@ -8,19 +9,19 @@ namespace Liquid.NET.Filters
         Type SourceType { get; }
         Type ResultType { get; }
 
-        IExpressionConstant Apply(IExpressionConstant liquidExpression);
+        LiquidExpressionResult Apply(IExpressionConstant liquidExpression);
     };
 
     public interface IFilterExpression<in TSource, out TResult> : IFilterExpression        
         where TSource : IExpressionConstant
-        where TResult : IExpressionConstant
+        where TResult : LiquidExpressionResult
     {
         TResult Apply(TSource liquidExpression);
     };
 
     public abstract class FilterExpression<TSource,TResult> : IFilterExpression
         where TSource : IExpressionConstant
-        where TResult : IExpressionConstant
+        where TResult : LiquidExpressionResult
     {
 
         // TODO: I don't think this should be virtual
@@ -29,7 +30,7 @@ namespace Liquid.NET.Filters
             return liquidExpression.Bind<TResult>(x => ApplyTo((dynamic)x));
         }
 
-        public IExpressionConstant Apply(IExpressionConstant liquidExpression)
+        public LiquidExpressionResult Apply(IExpressionConstant liquidExpression)
         {
             return Apply((TSource)liquidExpression);
         }

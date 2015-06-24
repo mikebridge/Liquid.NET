@@ -13,7 +13,7 @@ namespace Liquid.NET.Constants
         {
             if (key >= array.Count || key < -array.Count)
             {
-                return ConstantFactory.CreateUndefined<StringValue>("index "+key+" is outside the bounds of the array.");
+                return ConstantFactory.CreateNilValueOfType<StringValue>("index "+key+" is outside the bounds of the array.");
             }
             key = WrapMod(key, array.Count);
             

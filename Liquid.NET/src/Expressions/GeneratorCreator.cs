@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 using Liquid.NET.Constants;
 using Liquid.NET.Symbols;
 using Liquid.NET.Utils;
@@ -52,14 +51,14 @@ namespace Liquid.NET.Expressions
 //            _arrayValue = arrayValue;
 //        }
 
+        // TODO: SHould this return a LiquidExpressionResult?
         public IEnumerable<IExpressionConstant> Eval(SymbolTableStack symbolTableStack)
-        {
-            //Console.WriteLine("Evaling ArrayValue generator creator");
+        {            
             var expressionConstant = LiquidExpressionEvaluator.Eval(_arrayValueExpression,
                 symbolTableStack);
-            //Console.WriteLine("it is a "+expressionConstant);
+            
             return
-                ValueCaster.Cast<IExpressionConstant, ArrayValue>(expressionConstant);
+                ValueCaster.Cast<IExpressionConstant, ArrayValue>(expressionConstant.SuccessResult.Value);
         }
     }
 
@@ -86,7 +85,9 @@ namespace Liquid.NET.Expressions
 
         private NumericValue ValueAsNumeric(TreeNode<LiquidExpression> expr, SymbolTableStack symbolTableStack)
         {
-            return ValueCaster.Cast<IExpressionConstant, NumericValue>(LiquidExpressionEvaluator.Eval(expr, symbolTableStack));
+            var liquidExpressionResult = LiquidExpressionEvaluator.Eval(expr, symbolTableStack);
+            return liquidExpressionResult.SuccessResult.HasValue ? ValueCaster.Cast<IExpressionConstant, NumericValue>(liquidExpressionResult.SuccessResult.Value)
+                : new NumericValue(0);
         }
     }
 }

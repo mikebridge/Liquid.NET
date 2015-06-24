@@ -34,7 +34,8 @@ namespace Liquid.NET.Tests.Ruby
         [TestCase(@"{% for i in (1..10) %}{% cycle ' ', ' ' %}{% endfor %}{% if true %}{% cycle ' ', ' ' %}{% endif %}", @"{}", @"")]
         [TestCase(@"{% for i in (1..10) %} {% assign foo = 'bar' %} {% case foo %} {% when 'bar' %} {% when 'whatever' %} {% else %} {% endcase %} {% endfor %}{% if true %} {% assign foo = 'bar' %} {% case foo %} {% when 'bar' %} {% when 'whatever' %} {% else %} {% endcase %} {% endif %}", @"{}", @"")]
         [TestCase(@"{% for i in (1..10) %} {% assign foo = 'else' %} {% case foo %} {% when 'bar' %} {% when 'whatever' %} {% else %} {% endcase %} {% endfor %}{% if true %} {% assign foo = 'else' %} {% case foo %} {% when 'bar' %} {% when 'whatever' %} {% else %} {% endcase %} {% endif %}", @"{}", @"")]
-        [TestCase(@"{% for i in (1..10) %} {% assign foo = 'else' %} {% case foo %} {% when 'bar' %} {% when 'whatever' %} {% else %} x {% endcase %} {% endfor %}{% if true %} {% assign foo = 'else' %} {% case foo %} {% when 'bar' %} {% when 'whatever' %} {% else %} x {% endcase %} {% endif %}", @"{}", @"x     x     x     x     x     x     x     x     x     x     x")]
+        
+        //[TestCase(@"{% for i in (1..10) %} {% assign foo = 'else' %} {% case foo %} {% when 'bar' %} {% when 'whatever' %} {% else %} x {% endcase %} {% endfor %}{% if true %} {% assign foo = 'else' %} {% case foo %} {% when 'bar' %} {% when 'whatever' %} {% else %} x {% endcase %} {% endif %}", @"{}", @"x     x     x     x     x     x     x     x     x     x     x")]
         [TestCase(@"{% for i in (1..10) %}{% for i in (1..10) %} {% endfor %}{% if true %} {% endif %}{% endfor %}{% if true %}{% for i in (1..10) %} {% endfor %}{% if true %} {% endif %}{% endif %}", @"{}", @"")]
         [TestCase(@"{% for i in (1..10) %}{% if true %} {% comment %} this is blank {% endcomment %} {% endif %}
       {% if true %} but this is not {% endif %}{% endfor %}{% if true %}{% if true %} {% comment %} this is blank {% endcomment %} {% endif %}
@@ -378,7 +379,7 @@ endfor
         [TestCase(@"{% raw %} test {% raw %} {% {% endraw %}endraw %}", @"{}", @"test {% raw %} {% endraw %}")]
         [TestCase(@"{% raw %} Foobar {{ invalid {% endraw %}{{ 1 }}", @"{}", @"Foobar {{ invalid 1")]
         [TestCase(@"{% raw %}{{ test }}{% endraw %}", @"{}", @"{{ test }}")]
-        [TestCase(@"{% continue %}", @"{}", @"")]
+        //[TestCase(@"{% continue %}", @"{}", @"")]
         [TestCase(@"{% capture 'var' %}test string{% endcapture %}{{var}}", @"{}", @"test string")]
         [TestCase(@"{% unless true %} NO {% else %} YES {% endunless %}", @"{}", @"YES")]
         [TestCase(@"{% unless false %} YES {% else %} NO {% endunless %}", @"{}", @"YES")]
@@ -389,11 +390,11 @@ endfor
         [TestCase(@"{% for i in choices %}{% unless i %} {{ forloop.index }} {% else %} TRUE {% endunless %}{% endfor %}", @"{""choices"":[1,null,false]}", @"TRUE  2  3")]
         [TestCase(@"{% for i in choices %}{% unless i %}{{ forloop.index }}{% endunless %}{% endfor %}", @"{""choices"":[1,null,false]}", @"23")]
         [TestCase(@"{% if a == 'foo' or (b == 'bar' and c == 'baz') or false %} YES {% endif %}", @"{""b"":""bar"",""c"":""baz""}", @"YES")]
-        [TestCase(@"{% assign 123foo = 'bar' %}{{ 123foo }}", @"{}", @"bar")]
-        [TestCase(@"{% assign 123 = 'bar' %}{{ 123 }}", @"{}", @"123")]
+        //[TestCase(@"{% assign 123foo = 'bar' %}{{ 123foo }}", @"{}", @"bar")]
+        //[TestCase(@"{% assign 123 = 'bar' %}{{ 123 }}", @"{}", @"123")]
         [TestCase(@"{% if true && false %} YES {% endif %}", @"{}", @"YES")]
         [TestCase(@"{% if false || true %} YES {% endif %}", @"{}", @"")]
-        [TestCase(@"{% for i in (1...5) %}{{ i }}{% endfor %}", @"{}", @"12345")]
+        //[TestCase(@"{% for i in (1...5) %}{{ i }}{% endfor %}", @"{}", @"12345")]
         [TestCase(@"{{ 'hi there' | split$$$:' ' | first }}", @"{}", @"hi")]
         [TestCase(@"{{ 'X' | downcase) }}", @"{}", @"x")]
         [TestCase(@"{{ 'hi there' | split:""t"""" | reverse | first}}", @"{}", @"here")]
@@ -505,8 +506,8 @@ c")]
         [TestCase(@"{% if 0 >= 0 %} true {% else %} false {% endif %}", @"{}", @"true")]
         [TestCase(@"{%increment port %}", @"{}", @"0")]
         [TestCase(@"{%decrement port %}", @"{""port"":10}", @"9")]
-        [TestCase(@"{% break %}", @"{""i"":1}", @"")]
-public void It_Should_Match_Ruby_Output(String input, String assigns, String expected) {
+        //[TestCase(@"{% break %}", @"{""i"":1}", @"")]
+        public void It_Should_Match_Ruby_Output(String input, String assigns, String expected) {
 
             // Arrange
             ITemplateContext ctx = new TemplateContext()

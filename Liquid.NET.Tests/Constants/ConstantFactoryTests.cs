@@ -26,33 +26,33 @@ namespace Liquid.NET.Tests.Constants
 
         }
 
-        [Test]
-        public void It_Should_Create_An_Undefined_Variable_Corresponding_To_A_Return_Type()
-        {
-            // Arrange
-            
-            //ConstantFactory.CreateUndefinedX(_testToString);
-            // Act
-            var result = ConstantFactory.CreateUndefined(_testToString, "testing...");
+//        [Test]
+//        public void It_Should_Create_An_Undefined_Variable_Corresponding_To_A_Return_Type()
+//        {
+//            // Arrange
+//            
+//            //ConstantFactory.CreateUndefinedX(_testToString);
+//            // Act
+//            var result = ConstantFactory.CreateNilValueOfType(_testToString, "testing...");
+//
+//            // Assert
+//            Assert.That(result, Is.TypeOf<StringValue>());
+//            Assert.That(result.IsUndefined);
+//        }
 
-            // Assert
-            Assert.That(result, Is.TypeOf<StringValue>());
-            Assert.That(result.IsUndefined);
-        }
-
-        [Test]
-        public void It_Should_Create_A_String_If_Type_Return_Type_Is_Not_Instantiable()
-        {
-            // Arrange
-
-            //ConstantFactory.CreateUndefinedX(_testToString);
-            // Act
-            var result = ConstantFactory.CreateUndefined(_testToInterface, "testing...");
-
-            // Assert
-            Assert.That(result, Is.TypeOf<StringValue>());
-            Assert.That(result.IsUndefined);
-        }
+//        [Test]
+//        public void It_Should_Create_A_String_If_Type_Return_Type_Is_Not_Instantiable()
+//        {
+//            // Arrange
+//
+//            //ConstantFactory.CreateUndefinedX(_testToString);
+//            // Act
+//            var result = ConstantFactory.CreateNilValueOfType(_testToInterface, "testing...");
+//
+//            // Assert
+//            Assert.That(result, Is.TypeOf<StringValue>());
+//            Assert.That(result.IsUndefined);
+//        }
 
         private readonly Func<NumericValue, StringValue> _testToString = num => new StringValue(num.Value.ToString());
 

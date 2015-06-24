@@ -22,7 +22,7 @@ namespace Liquid.NET.Rendering
         public void Render(IncludeTag includeTag, SymbolTableStack symbolTableStack)
         {
             var virtualFilenameVar = LiquidExpressionEvaluator.Eval(includeTag.VirtualFileExpression, symbolTableStack);
-            String virtualFileName = ValueCaster.RenderAsString(virtualFilenameVar);
+            String virtualFileName = ValueCaster.RenderAsString(virtualFilenameVar.Value);
 
             if (symbolTableStack.FileSystem == null)
             {
@@ -37,22 +37,21 @@ namespace Liquid.NET.Rendering
 
             if (includeTag.ForExpression != null)
             {
-                var forExpression = LiquidExpressionEvaluator.Eval(includeTag.ForExpression, symbolTableStack);
+                var forExpressionOption = LiquidExpressionEvaluator.Eval(includeTag.ForExpression, symbolTableStack);
 
-                if (forExpression is DictionaryValue) // it seems to render as a single element if it's a dictionary.
+                if (forExpressionOption.Value is DictionaryValue) // it seems to render as a single element if it's a dictionary.
                 {
                     var localBlockScope = new SymbolTable();
                     DefineLocalVariables(symbolTableStack, localBlockScope, includeTag.Definitions);
 
                     var exprValue = LiquidExpressionEvaluator.Eval(includeTag.ForExpression, symbolTableStack);
-                    localBlockScope.DefineVariable(virtualFileName, exprValue);
+                    localBlockScope.DefineVariable(virtualFileName, exprValue.Value);
 
                     RenderWithLocalScope(symbolTableStack, localBlockScope, snippetAst.RootNode);
                 }
                 else
                 {
-
-                    ArrayValue array = ValueCaster.Cast<IExpressionConstant, ArrayValue>(forExpression);
+                    ArrayValue array = ValueCaster.Cast<IExpressionConstant, ArrayValue>(forExpressionOption.Value);
 
                     if (array.HasError)
                     {
@@ -76,7 +75,7 @@ namespace Liquid.NET.Rendering
                 if (includeTag.WithExpression != null)
                 {
                     var withExpression = LiquidExpressionEvaluator.Eval(includeTag.WithExpression, symbolTableStack);
-                    localBlockScope.DefineVariable(virtualFileName, withExpression);
+                    localBlockScope.DefineVariable(virtualFileName, withExpression.Value);
                 }
                 RenderWithLocalScope(symbolTableStack, localBlockScope, snippetAst.RootNode);
             }
@@ -98,7 +97,15 @@ namespace Liquid.NET.Rendering
         {
             foreach (var def in definitions)
             {
-                localBlockScope.DefineVariable(def.Key, LiquidExpressionEvaluator.Eval(def.Value, symbolTableStack));
+                var option = LiquidExpressionEvaluator.Eval(def.Value, symbolTableStack);
+                if (option.HasValue)
+                {
+                    localBlockScope.DefineVariable(def.Key, option.Value);
+                }
+                else
+                {
+                    localBlockScope.DefineVariable(def.Key, new NilValue());
+                }
             }
         }
     }

@@ -2,12 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Xml.XPath;
 using Liquid.NET.Constants;
-using Liquid.NET.Expressions;
-using Liquid.NET.Filters.Math;
-using Liquid.NET.Filters.Strings;
+using Liquid.NET.Utils;
 
 namespace Liquid.NET.Filters
 {
@@ -28,14 +24,14 @@ namespace Liquid.NET.Filters
         /// <param name="name"></param>
         /// <param name="filterArgs"></param>
         /// <returns></returns>
-        public static T InstantiateFilter<T>(String name, IList<IExpressionConstant> filterArgs)
+        public static T InstantiateFilter<T>(String name, IList<Option<IExpressionConstant>> filterArgs)
             where T: IFilterExpression
         {
             return (T) InstantiateFilter(name, typeof(T), filterArgs);
         }
 
         // TODO: CHange to IExpressionConstants---we don't want to eval them here.
-        public static IFilterExpression InstantiateFilter(String name, Type filterType, IEnumerable<IExpressionConstant> filterArgs)
+        public static IFilterExpression InstantiateFilter(String name, Type filterType, IEnumerable<Option<IExpressionConstant>> filterArgs)
         {
            
             if (filterType == null)
@@ -54,6 +50,7 @@ namespace Liquid.NET.Filters
                 // for the time being, ensure just one constructor.
                 throw new Exception("The \""+filterType+"\" class for " + name + " has more than one constructor.  Please contact the developer to fix this.");
             }
+            //filterArgs.Select(x => x.HasValue ? x.Value : new NilValue());
             return InstantiateFilter(filterType, CreateArguments(filterArgs, constructors[0]));
            
         }
@@ -65,7 +62,7 @@ namespace Liquid.NET.Filters
                 : (IFilterExpression) Activator.CreateInstance(filterType, args.ToArray());
         }
 
-        private static IList<object> CreateArguments(IEnumerable<IExpressionConstant> filterArgs, ConstructorInfo argConstructor)
+        private static IList<object> CreateArguments(IEnumerable<Option<IExpressionConstant>> filterArgs, ConstructorInfo argConstructor)
         {
             IList<Object> result = new List<object>();
             int i = 0;
@@ -81,7 +78,7 @@ namespace Liquid.NET.Filters
                     if (argType == typeof (ExpressionConstant) || argType == typeof(IExpressionConstant))
                     {
                         Console.WriteLine("Skipping ExpressionConstant...");
-                        result.Add(filterList[i]);
+                        result.Add(filterList[i].HasValue? filterList[i].Value : new NilValue());
                         continue;
                     }
 
@@ -105,7 +102,7 @@ namespace Liquid.NET.Filters
                     Console.WriteLine("Default is " + defaultValue.GetType());
                     //var defaultarg = (IExpressionConstant)Activator.CreateInstance(argType, null);
                     var defaultarg = (IExpressionConstant)constructorInfo.Invoke(defaultValue);
-                    defaultarg.IsUndefined = true;
+                    //defaultarg.IsUndefined = true;
                     result.Add(defaultarg);
                     //result.Add(CreateUndefinedForType(parmType, defaultParams));
                     //result.Add(null);

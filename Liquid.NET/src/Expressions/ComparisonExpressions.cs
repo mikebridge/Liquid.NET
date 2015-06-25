@@ -76,10 +76,16 @@ namespace Liquid.NET.Expressions
         public static BooleanValue Compare(IExpressionConstant x, IExpressionConstant y,
             Func<decimal, decimal, bool> func)
         {
-            var numericValue1 = ValueCaster.Cast<IExpressionConstant, NumericValue>(x);
-            var numericValue2 = ValueCaster.Cast<IExpressionConstant, NumericValue>(y);
+            var numericValueResult1 = ValueCaster.Cast<IExpressionConstant, NumericValue>(x);
+            var numericValueResult2 = ValueCaster.Cast<IExpressionConstant, NumericValue>(y);
 
-            return new BooleanValue(func(numericValue1.DecimalValue, numericValue2.DecimalValue));
+            if (numericValueResult2.IsError || numericValueResult1.IsError)
+            {
+                return new BooleanValue(false);
+            }
+
+            return new BooleanValue(func(numericValueResult1.SuccessValue<NumericValue>().DecimalValue, 
+                                         numericValueResult2.SuccessValue<NumericValue>().DecimalValue));
         }
 
     }

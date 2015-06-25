@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
+
 using Liquid.NET.Expressions;
-using Liquid.NET.Symbols;
+using Liquid.NET.Utils;
 
 namespace Liquid.NET.Constants
 {
@@ -20,7 +20,7 @@ namespace Liquid.NET.Constants
             }
         }
 
-        public static NumericValue Parse(String str)
+        public static LiquidExpressionResult Parse(String str)
         {
             try
             {
@@ -31,8 +31,9 @@ namespace Liquid.NET.Constants
             catch
             {
                 // This shouldn't actually fail...
-                var errorSymbol = new NumericValue(0) {ErrorMessage = "Unable to convert '" + str + "' to a number."};
-                return errorSymbol;
+                //var errorSymbol = new NumericValue(0) {ErrorMessage = "Unable to convert '" + str + "' to a number."};
+                //return errorSymbol;
+                return LiquidExpressionResult.Error("Unable to convert '" + str + "' to a number.");
             }
         }
 
@@ -55,11 +56,11 @@ namespace Liquid.NET.Constants
             expressionDescriptionVisitor.Visit(this);
         }
 
-        public static NumericValue CreateError(string message)
-        {
-            var result = new NumericValue(0);
-            result.ErrorMessage = message;
-            return result;
-        }
+//        public static NumericValue CreateError(string message)
+//        {
+//            var result = new NumericValue(0);
+//            result.ErrorMessage = message;
+//            return result;
+//        }
     }
 }

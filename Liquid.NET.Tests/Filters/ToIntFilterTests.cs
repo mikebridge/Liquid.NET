@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 using Liquid.NET.Constants;
 using Liquid.NET.Filters;
 using NUnit.Framework;
@@ -28,7 +25,7 @@ namespace Liquid.NET.Tests.Filters
             var toIntFilter = new ToIntFilter();
 
             // Act
-            var result = toIntFilter.Apply(new StringValue(input));
+            var result = toIntFilter.Apply(new StringValue(input)).SuccessValue<NumericValue>();
 
             // Assert
             Assert.That(result.DecimalValue, Is.EqualTo((decimal) expected));
@@ -44,7 +41,7 @@ namespace Liquid.NET.Tests.Filters
             var toIntFilter = new ToIntFilter();
 
             // Act
-            var result = toIntFilter.Apply(new BooleanValue(val));
+            var result = toIntFilter.Apply(new BooleanValue(val)).SuccessValue<NumericValue>();
 
             // Assert
             Assert.That(result.DecimalValue, Is.EqualTo((decimal)expected));

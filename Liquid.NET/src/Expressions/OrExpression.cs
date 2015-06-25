@@ -17,7 +17,8 @@ namespace Liquid.NET.Expressions
 
         public override LiquidExpressionResult Eval(SymbolTableStack symbolTableStack, IEnumerable<Option<IExpressionConstant>> expressions)
         {
-            return new BooleanValue(expressions.Any(x => x.IsTrue));
+            var exprList = expressions.ToList();
+            return LiquidExpressionResult.Success(new BooleanValue(exprList.Any(x => x.HasValue && x.Value.IsTrue)));
         }
     }
 }

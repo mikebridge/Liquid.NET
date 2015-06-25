@@ -12,7 +12,7 @@ namespace Liquid.NET.Constants
     {
         public static bool IsEmpty(IExpressionConstant val)
         {
-            if (val == null || val.IsNil)
+            if (val == null /* || val.IsNil */)
             {
                 return false; // this appears to be the case in liquid?
             }

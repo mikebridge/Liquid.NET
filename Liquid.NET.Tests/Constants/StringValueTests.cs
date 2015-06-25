@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Liquid.NET.Constants;
 using Liquid.NET.Symbols;
 using Liquid.NET.Tests.Helpers;
+using Liquid.NET.Utils;
 using NUnit.Framework;
 
 namespace Liquid.NET.Tests.Constants
@@ -42,7 +43,7 @@ namespace Liquid.NET.Tests.Constants
         {
             // Arrange
             var stringSymbol = new StringValue(null);
-            var result = stringSymbol.Eval(StackHelper.CreateSymbolTableStack(), new List<IExpressionConstant>());
+            var result = stringSymbol.Eval(StackHelper.CreateSymbolTableStack(), new List<Option<IExpressionConstant>>());
 
             // Assert
             Assert.That(result, Is.EqualTo(stringSymbol));

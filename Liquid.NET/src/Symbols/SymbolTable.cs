@@ -124,19 +124,19 @@ namespace Liquid.NET.Symbols
             }
         }
 
-        public IExpressionConstant ReferenceVariable(String key)
+        public LiquidExpressionResult ReferenceVariable(String key)
         {
-
             if (HasVariableReference(key))
             {
-                return _variableDictionary[key];
+                var expressionConstant = _variableDictionary[key].ToOption();
+
+                return LiquidExpressionResult.Success(expressionConstant);
             }
             else
             {
-                return ConstantFactory.CreateError<StringValue>("Undefined variable: " + key);
+                //return LiquidExpressionResult.Error("Undefined variable: " + key);
+                return LiquidExpressionResult.Success(new None<IExpressionConstant>());
             }
         }
-
-
     }
 }

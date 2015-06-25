@@ -44,13 +44,13 @@ namespace Liquid.NET.Filters
             }
             catch (Exception)
             {
-                warningMessage = "unable to convert to a number";
+                //warningMessage = "unable to convert to a number";
             }
             var result = new NumericValue(default(decimal));
-            if (warningMessage != null)
-            {
-                result.WarningMessage = warningMessage;
-            }
+//            if (warningMessage != null)
+//            {
+//                result.WarningMessage = warningMessage;
+//            }
             return result;
         }
     }

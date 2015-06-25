@@ -61,14 +61,20 @@ namespace Liquid.NET.Rendering
                 }
                 else
                 {
-                    ArrayValue array = ValueCaster.Cast<IExpressionConstant, ArrayValue>(forExpressionOption.SuccessResult.Value);
-
-                    if (array.HasError)
+                    //ArrayValue array = ValueCaster.Cast<IExpressionConstant, ArrayValue>(forExpressionOption.SuccessResult.Value);
+                    var arrayResult = ValueCaster.Cast<IExpressionConstant, ArrayValue>(forExpressionOption.SuccessResult.Value);
+                    if (arrayResult.IsError)
                     {
-                        _renderingVisitor.Errors.Add(new LiquidError {Message = array.ErrorMessage});
+                        _renderingVisitor.Errors.Add(arrayResult.ErrorResult);
                         return;
                     }
-                    foreach (IExpressionConstant val in array.ArrValue)
+
+//                    if (array.HasError)
+//                    {
+//                        _renderingVisitor.Errors.Add(new LiquidError {Message = array.ErrorMessage});
+//                        return;
+//                    }
+                    foreach (IExpressionConstant val in arrayResult.SuccessValue<ArrayValue>())
                     {
                         var localBlockScope = new SymbolTable();
                         DefineLocalVariables(symbolTableStack, localBlockScope, includeTag.Definitions);

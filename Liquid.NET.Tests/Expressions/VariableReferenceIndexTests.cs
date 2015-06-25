@@ -9,6 +9,7 @@ using Liquid.NET.Constants;
 using Liquid.NET.Expressions;
 using Liquid.NET.Symbols;
 using Liquid.NET.Tests.Helpers;
+using Liquid.NET.Utils;
 using NUnit.Framework;
 
 namespace Liquid.NET.Tests.Expressions
@@ -29,10 +30,10 @@ namespace Liquid.NET.Tests.Expressions
 
             // Act
 
-            var result = variableReferenceIndex.Eval(symbolTableStack, new List<IExpressionConstant>());
+            var result = variableReferenceIndex.Eval(symbolTableStack, new List<Option<IExpressionConstant>>());
 
             // Assert
-            Assert.That(result.Value, Is.EqualTo("aaa"));
+            Assert.That(result.SuccessValue<StringValue>().StringVal, Is.EqualTo("aaa"));
 
         }
     }

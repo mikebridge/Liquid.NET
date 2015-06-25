@@ -24,7 +24,7 @@ namespace Liquid.NET.Tests.Symbols
 
             // Assert
             Assert.That(result, Is.Not.Null);
-            Assert.That(result.Value, Is.EqualTo(str));
+            Assert.That(result.SuccessValue<StringValue>().StringVal, Is.EqualTo(str));
 
         }
 
@@ -39,7 +39,8 @@ namespace Liquid.NET.Tests.Symbols
 
             // Assert
             Assert.That(result, Is.Not.Null);
-            Assert.That(result, Is.TypeOf<Undefined>());
+            Assert.Fail("Fix Undefined");
+            //Assert.That(result, Is.TypeOf<Undefined>());
 
         }
 
@@ -57,7 +58,7 @@ namespace Liquid.NET.Tests.Symbols
             var result = stack.Reference("hello");
 
             // Assert
-            Assert.That(result.Value, Is.EqualTo("HI"));
+            Assert.That(result.SuccessValue<StringValue>().StringVal, Is.EqualTo("HI"));
 
         }
 
@@ -78,7 +79,7 @@ namespace Liquid.NET.Tests.Symbols
             var result = stack.Reference(varname);
 
             // Assert
-            Assert.That(result.Value, Is.EqualTo("HELLO"));
+            Assert.That(result.SuccessValue<StringValue>().StringVal, Is.EqualTo("HELLO"));
 
         }
 
@@ -95,7 +96,7 @@ namespace Liquid.NET.Tests.Symbols
             var result = stack.Reference("hello");
 
             // Assert
-            Assert.That(result.Value, Is.EqualTo("HELLO"));
+            Assert.That(result.SuccessValue<StringValue>().StringVal, Is.EqualTo("HELLO"));
 
         }
 

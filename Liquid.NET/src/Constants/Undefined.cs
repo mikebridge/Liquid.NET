@@ -9,7 +9,7 @@ namespace Liquid.NET.Constants
     /// TODO: Is this a type (as it is now?) or a property of a type (like an errormessage)?
     /// </summary>
     [Obsolete]
-    public class Undefined : ExpressionConstant
+    public class UndefinedX : ExpressionConstant
     {
         public static String CreateUndefinedMessage(String varname)
         {
@@ -18,7 +18,7 @@ namespace Liquid.NET.Constants
 
         public string Name { get; private set; }
 
-        public Undefined(String name)
+        public UndefinedX(String name)
         {
             Name = name;
             //IsUndefined = true;

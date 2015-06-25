@@ -5,6 +5,7 @@ using Liquid.NET.Filters;
 using Liquid.NET.Filters.Math;
 using Liquid.NET.Filters.Strings;
 using Liquid.NET.Symbols;
+using Liquid.NET.Utils;
 using NUnit.Framework;
 
 namespace Liquid.NET.Tests.Filters
@@ -16,7 +17,7 @@ namespace Liquid.NET.Tests.Filters
         public void It_Should_Instantiate_A_Filter()
         {
             // Act
-            var filter = FilterFactory.InstantiateFilter<UpCaseFilter>("upcase", new List<IExpressionConstant>());
+            var filter = FilterFactory.InstantiateFilter<UpCaseFilter>("upcase", new List<Option<IExpressionConstant>>());
 
             // Assert
             Assert.That(filter, Is.TypeOf(typeof (UpCaseFilter)));
@@ -28,7 +29,7 @@ namespace Liquid.NET.Tests.Filters
         public void It_Should_Return_An_Error_If_Type_Isnt_A_Filter()
         {
             // Act
-            var filter = FilterFactory.InstantiateFilter("string", typeof(String), new List<IExpressionConstant>());
+            var filter = FilterFactory.InstantiateFilter("string", typeof(String), new List<Option<IExpressionConstant>>());
 
         }
 
@@ -36,7 +37,7 @@ namespace Liquid.NET.Tests.Filters
         public void It_Should_Convert_A_Symbol_With_Args_To_A_Filter()
         {
             // Arrange
-            var filter = FilterFactory.InstantiateFilter<RemoveFilter>("remove", new List<IExpressionConstant> { new StringValue("test") });
+            var filter = FilterFactory.InstantiateFilter<RemoveFilter>("remove", new List<Option<IExpressionConstant>>() { new StringValue("test") });
 
             // Act
 
@@ -49,19 +50,20 @@ namespace Liquid.NET.Tests.Filters
         {
             // Arrange
 
-            var filter = FilterFactory.InstantiateFilter<MockStringToStringFilter>("mockfilter", new List<IExpressionConstant> { new StringValue("test") });
+            var filter = FilterFactory.InstantiateFilter<MockStringToStringFilter>("mockfilter", new List<Option<IExpressionConstant>>() { new StringValue("test") });
 
             // Assert
             Assert.That(filter.StringArg1, Is.Not.Null);
             Assert.That(filter.StringArg2, Is.Not.Null);
-            Assert.That(filter.StringArg2.IsUndefined, Is.True);
+            Assert.Fail("Fix former undefined behaviour");
+            //Assert.That(filter.StringArg2.IsUndefined, Is.True);
         }
 
         [Test]
         public void It_Should_Cast_Numeric_Args_To_A_String()
         {
             // Arrange
-            var filter = FilterFactory.InstantiateFilter<MockStringToStringFilter>("mockfilter", new List<IExpressionConstant> { new NumericValue(123) });
+            var filter = FilterFactory.InstantiateFilter<MockStringToStringFilter>("mockfilter", new List<Option<IExpressionConstant>>() { new NumericValue(123) });
 
             // Act
 
@@ -125,7 +127,7 @@ namespace Liquid.NET.Tests.Filters
                 StringArg2 = stringLiteral2;
             }
 
-            public override StringValue Apply(StringValue liquidStringExpression)
+            public override LiquidExpressionResult Apply(StringValue liquidStringExpression)
             {
                 throw new NotImplementedException();
             }

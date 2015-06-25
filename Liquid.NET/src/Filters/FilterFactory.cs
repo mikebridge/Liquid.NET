@@ -83,10 +83,17 @@ namespace Liquid.NET.Filters
                     }
 
                     //result.Add(filterList[i].GetType() == parmType // if it's the same type
-                    result.Add(argType.IsInstanceOfType(filterList[i])
-                    //result.Add(parmType.IsInstanceOfType(filterList[i])    
-                        ? filterList[i] // then it's ok
-                        : CastParameter(filterList[i], argType)); // else cast it 
+                    if (argType.IsInstanceOfType(filterList[i]))
+                    {
+                        result.Add(filterList[i]);
+                    }
+                    else
+                    {
+                        result.Add(CastParameter(filterList[i], argType));
+                    }
+//                    result.Add(argType.IsInstanceOfType(filterList[i])
+//                        ? filterList[i] // then it's ok
+//                        : CastParameter(filterList[i], argType)); // else cast it 
                 }
                 else
                 {
@@ -126,12 +133,11 @@ namespace Liquid.NET.Filters
 //            return result;
 //        }
 
-        private static IExpressionConstant CastParameter(IExpressionConstant filterList, Type parmType)
+        private static Option<IExpressionConstant> CastParameter(Option<IExpressionConstant> filterList, Type parmType)
         {
             MethodInfo method = typeof (ValueCaster).GetMethod("Cast");
             MethodInfo generic = method.MakeGenericMethod(filterList.GetType(), parmType);
-            return (IExpressionConstant) generic.Invoke(null, new object[] {filterList});
-
+            return (Option<IExpressionConstant>) generic.Invoke(null, new object[] { filterList });
         }
 
         public static IFilterExpression CreateCastExpression(Type sourceType, Type resultType)

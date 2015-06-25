@@ -18,23 +18,23 @@ namespace Liquid.NET.Expressions
             SymbolTableStack symbolTableStack,
             IEnumerable<Option<IExpressionConstant>> expressions);
 
-        // TODO: remove this
-        public bool HasError
-        {
-            get { return ErrorMessage != null; }
-        }
-
-        // TODO: remove this
-        public string ErrorMessage { get; set; }
-
-        // TODO: remove this
-        public bool HasWarning
-        {
-            get { return WarningMessage != null; }
-        }
-
-        // TODO: remove this
-        public string WarningMessage { get; set; }
+//        // TODO: remove this
+//        public bool HasError
+//        {
+//            get { return ErrorMessage != null; }
+//        }
+//
+//        // TODO: remove this
+//        public string ErrorMessage { get; set; }
+//
+//        // TODO: remove this
+//        public bool HasWarning
+//        {
+//            get { return WarningMessage != null; }
+//        }
+//
+//        // TODO: remove this
+//        public string WarningMessage { get; set; }
 
     }
 }

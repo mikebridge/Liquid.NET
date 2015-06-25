@@ -113,7 +113,7 @@ namespace Liquid.NET
             var macroRenderer = new MacroRenderer();
             //var hiddenRenderer = new RenderingVisitor(_a)
             IList<LiquidError> macroErrors = new List<LiquidError>();
-            var macro = ValueCaster.RenderAsString(macroRenderer.Render(macroBlockTag, _symbolTableStack, args.ToList(), macroErrors));
+            var macro = ValueCaster.RenderAsString((IExpressionConstant) macroRenderer.Render(macroBlockTag, _symbolTableStack, args.ToList(), macroErrors));
             foreach (var error in macroErrors)
             {
                 Errors.Add(error);
@@ -304,17 +304,17 @@ namespace Liquid.NET
 
 
 
-        private void AlterNumericvalue(string key, int defaultValue, Func<NumericValue, NumericValue> newValueFunc)
-        {
-            _symbolTableStack.FindVariable(key,
-                (st, foundExpression) =>
-                {
-                    var numref = foundExpression as NumericValue;
-                    st.DefineVariable(key,
-                        numref != null ? newValueFunc(numref) : new NumericValue(defaultValue));
-                },
-                () => _symbolTableStack.Define(key, new NumericValue(defaultValue)));
-        }
+//        private void AlterNumericvalue(string key, int defaultValue, Func<NumericValue, NumericValue> newValueFunc)
+//        {
+//            _symbolTableStack.FindVariable(key,
+//                (st, foundExpression) =>
+//                {
+//                    var numref = foundExpression as NumericValue;
+//                    st.DefineVariable(key,
+//                        numref != null ? newValueFunc(numref) : new NumericValue(defaultValue));
+//                },
+//                () => _symbolTableStack.Define(key, new NumericValue(defaultValue)));
+//        }
 
         public void Visit(ForBlockTag forBlockTag)
         {

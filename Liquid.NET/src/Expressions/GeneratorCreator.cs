@@ -44,21 +44,20 @@ namespace Liquid.NET.Expressions
             _arrayValueExpression = arrayValueExpression;
         }
 
-//        private readonly ArrayValue _arrayValue;
-//
-//        public ArrayValueCreator(ArrayValue arrayValue)
-//        {
-//            _arrayValue = arrayValue;
-//        }
-
-        // TODO: SHould this return a LiquidExpressionResult?
         public IEnumerable<IExpressionConstant> Eval(SymbolTableStack symbolTableStack)
         {            
-            var expressionConstant = LiquidExpressionEvaluator.Eval(_arrayValueExpression,
-                symbolTableStack);
+            var expressionConstant = LiquidExpressionEvaluator.Eval(_arrayValueExpression, symbolTableStack);
             
-            return
-                ValueCaster.Cast<IExpressionConstant, ArrayValue>(expressionConstant.SuccessResult.Value);
+            var castResult = ValueCaster.Cast<IExpressionConstant, ArrayValue>(expressionConstant.SuccessResult.Value);
+            if (castResult.IsError)
+            {
+                // ??
+                return new List<IExpressionConstant>();
+            }
+            else
+            {
+                return castResult.SuccessValue<ArrayValue>().Select(x => x.Value);
+            }
         }
     }
 
@@ -86,7 +85,14 @@ namespace Liquid.NET.Expressions
         private NumericValue ValueAsNumeric(TreeNode<LiquidExpression> expr, SymbolTableStack symbolTableStack)
         {
             var liquidExpressionResult = LiquidExpressionEvaluator.Eval(expr, symbolTableStack);
-            return liquidExpressionResult.SuccessResult.HasValue ? ValueCaster.Cast<IExpressionConstant, NumericValue>(liquidExpressionResult.SuccessResult.Value)
+            if (liquidExpressionResult.IsError)
+            {
+                return new NumericValue(0);
+            }
+            var valueAsNumeric = ValueCaster.Cast<IExpressionConstant, NumericValue>(liquidExpressionResult.SuccessResult.Value);
+
+            return liquidExpressionResult.IsSuccess && liquidExpressionResult.SuccessResult.HasValue ? 
+                valueAsNumeric.SuccessValue<NumericValue>()
                 : new NumericValue(0);
         }
     }

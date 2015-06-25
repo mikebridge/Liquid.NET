@@ -42,7 +42,7 @@ namespace Liquid.NET.Tests.Filters.Array
             var filter = new FirstFilter();
 
             // Act
-            var result = filter.Apply(new StringValue("Hello World"));
+            var result = filter.Apply(new StringValue("Hello World")).SuccessValue<StringValue>();
 
             // Assert
             Assert.That(result.Value, Is.EqualTo("H"));
@@ -60,7 +60,7 @@ namespace Liquid.NET.Tests.Filters.Array
             var result = filter.Apply(arrayValue);
 
             // Assert
-            Assert.That(result.HasError, Is.True);
+            Assert.That(result.IsError, Is.True);
 
         }
 
@@ -74,7 +74,7 @@ namespace Liquid.NET.Tests.Filters.Array
             var result = filter.Apply(new StringValue(""));
 
             // Assert
-            Assert.That(result.HasError, Is.True);
+            Assert.That(result.IsError, Is.True);
 
         }
 
@@ -88,23 +88,23 @@ namespace Liquid.NET.Tests.Filters.Array
             var result = filter.Apply(new StringValue(null));
 
             // Assert
-            Assert.That(result.HasError, Is.True);
+            Assert.That(result.IsError, Is.True);
 
         }
 
-        [Test]
-        public void It_Should_Return_An_Error_If_Array_Is_Null() // TODO: Check if this is the case
-        {
-            // Arrange
-            var filter = new FirstFilter();
-
-            // Act
-            var result = filter.Apply(new ArrayValue(null));
-
-            // Assert
-            Assert.That(result.HasError, Is.True);
-
-        }
+//        [Test]
+//        public void It_Should_Return_An_Error_If_Array_Is_Null() // TODO: Check if this is the case
+//        {
+//            // Arrange
+//            var filter = new FirstFilter();
+//
+//            // Act
+//            var result = filter.Apply(new ArrayValue(null));
+//
+//            // Assert
+//            Assert.That(result.IsError, Is.True);
+//
+//        }
 
 
     }

@@ -68,6 +68,7 @@ namespace Liquid.NET.Constants
         public TOut Bind<TOut>(Func<LiquidExpressionResult, TOut> f)
             where TOut : LiquidExpressionResult
         {
+            //return f(this);
             throw new Exception("NEED TO MOVE THIS");
             //Console.WriteLine("New Bind");
 //            if (HasError)
@@ -84,5 +85,33 @@ namespace Liquid.NET.Constants
 
         }
 
+        public T ValueAs<T>()
+        {
+            return (T) Value;
+        }
+
+        public Option<IExpressionConstant> ToOption()
+        {
+            if (this.Value == null)
+            {
+                return new Some<IExpressionConstant>(this);
+            }
+            else
+            {
+                return new None<IExpressionConstant>();
+            }
+        }
+
+        public static implicit operator Option<IExpressionConstant>(ExpressionConstant t)
+        {
+            if (t == null)
+            {
+                return new None<IExpressionConstant>();
+            }
+            else
+            {
+                return new Some<IExpressionConstant>(t);
+            }
+        }
     }
 }

@@ -48,9 +48,13 @@ namespace Liquid.NET.Filters.Array
             return new ArrayValue(result.ToList());
         }
 
-        private String AsString(IExpressionConstant x, string field)
+        private String AsString(Option<IExpressionConstant> x, string field)
         {
-            return ValueCaster.RenderAsString(FieldAccessor.TryField(x, field));
+            if (!x.HasValue)
+            {
+                return "";
+            }
+            return ValueCaster.RenderAsString(FieldAccessor.TryField(x.Value, field));
         }
     }
 

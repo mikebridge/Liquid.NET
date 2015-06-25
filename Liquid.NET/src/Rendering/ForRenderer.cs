@@ -5,6 +5,7 @@ using System.Linq;
 using Liquid.NET.Constants;
 using Liquid.NET.Symbols;
 using Liquid.NET.Tags;
+using Liquid.NET.Utils;
 
 namespace Liquid.NET.Rendering
 {
@@ -88,7 +89,7 @@ namespace Liquid.NET.Rendering
 
         public static DictionaryValue CreateForLoopDescriptor(int iter, int length)
         {
-            return new DictionaryValue(new Dictionary<String, IExpressionConstant>
+            return new DictionaryValue(new Dictionary<String, Option<IExpressionConstant>>
             {
                 {"first", new BooleanValue(iter == 0)},
                 {"index", new NumericValue(iter + 1 )},

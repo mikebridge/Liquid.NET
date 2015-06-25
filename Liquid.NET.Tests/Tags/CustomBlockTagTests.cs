@@ -67,7 +67,7 @@ namespace Liquid.NET.Tests.Tags
             public StringValue Render(
                     SymbolTableStack symbolTableStack, 
                     TreeNode<IASTNode> liquidBlock,
-                    IList<IExpressionConstant> args)
+                    IList<Option<IExpressionConstant>> args)
             {
                 //var argsAsString = String.Join(", ", args.Select(x => x.GetType().Name + ":" + ValueCaster.RenderAsString(x)));
 
@@ -87,6 +87,7 @@ namespace Liquid.NET.Tests.Tags
                 evaluator.StartVisiting(subRenderer, liquidBlock);
                 return subRenderer.Text;
             }
+
         }
 
 

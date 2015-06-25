@@ -1331,7 +1331,12 @@ namespace Liquid.NET
             Console.WriteLine("CREATING NUMBER OBJECT  >" + context.GetText() + "<");
             base.EnterNumberObject(context);
             //ValueCaster.ConvertToM
-            AddExpressionToCurrentExpressionBuilder(NumericValue.Parse(context.GetText()));
+            var liquidExpressionResult = NumericValue.Parse(context.GetText());
+            if (liquidExpressionResult.IsError)
+            {
+                throw new Exception("Unable to parse " + context.GetText()); // this should never occur---the parser only passes valid numeric values.
+            }
+            AddExpressionToCurrentExpressionBuilder(liquidExpressionResult.SuccessValue<NumericValue>());
 
 
         }
@@ -1434,8 +1439,13 @@ namespace Liquid.NET
         {
             base.EnterNumberFilterArg(context);
             //Console.WriteLine("Enter NUMBER FILTERARG " + context.GetText());
+            var liquidExpressionResult = NumericValue.Parse(context.GetText());
+            if (liquidExpressionResult.IsError)
+            {
+                throw new Exception("Unable to parse number " + context.GetText()); // this shouldn't occur--the parser should catch it.
+            }
             CurrentBuilderContext.LiquidExpressionBuilder.AddFilterArgToLastExpressionsFilter(
-                NumericValue.Parse(context.GetText()));
+                liquidExpressionResult.SuccessValue<NumericValue>());
 
         }
 

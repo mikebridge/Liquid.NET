@@ -29,7 +29,7 @@ namespace Liquid.NET.Tests.Filters.Array
 
             // Act            
             var result = filter.Apply(arrayValue);
-            var resultStrings = result.Select(ValueCaster.RenderAsString);
+            var resultStrings = result.SuccessValue<ArrayValue>().Select(ValueCaster.RenderAsString);
             
             // Assert
             Assert.That(resultStrings, Is.EqualTo(new List<String>{"123", "456", "a string", "false"}));
@@ -55,16 +55,16 @@ namespace Liquid.NET.Tests.Filters.Array
             var result = sizeFilter.Apply(arrayValue);
 
             // Assert
-            Assert.That(IdAt(result, 0, "field1").Value, Is.EqualTo("Aa"));
-            Assert.That(IdAt(result, 1, "field1").Value, Is.EqualTo("ab"));
-            Assert.That(IdAt(result, 2, "field1").Value, Is.EqualTo("b"));
-            Assert.That(IdAt(result, 3, "field1").Value, Is.EqualTo("Z"));
+            Assert.That(IdAt(result.SuccessValue<ArrayValue>(), 0, "field1").Value, Is.EqualTo("Aa"));
+            Assert.That(IdAt(result.SuccessValue<ArrayValue>(), 1, "field1").Value, Is.EqualTo("ab"));
+            Assert.That(IdAt(result.SuccessValue<ArrayValue>(), 2, "field1").Value, Is.EqualTo("b"));
+            Assert.That(IdAt(result.SuccessValue<ArrayValue>(), 3, "field1").Value, Is.EqualTo("Z"));
 
         }
 
         private static IExpressionConstant IdAt(ArrayValue result, int index, String field)
         {
-            return ((DictionaryValue)result.ArrValue[index]).DictValue[field];
+            return ((DictionaryValue)result.ArrValue[index].Value).DictValue[field].Value;
         }
     }
 }

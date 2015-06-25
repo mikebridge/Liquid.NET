@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Dynamic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 using Liquid.NET.Constants;
-using Liquid.NET.Expressions;
 using Liquid.NET.Utils;
 
 namespace Liquid.NET.Filters
@@ -19,8 +14,16 @@ namespace Liquid.NET.Filters
         {
             //Console.WriteLine("Casting from " + typeof(TSource) + " to " + typeof(TResult));
             var result= ValueCaster.Cast<TSource, TResult>(liquidExpression);
+            if (result.IsError)
+            {
+                return result;
+            }
+            else
+            {
+                return LiquidExpressionResult.Success(result.SuccessResult);    
+            }
             //Console.WriteLine("RESULT IS " + result);
-            return LiquidExpressionResult.Success(result);
+            
         }
     }
 }

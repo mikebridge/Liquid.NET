@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using Liquid.NET.Constants;
 using Liquid.NET.Utils;
 
@@ -10,6 +11,9 @@ namespace Liquid.NET.Filters
         Type ResultType { get; }
 
         LiquidExpressionResult Apply(IExpressionConstant liquidExpression);
+        
+        LiquidExpressionResult ApplyToNil();
+
     };
 
     public interface IFilterExpression<in TSource, out TResult> : IFilterExpression
@@ -28,16 +32,19 @@ namespace Liquid.NET.Filters
         //public virtual TResult Apply(TSource liquidExpression)
         public virtual LiquidExpressionResult Apply(TSource option)
         {
-            throw new Exception("Need to figure out how to do this part");
+            //throw new Exception("Need to figure out how to do this part");
             //return option.Bind<LiquidExpressionResult>(x => ApplyTo((dynamic)x));
+            return ApplyTo((dynamic)option);
         }
 
         public LiquidExpressionResult Apply(IExpressionConstant liquidExpression)
         {
-            throw new Exception("Need to figure out how to do this part");
-            //return Apply((TSource)liquidExpression);
+            //throw new Exception("Need to figure out how to do this part");
+            return Apply((TSource)liquidExpression);
             //return Apply((Option<TSource>)liquidExpression);
         }
+
+    
 
         /* override some or all of these ApplyTo functions */
         public virtual LiquidExpressionResult ApplyTo(IExpressionConstant liquidExpression) // todo: make this fallback abtstract
@@ -86,7 +93,7 @@ namespace Liquid.NET.Filters
 
         public virtual LiquidExpressionResult ApplyToNil()
         {
-            throw new Exception("TODO: FIgoure how to do tis part");
+            return LiquidExpressionResult.Success(new None<IExpressionConstant>());
             //return new LiquidExpressionResult(Option<IExpressionConstant>.None);
         }
 

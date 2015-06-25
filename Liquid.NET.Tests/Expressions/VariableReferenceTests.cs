@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Liquid.NET.Constants;
 using Liquid.NET.Expressions;
 using Liquid.NET.Symbols;
+using Liquid.NET.Utils;
 using NUnit.Framework;
 
 namespace Liquid.NET.Tests.Expressions
@@ -23,7 +24,7 @@ namespace Liquid.NET.Tests.Expressions
             var symbolTableStack = SymbolTableStackFactory.CreateSymbolTableStack(templateContext);
 
             // Act
-            var result = variableReference.Eval(symbolTableStack, new List<IExpressionConstant>());
+            var result = variableReference.Eval(symbolTableStack, new List<Option<IExpressionConstant>>()).SuccessValue<StringValue>();
 
             // Assert
             Assert.That(result.Value, Is.EqualTo("HELLO"));

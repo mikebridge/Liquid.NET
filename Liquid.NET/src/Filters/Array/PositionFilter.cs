@@ -31,10 +31,21 @@ namespace Liquid.NET.Filters.Array
             }
             Console.WriteLine("Array is " + liquidArrayExpression.ArrValue.Count);
             Console.WriteLine("Index is " + _index.IntValue);
-            return LiquidExpressionResult.Success(liquidArrayExpression.ArrValue.Count > 0 && 
-                liquidArrayExpression.ArrValue.Count >= _index.IntValue + 1 ? 
-                liquidArrayExpression.ValueAt(_index.IntValue) : 
-                ConstantFactory.CreateError<ArrayValue>("Array has no element at position " + _index.IntValue));
+
+            IExpressionConstant result;
+            if (liquidArrayExpression.ArrValue.Count > 0 && liquidArrayExpression.ArrValue.Count >= _index.IntValue + 1)
+            {
+                return LiquidExpressionResult.Success(liquidArrayExpression.ValueAt(_index.IntValue));
+            }
+            else
+            {
+                return LiquidExpressionResult.Error("Array has no element at position " + _index.IntValue);            
+            }
+//
+//            return LiquidExpressionResult.Success(liquidArrayExpression.ArrValue.Count > 0 && 
+//                liquidArrayExpression.ArrValue.Count >= _index.IntValue + 1 ? 
+//                liquidArrayExpression.ValueAt(_index.IntValue) : 
+//                ConstantFactory.CreateError<ArrayValue>("Array has no element at position " + _index.IntValue));
         }
 
         public override LiquidExpressionResult ApplyTo(StringValue liquidStringExpression)
@@ -43,9 +54,19 @@ namespace Liquid.NET.Filters.Array
             {
                 return LiquidExpressionResult.Error("String is nil");
             }
-            return LiquidExpressionResult.Success(liquidStringExpression.StringVal.Length >= _index.IntValue + 1
-                ? (IExpressionConstant)new StringValue(liquidStringExpression.StringVal[_index.IntValue].ToString())
-                : ConstantFactory.CreateError<ArrayValue>("String has no element at position " + _index.IntValue));
+
+            if (liquidStringExpression.StringVal.Length >= _index.IntValue + 1)
+            {
+               return LiquidExpressionResult.Success(new StringValue(liquidStringExpression.StringVal[_index.IntValue].ToString()));
+            }
+            else
+            {
+                return LiquidExpressionResult.Error("String has no element at position " + _index.IntValue);                
+            }
+
+//            return LiquidExpressionResult.Success(liquidStringExpression.StringVal.Length >= _index.IntValue + 1
+//                ? (IExpressionConstant)new StringValue(liquidStringExpression.StringVal[_index.IntValue].ToString())
+//                : ConstantFactory.CreateError<ArrayValue>("String has no element at position " + _index.IntValue));
         }
     }
 }

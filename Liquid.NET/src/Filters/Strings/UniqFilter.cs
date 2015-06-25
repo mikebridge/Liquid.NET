@@ -14,9 +14,8 @@ namespace Liquid.NET.Filters.Strings
 
         public override LiquidExpressionResult ApplyTo(ArrayValue liquidArrayExpression)
         {
-            return LiquidExpressionResult.Success(new ArrayValue(liquidArrayExpression.ArrValue.Distinct(new EasyValueComparer()).ToList()));
-            
+            ArrayValue arrayValue = new ArrayValue(liquidArrayExpression.ArrValue.Distinct(new EasyOptionComparer()).ToList());
+            return LiquidExpressionResult.Success(arrayValue);
         }
-
     }
 }

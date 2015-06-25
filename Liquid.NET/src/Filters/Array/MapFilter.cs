@@ -26,7 +26,9 @@ namespace Liquid.NET.Filters.Array
             {
                 return LiquidExpressionResult.Error("Array is nil");
             }
-            var list = liquidArrayExpression.ArrValue.Select(x => FieldAccessor.TryField(x, _selector.StringVal)).ToList();
+            var list = liquidArrayExpression.ArrValue.Select(x => x.HasValue ? 
+                FieldAccessor.TryField(x.Value, _selector.StringVal) : 
+                new None<IExpressionConstant>()).ToList();
             return LiquidExpressionResult.Success(new ArrayValue(list));
         }
 
@@ -36,7 +38,7 @@ namespace Liquid.NET.Filters.Array
             {
                 return LiquidExpressionResult.Error("Hash is nil");
             }
-             String propertyNameString = ValueCaster.RenderAsString(_selector);
+            String propertyNameString = ValueCaster.RenderAsString((IExpressionConstant)_selector);
              return LiquidExpressionResult.Success(liquidDictionaryValue.ValueAt(propertyNameString));
             
         }

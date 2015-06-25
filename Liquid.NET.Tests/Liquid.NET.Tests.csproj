@@ -64,7 +64,6 @@
     <Compile Include="Constants\NumericValueTests.cs" />
     <Compile Include="Constants\ReflectorTests.cs" />
     <Compile Include="Constants\StringValueTests.cs" />
-    <Compile Include="Constants\UndefinedTests.cs" />
     <Compile Include="Constants\ValueCasterTests.cs" />
     <Compile Include="Expressions\AndExpressionTests.cs" />
     <Compile Include="Expressions\ComparisonExpressionTests.cs" />
@@ -156,7 +155,6 @@
     <Compile Include="Ruby\TypeTests.cs" />
     <Compile Include="Symbols\SymbolTableStackFactoryTests.cs" />
     <Compile Include="Symbols\SymbolTableStackTests.cs" />
-    <Compile Include="Symbols\UndefinedTests.cs" />
     <Compile Include="Tags\AssignTagTests.cs" />
     <Compile Include="Tags\CaptureBlockTagTests.cs" />
     <Compile Include="Tags\CaseWhenElseBlockTagTests.cs" />

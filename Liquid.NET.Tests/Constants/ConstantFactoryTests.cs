@@ -12,19 +12,19 @@ namespace Liquid.NET.Tests.Constants
     [TestFixture]
     public class ConstantFactoryTests
     {
-        [Test]
-        public void It_Should_Determine_The_Return_Type_Of_A_Function()
-        {
-            // Arrange
-            var type = ConstantFactory.GetReturnType(_testToString);
-
-            // Act
-            Console.WriteLine("Type is "+type);
-
-            // Assert
-            Assert.That(type, Is.EqualTo(typeof(StringValue)));
-
-        }
+//        [Test]
+//        public void It_Should_Determine_The_Return_Type_Of_A_Function()
+//        {
+//            // Arrange
+//            var type = ConstantFactory.GetReturnType(_testToString);
+//
+//            // Act
+//            Console.WriteLine("Type is "+type);
+//
+//            // Assert
+//            Assert.That(type, Is.EqualTo(typeof(StringValue)));
+//
+//        }
 
 //        [Test]
 //        public void It_Should_Create_An_Undefined_Variable_Corresponding_To_A_Return_Type()

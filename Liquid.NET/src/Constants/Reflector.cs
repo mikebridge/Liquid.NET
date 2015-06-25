@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Liquid.NET.Utils;
 
 namespace Liquid.NET.Constants
 {
@@ -62,21 +63,25 @@ namespace Liquid.NET.Constants
             return new DictionaryValue(dictionary);
         }
 
-        private IExpressionConstant ConvertToConstant(Type type, Object obj)
+        private Option<IExpressionConstant> ConvertToConstant(Type type, Object obj)
         {
             //Console.WriteLine("Converting " + obj + " to a constant type ");
+            if (obj == null)
+            {
+                return new None<IExpressionConstant>();
+            }
             if (type == typeof(String))
             {
-                return new StringValue((String) obj);
+                return new Some<IExpressionConstant>(new StringValue((String)obj));
             }
             if (type == typeof(int) || type == typeof(decimal))
             {
                 // TODO: long, etc.
-                return new NumericValue((decimal)obj);
+                return new Some<IExpressionConstant>(new NumericValue((decimal)obj));
             }
             if (type == typeof (bool))
             {
-                return new BooleanValue((bool) obj);
+                return new Some<IExpressionConstant>(new BooleanValue((bool) obj));
             }
 
             

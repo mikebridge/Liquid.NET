@@ -34,7 +34,7 @@ namespace Liquid.NET.Filters
         public override LiquidExpressionResult ApplyTo(ArrayValue arrayValue)
         {
 
-            String propertyNameString = ValueCaster.RenderAsString(_propertyName);
+            String propertyNameString = ValueCaster.RenderAsString((IExpressionConstant)_propertyName);
             int index;
             if (propertyNameString.ToLower().Equals("first"))
             {
@@ -50,14 +50,14 @@ namespace Liquid.NET.Filters
             }
             else
             {
-                var maybeIndex = ValueCaster.Cast<IExpressionConstant, NumericValue>(_propertyName);
-                if (!maybeIndex.IsUndefined)
+                var maybeIndexResult = ValueCaster.Cast<IExpressionConstant, NumericValue>(_propertyName);
+                if (maybeIndexResult.IsError || !maybeIndexResult.SuccessResult.HasValue)
                 {
-                    index = maybeIndex.IntValue;
+                    return LiquidExpressionResult.Error("invalid array index: " + propertyNameString);
                 }
                 else
                 {
-                    return LiquidExpressionResult.Error("invalid array index: " + propertyNameString);
+                    index = maybeIndexResult.SuccessValue<NumericValue>().IntValue;
                 }
             }
 
@@ -71,8 +71,8 @@ namespace Liquid.NET.Filters
 
         public override LiquidExpressionResult ApplyTo(DictionaryValue dictionaryValue)
         {
-            
-            String propertyNameString = ValueCaster.RenderAsString(_propertyName);
+
+            String propertyNameString = ValueCaster.RenderAsString((IExpressionConstant)_propertyName);
             if (propertyNameString.ToLower().Equals("size"))
             {
                 return LiquidExpressionResult.Success(new NumericValue(dictionaryValue.DictValue.Keys.Count()));
@@ -84,8 +84,8 @@ namespace Liquid.NET.Filters
         // TODO: this is inefficient and ugly and duplicates much of ArrayValue
         public override LiquidExpressionResult ApplyTo(StringValue strValue)
         {
-            var strValues = strValue.StringVal.ToCharArray().Select(ch => (IExpressionConstant) new StringValue(ch.ToString())).ToList();
-            String propertyNameString = ValueCaster.RenderAsString(_propertyName);
+            var strValues = strValue.StringVal.ToCharArray().Select(ch => new StringValue(ch.ToString()).ToOption()).ToList();
+            String propertyNameString = ValueCaster.RenderAsString((IExpressionConstant)_propertyName);
             int index;
             if (propertyNameString.ToLower().Equals("first"))
             {
@@ -101,14 +101,14 @@ namespace Liquid.NET.Filters
             }
             else
             {
-                var maybeIndex = ValueCaster.Cast<IExpressionConstant, NumericValue>(_propertyName);
-                if (!maybeIndex.IsUndefined)
+                var maybeIndexResult = ValueCaster.Cast<IExpressionConstant, NumericValue>(_propertyName);
+                if (maybeIndexResult.IsError || !maybeIndexResult.SuccessResult.HasValue)
                 {
-                    index = maybeIndex.IntValue;
+                    return LiquidExpressionResult.Error("invalid array index: " + propertyNameString);
                 }
                 else
                 {
-                    return LiquidExpressionResult.Error("invalid array index: " + propertyNameString);
+                    index = maybeIndexResult.SuccessValue<NumericValue>().IntValue;
                 }
             }
 

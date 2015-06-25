@@ -83,13 +83,17 @@ namespace Liquid.NET
         internal IFileSystem FileSystem { get { return _fileSystem; } }
 
         [Obsolete] // this should be transferred to the ScopeStack
-        public IExpressionConstant Reference(String name)
+        public Option<IExpressionConstant> Reference(String name)
         {
             if (_varDictionary.ContainsKey(name))
             {
-                return _varDictionary[name];
+                return new Some<IExpressionConstant>(_varDictionary[name]);
             }
-            return new Undefined(name);
+            else
+            {
+                return new None<IExpressionConstant>();
+            }
+            //return new Undefined(name);
         }
 
         public ITemplateContext WithStandardFilters()

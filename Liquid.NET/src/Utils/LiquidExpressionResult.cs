@@ -37,6 +37,18 @@ namespace Liquid.NET.Utils
             get { return Right; }
         }
 
+        public T SuccessValue<T>()
+            where T: IExpressionConstant
+        {
+            return (T) Right.Value;
+        }
+
+        public Option<T> SuccessOption<T>()
+            where T : IExpressionConstant
+        {
+            return (Option<T>) ((dynamic) Right);
+        }
+
         public LiquidError ErrorResult
         {
             get { return Left; }
@@ -57,9 +69,27 @@ namespace Liquid.NET.Utils
             return new LiquidExpressionResult(success);
         }
 
-        public static LiquidExpressionResult Success(IExpressionConstant success)
+//        public static LiquidExpressionResult Success(IExpressionConstant success)
+//        {
+//            return Success(new Some<IExpressionConstant>(success));
+//        }
+
+
+    }
+
+    public static class LiquidExpressionResultExtensions
+    {
+
+        public static LiquidExpressionResult Bind<T>(this LiquidExpressionResult self, Func<Option<T>, LiquidExpressionResult> f)
+            where T: IExpressionConstant
         {
-            return Success(new Some<IExpressionConstant>(success));
+            if (f == null) throw new ArgumentNullException("f");
+
+            return self.IsError
+                ? self
+                : f(self.SuccessOption<T>());
+                
         }
     }
+
 }

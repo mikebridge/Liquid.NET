@@ -40,7 +40,7 @@ namespace Liquid.NET.Tests.Filters
             var compositeFilterFn = FilterChain.CreateChain(filterList);
 
             // Act
-            var result = compositeFilterFn(new StringValue("test123"));
+            var result = compositeFilterFn(new StringValue("test123")).SuccessValue<StringValue>();
 
             // Assert
             Assert.That(result.Value, Is.EqualTo("TEST"));

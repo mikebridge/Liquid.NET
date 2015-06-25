@@ -74,7 +74,8 @@ namespace Liquid.NET
                 filterExpressionTuples.Select(x => x.Item2));
 
             // apply the composed function to the object
-            return filterChain(objResult);
+            
+            return filterChain(objResult.SuccessResult);
 
         }
 

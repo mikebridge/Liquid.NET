@@ -16,7 +16,7 @@ namespace Liquid.NET.Constants
             SymbolTableStack symbolTableStack,
             IEnumerable<Option<IExpressionConstant>> childresults)
         {
-            return this;
+            return LiquidExpressionResult.Success(this);
         }
 
 

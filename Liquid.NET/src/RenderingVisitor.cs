@@ -415,7 +415,7 @@ namespace Liquid.NET
         public void Visit(LiquidExpression liquidExpression)
         {
             Console.WriteLine("Visiting Object Expression ");
-            var liquidResult = LiquidExpressionEvaluator.Eval(liquidExpression, new List<LiquidExpressionResult>(), _symbolTableStack)
+            var liquidResult = LiquidExpressionEvaluator.Eval(liquidExpression, new List<Option<IExpressionConstant>>(), _symbolTableStack)
                 .WhenSuccess(x => x.WhenSome(some => _result += Render(x.Value))
                                    .WhenNone(() => _result += Render(new NilValue())))
                  .WhenError(RenderError);

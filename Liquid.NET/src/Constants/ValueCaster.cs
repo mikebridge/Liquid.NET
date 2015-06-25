@@ -56,11 +56,11 @@ namespace Liquid.NET.Constants
 
         }
 
-        private static IExpressionConstant Convert<TDest>(Undefined undef)
+        private static IExpressionConstant Convert<TDest>(NilValue undef)
             where TDest : IExpressionConstant
         {
             var destType = typeof(TDest);
-            if (destType == typeof(Undefined))
+            if (destType == typeof(NilValue))
             {
                 return undef;
             }
@@ -79,7 +79,7 @@ namespace Liquid.NET.Constants
         {
             //Console.WriteLine("Rendering dictionary");
             var destType = typeof(TDest);
-            if (destType == typeof(Undefined))
+            if (destType == typeof(NilValue))
             {
                 return dictionaryValue;
             }
@@ -266,11 +266,11 @@ namespace Liquid.NET.Constants
 //            {
 //                return "";
 //            }
-
-            if (val.HasError)
-            {
-                return val.ErrorMessage;
-            }
+//
+//            if (val.HasError)
+//            {
+//                return val.ErrorMessage;
+//            }
 
 
             var stringResult = Cast<IExpressionConstant, StringValue>(val);

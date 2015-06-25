@@ -12,13 +12,13 @@ namespace Liquid.NET.Expressions
 
         LiquidExpressionResult Eval(SymbolTableStack symbolTableStack, IEnumerable<Option<IExpressionConstant>> childresults);
 
-        bool HasError { get; }
-
-        String ErrorMessage { get; set; }
-
-        bool HasWarning { get; }
-
-        String WarningMessage { get; set; }
+//        bool HasError { get; }
+//
+//        String ErrorMessage { get; set; }
+//
+//        bool HasWarning { get; }
+//
+//        String WarningMessage { get; set; }
 
     }
 }

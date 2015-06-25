@@ -23,13 +23,26 @@ namespace Liquid.NET.Expressions
         {
             //_variableReference.Eval(symbolTableStack, new List<IExpressionConstant>())
 
-            DictionaryValue dict = _variableReference.Eval(symbolTableStack, new List<IExpressionConstant>()) as DictionaryValue;
+            var liquidExpressionResult = _variableReference.Eval(symbolTableStack, new List<Option<IExpressionConstant>>());
+            if (liquidExpressionResult.IsError)
+            {
+                return liquidExpressionResult;
+            }
+
+            if (!liquidExpressionResult.SuccessResult.HasValue)
+            {
+                return LiquidExpressionResult.Success(Option<IExpressionConstant>.None()); ; // no dictionary to look up in
+            }
+            var dict = liquidExpressionResult.SuccessResult.Value as DictionaryValue;
+
             if (dict != null)
             {
-                return dict.ValueAt(Convert.ToString(_index));
+                return LiquidExpressionResult.Success(dict.ValueAt(Convert.ToString(_index)));
             }
-            // TODO: Implement the rest of this
-            return new Undefined(_variableReference +"." + _index);
+
+            return LiquidExpressionResult.Success(Option<IExpressionConstant>.None());
+            //            // TODO: Implement the rest of this
+            //            return new Undefined(_variableReference +"." + _index);
         }
 
         

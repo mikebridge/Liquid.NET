@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Liquid.NET.Constants;
-using Liquid.NET.Expressions;
+
 using Liquid.NET.Symbols;
 using Liquid.NET.Tags;
 using Liquid.NET.Utils;
@@ -22,7 +22,13 @@ namespace Liquid.NET.Rendering
         public void Render(IncludeTag includeTag, SymbolTableStack symbolTableStack)
         {
             var virtualFilenameVar = LiquidExpressionEvaluator.Eval(includeTag.VirtualFileExpression, symbolTableStack);
-            String virtualFileName = ValueCaster.RenderAsString(virtualFilenameVar.Value);
+            if (virtualFilenameVar.IsError)
+            {
+                _renderingVisitor.Errors.Add(virtualFilenameVar.ErrorResult);
+                return;  
+            }
+
+            String virtualFileName = ValueCaster.RenderAsString(virtualFilenameVar.SuccessResult.Value);
 
             if (symbolTableStack.FileSystem == null)
             {
@@ -38,20 +44,24 @@ namespace Liquid.NET.Rendering
             if (includeTag.ForExpression != null)
             {
                 var forExpressionOption = LiquidExpressionEvaluator.Eval(includeTag.ForExpression, symbolTableStack);
-
-                if (forExpressionOption.Value is DictionaryValue) // it seems to render as a single element if it's a dictionary.
+                if (forExpressionOption.IsError)
+                {
+                    _renderingVisitor.Errors.Add(forExpressionOption.ErrorResult);
+                    return;
+                }
+                if (forExpressionOption.SuccessResult.Value is DictionaryValue) // it seems to render as a single element if it's a dictionary.
                 {
                     var localBlockScope = new SymbolTable();
                     DefineLocalVariables(symbolTableStack, localBlockScope, includeTag.Definitions);
 
                     var exprValue = LiquidExpressionEvaluator.Eval(includeTag.ForExpression, symbolTableStack);
-                    localBlockScope.DefineVariable(virtualFileName, exprValue.Value);
+                    localBlockScope.DefineVariable(virtualFileName, exprValue.SuccessResult.Value);
 
                     RenderWithLocalScope(symbolTableStack, localBlockScope, snippetAst.RootNode);
                 }
                 else
                 {
-                    ArrayValue array = ValueCaster.Cast<IExpressionConstant, ArrayValue>(forExpressionOption.Value);
+                    ArrayValue array = ValueCaster.Cast<IExpressionConstant, ArrayValue>(forExpressionOption.SuccessResult.Value);
 
                     if (array.HasError)
                     {
@@ -75,7 +85,7 @@ namespace Liquid.NET.Rendering
                 if (includeTag.WithExpression != null)
                 {
                     var withExpression = LiquidExpressionEvaluator.Eval(includeTag.WithExpression, symbolTableStack);
-                    localBlockScope.DefineVariable(virtualFileName, withExpression.Value);
+                    localBlockScope.DefineVariable(virtualFileName, withExpression.SuccessResult.Value);
                 }
                 RenderWithLocalScope(symbolTableStack, localBlockScope, snippetAst.RootNode);
             }
@@ -97,15 +107,15 @@ namespace Liquid.NET.Rendering
         {
             foreach (var def in definitions)
             {
-                var option = LiquidExpressionEvaluator.Eval(def.Value, symbolTableStack);
-                if (option.HasValue)
+                var liquidExpressionREsult = LiquidExpressionEvaluator.Eval(def.Value, symbolTableStack);
+                if (liquidExpressionREsult.IsError)
                 {
-                    localBlockScope.DefineVariable(def.Key, option.Value);
+                    // TODO: check if this should ignore this or not.
                 }
-                else
-                {
-                    localBlockScope.DefineVariable(def.Key, new NilValue());
-                }
+                localBlockScope.DefineVariable(def.Key,
+                    liquidExpressionREsult.SuccessResult.HasValue
+                        ? liquidExpressionREsult.SuccessResult.Value
+                        : new NilValue());
             }
         }
     }

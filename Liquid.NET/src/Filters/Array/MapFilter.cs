@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 using Liquid.NET.Constants;
 using Liquid.NET.Utils;
 
@@ -36,27 +34,12 @@ namespace Liquid.NET.Filters.Array
         {
             if (liquidDictionaryValue == null || liquidDictionaryValue.Value == null)
             {
-                return ConstantFactory.CreateError<DictionaryValue>("Hash is nil");
+                return LiquidExpressionResult.Error("Hash is nil");
             }
              String propertyNameString = ValueCaster.RenderAsString(_selector);
-            return liquidDictionaryValue.ValueAt(propertyNameString);
+             return LiquidExpressionResult.Success(liquidDictionaryValue.ValueAt(propertyNameString));
             
         }
 
-//
-//        public MapFilter(StringValue selector)
-//        {
-//            _selector = selector;
-//        }
-//
-//        public override ArrayValue Apply(ArrayValue liquidArrayExpression)
-//        {
-//            if (liquidArrayExpression == null || liquidArrayExpression.Value == null)
-//            {
-//                return ConstantFactory.CreateError<ArrayValue>("Array is nil");
-//            }
-//            var list = liquidArrayExpression.ArrValue.Select(x => FieldAccessor.TryField(x, _selector.StringVal)).ToList();
-//            return new ArrayValue(list);
-//        }
     }
 }

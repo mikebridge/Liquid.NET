@@ -37,7 +37,7 @@ namespace Liquid.NET.Filters.Strings
             }
             var list = liquidArrayExpression.ArrValue;
 
-            if (_start == null || _start.IsUndefined)
+            if (_start == null /*|| _start.IsUndefined*/)
             {
                 return LiquidExpressionResult.Error("Please pass a start parameter.");
             }
@@ -53,12 +53,12 @@ namespace Liquid.NET.Filters.Strings
             }
             var list = stringValue.StringVal.ToCharArray().ToList();
 
-            if (_start == null || _start.IsUndefined)
+            if (_start == null /*|| _start.IsUndefined*/)
             {
                 return LiquidExpressionResult.Error("Please pass a start parameter.");
             }
 
-            return new StringValue(String.Concat(SliceList(list)));
+            return LiquidExpressionResult.Success(new StringValue(String.Concat(SliceList(list))));
         }
 
         private IList<T> SliceList<T>(IList<T> list)
@@ -67,7 +67,7 @@ namespace Liquid.NET.Filters.Strings
             var skip = _start.IntValue;
             skip = FindPosition(list, skip);
 
-            if (_length != null && !_length.IsUndefined)
+            if (_length != null /*&& !_length.IsUndefined*/)
             {
                 take = _length.IntValue;
             }

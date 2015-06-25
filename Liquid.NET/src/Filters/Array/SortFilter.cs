@@ -36,6 +36,7 @@ namespace Liquid.NET.Filters.Array
 
         private ArrayValue SortByProperty(ArrayValue val, string sortfield)
         {
+
             var ordered = val.ArrValue.OrderBy(x => AsString(x, sortfield));
             // TODO: ThenBy
             return new ArrayValue(ordered.ToList());

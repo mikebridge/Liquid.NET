@@ -18,7 +18,7 @@ namespace Liquid.NET.Filters
 
         public override LiquidExpressionResult ApplyTo(DateValue dateValue)
         {
-            if (dateValue.IsUndefined || !dateValue.DateTimeValue.HasValue)
+            if (/*dateValue.IsUndefined ||*/ !dateValue.DateTimeValue.HasValue)
             {
                 return LiquidExpressionResult.Success(new StringValue(""));
             }

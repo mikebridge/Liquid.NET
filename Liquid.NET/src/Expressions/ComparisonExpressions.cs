@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web.UI.WebControls;
+
 using Liquid.NET.Constants;
 using Liquid.NET.Symbols;
 using Liquid.NET.Utils;
@@ -22,7 +20,7 @@ namespace Liquid.NET.Expressions
             IEnumerable<Option<IExpressionConstant>> expressions)
         {
             var expressionList = expressions.ToList();
-            return ComparisonExpressions.Compare(expressionList[0], expressionList[1], (x, y) => x > y);
+            return LiquidExpressionResult.Success(ComparisonExpressions.Compare(expressionList[0].Value, expressionList[1].Value, (x, y) => x > y));
         }
     }
 
@@ -37,7 +35,7 @@ namespace Liquid.NET.Expressions
             IEnumerable<Option<IExpressionConstant>> expressions)
         {
             var expressionList = expressions.ToList();
-            return ComparisonExpressions.Compare(expressionList[0], expressionList[1], (x, y) => x <= y);
+            return LiquidExpressionResult.Success(ComparisonExpressions.Compare(expressionList[0].Value, expressionList[1].Value, (x, y) => x <= y));
         }
     }
 
@@ -52,7 +50,7 @@ namespace Liquid.NET.Expressions
             IEnumerable<Option<IExpressionConstant>> expressions)
         {
             var expressionList = expressions.ToList();
-            return ComparisonExpressions.Compare(expressionList[0], expressionList[1], (x, y) => x >= y);
+            return LiquidExpressionResult.Success(ComparisonExpressions.Compare(expressionList[0].Value, expressionList[1].Value, (x, y) => x >= y));
         }
     }
 
@@ -67,7 +65,7 @@ namespace Liquid.NET.Expressions
             IEnumerable<Option<IExpressionConstant>> expressions)
         {
             var expressionList = expressions.ToList();
-            return ComparisonExpressions.Compare(expressionList[0], expressionList[1], (x, y) => x < y);
+            return LiquidExpressionResult.Success(ComparisonExpressions.Compare(expressionList[0].Value, expressionList[1].Value, (x, y) => x < y));
         }
     }
 
@@ -83,13 +81,6 @@ namespace Liquid.NET.Expressions
 
             return new BooleanValue(func(numericValue1.DecimalValue, numericValue2.DecimalValue));
         }
-
-//        public static BooleanValue Invalu
-//           if (exprList.Count() != 2)
-//            {
-//                // This shouldn't happen if the parser is correct.
-//                return ConstantFactory.CreateError<BooleanValue>("Equals is a binary expression but received " + exprList.Count() + "."); 
-//            }
 
     }
 }

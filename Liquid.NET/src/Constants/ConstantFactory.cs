@@ -9,18 +9,20 @@ using System.Threading.Tasks;
 
 namespace Liquid.NET.Constants
 {
+    [Obsolete]
     public static class ConstantFactory
     {
-        public static T CreateError<T>(String errorMessage)
+        /*
+        public static T CreateErrorX<T>(String errorMessage)
             where T : IExpressionConstant
         {
             //Console.WriteLine("Creating error "+ errorMessage);
             var error = (T) Activator.CreateInstance(typeof(T), default(T));
-            error.ErrorMessage = errorMessage;
+            //error.ErrorMessage = errorMessage;
             return error;
         }
 
-        public static T CreateNilValueOfType<T>(String errorMessage)
+        public static T CreateNilValueOfTypeX<T>(String errorMessage)
             where T : IExpressionConstant
         {
             Console.WriteLine("Creating undefined " +typeof(T) + ": "+ errorMessage);
@@ -43,17 +45,18 @@ namespace Liquid.NET.Constants
 
        
 
-        public static TOut CreateNilValueOfType<TIn, TOut>(Func<TIn, TOut> f, String errorMessage)
+        public static TOut CreateNilValueOfTypeX<TIn, TOut>(Func<TIn, TOut> f, String errorMessage)
             where TOut : IExpressionConstant
         {
 
             return CreateNilValueOfType<TOut>(errorMessage);
         }
 
-        public static Type GetReturnType<TIn,TOut>(Func<TIn, TOut> f)
+        public static Type GetReturnTypeX<TIn,TOut>(Func<TIn, TOut> f)
         {
             var t = f.Method.ReturnType;
             return t;
         }
+         */
     }
 }

@@ -23,7 +23,7 @@ namespace Liquid.NET.Expressions
         public override LiquidExpressionResult Eval(SymbolTableStack symbolTableStack, IEnumerable<Option<IExpressionConstant>> expressions)
         {
             // something got screwed up here
-            return LiquidExpressionEvaluator.Eval(_liquidExpression, new List<LiquidExpressionResult>(), symbolTableStack);
+            return LiquidExpressionEvaluator.Eval(_liquidExpression, new List<Option<IExpressionConstant>>(), symbolTableStack);
         }
     }
 }

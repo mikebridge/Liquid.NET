@@ -14,7 +14,7 @@ namespace Liquid.NET.Filters.Math
 
         public override LiquidExpressionResult Apply(NumericValue liquidExpression)
         {
-            return new NumericValue(liquidExpression.DecimalValue - _operand.DecimalValue);
+            return LiquidExpressionResult.Success(new NumericValue(liquidExpression.DecimalValue - _operand.DecimalValue));
         }
     }
 }

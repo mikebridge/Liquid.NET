@@ -18,13 +18,13 @@ namespace Liquid.NET.Filters.Math
         {
             if (_operand == null)
             {
-                return NumericValue.CreateError("The argument to \"modulo\" is missing.");
+                return LiquidExpressionResult.Error("The argument to \"modulo\" is missing.");
             }
             if (_operand.DecimalValue == 0)
             {
-                return NumericValue.CreateError("Liquid error: divided by 0");
+                return LiquidExpressionResult.Error("Liquid error: divided by 0");
             }
-            return new NumericValue(numericValue.DecimalValue % _operand.DecimalValue);
+            return LiquidExpressionResult.Success(new NumericValue(numericValue.DecimalValue % _operand.DecimalValue));
         }
     }
 }

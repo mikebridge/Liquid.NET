@@ -17,10 +17,10 @@ namespace Liquid.NET.Filters
 
         public override LiquidExpressionResult Apply(TSource liquidExpression)
         {
-            Console.WriteLine("Casting from " + typeof(TSource) + " to " + typeof(TResult));
+            //Console.WriteLine("Casting from " + typeof(TSource) + " to " + typeof(TResult));
             var result= ValueCaster.Cast<TSource, TResult>(liquidExpression);
-            Console.WriteLine("RESULT IS " + result);
-            return result;
+            //Console.WriteLine("RESULT IS " + result);
+            return LiquidExpressionResult.Success(result);
         }
     }
 }

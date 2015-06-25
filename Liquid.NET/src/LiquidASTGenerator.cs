@@ -1203,7 +1203,8 @@ namespace Liquid.NET
         public override void EnterNullObject(LiquidParser.NullObjectContext context)
         {
             base.EnterNullObject(context);
-            var nullObj = new StringValue(null) {IsUndefined = true}; // TODO: Is null undefined??
+            //var nullObj = new StringValue(null) {IsUndefined = true}; // TODO: Is null undefined??
+            var nullObj = new NilValue();
             AddExpressionToCurrentExpressionBuilder(nullObj);
         }
 

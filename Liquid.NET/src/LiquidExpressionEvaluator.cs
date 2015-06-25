@@ -21,9 +21,12 @@ namespace Liquid.NET
             SymbolTableStack symbolTableStack)
         {
             // Evaluate the children, depth first
-            var leaves = expr.Children.Select(x => Eval(x, symbolTableStack));
-
-            return Eval(expr.Data, leaves, symbolTableStack);
+            var leaves = expr.Children.Select(x => Eval(x, symbolTableStack)).ToList();
+            if (leaves.Any(x => x.IsError))
+            {
+                return leaves.First(x => x.IsError); // TODO: maybe aggregate tehse
+            }
+            return Eval(expr.Data, leaves.Select(x => x.SuccessResult), symbolTableStack);
         }
 
         public static LiquidExpressionResult Eval(
@@ -31,10 +34,13 @@ namespace Liquid.NET
             SymbolTableStack symbolTableStack)
         {
             // Evaluate the children, depth first
-            var leaves = expressiontree.ExpressionTree.Children.Select(x => Eval(x, symbolTableStack));
-
+            var leaves = expressiontree.ExpressionTree.Children.Select(x => Eval(x, symbolTableStack)).ToList();
+            if (leaves.Any(x => x.IsError))
+            {
+                return leaves.First(x => x.IsError); // TODO: maybe aggregate tehse
+            }
             // pass the results to the parent
-            return Eval(expressiontree.ExpressionTree.Data, leaves, symbolTableStack);
+            return Eval(expressiontree.ExpressionTree.Data, leaves.Select(x => x.SuccessResult), symbolTableStack);
         }
 
         public static LiquidExpressionResult Eval(
@@ -44,7 +50,10 @@ namespace Liquid.NET
         {
 
             LiquidExpressionResult objResult = expression.Expression.Eval(symbolTableStack, leaves);
-           
+            if (objResult.IsError)
+            {
+                return objResult;
+            }
             // Compose a chain of filters, making sure type-casting
             // is done between them.
 
@@ -80,7 +89,7 @@ namespace Liquid.NET
                 //return new Tuple<String, IFilterExpression>(filterSymbol.Name, null);
                 return null;
             }
-            var expressionConstants = filterSymbol.Args.Select(x => x.Eval(stack, new List<LiquidExpressionResult>()));
+            var expressionConstants = filterSymbol.Args.Select(x => x.Eval(stack, new List<Option<IExpressionConstant>>()));
             // TODO: Handle the error if any
             return FilterFactory.InstantiateFilter(filterSymbol.Name, filterType, expressionConstants.Select(x => x.SuccessResult));
         }

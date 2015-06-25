@@ -1,9 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web.ModelBinding;
 
 namespace Liquid.NET.Constants
 {
@@ -13,7 +9,9 @@ namespace Liquid.NET.Constants
         {
             if (key >= array.Count || key < -array.Count)
             {
-                return ConstantFactory.CreateNilValueOfType<StringValue>("index "+key+" is outside the bounds of the array.");
+                //return ConstantFactory.CreateNilValueOfType<StringValue>("index "+key+" is outside the bounds of the array.");
+                // TODO: this should return an OPTION
+                return new NilValue();
             }
             key = WrapMod(key, array.Count);
             

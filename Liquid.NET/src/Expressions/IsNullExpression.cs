@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using Liquid.NET.Constants;
 using Liquid.NET.Symbols;
 using Liquid.NET.Utils;
@@ -23,13 +24,12 @@ namespace Liquid.NET.Expressions
             {
                 throw new Exception("Expected one variable to compare with \"null\""); // this will be obsolete when the lexer/parser is split
             }
-            if (list[0].IsUndefined)
+            if (!list[0].HasValue)
             {
-                return new BooleanValue(false);
+                return LiquidExpressionResult.Success(new BooleanValue(false));
             }
-            return new BooleanValue(list[0].Value == null);
+            return LiquidExpressionResult.Success(new BooleanValue(list[0].Value == null || list[0].Value.GetType() == typeof (NilValue)));
 
-            //throw new NotImplementedException();
         }
     }
 }

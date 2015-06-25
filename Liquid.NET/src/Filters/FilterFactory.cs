@@ -117,14 +117,14 @@ namespace Liquid.NET.Filters
             return type.IsValueType ? Activator.CreateInstance(type) : null;
         }
 
-        public static IExpressionConstant CreateUndefinedForType(Type valueType, object[] args)
-        {
-            // TODO: Introspect the argument for the Value type and get the default.
-            Console.WriteLine("passing " + args.Count() + " args");
-            var result = (IExpressionConstant)Activator.CreateInstance(valueType, args);
-            result.IsUndefined = true;
-            return result;
-        }
+//        public static IExpressionConstant CreateUndefinedForType(Type valueType, object[] args)
+//        {
+//            // TODO: Introspect the argument for the Value type and get the default.
+//            Console.WriteLine("passing " + args.Count() + " args");
+//            var result = (IExpressionConstant)Activator.CreateInstance(valueType, args);
+//            result.IsUndefined = true;
+//            return result;
+//        }
 
         private static IExpressionConstant CastParameter(IExpressionConstant filterList, Type parmType)
         {

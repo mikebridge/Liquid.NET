@@ -21,17 +21,17 @@ namespace Liquid.NET.Filters.Math
         {
             if (dividend == null)
             {
-                return NumericValue.CreateError("The dividend is missing.");
+                return LiquidExpressionResult.Error("The dividend is missing.");
             }
             if (_divisor == null)
             {
-                return NumericValue.CreateError("The divisor is missing.");
+                return LiquidExpressionResult.Error("The divisor is missing.");
             }
             if (_divisor.DecimalValue == 0)
             {
-                return NumericValue.CreateError("Liquid error: divided by 0");
+                return LiquidExpressionResult.Error("Liquid error: divided by 0");
             }
-            return new NumericValue(dividend.DecimalValue / _divisor.DecimalValue );
+            return LiquidExpressionResult.Success(new NumericValue(dividend.DecimalValue / _divisor.DecimalValue ));
         }
     }
 

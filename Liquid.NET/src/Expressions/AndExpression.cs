@@ -18,11 +18,12 @@ namespace Liquid.NET.Expressions
 
         public override LiquidExpressionResult Eval(SymbolTableStack symbolTableStack, IEnumerable<Option<IExpressionConstant>> expressions)
         {
-            if (!expressions.Any() || expressions.Count() == 1)
+            var exprList = expressions.ToList();
+            if (exprList.Count() != 2)
             {
                 throw new Exception("An AND expression must have two values"); // TODO: when the Eval is separated this will be redundant.
             }
-            return new BooleanValue(expressions.All(x => x.IsTrue));
+            return LiquidExpressionResult.Success(new BooleanValue(exprList.All(x => x.HasValue) && exprList.All(x => x.Value.IsTrue)));
         }
     }
 }

@@ -16,9 +16,9 @@ namespace Liquid.NET.Filters.Math
         {
             if (_operand == null)
             {
-                return NumericValue.CreateError("The argument to \"add\" is missing.");
+                return LiquidExpressionResult.Error("The argument to \"add\" is missing.");
             }
-            return new NumericValue(numericValue.DecimalValue +  _operand.DecimalValue);
+            return LiquidExpressionResult.Success(new NumericValue(numericValue.DecimalValue +  _operand.DecimalValue));
         }
     }
 }

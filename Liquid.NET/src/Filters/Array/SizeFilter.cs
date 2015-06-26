@@ -49,6 +49,9 @@ namespace Liquid.NET.Filters.Array
             return LiquidExpressionResult.Success(new NumericValue(liquidGeneratorExpression.Length)); 
         }
 
-
+        public override LiquidExpressionResult ApplyToNil()
+        {
+            return LiquidExpressionResult.Success(new NumericValue(0)); 
+        }
     }
 }

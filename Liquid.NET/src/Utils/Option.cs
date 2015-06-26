@@ -23,8 +23,8 @@ namespace Liquid.NET.Utils
 
         public static bool operator ==(Option<T> option1, Option<T> option2)
         {
-            if (option1 == null) throw new ArgumentNullException("option1");
-            if (option2 == null) throw new ArgumentNullException("option2");
+            if (ReferenceEquals(null, option1)) throw new ArgumentNullException("option1");
+            if (ReferenceEquals(null, option2)) throw new ArgumentNullException("option2");
 
             return option1.Equals(option2);
         }

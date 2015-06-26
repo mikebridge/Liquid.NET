@@ -168,9 +168,13 @@ namespace Liquid.NET.Constants
             return "{ " + Quote(typeof(StringValue), key) + " : " + Quote(wrappedType, exprConstantAsString) + " }";
         }
 
-        private static Type GetWrappedType(Option<IExpressionConstant> expressionConstant)
+        private static Type GetWrappedType<T>(Option<T> expressionConstant)
+            where T:IExpressionConstant
         {
-            return expressionConstant.GetType().GetGenericArguments()[0];
+            
+            var nestedType = expressionConstant.GetType().GetGenericArguments()[0];
+            Console.WriteLine("NEsted type " + nestedType);
+            return nestedType;
         }
 
         // TODO: quote JSON here
@@ -292,10 +296,10 @@ namespace Liquid.NET.Constants
 
         public static string RenderAsString(Option<IExpressionConstant> val)
         {
-            if (val == null)
-            {
-                return "";
-            }
+//            if (val == null)
+//            {
+//                return "";
+//            }
 //            if (!val.HasValue)
 //            {
 //                return "";

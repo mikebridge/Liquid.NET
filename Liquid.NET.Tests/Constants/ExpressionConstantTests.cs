@@ -12,7 +12,7 @@ namespace Liquid.NET.Tests.Constants
 
         [Test]
         [TestCase(1, 2, false)]
-        [TestCase(2, 2, false)]
+        [TestCase(2, 2, true)]
         public void NumericValues_Should_Equal(decimal decvar1, decimal decvar2, bool expected)
         {
             // Arrange

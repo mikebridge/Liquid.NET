@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Remoting.Messaging;
 using System.Security.Cryptography.X509Certificates;
 using Liquid.NET.Constants;
 using Liquid.NET.Expressions;
@@ -325,8 +326,12 @@ namespace Liquid.NET
         {
 
             // find the first place where the expression tree evaluates to true (i.e. which of the if/elsif/else clauses)
+            // This ignores "eval" errors in clauses.
             var match = ifThenElseBlockTag.IfElseClauses.FirstOrDefault(
-                                expr => LiquidExpressionEvaluator.Eval(expr.LiquidExpressionTree, _symbolTableStack).IsSuccess);
+                                expr => {
+                                    var result = LiquidExpressionEvaluator.Eval(expr.LiquidExpressionTree, _symbolTableStack);
+                                    return result.IsSuccess && result.SuccessResult.Value.IsTrue;
+                                });
             if (match != null)
             {
                 _astRenderer.StartVisiting(this, match.LiquidBlock); // then render the contents

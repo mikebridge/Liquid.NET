@@ -28,7 +28,7 @@ namespace Liquid.NET.Tests.Filters.Array
             var filter = new FirstFilter();
 
             // Act
-            var result = filter.Apply(arrayValue);
+            var result = filter.Apply(arrayValue).SuccessValue<StringValue>();
 
             // Assert
             Assert.That(result, Is.EqualTo(objlist[0]));

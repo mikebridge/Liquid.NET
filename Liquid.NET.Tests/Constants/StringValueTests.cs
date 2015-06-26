@@ -46,7 +46,7 @@ namespace Liquid.NET.Tests.Constants
             var result = stringSymbol.Eval(StackHelper.CreateSymbolTableStack(), new List<Option<IExpressionConstant>>());
 
             // Assert
-            Assert.That(result, Is.EqualTo(stringSymbol));
+            Assert.That(result.SuccessValue<StringValue>(), Is.EqualTo(stringSymbol));
 
         }
 

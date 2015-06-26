@@ -25,7 +25,6 @@ namespace Liquid.NET.Expressions
             }
             if (!exprList[0].HasValue || !exprList[1].HasValue)
             {
-                Console.WriteLine("******** UNDEFINED");
                 return LiquidExpressionResult.Success(new BooleanValue(false));
             }
 
@@ -46,7 +45,7 @@ namespace Liquid.NET.Expressions
 
         private LiquidExpressionResult Contains(ArrayValue arrayValue, IExpressionConstant expressionConstant)
         {
-            return LiquidExpressionResult.Success(new BooleanValue(arrayValue.ArrValue.Any(x => x.Value.Equals(expressionConstant.Value))));
+            return LiquidExpressionResult.Success(new BooleanValue(arrayValue.ArrValue.Any(IsEqual(expressionConstant))));
         }
 
         private LiquidExpressionResult Contains(DictionaryValue dictValue, IExpressionConstant expressionConstant)
@@ -54,5 +53,19 @@ namespace Liquid.NET.Expressions
             return LiquidExpressionResult.Success(new BooleanValue(dictValue.DictValue.Keys.Any(x => x.Equals(expressionConstant.Value))));
         }
 
+        private static Func<Option<IExpressionConstant>, bool> IsEqual(IExpressionConstant expressionConstant)
+        {            
+            return x =>
+            {
+                if (x.HasValue)
+                {
+                    return x.Value.Value.Equals(expressionConstant.Value);
+                }
+                else
+                {
+                    return expressionConstant == null;
+                }
+            };
+        }
     }
 }

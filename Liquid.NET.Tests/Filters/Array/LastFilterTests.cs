@@ -28,7 +28,7 @@ namespace Liquid.NET.Tests.Filters.Array
             var filter = new LastFilter();
 
             // Act
-            var result = filter.Apply(arrayValue);
+            var result = filter.Apply(arrayValue).SuccessValue<BooleanValue>();
 
             // Assert
             Assert.That(result, Is.EqualTo(objlist[objlist.Count() - 1]));

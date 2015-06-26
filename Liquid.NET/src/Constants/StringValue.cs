@@ -46,6 +46,10 @@ namespace Liquid.NET.Constants
 
         public IEnumerator GetEnumerator()
         {
+            if (StringVal == null)
+            {
+                return new char[] { }.GetEnumerator(); // is this necessary?
+            }
             return StringVal.ToCharArray().GetEnumerator();
         }
     }

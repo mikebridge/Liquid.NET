@@ -12,12 +12,6 @@ namespace Liquid.NET.Constants
     public abstract class ExpressionConstant : ExpressionDescription, IExpressionConstant
     {
 
-        public override LiquidExpressionResult Eval(
-            SymbolTableStack symbolTableStack,
-            IEnumerable<Option<IExpressionConstant>> childresults)
-        {
-            return LiquidExpressionResult.Success(this);
-        }
 
 
         public abstract object Value
@@ -92,7 +86,7 @@ namespace Liquid.NET.Constants
 
         public Option<IExpressionConstant> ToOption()
         {
-            if (this.Value == null)
+            if (this.Value != null)
             {
                 return new Some<IExpressionConstant>(this);
             }
@@ -113,5 +107,44 @@ namespace Liquid.NET.Constants
                 return new Some<IExpressionConstant>(t);
             }
         }
+
+        public override bool Equals(object otherObj)
+        {
+            if (otherObj == null)
+            {
+                return false;
+            }
+            else
+            {
+                var exprConstant = otherObj as ExpressionConstant;
+                if (exprConstant != null)
+                {
+                    return exprConstant.Value.Equals(Value);
+                }
+                else
+                {
+                    return this.Value == null;   
+                }
+            }
+        }
+
+
+//        protected bool Equals(ExpressionConstant other)
+//        {
+//            throw new NotImplementedException();
+//        }
+
+        public override int GetHashCode()
+        {
+            return Value == null ? 0 : Value.GetHashCode();
+        }
+
+        public override LiquidExpressionResult Eval(
+            SymbolTableStack symbolTableStack,
+            IEnumerable<Option<IExpressionConstant>> childresults)
+        {
+            return LiquidExpressionResult.Success(this);
+        }
+
     }
 }

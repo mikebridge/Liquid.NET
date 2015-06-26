@@ -48,7 +48,9 @@ namespace Liquid.NET.Constants
             get { return _val != 0; }
         }
 
-   
+
+        
+
 
 
         public override void Accept(IExpressionDescriptionVisitor expressionDescriptionVisitor)

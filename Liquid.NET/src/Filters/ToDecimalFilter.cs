@@ -19,7 +19,7 @@ namespace Liquid.NET.Filters
 
         public static NumericValue ConvertToDecimal(ExpressionConstant liquidExpression)
         {
-            String warningMessage = null;
+            
             try
             {
                 if (liquidExpression == null || liquidExpression.Value == null)

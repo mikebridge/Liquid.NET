@@ -65,7 +65,9 @@ namespace Liquid.NET.Expressions
             IEnumerable<Option<IExpressionConstant>> expressions)
         {
             var expressionList = expressions.ToList();
-            return LiquidExpressionResult.Success(ComparisonExpressions.Compare(expressionList[0].Value, expressionList[1].Value, (x, y) => x < y));
+            var val1 = expressionList[0].Value;
+            var val2 = expressionList[1].Value;
+            return LiquidExpressionResult.Success(ComparisonExpressions.Compare(val1, val2, (x, y) => x < y));
         }
     }
 
@@ -84,8 +86,9 @@ namespace Liquid.NET.Expressions
                 return new BooleanValue(false);
             }
 
-            return new BooleanValue(func(numericValueResult1.SuccessValue<NumericValue>().DecimalValue, 
-                                         numericValueResult2.SuccessValue<NumericValue>().DecimalValue));
+            var decimalValue1 = numericValueResult1.SuccessValue<NumericValue>().DecimalValue;
+            var decimalValue2 = numericValueResult2.SuccessValue<NumericValue>().DecimalValue;
+            return new BooleanValue(func(decimalValue1, decimalValue2));
         }
 
     }

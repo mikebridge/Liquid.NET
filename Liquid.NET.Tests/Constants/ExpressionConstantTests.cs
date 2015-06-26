@@ -10,6 +10,31 @@ namespace Liquid.NET.Tests.Constants
     public class ExpressionConstantTests
     {
 
+        [Test]
+        [TestCase(1, 2, false)]
+        [TestCase(2, 2, false)]
+        public void NumericValues_Should_Equal(decimal decvar1, decimal decvar2, bool expected)
+        {
+            // Arrange
+            var var1 = new NumericValue(decvar1);
+            var var2 = new NumericValue(decvar2);
+
+            // Assert
+            Assert.That(var1.Equals(var2), Is.EqualTo(expected));
+
+        }
+
+        [Test]
+        public void NumericValues_Should_Not_Equal_Null()
+        {
+            // Arrange
+            var var1 = new NumericValue(1);            
+
+            // Assert
+            Assert.That(var1.Equals(null), Is.EqualTo(false));
+
+        }
+
 //        [Test]
 //        public void It_Should_Chain_A_Function()
 //        {

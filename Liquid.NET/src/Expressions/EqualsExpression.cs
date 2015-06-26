@@ -35,8 +35,8 @@ namespace Liquid.NET.Expressions
             }           
             if (exprList[0].GetType() == exprList[1].GetType())
             {
-                return  LiquidExpressionResult.Success(new BooleanValue(exprList[0].Value.Equals(exprList[1].Value)));
-
+                var isEqual = exprList[0].Value.Equals(exprList[1].Value);
+                return  LiquidExpressionResult.Success(new BooleanValue(isEqual));
             }
 
             return LiquidExpressionResult.Error("\"Equals\" implementation can't cast that yet"); 

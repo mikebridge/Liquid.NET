@@ -31,8 +31,7 @@ namespace Liquid.NET.Filters.Array
             }
             Console.WriteLine("Array is " + liquidArrayExpression.ArrValue.Count);
             Console.WriteLine("Index is " + _index.IntValue);
-
-            IExpressionConstant result;
+            
             if (liquidArrayExpression.ArrValue.Count > 0 && liquidArrayExpression.ArrValue.Count >= _index.IntValue + 1)
             {
                 return LiquidExpressionResult.Success(liquidArrayExpression.ValueAt(_index.IntValue));

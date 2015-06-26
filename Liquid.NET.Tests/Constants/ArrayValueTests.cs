@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Security.Policy;
 using Liquid.NET.Constants;
-
+using Liquid.NET.Utils;
 using NUnit.Framework;
 
 namespace Liquid.NET.Tests.Constants
@@ -25,7 +25,8 @@ namespace Liquid.NET.Tests.Constants
             ArrayValue arrayValue = new ArrayValue(objlist);
 
             // Assert
-            Assert.That(arrayValue.ValueAt(0), Is.EqualTo(objlist[0]));
+            var valueAt = arrayValue.ValueAt(0);
+            Assert.That(valueAt.Value, Is.EqualTo(objlist[0].Value));
         }
 
         [Test]

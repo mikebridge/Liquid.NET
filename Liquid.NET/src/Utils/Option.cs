@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.CompilerServices;
 
 namespace Liquid.NET.Utils
 {
@@ -8,11 +7,6 @@ namespace Liquid.NET.Utils
         public abstract T Value { get; protected set; }
 
         public abstract bool HasValue { get; }
-
-        public bool Equals(T other)
-        {
-            return Equals((object) other);
-        }
 
         public static Option<T> Create(T val)
         {
@@ -26,6 +20,59 @@ namespace Liquid.NET.Utils
         {
             return new None<T>();
         }
+
+        public static bool operator ==(Option<T> option1, Option<T> option2)
+        {
+            if (option1 == null) throw new ArgumentNullException("option1");
+            if (option2 == null) throw new ArgumentNullException("option2");
+
+            return option1.Equals(option2);
+        }
+
+        public static bool operator !=(Option<T> lhs, Option<T> rhs)
+        {
+            return !(lhs == rhs);
+        }
+
+        public bool Equals(T other)
+        {
+            return Equals((object) other);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null)
+            {
+                return false;
+            }
+            else
+            {
+                var option = obj as Option<T>;
+                if (option != null)
+                {
+                    var rhs = option;
+                    return HasValue && rhs.HasValue
+                        ? Value.Equals(rhs.Value)
+                        : !HasValue && !rhs.HasValue;
+                }
+                else if (obj is T)
+                {
+                    return HasValue && Value.Equals((T)obj);
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
+
+        public override int GetHashCode()
+        {
+            return HasValue
+                ? Value == null ? 0 : Value.GetHashCode()
+                : new None<T>().GetHashCode();
+        }
+
 
     }
 

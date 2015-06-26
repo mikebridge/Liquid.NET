@@ -152,7 +152,9 @@ namespace Liquid.NET.Constants
 
         private static string FormatArray(ArrayValue arrayValue)
         {
-            var strs = arrayValue.ArrValue.Select(x => Quote(x.GetType(), Convert<StringValue>((dynamic) x).Value.ToString()));
+
+            var strs = arrayValue.ArrValue.Select(x => Quote(GetWrappedType(x), RenderAsString(x)));
+            //var strs = arrayValue.ArrValue.Select(x => Quote(x.GetType(), Convert<StringValue>((dynamic) x).Value.ToString()));
             return "[ " + String.Join(", ", strs) + " ]"; 
 
         }
@@ -161,13 +163,20 @@ namespace Liquid.NET.Constants
         private static String FormatKvPair(string key, Option<IExpressionConstant> expressionConstant)
         {
             //var strSymbol = Convert<StringValue>((dynamic) expressionConstant);
+            Type wrappedType = GetWrappedType(expressionConstant);
             String exprConstantAsString = RenderAsString(expressionConstant);
-            return "{ " + Quote(typeof(StringValue), key) + " : " + Quote(expressionConstant.GetType(), exprConstantAsString) + " }";
+            return "{ " + Quote(typeof(StringValue), key) + " : " + Quote(wrappedType, exprConstantAsString) + " }";
+        }
+
+        private static Type GetWrappedType(Option<IExpressionConstant> expressionConstant)
+        {
+            return expressionConstant.GetType().GetGenericArguments()[0];
         }
 
         // TODO: quote JSON here
         private static String Quote(Type origType, String str)
         {
+            Console.WriteLine("casting type" + origType);
             if (origType.IsAssignableFrom(typeof (NumericValue)))
             {
                 return str;

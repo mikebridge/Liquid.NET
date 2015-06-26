@@ -21,6 +21,8 @@ namespace Liquid.NET.Tests.Expressions
         [TestCase("1", ">=", "2", "FALSE")]
         [TestCase("1", "<=", "1", "TRUE")]
         [TestCase("2", "<=", "1", "FALSE")]
+        [TestCase("1", "==", "null", "FALSE")]
+        [TestCase("1", ">", "null", "FALSE")]
         public void It_Should_Compare_Two_Args(String arg1, string op, String arg2, string expected)
         {
             // Arrange
@@ -29,6 +31,8 @@ namespace Liquid.NET.Tests.Expressions
             // Assert
             Assert.That(result, Is.EqualTo("Result : " + expected));
         }
+
+        [TestCase("2", "<=", "1", "FALSE")]
 
         [Test]
         [TestCase("2", "__", "1", "mismatched input '_' expecting")]

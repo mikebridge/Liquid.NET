@@ -22,7 +22,7 @@ namespace Liquid.NET.Tests.Expressions
             symbolTable.DefineVariable("foo", str);
 
             // Assert
-            Assert.That(symbolTable.ReferenceVariable("foo"), Is.EqualTo(str));            
+            Assert.That(symbolTable.ReferenceVariable("foo").SuccessValue<StringValue>(), Is.EqualTo(str));            
 
         }
 
@@ -54,7 +54,7 @@ namespace Liquid.NET.Tests.Expressions
             symbolTable.DefineVariable(varname, arrayValue);
 
             // Act
-            var arr = symbolTable.ReferenceVariable(varname);
+            var arr = symbolTable.ReferenceVariable(varname).SuccessValue<ArrayValue>();
 
             // Assert
             Assert.That(arr, Is.TypeOf<ArrayValue>());

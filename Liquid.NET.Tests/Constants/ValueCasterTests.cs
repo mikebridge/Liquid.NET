@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 
 using Liquid.NET.Constants;
+using Liquid.NET.Utils;
 using NUnit.Framework;
 
 namespace Liquid.NET.Tests.Constants
@@ -52,7 +53,8 @@ namespace Liquid.NET.Tests.Constants
             // Act
             MethodInfo method = typeof(ValueCaster).GetMethod("Cast");
             MethodInfo generic = method.MakeGenericMethod(typeof(NumericValue), typeof(StringValue));
-            var stringLiteral = (StringValue) generic.Invoke(null, new object[] {num});
+            var castResult = (LiquidExpressionResult) generic.Invoke(null, new object[] {num});
+            var stringLiteral = castResult.SuccessValue<StringValue>();
 
             // Assert
             Assert.That(stringLiteral.Value, Is.EqualTo("123.45"));
@@ -82,7 +84,7 @@ namespace Liquid.NET.Tests.Constants
             var original = new ArrayValue(new List<IExpressionConstant>{new NumericValue(123.4m), new NumericValue(5)});
 
             // Act
-            var result = ValueCaster.Cast<ArrayValue, ArrayValue>(original);
+            var result = ValueCaster.Cast<ArrayValue, ArrayValue>(original).SuccessValue<ArrayValue>();
 
             // Assert
             Assert.That(result, Is.EqualTo(original));
@@ -95,7 +97,7 @@ namespace Liquid.NET.Tests.Constants
             var original = new ArrayValue(new List<IExpressionConstant> { new NumericValue(123.4m), new NumericValue(5) });
 
             // Act
-            var result = ValueCaster.Cast<ArrayValue, ExpressionConstant>(original);
+            var result = ValueCaster.Cast<ArrayValue, ExpressionConstant>(original).SuccessValue<ArrayValue>();
 
             // Assert
             Assert.That(result, Is.EqualTo(original));
@@ -146,7 +148,7 @@ namespace Liquid.NET.Tests.Constants
 
             // Act
             var arrayResult = ValueCaster.Cast<StringValue, ArrayValue>(str);
-            Assert.That(arrayResult.IsError, Is.False, arrayResult.ErrorResult.Message);
+            Assert.That(arrayResult.IsError, Is.False);
 
             // Assert
             var arrValue = arrayResult.SuccessValue<ArrayValue>().ArrValue;

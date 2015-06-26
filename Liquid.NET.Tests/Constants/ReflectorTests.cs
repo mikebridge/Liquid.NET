@@ -27,9 +27,8 @@ namespace Liquid.NET.Tests.Constants
             Assert.That(exprObject.ValueAt("MyProperty").Value, Is.EqualTo(testObj.MyProperty));
             Assert.That(exprObject.ValueAt("MyPropertyWithPrivateSetter").Value, Is.EqualTo(testObj.MyPropertyWithPrivateSetter));
             Assert.That(exprObject.ValueAt("MyPublicField").Value, Is.EqualTo(testObj.MyPublicField));
-            Assert.Fail("Fix undefined");
-            //Assert.That(exprObject.ValueAt("MyPrivateProperty"), Is.TypeOf<Undefined>());
-            //Assert.That(exprObject.ValueAt("MyPrivateField"), Is.TypeOf<Undefined>());
+            Assert.That(exprObject.ValueAt("MyPrivateProperty").HasValue, Is.False);
+            Assert.That(exprObject.ValueAt("MyPrivateField").HasValue, Is.False);
         }
 
         public class TestObj

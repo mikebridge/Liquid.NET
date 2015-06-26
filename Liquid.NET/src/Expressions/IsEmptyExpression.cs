@@ -24,7 +24,7 @@ namespace Liquid.NET.Expressions
             {
                 return LiquidExpressionResult.Error("Expected one variable to compare with \"empty\"");
             }
-            if (list[1].HasValue)
+            if (!list[0].HasValue)
             {
                 return LiquidExpressionResult.Success(new BooleanValue(true));
             }

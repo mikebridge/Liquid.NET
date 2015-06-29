@@ -25,9 +25,15 @@ namespace Liquid.NET.Symbols
             return last;
         }
 
-        public LiquidExpressionResult Reference(String reference)
+        /// <summary>
+        /// To ignore the current stack, set skiplevels=1.
+        /// </summary>
+        /// <param name="reference"></param>
+        /// <param name="skiplevels"></param>
+        /// <returns></returns>
+        public LiquidExpressionResult Reference(String reference, int skiplevels = 0)
         {
-            for (int i = _symbolTables.Count()-1; i >= 0; i--)
+            for (int i = _symbolTables.Count() - 1 - skiplevels; i >= 0; i--)
             {
                 Console.WriteLine("Looking up" + reference);
                 if (_symbolTables[i].HasVariableReference(reference))
@@ -36,7 +42,6 @@ namespace Liquid.NET.Symbols
                 }
             }
             return LiquidExpressionResult.Success(new None<IExpressionConstant>());
-            //return new Undefined(reference); 
         }
 
         public void FindVariable(String reference, 

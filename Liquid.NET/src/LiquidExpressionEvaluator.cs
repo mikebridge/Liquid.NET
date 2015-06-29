@@ -48,6 +48,12 @@ namespace Liquid.NET
             IEnumerable<Option<IExpressionConstant>> leaves, 
             SymbolTableStack symbolTableStack)
         {
+            // until the expression is changed to an option type, an expression may be null.  If it's null, it evaluates to null.
+            if (expression.Expression == null)
+            {
+                return null;
+            }
+
 
             LiquidExpressionResult objResult = expression.Expression.Eval(symbolTableStack, leaves);
             if (objResult.IsError)

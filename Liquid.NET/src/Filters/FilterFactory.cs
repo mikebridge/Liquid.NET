@@ -86,7 +86,11 @@ namespace Liquid.NET.Filters
                         CastParameter(filterList[i], argType).WhenSuccess( // more specific type
                             prm => result.Add(prm.Value)
                         ).WhenError(
-                            prm => result.Add(null) // This shouldnt' be hit
+                            prm =>
+                            {
+                                Console.WriteLine("THIS IS NULL");
+                                result.Add(null);// This shouldnt' be hit
+                            }
                         );
 
                     }

@@ -4,3 +4,11 @@
 #
 {% if myarray %}TRUTHY{% else %}NOT TRUTHY{% endif %}
 #
+{% if myundefined == empty %}TRUTHY{% else %}NOT TRUTHY{% endif %}
+#
+{% if myundefined == blank %}TRUTHY{% else %}NOT TRUTHY{% endif %}
+#
+{% if nil == empty %}TRUTHY{% else %}NOT TRUTHY{% endif %}
+#
+{% if ' ' == blank %}TRUTHY{% else %}NOT TRUTHY{% endif %}
+#

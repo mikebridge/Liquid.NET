@@ -94,7 +94,8 @@ namespace Liquid.NET
 
         private String FormatErrors(IEnumerable<LiquidError> liquidErrors)
         {
-            return "ERROR: " + String.Join("; ", liquidErrors.Select(x => x.Message));
+            //return "ERROR: " + String.Join("; ", liquidErrors.Select(x => x.Message));
+            return String.Join("; ", liquidErrors.Select(x => x.Message));
         }
 
         private void RenderErrors(IEnumerable<LiquidExpressionResult> liquidErrors)
@@ -223,10 +224,17 @@ namespace Liquid.NET
 
         public void Visit(AssignTag assignTag)
         {
-            LiquidExpressionEvaluator.Eval(assignTag.LiquidExpressionTree, _symbolTableStack)
-                .WhenSuccess(x => x.WhenSome(some => _symbolTableStack.DefineGlobal(assignTag.VarName, some))
-                                   .WhenNone(() => _symbolTableStack.DefineGlobal(assignTag.VarName, new NilValue())))
-                .WhenError(RenderError);
+            if (assignTag.LiquidExpressionTree == null)
+            {
+                _symbolTableStack.DefineGlobal(assignTag.VarName, null);
+            }
+            else
+            {
+                LiquidExpressionEvaluator.Eval(assignTag.LiquidExpressionTree, _symbolTableStack)
+                    .WhenSuccess(x => x.WhenSome(some => _symbolTableStack.DefineGlobal(assignTag.VarName, some))
+                        .WhenNone(() => _symbolTableStack.DefineGlobal(assignTag.VarName, null)))
+                    .WhenError(RenderError);
+            }
 //                result =
 //                )
 //            if (result.HasValue)
@@ -330,7 +338,7 @@ namespace Liquid.NET
             var match = ifThenElseBlockTag.IfElseClauses.FirstOrDefault(
                                 expr => {
                                     var result = LiquidExpressionEvaluator.Eval(expr.LiquidExpressionTree, _symbolTableStack);
-                                    return result.IsSuccess && result.SuccessResult.Value.IsTrue;
+                                    return result.IsSuccess && result.SuccessResult.HasValue && result.SuccessResult.Value.IsTrue;
                                 });
             if (match != null)
             {

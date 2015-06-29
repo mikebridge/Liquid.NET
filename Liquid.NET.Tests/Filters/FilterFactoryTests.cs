@@ -46,6 +46,7 @@ namespace Liquid.NET.Tests.Filters
         }
 
         [Test]
+        [Ignore("this is no longer the case.  TODO: make the args into option types")]
         public void It_Should_Pass_ArgDefault_If_Missing_Args()
         {
             // Arrange

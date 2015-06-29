@@ -74,12 +74,18 @@ namespace Liquid.NET.Rendering
 //                        _renderingVisitor.Errors.Add(new LiquidError {Message = array.ErrorMessage});
 //                        return;
 //                    }
-                    foreach (IExpressionConstant val in arrayResult.SuccessValue<ArrayValue>())
+                    foreach (Option<IExpressionConstant> val in arrayResult.SuccessValue<ArrayValue>())
                     {
                         var localBlockScope = new SymbolTable();
                         DefineLocalVariables(symbolTableStack, localBlockScope, includeTag.Definitions);
-
-                        localBlockScope.DefineVariable(virtualFileName, val);
+                        if (val.HasValue)
+                        {
+                            localBlockScope.DefineVariable(virtualFileName, val.Value);
+                        }
+                        else
+                        {
+                            localBlockScope.DefineVariable(virtualFileName, null);
+                        }
                         RenderWithLocalScope(symbolTableStack, localBlockScope, snippetAst.RootNode);
                     }
                 }

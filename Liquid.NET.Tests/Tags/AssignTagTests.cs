@@ -25,6 +25,22 @@ namespace Liquid.NET.Tests.Tags
             Assert.That(result, Is.EqualTo("bar"));
 
         }
+
+        [Test]
+        public void It_Should_Assign_Null()
+        {
+            // Arrange
+            TemplateContext ctx = new TemplateContext();
+            var template = LiquidTemplate.Create("{% assign foo = null %}{{ foo }}");
+
+            // Act
+            String result = template.Render(ctx);
+
+            // Assert
+            Assert.That(result, Is.EqualTo(""));
+
+        }
+
         [Test]
         public void It_Refer_To_Another_Variable()
         {

@@ -110,7 +110,7 @@ namespace Liquid.NET.Tests.Tags
             // Arrange
             ITemplateContext ctx = new TemplateContext().WithAllFilters();
             
-            foreach (var tuple in DictionaryFactory.CreateFromJson(assigns))
+            foreach (var tuple in DictionaryFactory.CreateStringMapFromJson(assigns))
             {
                 ctx.Define(tuple.Item1, tuple.Item2);
             }

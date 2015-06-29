@@ -28,14 +28,19 @@ namespace Liquid.NET.Filters
             }
 
             // create the casting filter which will cast the incoming object to the input type of filter #1
+            
             Func<IExpressionConstant, LiquidExpressionResult> castFn = 
-                objExpr => CreateCastFilter(objExpr.GetType(), expressions[0].SourceType).Apply(objExpr);
+                objExpr => objExpr!=null? CreateCastFilter(objExpr.GetType(), expressions[0].SourceType).Apply(objExpr) : LiquidExpressionResult.Success(new None<IExpressionConstant>());
+            //Func<Option<IExpressionConstant>, LiquidExpressionResult> castFn = 
+                //objExpr => CreateCastFilter(objExpr.GetType(), expressions[0].SourceType).Apply(objExpr);
 
             // put the casting filter in between the object and the chain
 //            return objExpression => objExpression.Bind(x => castFn(objExpression))
 //                                                 .Bind(CreateChain(expressions));      
             // TODO: Figure out how to do this.  It should call ApplyNil() or something.
-            return optionExpression => (castFn(optionExpression.HasValue ? optionExpression.Value : new NilValue())).Bind(CreateChain(expressions));
+            return optionExpression => (castFn(optionExpression.HasValue ? optionExpression.Value : null)).Bind(CreateChain(expressions));
+            //return optionExpression => optionExpression.HasValue ? castFn(optionExpression.Value) : LiquidExpressionResult.Success(new None<IExpressionConstant>()).Bind(CreateChain(expressions));
+
             //return objExpression => objExpression.Bind(x => castFn(objExpression))
             //    .Bind(CreateChain(expressions));    
 
@@ -140,6 +145,7 @@ namespace Liquid.NET.Filters
         }
 
         public static IFilterExpression CreateCastFilter(Type sourceType, Type resultType)
+            //where sourceType: IExpressionConstant
         {
             // TODO: Move this to FilterFactory.Instantiate
             Type genericClass = typeof(CastFilter<,>);

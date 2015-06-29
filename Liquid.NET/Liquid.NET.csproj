@@ -86,6 +86,8 @@
     <Compile Include="src\Constants\Undefined.cs" />
     <Compile Include="src\Constants\ValueCaster.cs" />
     <Compile Include="src\Expressions\ContainsExpression.cs" />
+    <Compile Include="src\Expressions\FalseExpression.cs" />
+    <Compile Include="src\Expressions\IsBlankExpression.cs" />
     <Compile Include="src\Expressions\NotEqualsExpression.cs" />
     <Compile Include="src\Expressions\IsNullExpression.cs" />
     <Compile Include="src\Expressions\IsEmptyExpression.cs" />

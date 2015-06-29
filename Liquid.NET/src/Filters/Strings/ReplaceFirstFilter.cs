@@ -15,8 +15,8 @@ namespace Liquid.NET.Filters.Strings
 
         public ReplaceFirstFilter(StringValue stringToRemove, StringValue replacementString)
         {
-            _stringToRemove = stringToRemove;
-            _replacementString = replacementString;
+            _stringToRemove = stringToRemove ?? new StringValue(""); 
+            _replacementString = replacementString ?? new StringValue("");
         }
 
         public override LiquidExpressionResult ApplyTo(IExpressionConstant liquidExpression)

@@ -30,7 +30,8 @@ namespace Liquid.NET.Constants
         // TODO: not sure what this should do
         public override bool IsTrue
         {
-            get { return _value.Keys.Any(); }
+            get { return _value != null;  }
+            //get { return _value.Keys.Any(); }
         }
 
         public Option<IExpressionConstant> ValueAt(String key)

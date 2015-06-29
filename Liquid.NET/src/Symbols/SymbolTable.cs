@@ -128,7 +128,7 @@ namespace Liquid.NET.Symbols
         {
             if (HasVariableReference(key))
             {
-                var expressionConstant = _variableDictionary[key].ToOption();
+                var expressionConstant = _variableDictionary[key] == null ? new None<IExpressionConstant>() : _variableDictionary[key].ToOption();
 
                 return LiquidExpressionResult.Success(expressionConstant);
             }

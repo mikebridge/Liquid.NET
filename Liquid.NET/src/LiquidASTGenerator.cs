@@ -323,11 +323,33 @@ namespace Liquid.NET
             }
             if (context.for_param_limit() != null)
             {
-                forBlock.Limit = CreateIntNumericValueFromString(context.for_param_limit().NUMBER().ToString());
+                if (context.for_param_limit().NUMBER() != null)
+                {
+                    forBlock.Limit = CreateObjectSimpleExpressionNode(
+                        CreateIntNumericValueFromString(context.for_param_limit().NUMBER().ToString()));
+                }
+                else if (context.for_param_limit().variable() != null)
+                {
+                    StartNewLiquidExpressionTree(x => forBlock.Limit = x);
+                    StartCapturingVariable(context.for_param_limit().variable());
+                    MarkCurrentExpressionComplete();
+                }
+                //forBlock.Limit = CreateIntNumericValueFromString(context.for_param_limit().NUMBER().ToString());
             }
             if (context.for_param_offset() != null)
             {
-                forBlock.Offset = CreateIntNumericValueFromString(context.for_param_offset().NUMBER().ToString());
+                if (context.for_param_offset().NUMBER() != null)
+                {
+                    forBlock.Offset = CreateObjectSimpleExpressionNode(
+                        CreateIntNumericValueFromString(context.for_param_offset().NUMBER().ToString()));
+                }
+                else if (context.for_param_offset().variable() != null)
+                {
+                    StartNewLiquidExpressionTree(x => forBlock.Offset = x);
+                    StartCapturingVariable(context.for_param_offset().variable());
+                    MarkCurrentExpressionComplete();
+                }
+                //
             }
         }
 
@@ -1035,11 +1057,109 @@ namespace Liquid.NET
             MarkCurrentExpressionComplete();
         }
 
-       
-//        public override void EnterIsEmptyOrNullExpr(LiquidParser.IsEmptyOrNullExprContext context)
+        public override void EnterIsEmptyOrBlankExpr(LiquidParser.IsEmptyOrBlankExprContext context)
+        {
+            base.EnterIsEmptyOrBlankExpr(context);
+            if (context.NEQ() == null && context.EQ() == null && context.ISEMPTY() == null && context.ISBLANK() != null)
+                // any comparison other than == and != will fail
+            {
+                AddExpressionToCurrentExpressionBuilder(new FalseExpression());
+            }
+            else
+            {
+                if (context.NEQ() != null)
+                {
+                    AddExpressionToCurrentExpressionBuilder(new NotExpression());
+                }
+
+                if (context.EMPTY() != null || context.ISEMPTY() != null)
+                {
+                    AddExpressionToCurrentExpressionBuilder(new IsEmptyExpression());
+                }
+
+                if (context.BLANK() != null || context.ISBLANK() != null)
+                {
+                    AddExpressionToCurrentExpressionBuilder(new IsBlankExpression());
+                }
+            }
+        }
+
+        public override void ExitIsEmptyOrBlankExpr(LiquidParser.IsEmptyOrBlankExprContext context)
+        {
+            if (context.NEQ() == null && context.EQ() == null && context.ISEMPTY() == null && context.ISBLANK() != null)
+            {
+                MarkCurrentExpressionComplete();
+            }
+            else
+            {
+                if (context.NEQ() != null)
+                {
+                    MarkCurrentExpressionComplete();
+                }
+
+                if (context.EMPTY() != null || context.ISEMPTY() != null)
+                {
+                    MarkCurrentExpressionComplete();
+                }
+
+                if (context.BLANK() != null || context.ISBLANK() != null)
+                {
+                    MarkCurrentExpressionComplete();
+                }
+            }
+
+        }
+//        {
+//            base.EnterIsEmptyOrNullExpr(context);
+//            //Console.WriteLine(" --- exiting IS EMPTY expression >" + context.GetText() + "<");
+//            MarkCurrentExpressionComplete();
+//            if (context.NEQ() != null)
+//            {
+//                MarkCurrentExpressionComplete();
+//            }
+//        }
+
+//        public override void EnterIsEmptyOrNullExpr(LiquidParser.IsEmptyOrNullExprContext isEmptyExprContext)
 //        {
 //            Console.WriteLine("Is empty or null...");
+//            base.EnterIsEmptyOrNullExpr(isEmptyExprContext);
+//            if (isEmptyExprContext.NEQ() == null && isEmptyExprContext.EQ() == null)
+//                // any comparison other than == and != will fail
+//            {
+//                AddExpressionToCurrentExpressionBuilder(new FalseExpression());
+//            }
+//            else
+//            {
+//                if (isEmptyExprContext.NEQ() != null)
+//                {
+//                    AddExpressionToCurrentExpressionBuilder(new NotExpression());
+//                }
+//
+//                if (isEmptyExprContext.EMPTY() != null)
+//                {
+//                    AddExpressionToCurrentExpressionBuilder(new IsEmptyExpression());
+//                }
+//                if (isEmptyExprContext.NULL() != null)
+//                {
+//                    AddExpressionToCurrentExpressionBuilder(new IsNullExpression());
+//                }
+//                if (isEmptyExprContext.BLANK() != null)
+//                {
+//                    AddExpressionToCurrentExpressionBuilder(new IsBlankExpression());
+//                }
+//            }
+//
+//        }
+//
+//        public override void ExitIsEmptyOrNullExpr(LiquidParser.IsEmptyOrNullExprContext context)
+//        {
 //            base.EnterIsEmptyOrNullExpr(context);
+//            //Console.WriteLine(" --- exiting IS EMPTY expression >" + context.GetText() + "<");
+//            MarkCurrentExpressionComplete();
+//            if (context.NEQ() != null)
+//            {
+//                MarkCurrentExpressionComplete();
+//            }
 //        }
 
 //        public override void EnterIsEmptyExpr(LiquidParser.IsEmptyExprContext isEmptyExprContext)
@@ -1092,7 +1212,26 @@ namespace Liquid.NET
         {
             base.EnterComparisonExpr(comparisonContext);
             Console.WriteLine(" === creating COMPARISON expression >" + comparisonContext.GetText() + "<");
-            if (comparisonContext.EQ() != null)
+
+            if (IsNullComparison(comparisonContext))
+            {
+                if (comparisonContext.EQ() != null)
+                {
+                    Console.WriteLine(" +++ EQUALS NULL");
+                    AddExpressionToCurrentExpressionBuilder(new IsNullExpression());
+                } 
+                else if (comparisonContext.NEQ() != null)
+                {
+                    Console.WriteLine(" +++ NOT EQUALS NULL");
+                    AddExpressionToCurrentExpressionBuilder(new NotExpression());
+                    AddExpressionToCurrentExpressionBuilder(new IsNullExpression());
+                }
+                else
+                {
+                    AddExpressionToCurrentExpressionBuilder(new FalseExpression());
+                }
+            } 
+            else if (comparisonContext.EQ() != null)
             {
                 Console.WriteLine(" +++ EQUALS");
                 AddExpressionToCurrentExpressionBuilder(new EqualsExpression());
@@ -1127,15 +1266,40 @@ namespace Liquid.NET
             }
         }
 
-        public override void ExitComparisonExpr(LiquidParser.ComparisonExprContext context)
+        private static bool IsNullComparison(LiquidParser.ComparisonExprContext comparisonContext)
         {
-            base.ExitComparisonExpr(context);
-            Console.WriteLine(" --- exiting COMPARISON expression >" + context.GetText() + "<");
-            MarkCurrentExpressionComplete();
+            return comparisonContext.children.Select(x => (x as LiquidParser.OutputExpressionContext))
+                .Where(x => x != null).Any(x => "null".Equals(x.GetText().ToLower()) || "nil".Equals(x.GetText().ToLower()));
+        }
+
+        public override void ExitComparisonExpr(LiquidParser.ComparisonExprContext comparisonContext)
+        {
+            base.ExitComparisonExpr(comparisonContext);
+            Console.WriteLine(" --- exiting COMPARISON expression >" + comparisonContext.GetText() + "<");
+            if (IsNullComparison(comparisonContext))
+            {
+                if (comparisonContext.EQ() != null)
+                {
+                    MarkCurrentExpressionComplete();
+                }
+                else if (comparisonContext.NEQ() != null)
+                {
+                    MarkCurrentExpressionComplete();
+                    MarkCurrentExpressionComplete();
+                }
+                else
+                {
+                    MarkCurrentExpressionComplete();
+                }
+            }
+            else
+            {
+                MarkCurrentExpressionComplete();
+            }
         }
 
 
-        // todo: rename this "Object" or something to indicate it's just teh Object part of the expression.
+        // todo: rename this "Object" or something to indicate it's ajust teh Object part of the expression.
         public override void EnterOutputExpression(LiquidParser.OutputExpressionContext context)
         {
             Console.WriteLine("))) Entering Output Expression!  Expression creation should follow.");
@@ -1201,19 +1365,21 @@ namespace Liquid.NET
             MarkCurrentExpressionComplete();
         }
 
-        public override void EnterNullObject(LiquidParser.NullObjectContext context)
-        {
-            base.EnterNullObject(context);
-            //var nullObj = new StringValue(null) {IsUndefined = true}; // TODO: Is null undefined??
-            var nullObj = new NilValue();
-            AddExpressionToCurrentExpressionBuilder(nullObj);
-        }
-
-        public override void ExitNullObject(LiquidParser.NullObjectContext context)
-        {
-            base.ExitNullObject(context);
-            MarkCurrentExpressionComplete();
-        }
+//        public override void EnterNullObject(LiquidParser.NullObjectContext context)
+//        {
+//            base.EnterNullObject(context);
+//            //context.NULL();
+//            //var nullObj = new StringValue(null) {IsUndefined = true}; // TODO: Is null undefined??
+//            //var nullObj = new NilValue();
+//            //AddExpressionToCurrentExpressionBuilder(nullObj);
+//            AddExpressionToCurrentExpressionBuilder(null);
+//        }
+//
+//        public override void ExitNullObject(LiquidParser.NullObjectContext context)
+//        {
+//            base.ExitNullObject(context);
+//            MarkCurrentExpressionComplete();
+//        }
 
         /// <summary>
         /// TODO: Strip the quotes in the parser/lexer.  Until then, we'll do it here.

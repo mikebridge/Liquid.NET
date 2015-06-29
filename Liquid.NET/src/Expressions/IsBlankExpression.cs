@@ -10,7 +10,7 @@ using ExpressionResult = Liquid.NET.Utils.Either<Liquid.NET.LiquidError, Liquid.
 
 namespace Liquid.NET.Expressions
 {
-    public class IsEmptyExpression : ExpressionDescription
+    public class IsBlankExpression : ExpressionDescription
     {
         public override void Accept(IExpressionDescriptionVisitor expressionDescriptionVisitor)
         {
@@ -22,11 +22,11 @@ namespace Liquid.NET.Expressions
             var list = expressions.ToList();
             if (list.Count() != 1)
             {
-                return LiquidExpressionResult.Error("Expected one variable to compare with \"empty\"");
+                return LiquidExpressionResult.Error("Expected one variable to compare with \"blank\"");
             }
             if (!list[0].HasValue)
             {
-                return LiquidExpressionResult.Success(new BooleanValue(false)); // nulls are not empty.
+                return LiquidExpressionResult.Success(new BooleanValue(true));
             }
             return LiquidExpressionResult.Success(new BooleanValue(EmptyChecker.IsEmpty(list[0].Value)));
         }

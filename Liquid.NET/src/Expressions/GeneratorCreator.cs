@@ -56,7 +56,7 @@ namespace Liquid.NET.Expressions
             }
             else
             {
-                return castResult.SuccessValue<ArrayValue>().Select(x => x.Value);
+                return castResult.SuccessValue<ArrayValue>().Select(x => x.HasValue? x.Value : null);
             }
         }
     }

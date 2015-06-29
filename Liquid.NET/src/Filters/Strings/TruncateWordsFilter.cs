@@ -16,7 +16,7 @@ namespace Liquid.NET.Filters.Strings
         public TruncateWordsFilter(NumericValue length, StringValue truncateString)
         {
             _length = length;
-            _truncateString = truncateString.StringVal == null ? new StringValue("...") : truncateString;
+            _truncateString = truncateString == null || truncateString.Value == null ? new StringValue("...") : truncateString;
         }
         public override LiquidExpressionResult ApplyTo(StringValue liquidStringExpression)
         {

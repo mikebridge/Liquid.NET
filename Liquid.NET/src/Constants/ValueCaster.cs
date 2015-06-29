@@ -171,17 +171,28 @@ namespace Liquid.NET.Constants
         private static Type GetWrappedType<T>(Option<T> expressionConstant)
             where T:IExpressionConstant
         {
-            
-            var nestedType = expressionConstant.GetType().GetGenericArguments()[0];
-            Console.WriteLine("NEsted type " + nestedType);
-            return nestedType;
+            if (expressionConstant.HasValue)
+            {
+                //var nestedType = expressionConstant.GetType().GetGenericArguments()[0];
+                var nestedType = expressionConstant.Value.GetType();
+                Console.WriteLine("NEsted type " + nestedType);
+                return nestedType;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         // TODO: quote JSON here
         private static String Quote(Type origType, String str)
         {
-            Console.WriteLine("casting type" + origType);
-            if (origType.IsAssignableFrom(typeof (NumericValue)))
+            //Console.WriteLine("casting type" + origType);
+            if (origType == null)
+            {
+                return "null";
+            }
+            if (origType.IsAssignableFrom(typeof(NumericValue)) || origType.IsAssignableFrom(typeof(BooleanValue)))
             {
                 return str;
             }
@@ -219,8 +230,6 @@ namespace Liquid.NET.Constants
             {
                 var expressionConstants = str.StringVal.Select(x => (Option<IExpressionConstant>) new Some<IExpressionConstant>(new StringValue(x.ToString())));
                 return LiquidExpressionResult.Success(new ArrayValue(expressionConstants.ToList()));
-                //var expressionConstants = str.StringVal.Select(x => (IExpressionConstant) new StringValue(x.ToString())).ToList();
-                //return LiquidExpressionResult.Success(new ArrayValue(expressionConstants));
             }
             return LiquidExpressionResult.Error("Can't convert from string to " + destType);
            

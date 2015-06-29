@@ -56,7 +56,7 @@ custom_blocktag:	TAGSTART custom_block_start_tag customtagblock_expr* TAGEND cus
 
 custom_block_start_tag:		LABEL;
 
-//custom_block_end_tag:		{ _localctx.GetText().Equals("end") + ??? }? ENDLABEL;
+//custom_block_end_tag:		{ _localctx.GetText().Equals("end") + ??? }? ENDLABEL;c
 
 custom_block_end_tag:		ENDLABEL;
 
@@ -128,9 +128,9 @@ for_block:			block* ;
 
 for_params: 		PARAM_REVERSED | for_param_offset | for_param_limit ; // todo: limit to one of each?
 
-for_param_offset:	PARAM_OFFSET COLON NUMBER ;
+for_param_offset:	PARAM_OFFSET COLON (variable | NUMBER) ;
 
-for_param_limit:	PARAM_LIMIT COLON NUMBER ;
+for_param_limit:	PARAM_LIMIT COLON (variable | NUMBER)  ;
 
 for_label:			LABEL ;
 
@@ -177,6 +177,7 @@ object:				STRING									# StringObject
 					| NULL									# NullObject		
 					| variable								# VariableObject
 					;
+
  
 objectvariableindex : ARRAYSTART arrayindex ARRAYEND
 					//| PERIOD (objectproperty | ISEMPTY) 
@@ -204,8 +205,10 @@ expr:				PARENOPEN expr PARENCLOSE			# GroupedExpr
 					| expr CONTAINS expr				# ContainsExpression   // TODO: implement this
 					| expr (MULT | DIV | MOD) expr      # MultExpr
 					| expr (MINUS | ADD) expr           # AddSubExpr
-					//| expr (NEQ | EQ) (EMPTY | NULL)    # IsEmptyOrNullExpr // TODO can 'empty' be used anywhere else? 
-					| expr (GT | LT | GTE | LTE | EQ | NEQ) expr      # ComparisonExpr
+					| expr PERIOD (ISEMPTY | ISBLANK)	# IsEmptyOrBlankExpr
+					| expr (GT | LT | GTE | LTE | EQ | NEQ) (EMPTY | BLANK)    # IsEmptyOrBlankExpr // TODO can 'empty' be used anywhere else? 
+					| (EMPTY | BLANK) (GT | LT | GTE | LTE | EQ | NEQ) expr    # IsEmptyOrBlankExpr // TODO can 'empty' be used anywhere else? 
+					| expr (GT | LT | GTE | LTE | EQ | NEQ) expr      # ComparisonExpr // this covers "NULL" as well.
 					| expr AND expr                     # AndExpr
 					| expr OR expr                      # OrExpr
 					;	

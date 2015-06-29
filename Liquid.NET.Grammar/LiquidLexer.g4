@@ -40,8 +40,9 @@ BOOLEAN :				'true' | 'false' ;
 
 ISEMPTY:				'empty?'; 
 EMPTY :					'empty';
-NULL :					'null'|'nil'; // Liquid uses both?
+NULL :					'null'|'nil'; // Liquid uses both? (Note: this is also hardcoded in LiquidASTGenerator)
 BLANK :					'blank';
+ISBLANK:				'isblank?'; 
 
 STRING :				'"' STRDOUBLE '"' | '\'' STRSINGLE '\'' ;  
 fragment STRDOUBLE :	(ESC | ~["\\])* ;
@@ -91,6 +92,12 @@ FILTERPIPE1 :			FILTERPIPE -> type(FILTERPIPE) ;
 PERIOD1:				PERIOD -> type(PERIOD) ;
 
 NULL1:					NULL -> type(NULL);
+
+EMPTY1:					EMPTY -> type(EMPTY);
+ISEMPTY1:				ISEMPTY -> type(ISEMPTY);
+
+BLANK1:					BLANK -> type(BLANK);
+ISBLANK1:				ISBLANK -> type(ISBLANK);
 
 NUMBER1:				NUMBER -> type(NUMBER);
 
@@ -157,6 +164,10 @@ ENDMACRO_TAG :			'endmacro' ;
 ENDLABEL:				END LABEL;
 
 NULL2:					NULL -> type(NULL);
+EMPTY2:					EMPTY -> type(EMPTY);
+ISEMPTY2:				ISEMPTY -> type(ISEMPTY);
+BLANK2:					BLANK -> type(BLANK);
+ISBLANK2:				ISBLANK -> type(ISBLANK);
 
 COLON1 :				':' -> type(COLON);
 COMMA1 :				',' -> type(COMMA);

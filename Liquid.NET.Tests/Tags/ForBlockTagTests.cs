@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
+using System.Security.Policy;
 using Liquid.NET.Constants;
-
+using Liquid.NET.Tests.Ruby;
 using NUnit.Framework;
 
 namespace Liquid.NET.Tests.Tags
@@ -252,6 +252,24 @@ namespace Liquid.NET.Tests.Tags
 
             // Assert
             Assert.That(result, Is.EqualTo("Result : 543"));
+
+        }
+
+        [Test]
+        public void It_Should_Find_The_Parent_Loop()
+        {
+            
+            TemplateContext ctx = new TemplateContext();
+            //ctx.Define("outer", new ArrayValue(new List<IExpressionConstant> { new NumericValue(1), new NumericValue(1), new NumericValue(1) }));
+            ctx.Define("outer", DictionaryFactory.CreateArrayFromJson("[[1, 1, 1], [1, 1, 1]]"));
+
+            var template = LiquidTemplate.Create("Result :{% for inner in outer %}{% for k in inner %} {{ forloop.parentloop.index }}.{{ forloop.index }}{% endfor %}{% endfor %}");
+
+            // Act
+            String result = template.Render(ctx);
+
+            // Assert
+            Assert.That(result, Is.EqualTo("Result : 1.1 1.2 1.3 2.1 2.2 2.3"));
 
         }
 

@@ -21,9 +21,8 @@ namespace Liquid.NET.Rendering
         }
 
         /// <summary>
-        /// Side effect; this calls the renderer with the astRenderer to render
-        /// the block.  It would probably be better to handle this a little more
-        /// cleanly.
+        /// this calls the renderer with the astRenderer to render
+        /// the block.
         /// </summary>
         /// <param name="forBlockTag"></param>
         /// <param name="symbolTableStack"></param>
@@ -54,11 +53,32 @@ namespace Liquid.NET.Rendering
 
         private void IterateBlock(ForBlockTag forBlockTag, SymbolTableStack symbolTableStack, List<IExpressionConstant> iterable)
         {
-            var offset = forBlockTag.Offset.IntValue; // zero indexed
-            var limit = forBlockTag.Limit.IntValue; // max number of iterations.
+            var offset = new NumericValue(0);
+            var  limit = new NumericValue(50);
+            if (forBlockTag.Offset != null)
+            {
+                var result = LiquidExpressionEvaluator.Eval(forBlockTag.Offset, symbolTableStack);
+                if (result.IsSuccess)
+                {
+                    offset = result.SuccessValue<NumericValue>();
+                }
+            }
+            if (forBlockTag.Limit != null)
+            {
+                var result = LiquidExpressionEvaluator.Eval(forBlockTag.Limit, symbolTableStack);
+                if (result.IsSuccess)
+                {
+                    limit = result.SuccessValue<NumericValue>();
+                }
+            }
+
+            
+
+            //ar offset = forBlockTag.Offset.IntValue; // zero indexed
+            //var limit = forBlockTag.Limit.IntValue; // max number of iterations.
 
             // the offset and limit slice the iterable and sends the result to the loop.
-            int length = iterable.Skip(offset).Take(limit).Count();
+            int length = iterable.Skip(offset.IntValue).Take(limit.IntValue).Count();
             if (length <= 0) 
             {
                 _astRenderer.StartVisiting(_renderingVisitor, forBlockTag.ElseBlock);
@@ -66,9 +86,9 @@ namespace Liquid.NET.Rendering
             }
 
             int iter = 0;
-            foreach (var item in iterable.Skip(offset).Take(limit))
+            foreach (var item in iterable.Skip(offset.IntValue).Take(limit.IntValue))
             {
-                symbolTableStack.Define("forloop", CreateForLoopDescriptor(iter, length));
+                symbolTableStack.Define("forloop", CreateForLoopDescriptor(iter, length, symbolTableStack));
                 symbolTableStack.Define(forBlockTag.LocalVariable, item);
 
                 try
@@ -87,10 +107,11 @@ namespace Liquid.NET.Rendering
             }
         }
 
-        public static DictionaryValue CreateForLoopDescriptor(int iter, int length)
+        public static DictionaryValue CreateForLoopDescriptor(int iter, int length, SymbolTableStack stack)
         {
             return new DictionaryValue(new Dictionary<String, Option<IExpressionConstant>>
-            {
+            {               
+                {"parentloop", FindParentLoop(stack)}, // see: https://github.com/Shopify/liquid/pull/520
                 {"first", new BooleanValue(iter == 0)},
                 {"index", new NumericValue(iter + 1 )},
                 {"index0", new NumericValue(iter)},
@@ -100,6 +121,18 @@ namespace Liquid.NET.Rendering
                 {"length", new NumericValue(length) }
             });
 
+        }
+
+        private static Option<IExpressionConstant> FindParentLoop(SymbolTableStack stack)
+        {
+            var parentLoop = stack.Reference("forloop", skiplevels:1 );
+
+            if (parentLoop.IsError || !parentLoop.SuccessResult.HasValue)
+            {
+                return new None<IExpressionConstant>();
+            }
+            return parentLoop.SuccessValue<DictionaryValue>();
+                
         }
     }
 }

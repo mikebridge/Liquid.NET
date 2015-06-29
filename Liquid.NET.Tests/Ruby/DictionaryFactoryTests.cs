@@ -18,13 +18,14 @@ namespace Liquid.NET.Tests.Ruby
             String json = "[1,2,3]";
  
             // Act
-            var result = DictionaryFactory.Transform(json);
+            //var result = DictionaryFactory.Transform(json);
+            var result = DictionaryFactory.CreateArrayFromJson(json);
 
             // Assert
             Console.WriteLine(result);
             Assert.That(result, Is.TypeOf<ArrayValue>());
             
-            Assert.That(((ArrayValue) result).Select(x => x.Value), Is.EquivalentTo(new List<int> {1,2,3}));            
+            Assert.That(((ArrayValue) result).Select(x => x.Value.Value), Is.EquivalentTo(new List<int> {1,2,3}));            
 
 
         }
@@ -36,7 +37,7 @@ namespace Liquid.NET.Tests.Ruby
             String json = "{\"array\": [1,2,3]}";
 
             // Act
-            IList<Tuple<String, IExpressionConstant>> result = DictionaryFactory.CreateFromJson(json);
+            IList<Tuple<String, IExpressionConstant>> result = DictionaryFactory.CreateStringMapFromJson(json);
 
             // Assert
             Console.WriteLine(result);
@@ -45,7 +46,7 @@ namespace Liquid.NET.Tests.Ruby
             Assert.That(result[0].Item1, Is.EqualTo("array"));
             Assert.That(result[0].Item2, Is.TypeOf<ArrayValue>());
             var array = (ArrayValue)result[0].Item2;
-            Assert.That(array.Select(x => x.Value), Is.EquivalentTo(new List<int> {1,2,3}));
+            Assert.That(array.Select(x => x.Value.Value), Is.EquivalentTo(new List<int> {1,2,3}));
 
 
         }

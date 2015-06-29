@@ -25,12 +25,12 @@ namespace Liquid.NET.Tests.Ruby
 
         [Test]{% for test in tests %}
         [TestCase(@"{{test.input}}", @"{{test.assigns}}", @"{{test.expected}}")]{% endfor %}
-public void It_Should_Match_Ruby_Output(String input, String assigns, String expected) {
+        public void It_Should_Match_Ruby_Output(String input, String assigns, String expected) {
 
             // Arrange
             ITemplateContext ctx = new TemplateContext().WithAllFilters();
             
-            foreach (var tuple in DictionaryFactory.CreateFromJson(assigns))
+            foreach (var tuple in DictionaryFactory.CreateStringMapFromJson(assigns))
             {
                 ctx.Define(tuple.Item1, tuple.Item2);
             }
@@ -51,6 +51,10 @@ public void It_Should_Match_Ruby_Output(String input, String assigns, String exp
 
             // Arrange
             ITemplateContext ctx = new TemplateContext().WithAllFilters();
+            foreach (var tuple in DictionaryFactory.CreateStringMapFromJson(assigns))
+            {
+                ctx.Define(tuple.Item1, tuple.Item2);
+            }
 
             try
             {

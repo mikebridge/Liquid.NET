@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.PerformanceData;
 using System.Linq;
 using Liquid.NET.Symbols;
@@ -20,7 +21,7 @@ namespace Liquid.NET.Constants
 
         public ArrayValue(IList<IExpressionConstant> values)
         {
-            _values = values.Select(x => x.ToOption()).ToList();
+            _values = values.Select(x => x == null? new None<IExpressionConstant>() : x.ToOption()).ToList();
         }
 
         public override object Value

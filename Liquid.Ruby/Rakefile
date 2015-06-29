@@ -44,11 +44,11 @@ namespace :gen do
     create_test_file('tags.txt', 'TagTests')
   end
 
-  task :tags do
+  task :truthy do
     create_test_file('truthy.txt', 'TruthyTests')
   end
 
-  task :tags do
+  task :type do
     create_test_file('types.txt', 'TypeTests')
   end
 
@@ -56,7 +56,7 @@ namespace :gen do
     create_liquid_test_file('liquid.txt', 'LiquidTests')
   end
 
-  task :all => [:errors, :filters, :tags]
+  task :all => [:errors, :filters, :tags, :truthy, :type, :liquid]
 
 end
 

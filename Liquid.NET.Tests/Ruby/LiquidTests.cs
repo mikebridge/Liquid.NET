@@ -514,7 +514,7 @@ c")]
                 .WithAllFilters()
                 .WithFileSystem(new TestFileSystem());
             
-            foreach (var tuple in DictionaryFactory.CreateFromJson(assigns))
+            foreach (var tuple in DictionaryFactory.CreateStringMapFromJson(assigns))
             {
                 ctx.Define(tuple.Item1, tuple.Item2);
             }

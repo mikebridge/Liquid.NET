@@ -26,9 +26,9 @@ namespace Liquid.NET.Expressions
             }
             if (!list[0].HasValue)
             {
-                return LiquidExpressionResult.Success(new BooleanValue(false));
+                return LiquidExpressionResult.Success(new BooleanValue(true));
             }
-            return LiquidExpressionResult.Success(new BooleanValue(list[0].Value == null || list[0].Value.GetType() == typeof (NilValue)));
+            return LiquidExpressionResult.Success(new BooleanValue(list[0].Value == null));
 
         }
     }

@@ -150,6 +150,8 @@ ELSE_TAG :				'else' ;
 ENDIF_TAG :				'endif' ;
 ENDUNLESS_TAG :			'endunless' ;
 FOR_TAG :				'for' ;
+TABLEROW_TAG :			'tablerow' ;
+ENDTABLEROW_TAG :		'endtablerow' ;
 FOR_IN :				'in';
 BREAK_TAG :				'break';
 CONTINUE_TAG :			'continue';
@@ -165,6 +167,8 @@ INCREMENT_TAG :			'increment';
 DECREMENT_TAG :			'decrement';
 MACRO_TAG :				'macro' ;
 ENDMACRO_TAG :			'endmacro' ;
+ISCHANGED_TAG :			'ischanged' ;
+ENDISCHANGED_TAG :		'endischanged' ;
 
 ENDLABEL:				END LABEL;
 

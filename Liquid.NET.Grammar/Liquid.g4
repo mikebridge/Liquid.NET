@@ -36,11 +36,12 @@ tag:				raw_tag
 					| decrement_tag
 					| unless_tag										
 					| case_tag
-					// | table_tag
+					| tablerow_tag
 					| include_tag
 					| break_tag
 					| continue_tag
 					| macro_tag
+//					| ifchanged_tag
 					;
 
 // text wrapped in a raw tag
@@ -135,6 +136,12 @@ for_param_limit:	PARAM_LIMIT COLON (variable | NUMBER)  ;
 for_label:			VARIABLENAME ;
 
 for_iterable:		variable | STRING  | generator;
+
+tablerow_tag:		TAGSTART TABLEROW_TAG VARIABLENAME FOR_IN for_iterable tablerow_params* TAGEND tablerow_block TAGSTART ENDTABLEROW_TAG TAGEND ;
+
+tablerow_block:		block* ;
+
+tablerow_params: 	for_param_offset | for_param_limit ; 
 
 variable:			VARIABLENAME objectvariableindex* ;
 

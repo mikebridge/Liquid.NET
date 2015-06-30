@@ -168,6 +168,7 @@ namespace Liquid.NET.Tests.Ruby
         [TestCase(@"{%for i in array offset:7 %}{{ i }}{%endfor%}", @"{""array"":[1,2,3,4,5,6,7,8,9,0]}", @"890")]
         [TestCase(@"{% for a in (1..2) %}o{% for b in empty %}{% endfor %}{% endfor %}", @"{}", @"oo")]
         [TestCase(@"{%for i in array limit: limit offset: offset %}{{ i }}{%endfor%}", @"{""array"":[1,2,3,4,5,6,7,8,9,0],""limit"":2,""offset"":2}", @"34")]
+        [TestCase(@"{%for i in array limit: x offset: y %}{{ i }}{%endfor%}", @"{""array"":[1,2,3,4,5,6,7,8,9,0],""x"":2,""y"":2}", @"34")]
         [TestCase(@"{%for item in array%}{%for i in item%}{{ i }}{%endfor%}{%endfor%}", @"{""array"":[[1,2],[3,4],[5,6]]}", @"123456")]
         [TestCase(@"{% for inner in outer %}{{ forloop.parentloop.index }}.{{ forloop.index }} {% endfor %}", @"{""outer"":[[1,1,1],[1,1,1]]}", @".1 .2")]
         [TestCase(@"{% for       item   in   items %}{{item}}{% endfor %}", @"{""items"":[1,2,3,4,5]}", @"12345")]

@@ -233,27 +233,27 @@ namespace Liquid.NET.Tests
 
         }
 
-        [Test]
-        public void It_Should_Render_A_Dictionary()
-        {
-            // Arrange
-            TemplateContext templateContext = new TemplateContext();
-            var dict = new Dictionary<String, String> { { "test1", "test element" } };
-
-            templateContext.Define("mydict", new ObjectValue(dict));
-
-            // Arrange
-            var ast = _generator.Generate("Result : {{ mydict }}");
-
-            // Act
-            String result = new LiquidASTRenderer().Render(templateContext, ast);
-            // Act
-
-            // Assert
-            Assert.That(result, Is.EqualTo("Result : { \"test1\" : \"test element\" }"));
-
-
-        }
+//        [Test]
+//        public void It_Should_Render_A_Dictionary()
+//        {
+//            // Arrange
+//            TemplateContext templateContext = new TemplateContext();
+//            var dict = new Dictionary<String, String> { { "test1", "test element" } };
+//
+//            templateContext.Define("mydict", new ObjectValue(dict));
+//
+//            // Arrange
+//            var ast = _generator.Generate("Result : {{ mydict }}");
+//
+//            // Act
+//            String result = new LiquidASTRenderer().Render(templateContext, ast);
+//            // Act
+//
+//            // Assert
+//            Assert.That(result, Is.EqualTo("Result : { \"test1\" : \"test element\" }"));
+//
+//
+//        }
 
         [Test]
         public void It_Should_Render_A_Dictionary_Element()
@@ -447,13 +447,14 @@ namespace Liquid.NET.Tests
             var array2 = new ArrayValue(new List<IExpressionConstant> { array1 });
             var arrayofstr = new ArrayValue(new List<IExpressionConstant> { new StringValue("aaa"), new StringValue("bbb") });
 
-            templateContext.Define("idx", new NumericValue(1));
+            //templateContext.Define("arrayofnums", new NumericValue(1));
+            templateContext.Define("arrayofnums", arrayofnums);
             templateContext.Define("array1", array1);
             templateContext.Define("array2", array2);
             templateContext.Define("arrayofstr", arrayofstr);
 
             // Arrange
-            var ast = _generator.Generate("Result : {{ arrayofstr[array2[0][0][idx[idx[1]]]] }}");
+            var ast = _generator.Generate("Result : {{ arrayofstr[array2[0][0][arrayofnums[arrayofnums[1]]]] }}");
 
             // Act
             String result = new LiquidASTRenderer().Render(templateContext, ast);
@@ -461,6 +462,70 @@ namespace Liquid.NET.Tests
 
             // Assert
             Assert.That(result, Is.EqualTo("Result : bbb"));
+
+        }
+
+        [Test]
+        public void It_Should_Return_Empty_When_Invalid_Index()
+        {
+            // Arrange
+            TemplateContext templateContext = new TemplateContext();
+            var arrayofnums = new ArrayValue(new List<IExpressionConstant> { new NumericValue(0), new NumericValue(1) });
+
+            templateContext.Define("arrayofnums", arrayofnums);
+
+            // Arrange
+            var ast = _generator.Generate("Result : {{ arrayofnums[4] }}");
+
+            // Act
+            String result = new LiquidASTRenderer().Render(templateContext, ast);
+            // Act
+
+            // Assert
+            Assert.That(result, Is.EqualTo("Result : "));
+
+        }
+
+        [Test]
+        public void It_Should_Return_Empty_When_Index_Is_Empty()
+        {
+            // Arrange
+            TemplateContext templateContext = new TemplateContext();
+            var arrayofnums = new ArrayValue(new List<IExpressionConstant> { new NumericValue(0), new NumericValue(1) });
+
+            templateContext.Define("arrayofnums", arrayofnums);
+
+            // Arrange
+            var ast = _generator.Generate("Result : {{ arrayofnums[4][arrayofnums[4]] }}");
+
+            // Act
+            String result = new LiquidASTRenderer().Render(templateContext, ast);
+            // Act
+
+            // Assert
+            Assert.That(result, Is.EqualTo("Result : "));
+
+        }
+
+        [Test]
+        public void It_Should_Return_An_Error_If_A_Number_Is_Treated_Like_An_Array()
+        {
+            // Arrange
+            TemplateContext templateContext = new TemplateContext();
+            var arrayofnums = new ArrayValue(new List<IExpressionConstant> { new NumericValue(0), new NumericValue(1) });
+
+            templateContext.Define("arrayofnums", arrayofnums);
+            templateContext.Define("numeric", new NumericValue(1));
+
+            // Arrange
+            var ast = _generator.Generate("Result : {{ arrayofnums[4][numeric[4]] }}");
+
+            // Act
+            String result = new LiquidASTRenderer().Render(templateContext, ast);
+            // Act
+
+            // Assert
+            Assert.That(result, Is.StringContaining("Unable to dereference"));
 
         }
 

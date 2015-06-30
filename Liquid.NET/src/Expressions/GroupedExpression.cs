@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Liquid.NET.Constants;
 using Liquid.NET.Symbols;
+using Liquid.NET.Utils;
 
 namespace Liquid.NET.Expressions
 {
@@ -13,11 +14,13 @@ namespace Liquid.NET.Expressions
             expressionDescriptionVisitor.Visit(this);
         }
 
-        public override IExpressionConstant Eval(SymbolTableStack symbolTableStack, IEnumerable<IExpressionConstant> expressions)
-        {            
+        public override LiquidExpressionResult Eval(SymbolTableStack symbolTableStack, IEnumerable<Option<IExpressionConstant>> expressions)
+        {
             var childExpressions = expressions.ToList();
-            //Console.WriteLine("Evaluating children ");
-            return childExpressions.Count != 1 ? ConstantFactory.CreateError<BooleanValue>("Unable to parse expression in parentheses") : childExpressions.First();
+
+            return childExpressions.Count != 1 ? 
+                LiquidExpressionResult.Error("Unable to parse expression in parentheses") : 
+                LiquidExpressionResult.Success(childExpressions.First());
         }
     }
 }

@@ -16,14 +16,14 @@ namespace Liquid.NET.Filters
             _format = format;
         }
 
-        public override StringValue ApplyTo(DateValue dateValue)
+        public override LiquidExpressionResult ApplyTo(DateValue dateValue)
         {
-            if (dateValue.IsUndefined || !dateValue.DateTimeValue.HasValue)
+            if (/*dateValue.IsUndefined ||*/ !dateValue.DateTimeValue.HasValue)
             {
-                return new StringValue("");
+                return LiquidExpressionResult.Success(new StringValue(""));
             }
             Console.WriteLine("Formatting " + dateValue.Value + " with format "+_format.StringVal);
-            return new StringValue(dateValue.DateTimeValue.Value.ToStrFTime(_format.StringVal));
+            return LiquidExpressionResult.Success(new StringValue(dateValue.DateTimeValue.Value.ToStrFTime(_format.StringVal)));
             
         }
 

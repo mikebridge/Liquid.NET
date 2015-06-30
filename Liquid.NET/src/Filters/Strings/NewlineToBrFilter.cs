@@ -5,6 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Liquid.NET.Constants;
+using Liquid.NET.Utils;
 
 namespace Liquid.NET.Filters.Strings
 {
@@ -15,9 +16,9 @@ namespace Liquid.NET.Filters.Strings
     {
         public const String BR = "<br />\r\n";
 
-        public override StringValue ApplyTo(IExpressionConstant liquidExpression)
+        public override LiquidExpressionResult ApplyTo(IExpressionConstant liquidExpression)
         {
-            return StringUtils.Eval(liquidExpression, x => Regex.Replace(x, @"(\r\n)|[\u000A\u000B\u000C\u000D\u2028\u2029\u0085]", BR));
+            return LiquidExpressionResult.Success(StringUtils.Eval(liquidExpression, x => Regex.Replace(x, @"(\r\n)|[\u000A\u000B\u000C\u000D\u2028\u2029\u0085]", BR)));
         }
 
     }

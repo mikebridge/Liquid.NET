@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web.UI.WebControls;
+
 using Liquid.NET.Constants;
 using Liquid.NET.Symbols;
+using Liquid.NET.Utils;
 
 namespace Liquid.NET.Expressions
 {
@@ -17,11 +16,11 @@ namespace Liquid.NET.Expressions
             expressionDescriptionVisitor.Visit(this);
         }
 
-        public override IExpressionConstant Eval(SymbolTableStack symbolTableStack,
-            IEnumerable<IExpressionConstant> expressions)
+        public override LiquidExpressionResult Eval(SymbolTableStack symbolTableStack,
+            IEnumerable<Option<IExpressionConstant>> expressions)
         {
             var expressionList = expressions.ToList();
-            return ComparisonExpressions.Compare(expressionList[0], expressionList[1], (x, y) => x > y);
+            return LiquidExpressionResult.Success(ComparisonExpressions.Compare(expressionList[0].Value, expressionList[1].Value, (x, y) => x > y));
         }
     }
 
@@ -32,11 +31,11 @@ namespace Liquid.NET.Expressions
             expressionDescriptionVisitor.Visit(this);
         }
 
-        public override IExpressionConstant Eval(SymbolTableStack symbolTableStack,
-            IEnumerable<IExpressionConstant> expressions)
+        public override LiquidExpressionResult Eval(SymbolTableStack symbolTableStack,
+            IEnumerable<Option<IExpressionConstant>> expressions)
         {
             var expressionList = expressions.ToList();
-            return ComparisonExpressions.Compare(expressionList[0], expressionList[1], (x, y) => x <= y);
+            return LiquidExpressionResult.Success(ComparisonExpressions.Compare(expressionList[0].Value, expressionList[1].Value, (x, y) => x <= y));
         }
     }
 
@@ -47,11 +46,11 @@ namespace Liquid.NET.Expressions
             expressionDescriptionVisitor.Visit(this);
         }
 
-        public override IExpressionConstant Eval(SymbolTableStack symbolTableStack,
-            IEnumerable<IExpressionConstant> expressions)
+        public override LiquidExpressionResult Eval(SymbolTableStack symbolTableStack,
+            IEnumerable<Option<IExpressionConstant>> expressions)
         {
             var expressionList = expressions.ToList();
-            return ComparisonExpressions.Compare(expressionList[0], expressionList[1], (x, y) => x >= y);
+            return LiquidExpressionResult.Success(ComparisonExpressions.Compare(expressionList[0].Value, expressionList[1].Value, (x, y) => x >= y));
         }
     }
 
@@ -62,11 +61,13 @@ namespace Liquid.NET.Expressions
             expressionDescriptionVisitor.Visit(this);
         }
 
-        public override IExpressionConstant Eval(SymbolTableStack symbolTableStack,
-            IEnumerable<IExpressionConstant> expressions)
+        public override LiquidExpressionResult Eval(SymbolTableStack symbolTableStack,
+            IEnumerable<Option<IExpressionConstant>> expressions)
         {
             var expressionList = expressions.ToList();
-            return ComparisonExpressions.Compare(expressionList[0], expressionList[1], (x, y) => x < y);
+            var val1 = expressionList[0].Value;
+            var val2 = expressionList[1].Value;
+            return LiquidExpressionResult.Success(ComparisonExpressions.Compare(val1, val2, (x, y) => x < y));
         }
     }
 
@@ -77,18 +78,18 @@ namespace Liquid.NET.Expressions
         public static BooleanValue Compare(IExpressionConstant x, IExpressionConstant y,
             Func<decimal, decimal, bool> func)
         {
-            var numericValue1 = ValueCaster.Cast<IExpressionConstant, NumericValue>(x);
-            var numericValue2 = ValueCaster.Cast<IExpressionConstant, NumericValue>(y);
+            var numericValueResult1 = ValueCaster.Cast<IExpressionConstant, NumericValue>(x);
+            var numericValueResult2 = ValueCaster.Cast<IExpressionConstant, NumericValue>(y);
 
-            return new BooleanValue(func(numericValue1.DecimalValue, numericValue2.DecimalValue));
+            if (numericValueResult2.IsError || numericValueResult1.IsError)
+            {
+                return new BooleanValue(false);
+            }
+
+            var decimalValue1 = numericValueResult1.SuccessValue<NumericValue>().DecimalValue;
+            var decimalValue2 = numericValueResult2.SuccessValue<NumericValue>().DecimalValue;
+            return new BooleanValue(func(decimalValue1, decimalValue2));
         }
-
-//        public static BooleanValue Invalu
-//           if (exprList.Count() != 2)
-//            {
-//                // This shouldn't happen if the parser is correct.
-//                return ConstantFactory.CreateError<BooleanValue>("Equals is a binary expression but received " + exprList.Count() + "."); 
-//            }
 
     }
 }

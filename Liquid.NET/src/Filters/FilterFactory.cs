@@ -2,12 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Xml.XPath;
 using Liquid.NET.Constants;
-using Liquid.NET.Expressions;
-using Liquid.NET.Filters.Math;
-using Liquid.NET.Filters.Strings;
+using Liquid.NET.Utils;
 
 namespace Liquid.NET.Filters
 {
@@ -28,14 +24,14 @@ namespace Liquid.NET.Filters
         /// <param name="name"></param>
         /// <param name="filterArgs"></param>
         /// <returns></returns>
-        public static T InstantiateFilter<T>(String name, IList<IExpressionConstant> filterArgs)
+        public static T InstantiateFilter<T>(String name, IList<Option<IExpressionConstant>> filterArgs)
             where T: IFilterExpression
         {
             return (T) InstantiateFilter(name, typeof(T), filterArgs);
         }
 
         // TODO: CHange to IExpressionConstants---we don't want to eval them here.
-        public static IFilterExpression InstantiateFilter(String name, Type filterType, IEnumerable<IExpressionConstant> filterArgs)
+        public static IFilterExpression InstantiateFilter(String name, Type filterType, IEnumerable<Option<IExpressionConstant>> filterArgs)
         {
            
             if (filterType == null)
@@ -54,6 +50,7 @@ namespace Liquid.NET.Filters
                 // for the time being, ensure just one constructor.
                 throw new Exception("The \""+filterType+"\" class for " + name + " has more than one constructor.  Please contact the developer to fix this.");
             }
+            //filterArgs.Select(x => x.HasValue ? x.Value : new NilValue());
             return InstantiateFilter(filterType, CreateArguments(filterArgs, constructors[0]));
            
         }
@@ -65,7 +62,7 @@ namespace Liquid.NET.Filters
                 : (IFilterExpression) Activator.CreateInstance(filterType, args.ToArray());
         }
 
-        private static IList<object> CreateArguments(IEnumerable<IExpressionConstant> filterArgs, ConstructorInfo argConstructor)
+        private static IList<object> CreateArguments(IEnumerable<Option<IExpressionConstant>> filterArgs, ConstructorInfo argConstructor)
         {
             IList<Object> result = new List<object>();
             int i = 0;
@@ -77,37 +74,81 @@ namespace Liquid.NET.Filters
                 Console.WriteLine("There are " + filterList.Count + " args in the filter.");
                 if (i < filterList.Count)
                 {
-                    Console.WriteLine("COMPARING " + filterList[i].GetType() + " TO " + argType);
-                    if (argType == typeof (ExpressionConstant) || argType == typeof(IExpressionConstant))
+                    if (filterList[i].HasValue)
                     {
-                        Console.WriteLine("Skipping ExpressionConstant...");
-                        result.Add(filterList[i]);
-                        continue;
+                        Console.WriteLine("COMPARING " + filterList[i].Value.GetType() + " TO " + argType);
+                        if (argType == typeof (ExpressionConstant) || argType == typeof (IExpressionConstant)) // most generic type
+                        {
+                            Console.WriteLine("Skipping ExpressionConstant...");
+                            result.Add(filterList[i].Value);
+                            continue;
+                        }
+                        CastParameter(filterList[i], argType).WhenSuccess( // more specific type
+                            prm => result.Add(prm.Value)
+                        ).WhenError(
+                            prm =>
+                            {
+                                Console.WriteLine("THIS IS NULL");
+                                result.Add(null);// This shouldnt' be hit
+                            }
+                        );
+
+                    }
+                    else
+                    {
+                        result.Add(null);
                     }
 
-                    //result.Add(filterList[i].GetType() == parmType // if it's the same type
-                    result.Add(argType.IsInstanceOfType(filterList[i])
-                    //result.Add(parmType.IsInstanceOfType(filterList[i])    
-                        ? filterList[i] // then it's ok
-                        : CastParameter(filterList[i], argType)); // else cast it 
+//                    if (filterList[i].HasValue)
+//                    {
+//                        Console.WriteLine("COMPARING " + filterList[i].Value.GetType() + " TO " + argType);
+//                        if (argType == typeof (ExpressionConstant) || argType == typeof (IExpressionConstant))
+//                        {
+//                            Console.WriteLine("Skipping ExpressionConstant...");
+//                            result.Add(filterList[i].Value);
+//                            continue;
+//                        }
+//                    }
+//                    else
+//                    {
+//                        result.Add(null);
+//                    }
+//
+//                    //result.Add(filterList[i].GetType() == parmType // if it's the same type
+//                    if (argType.IsInstanceOfType(filterList[i]))
+//                    {
+//                        result.Add(filterList[i]);
+//                    }
+//                    else
+//                    {
+//                        CastParameter(filterList[i], argType).WhenSuccess(
+//                            prm => result.Add(prm.Value)
+//                        ).WhenError(
+//                            prm => result.Add(null) // This shouldnt' be hit
+//                        );
+//                    }
+//                    result.Add(argType.IsInstanceOfType(filterList[i])
+//                        ? filterList[i] // then it's ok
+//                        : CastParameter(filterList[i], argType)); // else cast it 
                 }
                 else
                 {
-                    // no value provided, so use the default                    
-                    Console.WriteLine("Passing null--- no value");
-                    Console.WriteLine("THERE ARE "+argType.GetConstructors().Count());
-                    // construct a default value type
-                    var constructorInfo = argType.GetConstructors()[0];
-                    var parameterInfos = constructorInfo.GetParameters();
-
-
-                    var defaultValue = parameterInfos.Select(p => GetDefault(p.ParameterType)).ToArray(); //.Select(x => x == System.DBNull? ToArray();
-                    Console.WriteLine("Default is " + defaultValue.GetType());
-                    //var defaultarg = (IExpressionConstant)Activator.CreateInstance(argType, null);
-                    var defaultarg = (IExpressionConstant)constructorInfo.Invoke(defaultValue);
-                    defaultarg.IsUndefined = true;
-                    result.Add(defaultarg);
-                    //result.Add(CreateUndefinedForType(parmType, defaultParams));
+                    result.Add(null);
+//                    // no value provided, so use the default                    
+//                    Console.WriteLine("Passing null--- no value");
+//                    Console.WriteLine("THERE ARE "+argType.GetConstructors().Count());
+//                    // construct a default value type
+//                    var constructorInfo = argType.GetConstructors()[0];
+//                    var parameterInfos = constructorInfo.GetParameters();
+//
+//
+//                    var defaultValue = parameterInfos.Select(p => GetDefault(p.ParameterType)).ToArray(); //.Select(x => x == System.DBNull? ToArray();
+//                    Console.WriteLine("Default is " + defaultValue.GetType());
+//                    //var defaultarg = (IExpressionConstant)Activator.CreateInstance(argType, null);
+//                    var defaultarg = (IExpressionConstant)constructorInfo.Invoke(defaultValue);
+//                    //defaultarg.IsUndefined = true;
+//                    result.Add(defaultarg);
+//                    //result.Add(CreateUndefinedForType(parmType, defaultParams));
                     //result.Add(null);
                 }
                 i++;
@@ -120,21 +161,35 @@ namespace Liquid.NET.Filters
             return type.IsValueType ? Activator.CreateInstance(type) : null;
         }
 
-        public static IExpressionConstant CreateUndefinedForType(Type valueType, object[] args)
-        {
-            // TODO: Introspect the argument for the Value type and get the default.
-            Console.WriteLine("passing " + args.Count() + " args");
-            var result = (IExpressionConstant)Activator.CreateInstance(valueType, args);
-            result.IsUndefined = true;
-            return result;
-        }
+//        public static IExpressionConstant CreateUndefinedForType(Type valueType, object[] args)
+//        {
+//            // TODO: Introspect the argument for the Value type and get the default.
+//            Console.WriteLine("passing " + args.Count() + " args");
+//            var result = (IExpressionConstant)Activator.CreateInstance(valueType, args);
+//            result.IsUndefined = true;
+//            return result;
+//        }
 
-        private static IExpressionConstant CastParameter(IExpressionConstant filterList, Type parmType)
+        private static LiquidExpressionResult CastParameter(Option<IExpressionConstant> filterList, Type parmType)
         {
+            
             MethodInfo method = typeof (ValueCaster).GetMethod("Cast");
-            MethodInfo generic = method.MakeGenericMethod(filterList.GetType(), parmType);
-            return (IExpressionConstant) generic.Invoke(null, new object[] {filterList});
-
+            if (filterList.HasValue)
+            {
+                MethodInfo generic = method.MakeGenericMethod(filterList.Value.GetType(), parmType);
+                //return (IExpressionConstant) generic.Invoke(null, new object[] {filterList.Value});
+                return (LiquidExpressionResult) generic.Invoke(null, new object[] { filterList.Value });
+            }
+            else
+            {
+                MethodInfo generic = method.MakeGenericMethod(filterList.Value.GetType(), parmType);
+                //return (IExpressionConstant) generic.Invoke(null, null);
+                return (LiquidExpressionResult)generic.Invoke(null, null);
+                
+            }
+            // If the filters use Options, this should be used instead....
+            //MethodInfo generic = method.MakeGenericMethod(filterList.GetType(), parmType);
+            //return (Option<IExpressionConstant>) generic.Invoke(null, new object[] { filterList });
         }
 
         public static IFilterExpression CreateCastExpression(Type sourceType, Type resultType)

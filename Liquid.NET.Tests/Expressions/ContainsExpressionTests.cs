@@ -17,7 +17,6 @@ namespace Liquid.NET.Tests.Expressions
         [TestCase("\"hello\"", "'X'", "FALSE")]
         public void It_Should_Determine_If_A_String_Contains_A_Substring(String val, String contains, String expected)
         {
-
             // Act
             var result = RenderingHelper.RenderTemplate("{%if "+val+" contains "+contains+" %}TRUE{% else %}FALSE{% endif %}");
 

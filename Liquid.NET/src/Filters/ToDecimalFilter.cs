@@ -6,19 +6,20 @@ using System.Text;
 using System.Threading.Tasks;
 using Antlr4.Runtime.Misc;
 using Liquid.NET.Constants;
+using Liquid.NET.Utils;
 
 namespace Liquid.NET.Filters
 {
     public class ToDecimalFilter : FilterExpression<ExpressionConstant, NumericValue>
     {
-        public override NumericValue Apply([NotNull] ExpressionConstant liquidExpression)
+        public override LiquidExpressionResult Apply(ExpressionConstant liquidExpression)
         {
-            return ConvertToDecimal(liquidExpression);
+            return LiquidExpressionResult.Success(ConvertToDecimal(liquidExpression));
         }
 
         public static NumericValue ConvertToDecimal(ExpressionConstant liquidExpression)
         {
-            String warningMessage = null;
+            
             try
             {
                 if (liquidExpression == null || liquidExpression.Value == null)
@@ -43,13 +44,13 @@ namespace Liquid.NET.Filters
             }
             catch (Exception)
             {
-                warningMessage = "unable to convert to a number";
+                //warningMessage = "unable to convert to a number";
             }
             var result = new NumericValue(default(decimal));
-            if (warningMessage != null)
-            {
-                result.WarningMessage = warningMessage;
-            }
+//            if (warningMessage != null)
+//            {
+//                result.WarningMessage = warningMessage;
+//            }
             return result;
         }
     }

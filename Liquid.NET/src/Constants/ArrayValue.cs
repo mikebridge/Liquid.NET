@@ -1,18 +1,27 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.PerformanceData;
+using System.Linq;
 using Liquid.NET.Symbols;
+using Liquid.NET.Utils;
 
 namespace Liquid.NET.Constants
 {
-    public class ArrayValue : ExpressionConstant, IEnumerable<IExpressionConstant>
+
+    public class ArrayValue : ExpressionConstant, IEnumerable<Option<IExpressionConstant>>
     {
-        private readonly IList<IExpressionConstant> _values;// = new List<IExpressionConstant>(); 
+        private readonly IList<Option<IExpressionConstant>> _values;// = new List<IExpressionConstant>(); 
+
+        public ArrayValue(IList<Option<IExpressionConstant>> values)
+        {
+            _values = values;
+        }
 
         public ArrayValue(IList<IExpressionConstant> values)
         {
-            _values = values;
+            _values = values.Select(x => x == null? new None<IExpressionConstant>() : x.ToOption()).ToList();
         }
 
         public override object Value
@@ -26,14 +35,19 @@ namespace Liquid.NET.Constants
             get { return _values != null; }
         }
 
-        public IList<IExpressionConstant> ArrValue { get { return _values; } }
+        public override string LiquidTypeName
+        {
+            get { return "collection"; }
+        }
 
-        public IExpressionConstant ValueAt(int key)
+        public IList<Option<IExpressionConstant>> ArrValue { get { return _values; } }
+
+        public Option<IExpressionConstant> ValueAt(int key)
         {
             return ArrayIndexer.ValueAt(_values, key);
         }
 
-        IEnumerator<IExpressionConstant> IEnumerable<IExpressionConstant>.GetEnumerator()
+        IEnumerator<Option<IExpressionConstant>> IEnumerable<Option<IExpressionConstant>>.GetEnumerator()
         {
             return ArrValue.GetEnumerator();
         }

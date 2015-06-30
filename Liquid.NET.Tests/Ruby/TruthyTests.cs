@@ -24,20 +24,31 @@ namespace Liquid.NET.Tests.Ruby
     public class TruthyTests {
 
         [Test]
-        [TestCase(@"{% assign myarray = """" |split: "","" %}{% if myarray %}TRUTHY{% else %}NOT TRUTHY{% endif %}", @"TRUTHY")]
-        [TestCase(@"{% assign myarray = ""1"" |split: "","" %}{% if myarray %}TRUTHY{% else %}NOT TRUTHY{% endif %}", @"TRUTHY")]
-        [TestCase(@"{% if myarray %}TRUTHY{% else %}NOT TRUTHY{% endif %}", @"NOT TRUTHY")]
-        public void It_Should_Match_Ruby_Output(String input, String expected) {
+        [TestCase(@"{% assign myarray = ""1"" |split: "","" %}{% if myarray %}TRUTHY{% else %}NOT TRUTHY{% endif %}", @"", @"TRUTHY")]
+        [TestCase(@"{% if myarray %}TRUTHY{% else %}NOT TRUTHY{% endif %}", @"", @"NOT TRUTHY")]
+        [TestCase(@"{% if myundefined == empty %}TRUTHY{% else %}NOT TRUTHY{% endif %}", @"", @"NOT TRUTHY")]
+        [TestCase(@"{% if myundefined == blank %}TRUTHY{% else %}NOT TRUTHY{% endif %}", @"", @"NOT TRUTHY")]
+        //[TestCase(@"{% if nil == empty %}TRUTHY{% else %}NOT TRUTHY{% endif %}", @"", @"NOT TRUTHY")]
+        [TestCase(@"{% if ' ' == blank %}TRUTHY{% else %}NOT TRUTHY{% endif %}", @"", @"NOT TRUTHY")]
+        [TestCase(@"{% if ' ' == empty %}TRUTHY{% else %}NOT TRUTHY{% endif %}", @"", @"NOT TRUTHY")]
+        public void It_Should_Match_Ruby_Output(String input, String assigns, String expected) {
 
             // Arrange
             ITemplateContext ctx = new TemplateContext().WithAllFilters();
+            
+            foreach (var tuple in DictionaryFactory.CreateStringMapFromJson(assigns))
+            {
+                ctx.Define(tuple.Item1, tuple.Item2);
+            }
+
+            
             var template = LiquidTemplate.Create(input);
-        
+            
             // Act
             String result = template.Render(ctx);
         
             // Assert
-            Assert.That(result, Is.EqualTo(expected));
+            Assert.That(result.Trim(), Is.EqualTo(expected));
         }
 
         

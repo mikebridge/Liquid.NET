@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 using Liquid.NET.Constants;
+using Liquid.NET.Utils;
 
 namespace Liquid.NET.Filters.Array 
 {
@@ -16,46 +15,33 @@ namespace Liquid.NET.Filters.Array
             _selector = selector;
         }
 
-        public override IExpressionConstant ApplyTo(IExpressionConstant liquidExpression)
+        public override LiquidExpressionResult ApplyTo(IExpressionConstant liquidExpression)
         {
-            return ConstantFactory.CreateError<ArrayValue>("Can't map that object type.  It is not an array or a hash.");
+            return LiquidExpressionResult.Error("Can't map that object type.  It is not an array or a hash.");
         }
 
-        public override IExpressionConstant ApplyTo(ArrayValue liquidArrayExpression)
+        public override LiquidExpressionResult ApplyTo(ArrayValue liquidArrayExpression)
         {
             if (liquidArrayExpression == null || liquidArrayExpression.Value == null)
             {
-                return ConstantFactory.CreateError<ArrayValue>("Array is nil");
+                return LiquidExpressionResult.Error("Array is nil");
             }
-            var list = liquidArrayExpression.ArrValue.Select(x => FieldAccessor.TryField(x, _selector.StringVal)).ToList();
-            return new ArrayValue(list);
+            var list = liquidArrayExpression.ArrValue.Select(x => x.HasValue ? 
+                FieldAccessor.TryField(x.Value, _selector.StringVal) : 
+                new None<IExpressionConstant>()).ToList();
+            return LiquidExpressionResult.Success(new ArrayValue(list));
         }
 
-        public override IExpressionConstant ApplyTo(DictionaryValue liquidDictionaryValue)
+        public override LiquidExpressionResult ApplyTo(DictionaryValue liquidDictionaryValue)
         {
             if (liquidDictionaryValue == null || liquidDictionaryValue.Value == null)
             {
-                return ConstantFactory.CreateError<DictionaryValue>("Hash is nil");
+                return LiquidExpressionResult.Error("Hash is nil");
             }
-             String propertyNameString = ValueCaster.RenderAsString(_selector);
-            return liquidDictionaryValue.ValueAt(propertyNameString);
+            String propertyNameString = ValueCaster.RenderAsString((IExpressionConstant)_selector);
+             return LiquidExpressionResult.Success(liquidDictionaryValue.ValueAt(propertyNameString));
             
         }
 
-//
-//        public MapFilter(StringValue selector)
-//        {
-//            _selector = selector;
-//        }
-//
-//        public override ArrayValue Apply(ArrayValue liquidArrayExpression)
-//        {
-//            if (liquidArrayExpression == null || liquidArrayExpression.Value == null)
-//            {
-//                return ConstantFactory.CreateError<ArrayValue>("Array is nil");
-//            }
-//            var list = liquidArrayExpression.ArrValue.Select(x => FieldAccessor.TryField(x, _selector.StringVal)).ToList();
-//            return new ArrayValue(list);
-//        }
     }
 }

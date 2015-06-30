@@ -12,9 +12,9 @@ namespace Liquid.NET.Tags
 
         public ForBlockTag()
         {
-            Limit = new NumericValue(50); // as per the Shopify docs
+            //Limit = new NumericValue(50); // as per the Shopify docs
             Reversed = new BooleanValue(false);
-            Offset = new NumericValue(0);
+            //Offset = new NumericValue(0);
         }
 
         public void Accept(IASTVisitor visitor)
@@ -22,13 +22,9 @@ namespace Liquid.NET.Tags
             visitor.Visit(this);
         }
 
-        /// <summary>
-        /// TODO: the documentation here is confusing.
-        /// https://docs.shopify.com/themes/liquid-documentation/tags/iteration-tags
-        /// </summary>
-        public NumericValue Limit { get; set; }
+        public TreeNode<LiquidExpression> Limit { get; set; }
 
-        public NumericValue Offset { get; set; } // zero-indexed
+        public TreeNode<LiquidExpression> Offset { get; set; } // zero-indexed
 
         public BooleanValue Reversed { get; set; }
 

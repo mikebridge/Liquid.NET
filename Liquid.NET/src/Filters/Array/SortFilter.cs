@@ -1,10 +1,7 @@
 ﻿using System;
-using System.CodeDom;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Liquid.NET.Constants;
+using Liquid.NET.Utils;
 
 namespace Liquid.NET.Filters.Array
 {
@@ -23,22 +20,23 @@ namespace Liquid.NET.Filters.Array
             _sortField = sortField;
         }
 
-        public override ArrayValue ApplyTo(ArrayValue liquidArrayExpression)
+        public override LiquidExpressionResult ApplyTo(ArrayValue liquidArrayExpression)
         {            
             var sortfield = _sortField.StringVal;
 
             if (String.IsNullOrWhiteSpace(sortfield)) // try to sort as an array
             {
-                return SortAsArrayOfStrings(liquidArrayExpression);
+                return LiquidExpressionResult.Success(SortAsArrayOfStrings(liquidArrayExpression));
             }
             else
             {
-                return SortByProperty(liquidArrayExpression, sortfield);
+                return LiquidExpressionResult.Success(SortByProperty(liquidArrayExpression, sortfield));
             }
         }
 
         private ArrayValue SortByProperty(ArrayValue val, string sortfield)
         {
+
             var ordered = val.ArrValue.OrderBy(x => AsString(x, sortfield));
             // TODO: ThenBy
             return new ArrayValue(ordered.ToList());
@@ -50,9 +48,13 @@ namespace Liquid.NET.Filters.Array
             return new ArrayValue(result.ToList());
         }
 
-        private String AsString(IExpressionConstant x, string field)
+        private String AsString(Option<IExpressionConstant> x, string field)
         {
-            return ValueCaster.RenderAsString(FieldAccessor.TryField(x, field));
+            if (!x.HasValue)
+            {
+                return "";
+            }
+            return ValueCaster.RenderAsString(FieldAccessor.TryField(x.Value, field));
         }
     }
 

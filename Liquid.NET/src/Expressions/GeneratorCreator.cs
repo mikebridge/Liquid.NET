@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 using Liquid.NET.Constants;
 using Liquid.NET.Symbols;
 using Liquid.NET.Utils;
@@ -29,10 +28,11 @@ namespace Liquid.NET.Expressions
 
         public IEnumerable<IExpressionConstant> Eval(SymbolTableStack symbolTableStack)
         {
-            return _stringValue.StringVal
-                .ToCharArray()
-                .Select(x => new StringValue("" + x));
-            
+//            return _stringValue.StringVal
+//                .ToCharArray()
+//                .Select(x => new StringValue("" + x));
+            // In ruby liquid, it will not iterate through a string's characters---it will treat it as an array of one string.
+            return new List<IExpressionConstant>{_stringValue};
         }
     }
 
@@ -45,21 +45,24 @@ namespace Liquid.NET.Expressions
             _arrayValueExpression = arrayValueExpression;
         }
 
-//        private readonly ArrayValue _arrayValue;
-//
-//        public ArrayValueCreator(ArrayValue arrayValue)
-//        {
-//            _arrayValue = arrayValue;
-//        }
-
         public IEnumerable<IExpressionConstant> Eval(SymbolTableStack symbolTableStack)
-        {
-            //Console.WriteLine("Evaling ArrayValue generator creator");
-            var expressionConstant = LiquidExpressionEvaluator.Eval(_arrayValueExpression,
-                symbolTableStack);
-            //Console.WriteLine("it is a "+expressionConstant);
-            return
-                ValueCaster.Cast<IExpressionConstant, ArrayValue>(expressionConstant);
+        {            
+            var expressionConstant = LiquidExpressionEvaluator.Eval(_arrayValueExpression, symbolTableStack);
+
+            if (expressionConstant.IsError || !expressionConstant.SuccessResult.HasValue)
+            {
+                return new List<IExpressionConstant>();
+            }
+            var castResult = ValueCaster.Cast<IExpressionConstant, ArrayValue>(expressionConstant.SuccessResult.Value);
+            if (castResult.IsError)
+            {
+                // ??
+                return new List<IExpressionConstant>();
+            }
+            else
+            {
+                return castResult.SuccessValue<ArrayValue>().Select(x => x.HasValue? x.Value : null);
+            }
         }
     }
 
@@ -86,7 +89,16 @@ namespace Liquid.NET.Expressions
 
         private NumericValue ValueAsNumeric(TreeNode<LiquidExpression> expr, SymbolTableStack symbolTableStack)
         {
-            return ValueCaster.Cast<IExpressionConstant, NumericValue>(LiquidExpressionEvaluator.Eval(expr, symbolTableStack));
+            var liquidExpressionResult = LiquidExpressionEvaluator.Eval(expr, symbolTableStack);
+            if (liquidExpressionResult.IsError)
+            {
+                return new NumericValue(0);
+            }
+            var valueAsNumeric = ValueCaster.Cast<IExpressionConstant, NumericValue>(liquidExpressionResult.SuccessResult.Value);
+
+            return liquidExpressionResult.IsSuccess && liquidExpressionResult.SuccessResult.HasValue ? 
+                valueAsNumeric.SuccessValue<NumericValue>()
+                : new NumericValue(0);
         }
     }
 }

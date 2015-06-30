@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
+
 using Liquid.NET.Constants;
 using Liquid.NET.Symbols;
+using Liquid.NET.Utils;
+
+using ExpressionResult = Liquid.NET.Utils.Either<Liquid.NET.LiquidError, Liquid.NET.Utils.Option<Liquid.NET.Constants.IExpressionConstant>>;
 
 namespace Liquid.NET.Expressions
 {
@@ -14,14 +17,18 @@ namespace Liquid.NET.Expressions
             expressionDescriptionVisitor.Visit(this);
         }
 
-        public override IExpressionConstant Eval(SymbolTableStack symbolTableStack, IEnumerable<IExpressionConstant> expressions)
+        public override LiquidExpressionResult Eval(SymbolTableStack symbolTableStack, IEnumerable<Option<IExpressionConstant>> expressions)
         {
             var list = expressions.ToList();
             if (list.Count() != 1)
             {
-                throw new Exception("Expected one variable to compare with \"empty\""); // this will be obsolete when the lexer/parser is split
+                return LiquidExpressionResult.Error("Expected one variable to compare with \"empty\"");
             }
-            return new BooleanValue(EmptyChecker.IsEmpty(list[0]));
+            if (!list[0].HasValue)
+            {
+                return LiquidExpressionResult.Success(new BooleanValue(false)); // nulls are not empty.
+            }
+            return LiquidExpressionResult.Success(new BooleanValue(EmptyChecker.IsEmpty(list[0].Value)));
         }
     }
 }

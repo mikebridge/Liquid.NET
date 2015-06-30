@@ -5,6 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Liquid.NET.Constants;
 using Liquid.NET.Symbols;
+using Liquid.NET.Utils;
+
+
 
 namespace Liquid.NET.Expressions
 {
@@ -17,9 +20,10 @@ namespace Liquid.NET.Expressions
             _liquidExpression = liquidExpression;
         }
 
-        public override IExpressionConstant Eval(SymbolTableStack symbolTableStack, IEnumerable<IExpressionConstant> expressions)
+        public override LiquidExpressionResult Eval(SymbolTableStack symbolTableStack, IEnumerable<Option<IExpressionConstant>> expressions)
         {
-            return LiquidExpressionEvaluator.Eval(_liquidExpression, new List<IExpressionConstant>(), symbolTableStack);
+            // something got screwed up here
+            return LiquidExpressionEvaluator.Eval(_liquidExpression, new List<Option<IExpressionConstant>>(), symbolTableStack);
         }
     }
 }

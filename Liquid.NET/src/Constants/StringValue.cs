@@ -29,6 +29,8 @@ namespace Liquid.NET.Constants
             get { return _val != null; }
         }
 
+        public override string LiquidTypeName { get { return "string"; } }
+
         public override void Accept(IExpressionDescriptionVisitor visitor)
         {
             visitor.Visit(this);
@@ -46,6 +48,10 @@ namespace Liquid.NET.Constants
 
         public IEnumerator GetEnumerator()
         {
+            if (StringVal == null)
+            {
+                return new char[] { }.GetEnumerator(); // is this necessary?
+            }
             return StringVal.ToCharArray().GetEnumerator();
         }
     }

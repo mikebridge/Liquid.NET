@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Liquid.NET.Constants;
 using Liquid.NET.Symbols;
+using Liquid.NET.Utils;
 using NUnit.Framework;
 
 namespace Liquid.NET.Tests.Constants
@@ -21,7 +22,7 @@ namespace Liquid.NET.Tests.Constants
             var number = new NumericValue(123m);
 
             // Act
-            var result = number.Eval(SymbolTableStackFactory.CreateSymbolTableStack(new TemplateContext()), new List<IExpressionConstant>());
+            var result = number.Eval(SymbolTableStackFactory.CreateSymbolTableStack(new TemplateContext()), new List<Option<IExpressionConstant>>()).SuccessValue<NumericValue>();
 
             // Assert
             Assert.That(result.Value, Is.EqualTo(123m));
@@ -50,7 +51,7 @@ namespace Liquid.NET.Tests.Constants
         public void It_Should_Cast_A_Non_Numeric_String_To_Zero()
         {
             // Act
-            NumericValue number = NumericValue.Parse("z");
+            NumericValue number = NumericValue.Parse("z").SuccessValue<NumericValue>();
 
             // Assert
             Assert.That(number.IntValue, Is.EqualTo(0));

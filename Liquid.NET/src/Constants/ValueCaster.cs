@@ -3,84 +3,106 @@ using System.Collections.Generic;
 using System.Linq;
 
 using Liquid.NET.Filters;
+using Liquid.NET.Utils;
 
 namespace Liquid.NET.Constants
 {
     public static class ValueCaster
     {
-
-        public static TDest Cast<TSource, TDest>(TSource src)
+        public static LiquidExpressionResult Cast<TSource, TDest>(TSource src)
             where TDest : IExpressionConstant
             where TSource : IExpressionConstant
         {
+            if (src == null)
+            {
+                return LiquidExpressionResult.Success(new None<IExpressionConstant>());
+            }
             if (src is TDest)
             {
-                return (TDest) ((dynamic) src);
+                //var result = (TDest) ((dynamic) src);                
+                IExpressionConstant success = (TDest)((dynamic)src);
+                return LiquidExpressionResult.Success( new Some<IExpressionConstant>(success) );
             }
 
             return Convert<TDest>((dynamic)src);
         }
+//
+//        public static LiquidExpressionResult Cast<TSource, TDest>(Option<TSource> src)
+//            where TDest : IExpressionConstant
+//            where TSource : IExpressionConstant
+//        {
+//            if (!src.HasValue)
+//            {
+//                //new LiquidExpressionResult(result);
+//                return LiquidExpressionResult.Success(Option<IExpressionConstant>.None());
+//            }
+//            return Cast<TSource,TDest>(src.Value);
+//
+//           
+//        }
 
-        private static IExpressionConstant Convert<TDest>(NumericValue num)
+        private static LiquidExpressionResult Convert<TDest>(NumericValue num)
             where TDest : IExpressionConstant
         {
             var destType = typeof (TDest);
             if (destType == typeof (NumericValue))
             {
-                return num;
+                return LiquidExpressionResult.Success(num);
             }
 
             if (destType == typeof (StringValue))
             {
-                return new StringValue(num.Value.ToString());
+                return LiquidExpressionResult.Success(new StringValue(num.Value.ToString()));
             }
-            return new NumericValue(0); // Liquid seems to convert unknowns to numeric.
+            return LiquidExpressionResult.Success(new NumericValue(0)); // Liquid seems to convert unknowns to numeric.
             //return ConstantFactory.CreateError<TDest>("Can't convert from numeric to " + destType);
         }
 
-        private static IExpressionConstant Convert<TDest>(BooleanValue boolean)
+        private static LiquidExpressionResult Convert<TDest>(BooleanValue boolean)
             where TDest : IExpressionConstant
         {
             var destType = typeof (TDest);
             if (destType == typeof (BooleanValue))
             {
-                return boolean;
+                return LiquidExpressionResult.Success(boolean);
             }
 
             if (destType == typeof (StringValue))
             {
-                return new StringValue(boolean.Value.ToString().ToLower());
+                return LiquidExpressionResult.Success(new StringValue(boolean.Value.ToString().ToLower()));
             }
-            return ConstantFactory.CreateError<TDest>("Can't convert from boolean to " + destType);
+            return LiquidExpressionResult.Error("Can't convert from boolean to " + destType);
+            //return ConstantFactory.CreateError<TDest>("Can't convert from boolean to " + destType);
 
         }
 
-        private static IExpressionConstant Convert<TDest>(Undefined undef)
+        private static LiquidExpressionResult Convert<TDest>(NilValue undef)
             where TDest : IExpressionConstant
         {
-            var destType = typeof(TDest);
-            if (destType == typeof(Undefined))
-            {
-                return undef;
-            }
-
-            if (destType == typeof(StringValue))
-            {
-                return new StringValue(undef.Value.ToString());
-            }           
-            // TODO: Should this return the default value for whatever TDest is requested?
-            return ConstantFactory.CreateError<TDest>("Can't convert from an undefined ("+undef.Value+") to " + destType);
+            throw new ApplicationException("Can't convert to nil");
+//            var destType = typeof(TDest);
+//            if (destType == typeof(NilValue))
+//            {
+//                return undef;
+//            }
+//
+//            if (destType == typeof(StringValue))
+//            {
+//                return new StringValue(undef.Value.ToString());
+//            }           
+//            // TODO: Should this return the default value for whatever TDest is requested?
+//            return LiquidExpressionResult.Error("Can't convert from an undefined ("+undef.Value+") to " + destType);
             //return ExpressionConstant.CreateError<TDest>("Can't convert from an undefined to " + destType);
         }
 
-        private static IExpressionConstant Convert<TDest>(DictionaryValue dictionaryValue)
+        private static LiquidExpressionResult Convert<TDest>(DictionaryValue dictionaryValue)
            where TDest : IExpressionConstant
         {
             //Console.WriteLine("Rendering dictionary");
             var destType = typeof(TDest);
-            if (destType == typeof(Undefined))
+            if (destType == typeof(NilValue))
             {
-                return dictionaryValue;
+                return LiquidExpressionResult.Success(new NilValue());
             }
 
             if (destType == typeof(StringValue))
@@ -91,10 +113,11 @@ namespace Liquid.NET.Constants
 //                    Console.WriteLine("KEY " + key + "=" + dictionaryValue.DictValue[key]);
 //                }
 
-                return new StringValue(
+                var result= new StringValue(
                     dictionaryValue.DictValue
                         .Keys
                         .Aggregate("", (current, key) => current + FormatKvPair(key, dictionaryValue.DictValue[key])));
+                return LiquidExpressionResult.Success(result);
             }
             // So, according to https://github.com/Shopify/liquid/wiki/Liquid-for-Designers, a hash value will be iterated
             // as an array with two indices.
@@ -102,17 +125,16 @@ namespace Liquid.NET.Constants
             {
                 var dictarray = dictionaryValue.DictValue.Keys.Select(k =>
                 {
-                    var list = new List<IExpressionConstant> { new StringValue(k), dictionaryValue.DictValue[k] };
-                    return (IExpressionConstant) new ArrayValue(list);
-
+                    var list = new List<Option<IExpressionConstant>> { new Some<IExpressionConstant>(new StringValue(k)), dictionaryValue.DictValue[k] };
+                    return (Option<IExpressionConstant>) new Some<IExpressionConstant>(new ArrayValue(list));
                 }).ToList();
-                return new ArrayValue(dictarray);
+                return LiquidExpressionResult.Success(new ArrayValue(dictarray));
             }
             // TODO: Should this return the default value for whatever TDest is requested?
-            return ConstantFactory.CreateError<TDest>("Can't convert from a DictionaryValue to " + destType);
+            return LiquidExpressionResult.Error("Can't convert from a DictionaryValue to " + destType);
         }
 
-        private static IExpressionConstant Convert<TDest>(ArrayValue arrayValue)
+        private static LiquidExpressionResult Convert<TDest>(ArrayValue arrayValue)
               where TDest : IExpressionConstant
         {
             //Console.WriteLine("Rendering array");
@@ -122,31 +144,55 @@ namespace Liquid.NET.Constants
             {
                 //Console.WriteLine("Converting array to string");
 
-                return new StringValue(FormatArray(arrayValue));
+                return LiquidExpressionResult.Success(new StringValue(FormatArray(arrayValue)));
             }
             // TODO: Should this return the default value for whatever TDest is requested?
-            return ConstantFactory.CreateError<TDest>("Can't convert from an ArrayValue to " + destType);
+            return LiquidExpressionResult.Error("Can't convert from an ArrayValue to " + destType);
         }
 
         private static string FormatArray(ArrayValue arrayValue)
         {
-            var strs = arrayValue.ArrValue.Select(x => Quote(x.GetType(), Convert<StringValue>((dynamic) x).Value.ToString()));
+
+            var strs = arrayValue.ArrValue.Select(x => Quote(GetWrappedType(x), RenderAsString(x)));
+            //var strs = arrayValue.ArrValue.Select(x => Quote(x.GetType(), Convert<StringValue>((dynamic) x).Value.ToString()));
             return "[ " + String.Join(", ", strs) + " ]"; 
 
         }
 
 
-        private static String FormatKvPair(string key, IExpressionConstant expressionConstant)
+        private static String FormatKvPair(string key, Option<IExpressionConstant> expressionConstant)
         {
-            var strSymbol = Convert<StringValue>((dynamic) expressionConstant);
-            
-            return "{ " + Quote(typeof(StringValue), key) + " : " + Quote(expressionConstant.GetType(), (String) strSymbol.Value) + " }";
+            //var strSymbol = Convert<StringValue>((dynamic) expressionConstant);
+            Type wrappedType = GetWrappedType(expressionConstant);
+            String exprConstantAsString = RenderAsString(expressionConstant);
+            return "{ " + Quote(typeof(StringValue), key) + " : " + Quote(wrappedType, exprConstantAsString) + " }";
+        }
+
+        private static Type GetWrappedType<T>(Option<T> expressionConstant)
+            where T:IExpressionConstant
+        {
+            if (expressionConstant.HasValue)
+            {
+                //var nestedType = expressionConstant.GetType().GetGenericArguments()[0];
+                var nestedType = expressionConstant.Value.GetType();
+                Console.WriteLine("NEsted type " + nestedType);
+                return nestedType;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         // TODO: quote JSON here
         private static String Quote(Type origType, String str)
         {
-            if (origType.IsAssignableFrom(typeof (NumericValue)))
+            //Console.WriteLine("casting type" + origType);
+            if (origType == null)
+            {
+                return "null";
+            }
+            if (origType.IsAssignableFrom(typeof(NumericValue)) || origType.IsAssignableFrom(typeof(BooleanValue)))
             {
                 return str;
             }
@@ -158,67 +204,53 @@ namespace Liquid.NET.Constants
 
 
 
-        private static IExpressionConstant Convert<TDest>(StringValue str)
+        private static LiquidExpressionResult Convert<TDest>(StringValue str)
             where TDest : IExpressionConstant
         {
             var destType = typeof (TDest);
             if (destType == typeof (StringValue))
             {
-                return str;
+                return LiquidExpressionResult.Success(str);
             }
 
             if (destType == typeof (NumericValue))
             {
                 try
                 {
-                    return new NumericValue(decimal.Parse(str.StringVal));
+                    return LiquidExpressionResult.Success(new NumericValue(decimal.Parse(str.StringVal)));
                 }
                 catch
                 {
                     // https://github.com/Shopify/liquid/blob/master/lib/liquid/standardfilters.rb
-                    return new NumericValue(0);  // liquid to_numeric seems to convert these to 0.
+                    return LiquidExpressionResult.Success(new NumericValue(0));  // liquid to_numeric seems to convert these to 0.
                 }
             }
 
             if (destType == typeof (ArrayValue))
             {
-                return new ArrayValue(str.StringVal.Select(x => (IExpressionConstant) new StringValue(x.ToString())).ToList());
+                var expressionConstants = new Some<IExpressionConstant>(str);
+                // IN liquid, it doesn't seem to cast a string to an array of chars---it casts to an array of one element.
+                //var expressionConstants = str.StringVal.Select(x => (Option<IExpressionConstant>) new Some<IExpressionConstant>(new StringValue(x.ToString())));
+                return LiquidExpressionResult.Success(new ArrayValue(new List<Option<IExpressionConstant>>{expressionConstants}));
             }
-            return ConstantFactory.CreateError<TDest>("Can't convert from string to " + destType);
+            return LiquidExpressionResult.Error("Can't convert from string to " + destType);
            
         }
 
-        
 
-        // TODO: phase out Objectvalue.
-        private static IExpressionConstant Convert<TDest>(ObjectValue source)
-            where TDest : IExpressionConstant
-        {
-            var destType = typeof(TDest);
-            if (destType == typeof(StringValue))
-            {
-                //return new StringValue(Stringify(source));
-                return Convert<TDest>((dynamic) source.Value);
-            }
-            //source.
-            return ConstantFactory.CreateError<TDest>("Can't convert from " + source.GetType() + " to " + destType);
-
-        }
-
-
-        private static IExpressionConstant Convert<TDest>(IExpressionConstant source)
+        private static LiquidExpressionResult Convert<TDest>(IExpressionConstant source)
             where TDest : IExpressionConstant
         {
             var destType = typeof (TDest);
             if (destType == typeof (StringValue))
             {
-                return new StringValue(source.ToString());
+                return LiquidExpressionResult.Success(new StringValue(source.ToString()));
             }
             if (destType == typeof (NumericValue))
             {
-                return new NumericValue(0);
+                return LiquidExpressionResult.Success(new NumericValue(0));
             }
-            return ConstantFactory.CreateError<TDest>("Can't convert from " + source.GetType() + " to " + destType);
+            return LiquidExpressionResult.Error("Can't convert from " + source.GetType() + " to " + destType);
 
         }
 
@@ -273,32 +305,45 @@ namespace Liquid.NET.Constants
             return (IFilterExpression)Activator.CreateInstance(constructedClass);
         }
 
+        public static string RenderAsString(Option<IExpressionConstant> val)
+        {
+//            if (val == null)
+//            {
+//                return "";
+//            }
+//            if (!val.HasValue)
+//            {
+//                return "";
+//            }
+            return val.HasValue ? RenderAsString(val.Value) : "";
+
+            //var stringResult = Cast<IExpressionConstant, StringValue>(new Some<IExpressionConstant>(val));
+//            var stringResult = Cast<IExpressionConstant, StringValue>((dynamic)val);
+//
+//            // TODO: Does this render an error if it can't cast or an empty string?
+//            if (stringResult.IsError)
+//            {
+//                return "";
+//            }
+//            return stringResult.SuccessResult.HasValue ? ((StringValue)stringResult.SuccessResult.Value).StringVal : "";
+        }
 
         public static string RenderAsString(IExpressionConstant val)
         {
-            // These don't render in liquid
-            //if (val.IsUndefined || val.HasError)
-            if (val.IsUndefined)
+
+            if (val == null)
             {
                 return "";
             }
-
-            if (val.HasError)
-            {
-                return val.ErrorMessage;
-            }
-
 
             var stringResult = Cast<IExpressionConstant, StringValue>(val);
 
-            if (stringResult.StringVal == null)
+            // TODO: Does this render an error if it can't cast or an empty string?
+            if (stringResult.IsError)
             {
                 return "";
             }
-            else
-            {
-                return stringResult.StringVal;
-            }
+            return stringResult.SuccessResult.HasValue ? ((StringValue)stringResult.SuccessResult.Value).StringVal : "";
         }
 
     }

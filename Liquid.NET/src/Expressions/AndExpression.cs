@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Liquid.NET.Constants;
 using Liquid.NET.Symbols;
+using Liquid.NET.Utils;
+
+using ExpressionResult = Liquid.NET.Utils.Either<Liquid.NET.LiquidError, Liquid.NET.Utils.Option<Liquid.NET.Constants.IExpressionConstant>>;
 
 namespace Liquid.NET.Expressions
 {
@@ -13,13 +16,14 @@ namespace Liquid.NET.Expressions
             expressionDescriptionVisitor.Visit(this);
         }
 
-        public override IExpressionConstant Eval(SymbolTableStack symbolTableStack, IEnumerable<IExpressionConstant> expressions)
+        public override LiquidExpressionResult Eval(SymbolTableStack symbolTableStack, IEnumerable<Option<IExpressionConstant>> expressions)
         {
-            if (!expressions.Any() || expressions.Count() == 1)
+            var exprList = expressions.ToList();
+            if (exprList.Count() != 2)
             {
                 throw new Exception("An AND expression must have two values"); // TODO: when the Eval is separated this will be redundant.
             }
-            return new BooleanValue(expressions.All(x => x.IsTrue));
+            return LiquidExpressionResult.Success(new BooleanValue(exprList.All(x => x.HasValue) && exprList.All(x => x.Value.IsTrue)));
         }
     }
 }

@@ -2,6 +2,9 @@
 using System.Linq;
 using Liquid.NET.Constants;
 using Liquid.NET.Symbols;
+using Liquid.NET.Utils;
+
+using ExpressionResult = Liquid.NET.Utils.Either<Liquid.NET.LiquidError, Liquid.NET.Utils.Option<Liquid.NET.Constants.IExpressionConstant>>;
 
 namespace Liquid.NET.Expressions
 {
@@ -12,9 +15,10 @@ namespace Liquid.NET.Expressions
             expressionDescriptionVisitor.Visit(this);
         }
 
-        public override IExpressionConstant Eval(SymbolTableStack symbolTableStack, IEnumerable<IExpressionConstant> expressions)
+        public override LiquidExpressionResult Eval(SymbolTableStack symbolTableStack, IEnumerable<Option<IExpressionConstant>> expressions)
         {
-            return new BooleanValue(expressions.Any(x => x.IsTrue));
+            var exprList = expressions.ToList();
+            return LiquidExpressionResult.Success(new BooleanValue(exprList.Any(x => x.HasValue && x.Value.IsTrue)));
         }
     }
 }

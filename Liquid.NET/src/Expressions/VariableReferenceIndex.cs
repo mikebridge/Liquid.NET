@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 using Liquid.NET.Constants;
 using Liquid.NET.Symbols;
+using Liquid.NET.Utils;
+
 
 namespace Liquid.NET.Expressions
 {
@@ -19,15 +19,30 @@ namespace Liquid.NET.Expressions
             _index = index;
         }
 
-        public override IExpressionConstant Eval(SymbolTableStack symbolTableStack, IEnumerable<IExpressionConstant> expressions)
+        public override LiquidExpressionResult Eval(SymbolTableStack symbolTableStack, IEnumerable<Option<IExpressionConstant>> expressions)
         {
-            DictionaryValue dict = _variableReference.Eval(symbolTableStack, new List<IExpressionConstant>()) as DictionaryValue;
+            //_variableReference.Eval(symbolTableStack, new List<IExpressionConstant>())
+
+            var liquidExpressionResult = _variableReference.Eval(symbolTableStack, new List<Option<IExpressionConstant>>());
+            if (liquidExpressionResult.IsError)
+            {
+                return liquidExpressionResult;
+            }
+
+            if (!liquidExpressionResult.SuccessResult.HasValue)
+            {
+                return LiquidExpressionResult.Success(Option<IExpressionConstant>.None()); ; // no dictionary to look up in
+            }
+            var dict = liquidExpressionResult.SuccessResult.Value as DictionaryValue;
+
             if (dict != null)
             {
-                return dict.ValueAt(Convert.ToString(_index));
+                return LiquidExpressionResult.Success(dict.ValueAt(Convert.ToString(_index)));
             }
-            // TODO: Implement the rest of this
-            return new Undefined(_variableReference +"." + _index);
+
+            return LiquidExpressionResult.Success(Option<IExpressionConstant>.None());
+            //            // TODO: Implement the rest of this
+            //            return new Undefined(_variableReference +"." + _index);
         }
 
         

@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using Liquid.NET.Constants;
+using Liquid.NET.Utils;
 
 namespace Liquid.NET.Filters
 {
@@ -8,80 +10,102 @@ namespace Liquid.NET.Filters
         Type SourceType { get; }
         Type ResultType { get; }
 
-        IExpressionConstant Apply(IExpressionConstant liquidExpression);
+        LiquidExpressionResult Apply(IExpressionConstant liquidExpression);
+        
+        LiquidExpressionResult ApplyToNil();
+
     };
 
-    public interface IFilterExpression<in TSource, out TResult> : IFilterExpression        
+    public interface IFilterExpression<in TSource, out TResult> : IFilterExpression
         where TSource : IExpressionConstant
         where TResult : IExpressionConstant
     {
         TResult Apply(TSource liquidExpression);
     };
 
-    public abstract class FilterExpression<TSource,TResult> : IFilterExpression
+    public abstract class FilterExpression<TSource, TResult> : IFilterExpression
         where TSource : IExpressionConstant
         where TResult : IExpressionConstant
     {
 
         // TODO: I don't think this should be virtual
-        public virtual TResult Apply(TSource liquidExpression)
+        //public virtual TResult Apply(TSource liquidExpression)
+        public virtual LiquidExpressionResult Apply(TSource option)
         {
-            return liquidExpression.Bind<TResult>(x => ApplyTo((dynamic)x));
+            //throw new Exception("Need to figure out how to do this part");
+            //return option.Bind<LiquidExpressionResult>(x => ApplyTo((dynamic)x));
+            return ApplyTo((dynamic)option);
         }
 
-        public IExpressionConstant Apply(IExpressionConstant liquidExpression)
+        public LiquidExpressionResult Apply(IExpressionConstant liquidExpression)
         {
+            //throw new Exception("Need to figure out how to do this part");
             return Apply((TSource)liquidExpression);
+            //return Apply((Option<TSource>)liquidExpression);
         }
+
+    
 
         /* override some or all of these ApplyTo functions */
-        public virtual TResult ApplyTo(IExpressionConstant liquidExpression) // todo: make this fallback abtstract
+        public virtual LiquidExpressionResult ApplyTo(IExpressionConstant liquidExpression) // todo: make this fallback abtstract
         {
             throw new NotImplementedException();
         }
-        public virtual TResult ApplyTo(NumericValue val) 
+        public virtual LiquidExpressionResult ApplyTo(NumericValue val)
         {
+            //throw new Exception("Need to figure out how to do this part");
             return ApplyTo((IExpressionConstant)val);
         }
-        public virtual TResult ApplyTo(StringValue val)
+        public virtual LiquidExpressionResult ApplyTo(StringValue val)
         {
+            //throw new Exception("Need to figure out how to do this part");
             return ApplyTo((IExpressionConstant)val);
         }
-        public virtual TResult ApplyTo(DictionaryValue val)
+        public virtual LiquidExpressionResult ApplyTo(DictionaryValue val)
         {
+            //throw new Exception("Need to figure out how to do this part");
             return ApplyTo((IExpressionConstant)val);
         }
-        public virtual TResult ApplyTo(ArrayValue val)
+        public virtual LiquidExpressionResult ApplyTo(ArrayValue val)
         {
-            return ApplyTo((IExpressionConstant)val);
-        }
-
-        public virtual TResult ApplyTo(BooleanValue val)
-        {
-            return ApplyTo((IExpressionConstant)val);
-        }
-
-        public virtual TResult ApplyTo(DateValue val)
-        {
+            //throw new Exception("Need to figure out how to do this part");
             return ApplyTo((IExpressionConstant)val);
         }
 
-
-        public virtual TResult ApplyTo(GeneratorValue val)
+        public virtual LiquidExpressionResult ApplyTo(BooleanValue val)
         {
+            //throw new Exception("Need to figure out how to do this part");
             return ApplyTo((IExpressionConstant)val);
+        }
+
+        public virtual LiquidExpressionResult ApplyTo(DateValue val)
+        {
+            //throw new Exception("Need to figure out how to do this part");
+            return ApplyTo((IExpressionConstant)val);
+        }
+
+
+        public virtual LiquidExpressionResult ApplyTo(GeneratorValue val)
+        {
+            //throw new Exception("Need to figure out how to do this part");
+            return ApplyTo((IExpressionConstant)val);
+        }
+
+        public virtual LiquidExpressionResult ApplyToNil()
+        {
+            return LiquidExpressionResult.Success(new None<IExpressionConstant>());
+            //return new LiquidExpressionResult(Option<IExpressionConstant>.None);
         }
 
         public Type SourceType
         {
-            get { return typeof(TSource);  }
+            get { return typeof(TSource); }
         }
 
         public Type ResultType
         {
             get { return typeof(TResult); }
         }
-
 
     }
 }

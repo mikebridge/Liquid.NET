@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Security.Cryptography.X509Certificates;
+
 using Liquid.NET.Constants;
+using Liquid.NET.Utils;
 using NUnit.Framework;
 
 namespace Liquid.NET.Tests.Constants
@@ -18,10 +19,12 @@ namespace Liquid.NET.Tests.Constants
             var num = new NumericValue(123.45m);
 
             // Act
-            var stringliteral = ValueCaster.Cast<NumericValue, StringValue>(num);
+            var stringliteral = ValueCaster.Cast<NumericValue, StringValue>(num)
+                .SuccessValue<StringValue>()
+                .StringVal;
 
             // Assert
-            Assert.That(stringliteral.Value, Is.EqualTo("123.45"));
+            Assert.That(stringliteral, Is.EqualTo("123.45"));
 
         }
 
@@ -32,10 +35,12 @@ namespace Liquid.NET.Tests.Constants
             var num = new NumericValue(123.45m);
 
             // Act
-            var stringliteral = ValueCaster.Cast<NumericValue, StringValue>(num);
+            var stringliteral = ValueCaster.Cast<NumericValue, StringValue>(num)
+                .SuccessValue<StringValue>()
+                .StringVal;
 
             // Assert
-            Assert.That(stringliteral.Value, Is.EqualTo("123.45"));
+            Assert.That(stringliteral, Is.EqualTo("123.45"));
 
         }
 
@@ -48,7 +53,8 @@ namespace Liquid.NET.Tests.Constants
             // Act
             MethodInfo method = typeof(ValueCaster).GetMethod("Cast");
             MethodInfo generic = method.MakeGenericMethod(typeof(NumericValue), typeof(StringValue));
-            var stringLiteral = (StringValue) generic.Invoke(null, new object[] {num});
+            var castResult = (LiquidExpressionResult) generic.Invoke(null, new object[] {num});
+            var stringLiteral = castResult.SuccessValue<StringValue>();
 
             // Assert
             Assert.That(stringLiteral.Value, Is.EqualTo("123.45"));
@@ -62,10 +68,12 @@ namespace Liquid.NET.Tests.Constants
             var num = new ArrayValue(new List<IExpressionConstant>{new NumericValue(123.4m), new NumericValue(5)});
 
             // Act
-            var stringliteral = ValueCaster.Cast<ArrayValue, StringValue>(num);
+            var stringliteral = ValueCaster.Cast<ArrayValue, StringValue>(num)
+                .SuccessValue<StringValue>()
+                .StringVal;
 
             // Assert
-            Assert.That(stringliteral.Value, Is.EqualTo("[ 123.4, 5 ]"));
+            Assert.That(stringliteral, Is.EqualTo("[ 123.4, 5 ]"));
 
         }
 
@@ -76,7 +84,7 @@ namespace Liquid.NET.Tests.Constants
             var original = new ArrayValue(new List<IExpressionConstant>{new NumericValue(123.4m), new NumericValue(5)});
 
             // Act
-            var result = ValueCaster.Cast<ArrayValue, ArrayValue>(original);
+            var result = ValueCaster.Cast<ArrayValue, ArrayValue>(original).SuccessValue<ArrayValue>();
 
             // Assert
             Assert.That(result, Is.EqualTo(original));
@@ -89,7 +97,7 @@ namespace Liquid.NET.Tests.Constants
             var original = new ArrayValue(new List<IExpressionConstant> { new NumericValue(123.4m), new NumericValue(5) });
 
             // Act
-            var result = ValueCaster.Cast<ArrayValue, ExpressionConstant>(original);
+            var result = ValueCaster.Cast<ArrayValue, ExpressionConstant>(original).SuccessValue<ArrayValue>();
 
             // Assert
             Assert.That(result, Is.EqualTo(original));
@@ -105,9 +113,11 @@ namespace Liquid.NET.Tests.Constants
             // Act
             var result = ValueCaster.Cast<StringValue, NumericValue>(original);
 
+            Assert.That(result.IsSuccess, Is.True);
+
             // Assert
             // is this what it should do?
-            Assert.That(result.Value, Is.EqualTo(0));
+            Assert.That(result.SuccessValue<NumericValue>().IntValue, Is.EqualTo(0));
 
         }
 
@@ -130,19 +140,37 @@ namespace Liquid.NET.Tests.Constants
 
         }
 
+//        [Test]
+//        public void It_Should_Cast_A_String_To_An_Array_Of_Strings()
+//        {
+//            // Arrange
+//            var str = new StringValue("Hello");
+//
+//            // Act
+//            var arrayResult = ValueCaster.Cast<StringValue, ArrayValue>(str);
+//            Assert.That(arrayResult.IsError, Is.False);
+//
+//            // Assert
+//            var arrValue = arrayResult.SuccessValue<ArrayValue>().ArrValue;
+//            Assert.That(arrValue.Count, Is.EqualTo(5));
+//            Assert.That(String.Join(",", arrValue.Select(x =>  ((StringValue) x.Value).StringVal)), Is.EqualTo("H,e,l,l,o"));
+//
+//        }
+
         [Test]
-        public void It_Should_Cast_A_String_To_An_Array_Of_Strings()
+        public void It_Should_Cast_A_String_To_An_Array_Of_One_String()
         {
             // Arrange
             var str = new StringValue("Hello");
 
             // Act
-            var array = ValueCaster.Cast<StringValue, ArrayValue>(str);
-            Assert.That(array.HasError, Is.False, array.ErrorMessage);
+            var arrayResult = ValueCaster.Cast<StringValue, ArrayValue>(str);
+            Assert.That(arrayResult.IsError, Is.False);
 
             // Assert
-            Assert.That(array.ArrValue.Count, Is.EqualTo(5));
-            Assert.That(String.Join(",", array.ArrValue.Select(x => ((StringValue) x).StringVal)), Is.EqualTo("H,e,l,l,o"));
+            var arrValue = arrayResult.SuccessValue<ArrayValue>().ArrValue;
+            Assert.That(arrValue.Count, Is.EqualTo(1));
+            Assert.That(arrValue[0].Value, Is.EqualTo("Hello"));
 
         }
 
@@ -162,7 +190,7 @@ namespace Liquid.NET.Tests.Constants
                 });
 
             // Act
-            var result = ValueCaster.Cast<DictionaryValue, ArrayValue>(dictValue);
+            var result = ValueCaster.Cast<DictionaryValue, ArrayValue>(dictValue).SuccessValue<ArrayValue>();
 
             // Assert
 

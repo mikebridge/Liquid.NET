@@ -11,19 +11,21 @@ namespace Liquid.NET.Tests.Expressions
     public class IsEmptyExpressionTests
     {
         [Test]
-        [TestCase("\"\"", true)]
-        [TestCase("\"x\"", false)]
-        [TestCase("x", false)]  // nil != empty
-        [TestCase("0", false)]
-        [TestCase("-1", false)]
-        [TestCase("\"  \"", false)]
-        public void It_Should_Test_That_A_Value_Is_Empty(String val, bool expected)
+        [TestCase("\"\"", "==", true)]
+        [TestCase("\"x\"", "==", false)]
+        [TestCase("x", "==", false)]  // nil != empty
+        [TestCase("0", "==", false)]
+        [TestCase("-1", "==", false)]
+        [TestCase("\"  \"", "==", false)]
+        [TestCase("null", "==", false)]
+        [TestCase("null", "!=", true)]
+        public void It_Should_Test_That_A_Value_Is_Empty(String val, String op, bool expected)
         {
             // Arrange
             var expectedStr = expected ? "EMPTY" : "NOT EMPTY";
 
             // Act
-            var tmpl = @"Result : {% if "+val+" == empty %}EMPTY{% else %}NOT EMPTY{% endif %}";
+            var tmpl = @"Result : {% if "+val+" "+op+" empty %}EMPTY{% else %}NOT EMPTY{% endif %}";
             Console.WriteLine(tmpl);
             var result = RenderingHelper.RenderTemplate(tmpl);
             Console.WriteLine("Value is " + result);

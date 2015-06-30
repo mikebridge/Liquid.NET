@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
+
 using Liquid.NET.Constants;
 using Liquid.NET.Filters;
 using Liquid.NET.Filters.Array;
@@ -27,9 +27,9 @@ namespace Liquid.NET
 
         private readonly Registry<ICustomBlockTagRenderer> _customBlockTagRegistry = new Registry<ICustomBlockTagRenderer>();
 
-        private readonly ConcurrentDictionary<String, int> _counters = new ConcurrentDictionary<string, int>();
+        //private readonly ConcurrentDictionary<String, int> _counters = new ConcurrentDictionary<string, int>();
 
-        private IFileSystem _fileSystem = null;
+        private IFileSystem _fileSystem;
 
         public ITemplateContext Define(String name, IExpressionConstant constant)
         {
@@ -83,13 +83,17 @@ namespace Liquid.NET
         internal IFileSystem FileSystem { get { return _fileSystem; } }
 
         [Obsolete] // this should be transferred to the ScopeStack
-        public IExpressionConstant Reference(String name)
+        public Option<IExpressionConstant> Reference(String name)
         {
             if (_varDictionary.ContainsKey(name))
             {
-                return _varDictionary[name];
+                return new Some<IExpressionConstant>(_varDictionary[name]);
             }
-            return new Undefined(name);
+            else
+            {
+                return new None<IExpressionConstant>();
+            }
+            //return new Undefined(name);
         }
 
         public ITemplateContext WithStandardFilters()

@@ -1,4 +1,5 @@
 ﻿using Liquid.NET.Constants;
+using Liquid.NET.Utils;
 
 namespace Liquid.NET.Filters.Math
 {
@@ -11,9 +12,9 @@ namespace Liquid.NET.Filters.Math
             _operand = operand;
         }
 
-        public override NumericValue Apply(NumericValue liquidExpression)
+        public override LiquidExpressionResult Apply(NumericValue liquidExpression)
         {
-            return new NumericValue(liquidExpression.DecimalValue - _operand.DecimalValue);
+            return LiquidExpressionResult.Success(new NumericValue(liquidExpression.DecimalValue - _operand.DecimalValue));
         }
     }
 }

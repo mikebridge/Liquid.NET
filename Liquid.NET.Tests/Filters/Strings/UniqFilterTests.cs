@@ -43,7 +43,7 @@ namespace Liquid.NET.Tests.Filters.Strings
             var filter = new UniqFilter();
 
             // Act
-            var result = filter.Apply(arrayValue);
+            var result = filter.Apply(arrayValue).SuccessValue<ArrayValue>();
 
             // Assert
             Assert.That(result.Select(ValueCaster.RenderAsString), Is.EquivalentTo(new List<String>{"123", "456", "123", "false"}));

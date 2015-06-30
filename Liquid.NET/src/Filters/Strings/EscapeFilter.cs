@@ -5,6 +5,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using Liquid.NET.Constants;
+using Liquid.NET.Utils;
 
 namespace Liquid.NET.Filters.Strings
 {
@@ -13,9 +14,9 @@ namespace Liquid.NET.Filters.Strings
     /// </summary>
     public class EscapeFilter : FilterExpression<IExpressionConstant, StringValue>
     {
-        public override StringValue ApplyTo(IExpressionConstant liquidExpression)
+        public override LiquidExpressionResult ApplyTo(IExpressionConstant liquidExpression)
         {
-            return StringUtils.Eval(liquidExpression, WebUtility.HtmlEncode);
+            return LiquidExpressionResult.Success(StringUtils.Eval(liquidExpression, WebUtility.HtmlEncode));
         }
     }
 }

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Liquid.NET.Constants;
 using Liquid.NET.Symbols;
+using Liquid.NET.Utils;
 
 namespace Liquid.NET.Expressions
 {
@@ -15,14 +16,14 @@ namespace Liquid.NET.Expressions
             expressionDescriptionVisitor.Visit(this);
         }
 
-        public override IExpressionConstant Eval(SymbolTableStack symbolTableStack, IEnumerable<IExpressionConstant> expressions)
+        public override LiquidExpressionResult Eval(SymbolTableStack symbolTableStack, IEnumerable<Option<IExpressionConstant>> expressions)
         {
-            IList<IExpressionConstant> exprList = expressions.ToList();
+            IList<Option<IExpressionConstant>> exprList = expressions.ToList();
             if (exprList.Count() != 1)
             {
-                return ConstantFactory.CreateError<BooleanValue>("\"Not\" is a unary expression but received " + exprList.Count() + " arguments.");
+                return LiquidExpressionResult.Error("\"Not\" is a unary expression but received " + exprList.Count() + " arguments.");
             }
-            return new BooleanValue(! exprList[0].IsTrue);
+            return LiquidExpressionResult.Success(new BooleanValue(!exprList[0].HasValue || !exprList[0].Value.IsTrue));
         }
     }
 }

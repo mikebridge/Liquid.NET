@@ -4,7 +4,7 @@ using System.Linq;
 
 using Liquid.NET.Constants;
 using Liquid.NET.Filters.Array;
-
+using Liquid.NET.Utils;
 using NUnit.Framework;
 
 namespace Liquid.NET.Tests.Filters.Array
@@ -27,7 +27,7 @@ namespace Liquid.NET.Tests.Filters.Array
             var filter = new SizeFilter();
 
             // Act
-            var result = filter.Apply(arrayValue);
+            var result = filter.Apply(arrayValue).SuccessValue<NumericValue>();
 
             // Assert
             Assert.That(result.Value, Is.EqualTo(4));
@@ -38,11 +38,11 @@ namespace Liquid.NET.Tests.Filters.Array
         public void An_Array_With_No_Value_Should_Have_Zero_Length()
         {
             // Arrange
-            ArrayValue arrayValue = new ArrayValue(null);
+            ArrayValue arrayValue = new ArrayValue(new List<IExpressionConstant>());
             var filter = new SizeFilter();
             
             // Act
-            var result = filter.Apply(arrayValue);
+            var result = filter.Apply(arrayValue).SuccessValue<NumericValue>();
 
             // Assert
             Assert.That(result.Value, Is.EqualTo(0));
@@ -63,7 +63,7 @@ namespace Liquid.NET.Tests.Filters.Array
             SizeFilter sizeFilter = new SizeFilter();
 
             // Act
-            var result = sizeFilter.Apply(dictValue);
+            var result = sizeFilter.Apply(dictValue).SuccessValue<NumericValue>();
 
             // Assert
             Assert.That(result.Value, Is.EqualTo(dict.Keys.Count()));
@@ -74,11 +74,11 @@ namespace Liquid.NET.Tests.Filters.Array
         public void A_Dict_With_No_Value_Should_Have_Zero_Length()
         {
             // Arrange
-            DictionaryValue dictValue = new DictionaryValue(null);
+            DictionaryValue dictValue = new DictionaryValue(new Dictionary<String,Option<IExpressionConstant>>());
             var filter = new SizeFilter();
 
             // Act
-            var result = filter.Apply(dictValue);
+            var result = filter.Apply(dictValue).SuccessValue<NumericValue>();
 
             // Assert
             Assert.That(result.Value, Is.EqualTo(0));
@@ -93,7 +93,7 @@ namespace Liquid.NET.Tests.Filters.Array
             var filter = new SizeFilter();
 
             // Act
-            var result = filter.Apply(strVal);
+            var result = filter.Apply(strVal).SuccessValue<NumericValue>();
 
             // Assert
             Assert.That(result.Value, Is.EqualTo(strVal.StringVal.Count()));
@@ -108,7 +108,7 @@ namespace Liquid.NET.Tests.Filters.Array
             var filter = new SizeFilter();
 
             // Act
-            var result = filter.Apply(strVal);
+            var result = filter.Apply(strVal).SuccessValue<NumericValue>();
 
             // Assert
             Assert.That(result.Value, Is.EqualTo(0));
@@ -119,11 +119,11 @@ namespace Liquid.NET.Tests.Filters.Array
         public void An_Undefined_Value_Should_Have_Zero_Length()
         {
             // Arrange
-            var strVal = new StringValue(null) {IsUndefined = true};
+            var strVal = new None<IExpressionConstant>();
             var filter = new SizeFilter();
 
             // Act
-            var result = filter.Apply(strVal);
+            var result = filter.ApplyToNil().SuccessValue<NumericValue>();
 
             // Assert
             Assert.That(result.Value, Is.EqualTo(0));
@@ -138,7 +138,7 @@ namespace Liquid.NET.Tests.Filters.Array
             var filter = new SizeFilter();
 
             // Act
-            var result = filter.Apply(strVal);
+            var result = filter.Apply(strVal).SuccessValue<NumericValue>();
 
             // Assert
             Assert.That(result.Value, Is.EqualTo(8));

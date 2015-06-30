@@ -38,6 +38,11 @@ namespace Liquid.NET.Constants
             get { return true; }
         }
 
+        public override string LiquidTypeName
+        {
+            get { return "range"; }
+        }
+
         public int Length
         {
             get

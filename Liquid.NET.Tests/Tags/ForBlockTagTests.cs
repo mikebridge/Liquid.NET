@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
+using System.Security.Policy;
 using Liquid.NET.Constants;
-
+using Liquid.NET.Tests.Ruby;
 using NUnit.Framework;
 
 namespace Liquid.NET.Tests.Tags
@@ -197,7 +197,8 @@ namespace Liquid.NET.Tests.Tags
             String result = template.Render(new TemplateContext());
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : <li>H</li><li>e</li><li>l</li><li>l</li><li>o</li>"));
+            //Assert.That(result, Is.EqualTo("Result : <li>H</li><li>e</li><li>l</li><li>l</li><li>o</li>"));
+            Assert.That(result, Is.EqualTo("Result : <li>Hello</li>"));
 
         }
 
@@ -255,6 +256,58 @@ namespace Liquid.NET.Tests.Tags
 
         }
 
+        [Test]
+        public void It_Should_Find_The_Parent_Loop()
+        {
+            
+            TemplateContext ctx = new TemplateContext();
+            //ctx.Define("outer", new ArrayValue(new List<IExpressionConstant> { new NumericValue(1), new NumericValue(1), new NumericValue(1) }));
+            ctx.Define("outer", DictionaryFactory.CreateArrayFromJson("[[1, 1, 1], [1, 1, 1]]"));
+
+            var template = LiquidTemplate.Create("Result :{% for inner in outer %}{% for k in inner %} {{ forloop.parentloop.index }}.{{ forloop.index }}{% endfor %}{% endfor %}");
+
+            // Act
+            String result = template.Render(ctx);
+
+            // Assert
+            Assert.That(result, Is.EqualTo("Result : 1.1 1.2 1.3 2.1 2.2 2.3"));
+
+        }
+
+        [Test]
+        public void It_Can_Use_Reserved_Words()
+        {
+            // Arrange
+            TemplateContext ctx = new TemplateContext();
+            ctx.Define("limit", new NumericValue(3));
+            ctx.Define("offset", new NumericValue(1));
+            var template = LiquidTemplate.Create("Result : {% for for in \"Hello\" limit:limit offset:offset %}<li>{{ for }}</li>{% endfor %}");
+
+            // Act
+            String result = template.Render(new TemplateContext());
+
+            // Assert
+            Assert.That(result, Is.EqualTo("Result : <li>e</li><li>l</li><li>l</li>"));
+
+        }
+
+        [Test]
+        public void It_Should_Print_Loop_Variables_From_A_String()
+        {
+
+            // Arrange
+            String input = @"{%for val in string%}{{forloop.name}}-{{forloop.index}}-{{forloop.length}}-{{forloop.index0}}-{{forloop.rindex}}-{{forloop.rindex0}}-{{forloop.first}}-{{forloop.last}}-{{val}}{%endfor%}";
+            ITemplateContext ctx = new TemplateContext();
+
+            ctx.Define("string", new StringValue("test string"));
+            var template = LiquidTemplate.Create(input);
+
+            // Act
+            String result = template.Render(ctx);
+            Console.WriteLine(result);
+            // Assert
+            Assert.That(result.Trim(), Is.EqualTo(@"val-string-1-1-0-1-0-true-true-test string"));
+        }
 
         /// <summary>
         /// forloop.length      # => length of the entire for loop
@@ -392,13 +445,15 @@ namespace Liquid.NET.Tests.Tags
         }
 
         [Test]
-        [TestCase("\'\'", "")]
-        [TestCase("\'abc\'", "char:a char:b char:c ")]
+        [TestCase("\'\'", "char:")]
+        //[TestCase("\'abc\'", "char:a char:b char:c ")]// these don't work this way
+        [TestCase("\'abc\'", "char:abc")]
+        //[Ignore("Looks like liquid doesn't iterate over a string.")]
         public void It_Should_Iterate_Over_A_Strings_Characters(String str, String expected)
         {
             //[TestCase(@"{% for char in characters %}I WILL NOT BE OUTPUT{% endfor %}", @"{""characters"":""""}", @"")]
             TemplateContext ctx = new TemplateContext();
-            var template = LiquidTemplate.Create(@"{% for char in "+str+" %}char:{{char}} {% endfor %}");
+            var template = LiquidTemplate.Create(@"{% for char in "+str+" %}char:{{char}}{% endfor %}");
             // Act
             String result = template.Render(ctx);
 

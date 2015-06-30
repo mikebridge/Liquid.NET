@@ -7,6 +7,8 @@ using Liquid.NET.Filters;
 using Liquid.NET.Symbols;
 using Liquid.NET.Utils;
 
+//using ExpressionResult = Liquid.NET.Utils.Either<Liquid.NET.LiquidError, Liquid.NET.Utils.Option<Liquid.NET.Constants.IExpressionConstant>>;
+
 namespace Liquid.NET
 {
     // Take an AST Expression and turn it into something
@@ -14,47 +16,70 @@ namespace Liquid.NET
     public static class LiquidExpressionEvaluator
     {
         
-        public static IExpressionConstant Eval(
+        public static LiquidExpressionResult Eval(
             TreeNode<LiquidExpression> expr, 
             SymbolTableStack symbolTableStack)
         {
             // Evaluate the children, depth first
-            var leaves = expr.Children.Select(x => Eval(x, symbolTableStack));
-
-            return Eval(expr.Data, leaves, symbolTableStack);
+            var leaves = expr.Children.Select(x => Eval(x, symbolTableStack)).ToList();
+            if (leaves.Any(x => x.IsError))
+            {
+                return leaves.First(x => x.IsError); // TODO: maybe aggregate tehse
+            }
+            return Eval(expr.Data, leaves.Select(x => x.SuccessResult), symbolTableStack);
         }
 
-        public static IExpressionConstant Eval(
+        public static LiquidExpressionResult Eval(
             LiquidExpressionTree expressiontree, 
             SymbolTableStack symbolTableStack)
         {
             // Evaluate the children, depth first
-            var leaves = expressiontree.ExpressionTree.Children.Select(x => Eval(x, symbolTableStack));
-
+            var leaves = expressiontree.ExpressionTree.Children.Select(x => Eval(x, symbolTableStack)).ToList();
+            if (leaves.Any(x => x.IsError))
+            {
+                return leaves.First(x => x.IsError); // TODO: maybe aggregate tehse
+            }
             // pass the results to the parent
-            return Eval(expressiontree.ExpressionTree.Data, leaves, symbolTableStack);
+            return Eval(expressiontree.ExpressionTree.Data, leaves.Select(x => x.SuccessResult), symbolTableStack);
         }
 
-        public static IExpressionConstant Eval(
-            LiquidExpression expression, 
-            IEnumerable<IExpressionConstant> leaves, 
+        public static LiquidExpressionResult Eval(
+            LiquidExpression expression,
+            IEnumerable<Option<IExpressionConstant>> leaves, 
             SymbolTableStack symbolTableStack)
         {
+            // until the expression is changed to an option type, an expression may be null.  If it's null, it evaluates to null.
+            if (expression.Expression == null)
+            {
+                return null;
+            }
 
-            IExpressionConstant objResult = expression.Expression.Eval(symbolTableStack, leaves);
-           
+
+            LiquidExpressionResult objResult = expression.Expression.Eval(symbolTableStack, leaves);
+            if (objResult.IsError)
+            {
+                return objResult;
+            }
             // Compose a chain of filters, making sure type-casting
             // is done between them.
-
-            var filterExpressionTuples = expression.FilterSymbols.Select(symbol => 
-                new Tuple<FilterSymbol, IFilterExpression>(symbol, InstantiateFilter(symbolTableStack, symbol))).ToList();
-
+            IEnumerable<Tuple<FilterSymbol, IFilterExpression>> filterExpressionTuples;
+            try
+            {
+                filterExpressionTuples = expression.FilterSymbols.Select(symbol =>
+                    new Tuple<FilterSymbol, IFilterExpression>(symbol, InstantiateFilter(symbolTableStack, symbol)))
+                    .ToList();
+            }
+            catch (Exception ex)
+            {
+                return LiquidExpressionResult.Error(ex.Message);
+            }
             var erroringFilternames = filterExpressionTuples.Where(x => x.Item2 == null).Select(x => x.Item1).ToList();
 
             if (erroringFilternames.Any())
             {
                 //throw new Exception("Missing filters..."); 
-                return ConstantFactory.CreateError<StringValue>("Missing filters: "+String.Join(", ", erroringFilternames.Select(x => x.Name)));
+                //return ConstantFactory.CreateError<StringValue>();
+                return LiquidExpressionResult.Error("Missing filters: " + String.Join(", ", erroringFilternames.Select(x => x.Name)));
             }
 
             var filterChain = FilterChain.CreateChain(
@@ -62,7 +87,8 @@ namespace Liquid.NET
                 filterExpressionTuples.Select(x => x.Item2));
 
             // apply the composed function to the object
-            return filterChain(objResult);
+            
+            return filterChain(objResult.SuccessResult);
 
         }
 
@@ -77,8 +103,15 @@ namespace Liquid.NET
                 //return new Tuple<String, IFilterExpression>(filterSymbol.Name, null);
                 return null;
             }
-            var expressionConstants = filterSymbol.Args.Select(x => x.Eval(stack, new List<IExpressionConstant>()));
-            return FilterFactory.InstantiateFilter(filterSymbol.Name, filterType, expressionConstants);
+            var expressionConstants = filterSymbol.Args.Select(x => x.Eval(stack, new List<Option<IExpressionConstant>>())).ToList();
+            // TODO: Handle the error if any
+            //return FilterFactory.InstantiateFilter(filterSymbol.Name, filterType, expressionConstants.Select(x => x.IsSuccess? x.SuccessResult));
+            if (expressionConstants.Any(x => x.IsError))
+            {
+                //return null; // eval-ing a constant failed.
+                throw new Exception(String.Join("," ,expressionConstants.Where(x => x.IsError).Select(x => x.ErrorResult.Message)));
+            }
+            return FilterFactory.InstantiateFilter(filterSymbol.Name, filterType, expressionConstants.Select(x => x.SuccessResult));
         }
 
 

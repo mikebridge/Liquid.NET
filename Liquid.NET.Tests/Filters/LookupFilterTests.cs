@@ -96,8 +96,8 @@ namespace Liquid.NET.Tests.Filters
         }
 
         [Test]
-        [TestCase("size", "4")]
-        public void It_Should_Dereference_Properties_Of_Dictionary(String property, String expected)
+        [TestCase("size")]
+        public void It_Should_Dereference_Properties_Of_Dictionary(String property)
         {
             // Arrange
             TemplateContext ctx = new TemplateContext();
@@ -109,7 +109,7 @@ namespace Liquid.NET.Tests.Filters
             var result = RenderingHelper.RenderTemplate(tmpl, ctx);
 
             // Assert
-            Assert.That(result, Is.EqualTo(expected));
+            Assert.That(result, Is.EqualTo(dictValue.DictValue.Count.ToString()));
         }
 
         public ArrayValue CreateArrayOfDicts()

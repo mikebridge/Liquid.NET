@@ -1,5 +1,6 @@
 ﻿using System;
 using Liquid.NET.Constants;
+using Liquid.NET.Utils;
 
 namespace Liquid.NET.Filters.Math
 {
@@ -9,15 +10,15 @@ namespace Liquid.NET.Filters.Math
 
         public RoundFilter(NumericValue val)
         {
-            if (val != null && !val.IsUndefined && val.IntValue > 0)
+            if (val != null && /*!val.IsUndefined && */ val.IntValue > 0)
             {
                 decimalPlaces = val.IntValue;
             }
         }
 
-        public override NumericValue Apply(NumericValue val)
+        public override LiquidExpressionResult Apply(NumericValue val)
         {
-            return new NumericValue(System.Math.Round(val.DecimalValue, decimalPlaces, MidpointRounding.AwayFromZero));
+            return LiquidExpressionResult.Success(new NumericValue(System.Math.Round(val.DecimalValue, decimalPlaces, MidpointRounding.AwayFromZero)));
         }
     }
 }

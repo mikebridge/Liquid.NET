@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Liquid.NET.Constants;
 using Liquid.NET.Symbols;
+using Liquid.NET.Utils;
 
 namespace Liquid.NET.Expressions
 {
@@ -9,15 +10,15 @@ namespace Liquid.NET.Expressions
     {
         void Accept(IExpressionDescriptionVisitor expressionDescriptionVisitor);
 
-        IExpressionConstant Eval(SymbolTableStack symbolTableStack, IEnumerable<IExpressionConstant> childresults);
+        LiquidExpressionResult Eval(SymbolTableStack symbolTableStack, IEnumerable<Option<IExpressionConstant>> childresults);
 
-        bool HasError { get; }
-
-        String ErrorMessage { get; set; }
-
-        bool HasWarning { get; }
-
-        String WarningMessage { get; set; }
+//        bool HasError { get; }
+//
+//        String ErrorMessage { get; set; }
+//
+//        bool HasWarning { get; }
+//
+//        String WarningMessage { get; set; }
 
     }
 }

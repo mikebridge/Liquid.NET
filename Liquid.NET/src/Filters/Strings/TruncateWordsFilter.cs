@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Liquid.NET.Constants;
+using Liquid.NET.Utils;
 
 namespace Liquid.NET.Filters.Strings
 {
@@ -15,11 +16,11 @@ namespace Liquid.NET.Filters.Strings
         public TruncateWordsFilter(NumericValue length, StringValue truncateString)
         {
             _length = length;
-            _truncateString = truncateString.IsUndefined ? new StringValue("...") : truncateString;
+            _truncateString = truncateString == null || truncateString.Value == null ? new StringValue("...") : truncateString;
         }
-        public override StringValue ApplyTo(StringValue liquidStringExpression)
+        public override LiquidExpressionResult ApplyTo(StringValue liquidStringExpression)
         {
-            return StringUtils.Eval(liquidStringExpression, TruncateWords);
+            return LiquidExpressionResult.Success(StringUtils.Eval(liquidStringExpression, TruncateWords));
             
         }
 

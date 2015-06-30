@@ -11,17 +11,35 @@ namespace Liquid.NET.Tests.Ruby
 {
     public static class DictionaryFactory
     {
-        public static IList<Tuple<String, IExpressionConstant>> CreateFromJson(String json)
+        public static IExpressionConstant CreateArrayFromJson(String json)
         {
+            var result = JsonConvert.DeserializeObject<JArray>(json);
+            //var result = JsonConvert.DeserializeObject(json);
+            //return TransformRoots((dynamic) result);
+            return Transform(result);
+        }
+
+        public static IList<Tuple<String, IExpressionConstant>> CreateStringMapFromJson(String json)
+        {
+            if (String.IsNullOrEmpty(json))
+            {
+                return new List<Tuple<String, IExpressionConstant>>();
+            }
             var result = JsonConvert.DeserializeObject<JObject>(json);
+            //var result = JsonConvert.DeserializeObject(json);
+            //return TransformRoots((dynamic) result);
             return TransformRoots(result);
         }
 
+//        public static IList<Tuple<String, IExpressionConstant>> TransformRoots(JArray obj)
+//        {
+//            return Transform(obj);
+//            //return obj.Properties().Select(p => new Tuple<String, IExpressionConstant>(p.Name, Transform((dynamic)p.Value))).ToList();
+//        }
+
         public static IList<Tuple<String,IExpressionConstant>> TransformRoots(JObject obj)
         {
-
-            return obj.Properties().Select(p => new Tuple<String, IExpressionConstant>(p.Name, Transform((dynamic)p.Value))).ToList();
-            
+            return obj.Properties().Select(p => new Tuple<String, IExpressionConstant>(p.Name, Transform((dynamic)p.Value))).ToList();            
         }
 
         public static IExpressionConstant Transform(Object obj)
@@ -65,7 +83,8 @@ namespace Liquid.NET.Tests.Ruby
             }
             else if (obj.Type.Equals(JTokenType.Null))
             {
-                throw new ApplicationException("NULL Not implemented yet");
+                //throw new ApplicationException("NULL Not implemented yet");
+                return null; // TODO: Change this to an option
             }
             else
             {

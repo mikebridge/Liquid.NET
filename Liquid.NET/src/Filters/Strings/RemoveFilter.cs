@@ -1,5 +1,6 @@
 ﻿using System;
 using Liquid.NET.Constants;
+using Liquid.NET.Utils;
 
 namespace Liquid.NET.Filters.Strings
 {
@@ -12,17 +13,16 @@ namespace Liquid.NET.Filters.Strings
             _replacement = replacement;
         }
         // TODO: use StringUtils.Eval?
-        public override StringValue Apply(StringValue liquidStringExpression)
+        public override LiquidExpressionResult Apply(StringValue liquidStringExpression)
         {
             // TODO: Return errors
             Console.WriteLine("APPLYING REMOVE " + _replacement.Value + "TO " + liquidStringExpression.Value);
             if (_replacement == null || _replacement.Value == null)
             {
-                var result = new StringValue(null) {ErrorMessage = "Please specify a replacement string."};
-                return result;
+                return LiquidExpressionResult.Error("Please specify a replacement string.");
             }
 
-            return Remove((String)liquidStringExpression.Value, _replacement);
+            return LiquidExpressionResult.Success(Remove((String)liquidStringExpression.Value, _replacement));
 
         }
 

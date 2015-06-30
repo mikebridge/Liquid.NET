@@ -40,8 +40,9 @@ BOOLEAN :				'true' | 'false' ;
 
 ISEMPTY:				'empty?'; 
 EMPTY :					'empty';
-NULL :					'null'|'nil'; // Liquid uses both?
+NULL :					'null'|'nil'; // Liquid uses both? (Note: this is also hardcoded in LiquidASTGenerator)
 BLANK :					'blank';
+ISBLANK:				'isblank?'; 
 
 STRING :				'"' STRDOUBLE '"' | '\'' STRSINGLE '\'' ;  
 fragment STRDOUBLE :	(ESC | ~["\\])* ;
@@ -50,7 +51,9 @@ fragment ESC :			'\\' (["\\/bfnrt] | UNICODE) ;
 fragment UNICODE :		'u' HEX HEX HEX HEX ;
 fragment HEX :			[0-9a-fA-F] ;
 
-LABEL :					ALPHA (ALPHA|DIGIT|UNDERSCORE)* ;
+VARIABLENAME:			LABEL;
+
+fragment LABEL :					ALPHA (ALPHA|DIGIT|UNDERSCORE)* ;
 
 fragment UNDERSCORE:	'_' ;
 fragment ALPHA:			[a-zA-Z] ;
@@ -92,13 +95,21 @@ PERIOD1:				PERIOD -> type(PERIOD) ;
 
 NULL1:					NULL -> type(NULL);
 
+EMPTY1:					EMPTY -> type(EMPTY);
+ISEMPTY1:				ISEMPTY -> type(ISEMPTY);
+
+BLANK1:					BLANK -> type(BLANK);
+ISBLANK1:				ISBLANK -> type(ISBLANK);
+
 NUMBER1:				NUMBER -> type(NUMBER);
 
 BOOLEAN1:				BOOLEAN -> type(BOOLEAN);
 
 STRING1:				STRING -> type(STRING);
 
-LABEL1:					LABEL -> type(LABEL);
+//LABEL1:					LABEL -> type(LABEL);
+VARIABLENAME1:			LABEL -> type(VARIABLENAME);
+//VARIABLENAME:			LABEL;
 
 ARRAYSTART1 :			'[' -> pushMode(INARRAYINDEX), type(ARRAYSTART) ;
 ARRAYEND1 :				']' -> type(ARRAYEND);
@@ -117,7 +128,8 @@ ARRAYEND2a :				{arraybracketcount == 0; }? ARRAYEND {System.Console.WriteLine("
 ARRAYEND2b :				{arraybracketcount > 0; }? ARRAYEND  { arraybracketcount--; System.Console.WriteLine("* closed nested ']' " +arraybracketcount); } -> type(ARRAYEND);
 ARRAYINT:				'0' | MINUS ? [1-9] [0-9]* ;
 STRING3:				STRING {System.Console.WriteLine("** Lexing a string " +arraybracketcount);}  -> type(STRING);
-LABEL3:					LABEL -> type(LABEL) ;
+//LABEL3:					LABEL -> type(LABEL) ;
+VARIABLENAME3:			LABEL -> type(VARIABLENAME);
 MINUS3:					MINUS -> type(MINUS) ;
 
 // ========= LIQUID TAGS ============
@@ -157,6 +169,10 @@ ENDMACRO_TAG :			'endmacro' ;
 ENDLABEL:				END LABEL;
 
 NULL2:					NULL -> type(NULL);
+EMPTY2:					EMPTY -> type(EMPTY);
+ISEMPTY2:				ISEMPTY -> type(ISEMPTY);
+BLANK2:					BLANK -> type(BLANK);
+ISBLANK2:				ISBLANK -> type(ISBLANK);
 
 COLON1 :				':' -> type(COLON);
 COMMA1 :				',' -> type(COMMA);
@@ -188,10 +204,19 @@ FILTERPIPE2 :			FILTERPIPE -> type(FILTERPIPE) ;
 COLON2 :				COLON -> type(COLON);
 PERIOD2 :				PERIOD -> type(PERIOD) ;
 STRING2:				STRING -> type(STRING);
-LABEL2:					LABEL -> type(LABEL);
+
+VARIABLENAME2:			(LABEL | KEYWORDS) -> type(VARIABLENAME);
+//LABEL2:					LABEL -> type(LABEL);
+
 GENERATORRANGE1:		GENERATORRANGE -> type(GENERATORRANGE) ;
 
 END:					'end' ;
+
+KEYWORDS: INCLUDE_TAG | WITH | IF_TAG | UNLESS_TAG | CASE_TAG | WHEN_TAG | ENDCASE_TAG | ELSIF_TAG | ELSE_TAG |
+	ENDIF_TAG | ENDUNLESS_TAG | FOR_TAG | FOR_IN | BREAK_TAG | CONTINUE_TAG | PARAM_REVERSED | PARAM_OFFSET | PARAM_LIMIT |
+	ENDFOR_TAG | CYCLE_TAG | ASSIGN_TAG | CAPTURE_TAG | ENDCAPTURE_TAG | INCREMENT_TAG | DECREMENT_TAG | MACRO_TAG | ENDMACRO_TAG | 
+	END | NOT | CONTAINS | AND;
+
 
 WS2 :					[ \t\r\n]+ -> skip ;
 

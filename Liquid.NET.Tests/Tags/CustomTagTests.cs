@@ -5,7 +5,7 @@ using System.Linq;
 using Liquid.NET.Constants;
 using Liquid.NET.Symbols;
 using Liquid.NET.Tags.Custom;
-
+using Liquid.NET.Utils;
 using NUnit.Framework;
 
 namespace Liquid.NET.Tests.Tags
@@ -45,9 +45,9 @@ namespace Liquid.NET.Tests.Tags
                 get { return new List<string>(); }
             }
 
-            public StringValue Render(SymbolTableStack symbolTableStack, IList<IExpressionConstant> args)
+            public StringValue Render(SymbolTableStack symbolTableStack, IList<Option<IExpressionConstant>> args)
             {
-                var argsAsString = String.Join(", ", args.Select(x => x.GetType().Name+":"+ValueCaster.RenderAsString(x)));
+                var argsAsString = String.Join(", ", args.Select(x => x.Value.GetType().Name+":"+ValueCaster.RenderAsString(x)));
                 return new StringValue("I heard " + argsAsString);
             }
         }

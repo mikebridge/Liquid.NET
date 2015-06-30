@@ -69,6 +69,7 @@
     <Compile Include="src\Constants\ConstantFactory.cs" />
     <Compile Include="src\Constants\DateValue.cs" />
     <Compile Include="src\Constants\DictionaryValue.cs" />
+    <Compile Include="src\Constants\EasyOptionComparer.cs" />
     <Compile Include="src\Constants\EasyValueComparer.cs" />
     <Compile Include="src\Constants\EmptyChecker.cs" />
     <Compile Include="src\Constants\ExpressionConstant.cs" />
@@ -76,15 +77,15 @@
     <Compile Include="src\Constants\GeneratorValue.cs" />
     <Compile Include="src\Constants\IExpressionConstant.cs" />
     <Compile Include="src\Constants\IIndexable.cs" />
-    <Compile Include="src\Constants\KeyValueArg.cs" />
+    <Compile Include="src\Constants\NilValue.cs" />
     <Compile Include="src\Constants\NumericValue.cs" />
     <Compile Include="src\Constants\FilterArgumentAttribute.cs" />
-    <Compile Include="src\Constants\ObjectValue.cs" />
     <Compile Include="src\Constants\Reflector.cs" />
     <Compile Include="src\Constants\StringValue.cs" />
-    <Compile Include="src\Constants\Undefined.cs" />
     <Compile Include="src\Constants\ValueCaster.cs" />
     <Compile Include="src\Expressions\ContainsExpression.cs" />
+    <Compile Include="src\Expressions\FalseExpression.cs" />
+    <Compile Include="src\Expressions\IsBlankExpression.cs" />
     <Compile Include="src\Expressions\NotEqualsExpression.cs" />
     <Compile Include="src\Expressions\IsNullExpression.cs" />
     <Compile Include="src\Expressions\IsEmptyExpression.cs" />
@@ -199,6 +200,7 @@
     <Compile Include="src\Tags\CycleTag.cs" />
     <Compile Include="src\Tags\DecrementTag.cs" />
     <Compile Include="src\Tags\ForBlockTag.cs" />
+    <Compile Include="src\Tags\IfChangedBlockTag.cs" />
     <Compile Include="src\Tags\IfThenElseBlockTag.cs" />
     <Compile Include="src\Tags\IncludeTag.cs" />
     <Compile Include="src\Tags\IncrementTag.cs" />
@@ -206,7 +208,10 @@
     <Compile Include="src\Tags\RawBlockTag.cs" />
     <Compile Include="src\TemplateContext.cs" />
     <Compile Include="src\Symbols\IASTVisitor.cs" />
+    <Compile Include="src\Utils\Either.cs" />
+    <Compile Include="src\Utils\LiquidExpressionResult.cs" />
     <Compile Include="src\Utils\LiquidVersionAttribute.cs" />
+    <Compile Include="src\Utils\Option.cs" />
     <Compile Include="src\Utils\Registry.cs" />
     <Compile Include="src\Utils\StrFTime.cs" />
     <Compile Include="src\Utils\TreeNode.cs" />

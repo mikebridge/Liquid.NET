@@ -3,6 +3,7 @@ using System.Globalization;
 using Liquid.NET.Constants;
 using Liquid.NET.Symbols;
 using Liquid.NET.Tests.Helpers;
+using Liquid.NET.Utils;
 using NUnit.Framework;
 
 namespace Liquid.NET.Tests.Symbols
@@ -24,7 +25,7 @@ namespace Liquid.NET.Tests.Symbols
 
             // Assert
             Assert.That(result, Is.Not.Null);
-            Assert.That(result.Value, Is.EqualTo(str));
+            Assert.That(result.SuccessValue<StringValue>().StringVal, Is.EqualTo(str));
 
         }
 
@@ -39,7 +40,8 @@ namespace Liquid.NET.Tests.Symbols
 
             // Assert
             Assert.That(result, Is.Not.Null);
-            Assert.That(result, Is.TypeOf<Undefined>());
+            Assert.That(result.SuccessResult.HasValue, Is.False);
+            //Assert.That(result, Is.TypeOf<Undefined>());
 
         }
 
@@ -57,7 +59,7 @@ namespace Liquid.NET.Tests.Symbols
             var result = stack.Reference("hello");
 
             // Assert
-            Assert.That(result.Value, Is.EqualTo("HI"));
+            Assert.That(result.SuccessValue<StringValue>().StringVal, Is.EqualTo("HI"));
 
         }
 
@@ -78,7 +80,7 @@ namespace Liquid.NET.Tests.Symbols
             var result = stack.Reference(varname);
 
             // Assert
-            Assert.That(result.Value, Is.EqualTo("HELLO"));
+            Assert.That(result.SuccessValue<StringValue>().StringVal, Is.EqualTo("HELLO"));
 
         }
 
@@ -95,7 +97,7 @@ namespace Liquid.NET.Tests.Symbols
             var result = stack.Reference("hello");
 
             // Assert
-            Assert.That(result.Value, Is.EqualTo("HELLO"));
+            Assert.That(result.SuccessValue<StringValue>().StringVal, Is.EqualTo("HELLO"));
 
         }
 

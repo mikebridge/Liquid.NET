@@ -31,7 +31,7 @@ namespace Liquid.NET.Tests.Filters.Strings
 
         [Test]
         [TestCase("0", "[ \"a string\" ]")]
-        [TestCase("1,3", "[ 123, 456, \"false\" ]")]
+        [TestCase("1,3", "[ 123, 456, false ]")]
         [TestCase("-3,2", "[ 123, 456 ]")]
         public void It_Should_Slice_An_Array(String slice, string expected)
         {

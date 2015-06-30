@@ -23,7 +23,7 @@ namespace Liquid.NET.Tests.Filters
             var inputObj = new StringValue("123");
 
             // Act
-            var result = castFilter.Apply(inputObj);
+            var result = castFilter.Apply(inputObj).SuccessValue<NumericValue>();
             //result.Eval(new SymbolTableStack(new TemplateContext()), new List<IExpressionConstant>());
 
             // Assert

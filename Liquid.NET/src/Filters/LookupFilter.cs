@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Liquid.NET.Constants;
+using Liquid.NET.Utils;
 
 namespace Liquid.NET.Filters
 {
@@ -19,21 +20,24 @@ namespace Liquid.NET.Filters
 //            //Console.WriteLine("APPLYING LOOKUP ");
 //            return ApplyTo((dynamic) liquidExpression);
 //        }
-        public override IExpressionConstant ApplyTo(IExpressionConstant liquidExpression)
+        public override LiquidExpressionResult ApplyTo(IExpressionConstant liquidExpression)
         {
             //return base.ApplyTo(liquidExpression);
             //Console.WriteLine("  ()() TRIED TO DEREFERENCE  " + _propertyName.Value.ToString());
-            liquidExpression.ErrorMessage = "Unable to dereference " + liquidExpression.Value + " with " + _propertyName.Value + ": expected Array or Dictionary.";
-            return liquidExpression;
+            return LiquidExpressionResult.Error("Unable to dereference " + liquidExpression.Value + " with " + _propertyName.Value + ": expected Array or Dictionary.");
+
+
+
+            //return liquidExpression;
 
             //return new Undefined(_propertyName.Value.ToString());
         }
 
 
-        public override IExpressionConstant ApplyTo(ArrayValue arrayValue)
+        public override LiquidExpressionResult ApplyTo(ArrayValue arrayValue)
         {
 
-            String propertyNameString = ValueCaster.RenderAsString(_propertyName);
+            String propertyNameString = ValueCaster.RenderAsString((IExpressionConstant)_propertyName);
             int index;
             if (propertyNameString.ToLower().Equals("first"))
             {
@@ -45,47 +49,47 @@ namespace Liquid.NET.Filters
             }
             else if (propertyNameString.ToLower().Equals("size"))
             {
-                return new NumericValue(arrayValue.ArrValue.Count);
+                return LiquidExpressionResult.Success(new NumericValue(arrayValue.ArrValue.Count));
             }
             else
             {
-                var maybeIndex = ValueCaster.Cast<IExpressionConstant, NumericValue>(_propertyName);
-                if (!maybeIndex.IsUndefined)
+                var maybeIndexResult = ValueCaster.Cast<IExpressionConstant, NumericValue>(_propertyName);
+                if (maybeIndexResult.IsError || !maybeIndexResult.SuccessResult.HasValue)
                 {
-                    index = maybeIndex.IntValue;
+                    return LiquidExpressionResult.Error("invalid array index: " + propertyNameString);
                 }
                 else
-                {                    
-                    return ConstantFactory.CreateUndefined<StringValue>("invalid array index: " + propertyNameString);
+                {
+                    index = maybeIndexResult.SuccessValue<NumericValue>().IntValue;
                 }
             }
 
             if (arrayValue.ArrValue.Count == 0)
             {
-                return ConstantFactory.CreateUndefined<StringValue>("array is empty: " + propertyNameString);
+                //return LiquidExpressionResult.Error("array is empty: " + propertyNameString);
+                return LiquidExpressionResult.Success(new None<IExpressionConstant>()); // not an error in Ruby liquid.
             }
             var result = arrayValue.ValueAt(index); 
-            return result;
+            return LiquidExpressionResult.Success(result);
         }
 
-        public override IExpressionConstant ApplyTo(DictionaryValue dictionaryValue)
+        public override LiquidExpressionResult ApplyTo(DictionaryValue dictionaryValue)
         {
-            
-            String propertyNameString = ValueCaster.RenderAsString(_propertyName);
+
+            String propertyNameString = ValueCaster.RenderAsString((IExpressionConstant)_propertyName);
             if (propertyNameString.ToLower().Equals("size"))
             {
-                return new NumericValue(dictionaryValue.DictValue.Keys.Count());
+                return LiquidExpressionResult.Success(new NumericValue(dictionaryValue.DictValue.Keys.Count()));
             }
 
-            var result = dictionaryValue.ValueAt(_propertyName.Value.ToString());
-            return result;
+            return LiquidExpressionResult.Success(dictionaryValue.ValueAt(_propertyName.Value.ToString()));
         }
 
         // TODO: this is inefficient and ugly and duplicates much of ArrayValue
-        public override IExpressionConstant ApplyTo(StringValue strValue)
+        public override LiquidExpressionResult ApplyTo(StringValue strValue)
         {
-            var strValues = strValue.StringVal.ToCharArray().Select(ch => (IExpressionConstant) new StringValue(ch.ToString())).ToList();
-            String propertyNameString = ValueCaster.RenderAsString(_propertyName);
+            var strValues = strValue.StringVal.ToCharArray().Select(ch => new StringValue(ch.ToString()).ToOption()).ToList();
+            String propertyNameString = ValueCaster.RenderAsString((IExpressionConstant)_propertyName);
             int index;
             if (propertyNameString.ToLower().Equals("first"))
             {
@@ -97,26 +101,27 @@ namespace Liquid.NET.Filters
             }
             else if (propertyNameString.ToLower().Equals("size"))
             {
-                return new NumericValue(strValues.Count);
+                return LiquidExpressionResult.Success(new NumericValue(strValues.Count));
             }
             else
             {
-                var maybeIndex = ValueCaster.Cast<IExpressionConstant, NumericValue>(_propertyName);
-                if (!maybeIndex.IsUndefined)
+                var maybeIndexResult = ValueCaster.Cast<IExpressionConstant, NumericValue>(_propertyName);
+                if (maybeIndexResult.IsError || !maybeIndexResult.SuccessResult.HasValue)
                 {
-                    index = maybeIndex.IntValue;
+                    return LiquidExpressionResult.Error("invalid array index: " + propertyNameString);
                 }
                 else
                 {
-                    return ConstantFactory.CreateUndefined<StringValue>("invalid array index: " + propertyNameString);
+                    index = maybeIndexResult.SuccessValue<NumericValue>().IntValue;
                 }
             }
 
             if (strValues.Count == 0)
             {
-                return ConstantFactory.CreateUndefined<StringValue>("Empty string: " + propertyNameString);
+                //return LiquidExpressionResult.Error("Empty string: " + propertyNameString);
+                return LiquidExpressionResult.Success(new None<IExpressionConstant>()); // not an error in Ruby liquid.
             }
-            return ArrayIndexer.ValueAt(strValues, index);
+            return LiquidExpressionResult.Success(ArrayIndexer.ValueAt(strValues, index));
 
         }
 

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Liquid.NET.Constants;
+using Liquid.NET.Utils;
 
 namespace Liquid.NET.Filters.Strings
 {
@@ -13,10 +14,10 @@ namespace Liquid.NET.Filters.Strings
     public class HandleizeFilter : FilterExpression<IExpressionConstant, StringValue>
     {
 
-        public override StringValue ApplyTo(IExpressionConstant liquidExpression)
+        public override LiquidExpressionResult ApplyTo(IExpressionConstant liquidExpression)
         {
             var strArray = ValueCaster.RenderAsString(liquidExpression).Split();
-            return StringUtils.Eval(liquidExpression, x => Slug.Create(true, strArray));
+            return LiquidExpressionResult.Success(StringUtils.Eval(liquidExpression, x => Slug.Create(true, strArray)));
         }
 
 

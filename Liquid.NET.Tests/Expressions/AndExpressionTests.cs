@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Liquid.NET.Constants;
 using Liquid.NET.Expressions;
 using Liquid.NET.Symbols;
+using Liquid.NET.Utils;
 using NUnit.Framework;
 
 namespace Liquid.NET.Tests.Expressions
@@ -26,14 +27,14 @@ namespace Liquid.NET.Tests.Expressions
             var expr = new AndExpression();
 
             // Act
-            var result = expr.Eval(SymbolTableStackFactory.CreateSymbolTableStack(new TemplateContext()), new List<IExpressionConstant>
+            var result = expr.Eval(SymbolTableStackFactory.CreateSymbolTableStack(new TemplateContext()), new List<Option<IExpressionConstant>>
             {
                 new BooleanValue(expr1),
                 new BooleanValue(expr2)
-            });
+            }).SuccessValue<BooleanValue>().BoolValue;
 
             // Assert
-            Assert.That(result.Value, Is.EqualTo(expected));
+            Assert.That(result, Is.EqualTo(expected));
         }
     }
 }

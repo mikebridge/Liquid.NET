@@ -4,6 +4,7 @@ using System.Linq;
 
 using Liquid.NET.Constants;
 using Liquid.NET.Tags;
+using Liquid.NET.Utils;
 
 namespace Liquid.NET.Symbols
 {
@@ -24,9 +25,15 @@ namespace Liquid.NET.Symbols
             return last;
         }
 
-        public IExpressionConstant Reference(String reference)
+        /// <summary>
+        /// To ignore the current stack, set skiplevels=1.
+        /// </summary>
+        /// <param name="reference"></param>
+        /// <param name="skiplevels"></param>
+        /// <returns></returns>
+        public LiquidExpressionResult Reference(String reference, int skiplevels = 0)
         {
-            for (int i = _symbolTables.Count()-1; i >= 0; i--)
+            for (int i = _symbolTables.Count() - 1 - skiplevels; i >= 0; i--)
             {
                 Console.WriteLine("Looking up" + reference);
                 if (_symbolTables[i].HasVariableReference(reference))
@@ -34,12 +41,11 @@ namespace Liquid.NET.Symbols
                     return _symbolTables[i].ReferenceVariable(reference);
                 }
             }
-            
-            return new Undefined(reference); 
+            return LiquidExpressionResult.Success(new None<IExpressionConstant>());
         }
 
         public void FindVariable(String reference, 
-            Action<SymbolTable, IExpressionConstant> ifFoundAction, 
+            Action<SymbolTable, Option<IExpressionConstant>> ifFoundAction, 
             Action ifNotFoundAction)
         {
 
@@ -48,7 +54,15 @@ namespace Liquid.NET.Symbols
                 Console.WriteLine("Looking up" + reference);
                 if (_symbolTables[i].HasVariableReference(reference))
                 {
-                    ifFoundAction(_symbolTables[i], _symbolTables[i].ReferenceVariable(reference));
+                    var liquidExpressionResult = _symbolTables[i].ReferenceVariable(reference);
+                    if (liquidExpressionResult.IsError)
+                    {
+                        ifNotFoundAction();
+                    }
+                    else
+                    {
+                        ifFoundAction(_symbolTables[i], liquidExpressionResult.SuccessResult);
+                    }
                     return;
                 }
             }

@@ -262,6 +262,9 @@ namespace Liquid.NET
             _astNodeStack.Pop();
         }
 
+        //public override void Enter
+
+
         #region For Tag
 
         public override void EnterFor_tag(LiquidParser.For_tagContext context)

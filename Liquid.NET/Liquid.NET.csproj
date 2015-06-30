@@ -206,6 +206,7 @@
     <Compile Include="src\Tags\IncrementTag.cs" />
     <Compile Include="src\Tags\MacroBlockTag.cs" />
     <Compile Include="src\Tags\RawBlockTag.cs" />
+    <Compile Include="src\Tags\TableRowBlockTag.cs" />
     <Compile Include="src\TemplateContext.cs" />
     <Compile Include="src\Symbols\IASTVisitor.cs" />
     <Compile Include="src\Utils\Either.cs" />

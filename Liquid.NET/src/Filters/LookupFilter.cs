@@ -25,6 +25,9 @@ namespace Liquid.NET.Filters
             //return base.ApplyTo(liquidExpression);
             //Console.WriteLine("  ()() TRIED TO DEREFERENCE  " + _propertyName.Value.ToString());
             return LiquidExpressionResult.Error("Unable to dereference " + liquidExpression.Value + " with " + _propertyName.Value + ": expected Array or Dictionary.");
+
+
+
             //return liquidExpression;
 
             //return new Undefined(_propertyName.Value.ToString());

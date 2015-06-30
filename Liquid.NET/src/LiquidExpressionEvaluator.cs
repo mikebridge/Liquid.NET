@@ -62,10 +62,17 @@ namespace Liquid.NET
             }
             // Compose a chain of filters, making sure type-casting
             // is done between them.
-
-            var filterExpressionTuples = expression.FilterSymbols.Select(symbol => 
-                new Tuple<FilterSymbol, IFilterExpression>(symbol, InstantiateFilter(symbolTableStack, symbol))).ToList();
-
+            IEnumerable<Tuple<FilterSymbol, IFilterExpression>> filterExpressionTuples;
+            try
+            {
+                filterExpressionTuples = expression.FilterSymbols.Select(symbol =>
+                    new Tuple<FilterSymbol, IFilterExpression>(symbol, InstantiateFilter(symbolTableStack, symbol)))
+                    .ToList();
+            }
+            catch (Exception ex)
+            {
+                return LiquidExpressionResult.Error(ex.Message);
+            }
             var erroringFilternames = filterExpressionTuples.Where(x => x.Item2 == null).Select(x => x.Item1).ToList();
 
             if (erroringFilternames.Any())
@@ -96,8 +103,14 @@ namespace Liquid.NET
                 //return new Tuple<String, IFilterExpression>(filterSymbol.Name, null);
                 return null;
             }
-            var expressionConstants = filterSymbol.Args.Select(x => x.Eval(stack, new List<Option<IExpressionConstant>>()));
+            var expressionConstants = filterSymbol.Args.Select(x => x.Eval(stack, new List<Option<IExpressionConstant>>())).ToList();
             // TODO: Handle the error if any
+            //return FilterFactory.InstantiateFilter(filterSymbol.Name, filterType, expressionConstants.Select(x => x.IsSuccess? x.SuccessResult));
+            if (expressionConstants.Any(x => x.IsError))
+            {
+                //return null; // eval-ing a constant failed.
+                throw new Exception(String.Join("," ,expressionConstants.Where(x => x.IsError).Select(x => x.ErrorResult.Message)));
+            }
             return FilterFactory.InstantiateFilter(filterSymbol.Name, filterType, expressionConstants.Select(x => x.SuccessResult));
         }
 

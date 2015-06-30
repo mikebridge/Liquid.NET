@@ -273,6 +273,24 @@ namespace Liquid.NET.Tests.Tags
 
         }
 
+        [Test]
+        public void It_Can_Use_Reserved_Words()
+        {
+            // Arrange
+            TemplateContext ctx = new TemplateContext();
+            ctx.Define("limit", new NumericValue(3));
+            ctx.Define("offset", new NumericValue(1));
+            var template = LiquidTemplate.Create("Result : {% for for in \"Hello\" limit:limit offset:offset %}<li>{{ for }}</li>{% endfor %}");
+
+            // Act
+            String result = template.Render(new TemplateContext());
+
+            // Assert
+            Assert.That(result, Is.EqualTo("Result : <li>e</li><li>l</li><li>l</li>"));
+
+        }
+
+
 
         /// <summary>
         /// forloop.length      # => length of the entire for loop

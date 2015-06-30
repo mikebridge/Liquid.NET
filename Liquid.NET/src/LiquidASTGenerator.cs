@@ -188,7 +188,7 @@ namespace Liquid.NET
         public override void EnterInclude_param_pair(LiquidParser.Include_param_pairContext context)
         {
             base.EnterInclude_param_pair(context);
-            String label = context.LABEL().GetText();
+            String label = context.VARIABLENAME().GetText();
             StartNewLiquidExpressionTree(result =>
             {
                 Console.WriteLine(" ---> Setting INCLUDE for "+label + " = " + result );
@@ -209,7 +209,7 @@ namespace Liquid.NET
         public override void EnterAssign_tag(LiquidParser.Assign_tagContext context)
         {
             base.EnterAssign_tag(context);
-            var label = context.LABEL();
+            var label = context.VARIABLENAME();
             if (label == null)
             {
                 // ignore the assignment
@@ -249,7 +249,7 @@ namespace Liquid.NET
             base.EnterCapture_tag(contentContext);
             var captureBlock = new CaptureBlockTag()
             {
-                VarName = contentContext.LABEL().GetText()
+                VarName = contentContext.VARIABLENAME().GetText()
             };
             var newNode = CreateTreeNode<IASTNode>(captureBlock);
             CurrentAstNode.AddChild(newNode);
@@ -271,7 +271,7 @@ namespace Liquid.NET
 
             var forBlock = new ForBlockTag
             {
-                LocalVariable = context.for_label().LABEL().ToString()
+                LocalVariable = context.for_label().VARIABLENAME().ToString()
             };
             AddNodeToAST(forBlock);
 
@@ -774,7 +774,7 @@ namespace Liquid.NET
             base.EnterIncrement_tag(incrementContext);
             var incrementTag = new IncrementTag
             {
-                VarName = incrementContext.LABEL().GetText()
+                VarName = incrementContext.VARIABLENAME().GetText()
             };
            
             var newNode = CreateTreeNode<IASTNode>(incrementTag);
@@ -786,7 +786,7 @@ namespace Liquid.NET
             base.EnterDecrement_tag(decrementContext);
             var decrementTag = new DecrementTag()
             {
-                VarName = decrementContext.LABEL().GetText()
+                VarName = decrementContext.VARIABLENAME().GetText()
             };
 
             var newNode = CreateTreeNode<IASTNode>(decrementTag);
@@ -953,7 +953,7 @@ namespace Liquid.NET
         private void StartCapturingVariable(LiquidParser.VariableContext variableContext)
         {
             //Console.WriteLine("START Capturing variable " + variableContext.LABEL().GetText());
-            var varname = variableContext.LABEL().GetText();
+            var varname = variableContext.VARIABLENAME().GetText();
             IEnumerable<FilterSymbol> indexLookupFilters =
                 variableContext.objectvariableindex().Select(AddIndexLookupFilter);
             AddExpressionToCurrentExpressionBuilder(new VariableReference(varname));
@@ -1459,14 +1459,14 @@ namespace Liquid.NET
 //                    return indexingFilter;
 //
 //                }
-                if (arrayIndex.LABEL() != null)
+                if (arrayIndex.VARIABLENAME() != null)
                 {
-                    Console.WriteLine("INDEX IS LABEL " + arrayIndex.LABEL());
+                    Console.WriteLine("INDEX IS LABEL " + arrayIndex.VARIABLENAME());
 
                     // maybe this shoud be a wrapper instead of a chain
                     var arrayIndexLiquidExpression = new LiquidExpression
                     {
-                        Expression = new VariableReference(arrayIndex.LABEL().GetText())
+                        Expression = new VariableReference(arrayIndex.VARIABLENAME().GetText())
                     };
 
                     // todo: switch tho AddFilterSymbols

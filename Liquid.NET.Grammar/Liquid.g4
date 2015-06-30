@@ -54,7 +54,7 @@ raw_tag:			RAW;
 custom_blocktag:	TAGSTART custom_block_start_tag customtagblock_expr* TAGEND custom_blocktag_block TAGSTART custom_block_end_tag TAGEND { _localctx.custom_block_end_tag().GetText().Equals("end" + _localctx.custom_block_start_tag().GetText()) }?;
 //					| TAGSTART custom_block_start_tag customtagblock_expr* TAGEND custom_blocktag_block TAGSTART LABEL TAGEND {NotifyErrorListeners("Liquid error: end tag does not match start tag '" + _localctx.custom_block_start_tag().GetText() + "'");} ;
 
-custom_block_start_tag:		LABEL;
+custom_block_start_tag:		VARIABLENAME;
 
 //custom_block_end_tag:		{ _localctx.GetText().Equals("end") + ??? }? ENDLABEL;c
 
@@ -104,9 +104,9 @@ cycle_group:		(STRING | variable | NUMBER) COLON ;
 
 cycle_value:		STRING | variable | NUMBER | BOOLEAN | NULL;
 
-assign_tag :		TAGSTART ASSIGN_TAG LABEL ASSIGNEQUALS outputexpression TAGEND ;
+assign_tag :		TAGSTART ASSIGN_TAG VARIABLENAME ASSIGNEQUALS outputexpression TAGEND ;
 
-capture_tag :		TAGSTART CAPTURE_TAG LABEL TAGEND capture_block TAGSTART ENDCAPTURE_TAG TAGEND;
+capture_tag :		TAGSTART CAPTURE_TAG VARIABLENAME TAGEND capture_block TAGSTART ENDCAPTURE_TAG TAGEND;
 
 capture_block:		block* ;
 
@@ -118,7 +118,7 @@ include_with :		WITH outputexpression;
 
 include_for :		FOR_TAG outputexpression;
 
-include_param_pair : LABEL COLON outputexpression;
+include_param_pair : VARIABLENAME COLON outputexpression;
 
 for_tag:			TAGSTART FOR_TAG for_label FOR_IN for_iterable for_params* TAGEND for_block for_else? TAGSTART ENDFOR_TAG TAGEND ;
 
@@ -132,11 +132,11 @@ for_param_offset:	PARAM_OFFSET COLON (variable | NUMBER) ;
 
 for_param_limit:	PARAM_LIMIT COLON (variable | NUMBER)  ;
 
-for_label:			LABEL ;
+for_label:			VARIABLENAME ;
 
 for_iterable:		variable | STRING  | generator;
 
-variable:			LABEL objectvariableindex* ;
+variable:			VARIABLENAME objectvariableindex* ;
 
 generator:			PARENOPEN generator_index GENERATORRANGE generator_index PARENCLOSE ;
 
@@ -144,17 +144,17 @@ generator_index:	NUMBER | variable;
 
 //comment_tag:		TAGSTART COMMENT_TAG TAGEND rawtext TAGSTART ENDCOMMENT_TAG TAGEND ;
 
-increment_tag:		TAGSTART INCREMENT_TAG LABEL TAGEND ;
+increment_tag:		TAGSTART INCREMENT_TAG VARIABLENAME TAGEND ;
 
-decrement_tag:		TAGSTART DECREMENT_TAG LABEL TAGEND ;
+decrement_tag:		TAGSTART DECREMENT_TAG VARIABLENAME TAGEND ;
 
 macro_tag:			TAGSTART MACRO_TAG macro_label macro_param* TAGEND macro_block TAGSTART ENDMACRO_TAG TAGEND ;
 
-macro_param:		LABEL ;
+macro_param:		VARIABLENAME ;
 
 macro_block:		block* ;
 
-macro_label:		LABEL ;
+macro_label:		VARIABLENAME ;
 
 
 // {{ Parse output and filters }}
@@ -185,18 +185,18 @@ objectvariableindex : ARRAYSTART arrayindex ARRAYEND
 					;
 
 					// TODO: change LABEL... to variable
-arrayindex:			ARRAYINT | STRING  | LABEL objectvariableindex*  ;
+arrayindex:			ARRAYINT | STRING  | VARIABLENAME objectvariableindex*  ;
 
-objectproperty:		LABEL;
+objectproperty:		VARIABLENAME;
 
-filtername:			LABEL ; 
+filtername:			VARIABLENAME ; 
 
 // TODO: change LABEL... to variable
 
 filterarg:			STRING								# StringFilterArg
 					| NUMBER							# NumberFilterArg
 					| BOOLEAN							# BooleanFilterArg
-					| LABEL objectvariableindex*		# VariableFilterArg 
+					| VARIABLENAME objectvariableindex*		# VariableFilterArg 
 					;	 
 
 expr:				PARENOPEN expr PARENCLOSE			# GroupedExpr 
@@ -213,7 +213,7 @@ expr:				PARENOPEN expr PARENCLOSE			# GroupedExpr
 					| expr OR expr                      # OrExpr
 					;	
 
-tagname:			LABEL ; 
+tagname:			VARIABLENAME ; 
 
 
 

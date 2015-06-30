@@ -3,6 +3,7 @@ using System.Globalization;
 using Liquid.NET.Constants;
 using Liquid.NET.Symbols;
 using Liquid.NET.Tests.Helpers;
+using Liquid.NET.Utils;
 using NUnit.Framework;
 
 namespace Liquid.NET.Tests.Symbols
@@ -39,7 +40,7 @@ namespace Liquid.NET.Tests.Symbols
 
             // Assert
             Assert.That(result, Is.Not.Null);
-            Assert.Fail("Fix Undefined");
+            Assert.That(result.SuccessResult.HasValue, Is.False);
             //Assert.That(result, Is.TypeOf<Undefined>());
 
         }

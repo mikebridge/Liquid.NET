@@ -9,6 +9,7 @@ namespace Liquid.NET.Constants
     /// <summary>
     //
     /// </summary>
+    [Obsolete]
     public class NilValue : ExpressionConstant
     {
         public override object Value
@@ -21,5 +22,9 @@ namespace Liquid.NET.Constants
             get { return false; }
         }
 
+        public override string LiquidTypeName
+        {
+            get { return "null"; }
+        }
     }
 }

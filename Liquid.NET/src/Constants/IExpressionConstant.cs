@@ -11,6 +11,8 @@ namespace Liquid.NET.Constants
 
         bool IsTrue { get; }
 
+        String LiquidTypeName { get; }
+
         //bool IsNil { get; set; }
 
         LiquidExpressionResult Bind(Func<IExpressionConstant, LiquidExpressionResult> f);

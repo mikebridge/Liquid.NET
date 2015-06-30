@@ -118,7 +118,8 @@ namespace Liquid.NET.Filters
 
             if (strValues.Count == 0)
             {
-                return LiquidExpressionResult.Error("Empty string: " + propertyNameString);
+                //return LiquidExpressionResult.Error("Empty string: " + propertyNameString);
+                return LiquidExpressionResult.Success(new None<IExpressionConstant>()); // not an error in Ruby liquid.
             }
             return LiquidExpressionResult.Success(ArrayIndexer.ValueAt(strValues, index));
 

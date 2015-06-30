@@ -140,8 +140,25 @@ namespace Liquid.NET.Tests.Constants
 
         }
 
+//        [Test]
+//        public void It_Should_Cast_A_String_To_An_Array_Of_Strings()
+//        {
+//            // Arrange
+//            var str = new StringValue("Hello");
+//
+//            // Act
+//            var arrayResult = ValueCaster.Cast<StringValue, ArrayValue>(str);
+//            Assert.That(arrayResult.IsError, Is.False);
+//
+//            // Assert
+//            var arrValue = arrayResult.SuccessValue<ArrayValue>().ArrValue;
+//            Assert.That(arrValue.Count, Is.EqualTo(5));
+//            Assert.That(String.Join(",", arrValue.Select(x =>  ((StringValue) x.Value).StringVal)), Is.EqualTo("H,e,l,l,o"));
+//
+//        }
+
         [Test]
-        public void It_Should_Cast_A_String_To_An_Array_Of_Strings()
+        public void It_Should_Cast_A_String_To_An_Array_Of_One_String()
         {
             // Arrange
             var str = new StringValue("Hello");
@@ -152,8 +169,8 @@ namespace Liquid.NET.Tests.Constants
 
             // Assert
             var arrValue = arrayResult.SuccessValue<ArrayValue>().ArrValue;
-            Assert.That(arrValue.Count, Is.EqualTo(5));
-            Assert.That(String.Join(",", arrValue.Select(x =>  ((StringValue) x.Value).StringVal)), Is.EqualTo("H,e,l,l,o"));
+            Assert.That(arrValue.Count, Is.EqualTo(1));
+            Assert.That(arrValue[0].Value, Is.EqualTo("Hello"));
 
         }
 

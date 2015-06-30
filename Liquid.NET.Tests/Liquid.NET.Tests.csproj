@@ -160,6 +160,7 @@
     <Compile Include="Tags\CaseWhenElseBlockTagTests.cs" />
     <Compile Include="Tags\CustomBlockTagTests.cs" />
     <Compile Include="Tags\CustomTagTests.cs" />
+    <Compile Include="Tags\IfChangedBlockTagTests.cs" />
     <Compile Include="Tags\IncludeTagTests.cs" />
     <Compile Include="Tags\MacroBlockTagTests.cs" />
     <Compile Include="Tags\RawBlockTagTests.cs" />

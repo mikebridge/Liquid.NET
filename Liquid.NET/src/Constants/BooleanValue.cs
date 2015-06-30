@@ -23,6 +23,11 @@ namespace Liquid.NET.Constants
 
         public override bool IsTrue { get { return _val;  } }
 
+        public override string LiquidTypeName
+        {
+            get { return "bool"; }
+        }
+
         public bool BoolValue { get { return _val; } }
 
     }

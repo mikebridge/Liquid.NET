@@ -22,11 +22,16 @@ namespace Liquid.NET.Constants
             visitor.Visit(this);
         }
 
-
+        
 
         public override Object Value { get { return _val; } }
 
         public override bool IsTrue { get { return _val != null;  } }
+
+        public override string LiquidTypeName
+        {
+            get { return "date"; }
+        }
 
         public DateTime? DateTimeValue { get { return _val; } }
 

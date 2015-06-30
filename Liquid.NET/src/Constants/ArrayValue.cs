@@ -35,6 +35,11 @@ namespace Liquid.NET.Constants
             get { return _values != null; }
         }
 
+        public override string LiquidTypeName
+        {
+            get { return "collection"; }
+        }
+
         public IList<Option<IExpressionConstant>> ArrValue { get { return _values; } }
 
         public Option<IExpressionConstant> ValueAt(int key)

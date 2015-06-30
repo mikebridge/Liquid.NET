@@ -13,6 +13,7 @@ namespace Liquid.NET.Constants
 
         public decimal DecimalValue { get { return _val; } }
 
+
         public int IntValue
         {
             get {
@@ -48,9 +49,7 @@ namespace Liquid.NET.Constants
             get { return _val != 0; }
         }
 
-
-        
-
+        public override string LiquidTypeName { get { return "numeric"; } }
 
 
         public override void Accept(IExpressionDescriptionVisitor expressionDescriptionVisitor)

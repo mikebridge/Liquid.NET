@@ -27,6 +27,8 @@ namespace Liquid.NET.Constants
         {
             get;
         }
+
+        public abstract string LiquidTypeName { get; }
 //
 //        public bool IsUndefined { get; set; }
 //

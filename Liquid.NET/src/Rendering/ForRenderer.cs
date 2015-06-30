@@ -88,7 +88,8 @@ namespace Liquid.NET.Rendering
             int iter = 0;
             foreach (var item in iterable.Skip(offset.IntValue).Take(limit.IntValue))
             {
-                symbolTableStack.Define("forloop", CreateForLoopDescriptor(iter, length, symbolTableStack));
+                symbolTableStack.Define("forloop", CreateForLoopDescriptor(
+                    forBlockTag.LocalVariable +"-"+item.LiquidTypeName, iter, length, symbolTableStack));
                 symbolTableStack.Define(forBlockTag.LocalVariable, item);
 
                 try
@@ -107,7 +108,7 @@ namespace Liquid.NET.Rendering
             }
         }
 
-        public static DictionaryValue CreateForLoopDescriptor(int iter, int length, SymbolTableStack stack)
+        public static DictionaryValue CreateForLoopDescriptor(String name, int iter, int length, SymbolTableStack stack)
         {
             return new DictionaryValue(new Dictionary<String, Option<IExpressionConstant>>
             {               
@@ -118,7 +119,8 @@ namespace Liquid.NET.Rendering
                 {"rindex", new NumericValue(length - iter )},
                 {"rindex0", new NumericValue(length - iter - 1)},
                 {"last", new BooleanValue(length - iter - 1 == 0)},
-                {"length", new NumericValue(length) }
+                {"length", new NumericValue(length) },
+                {"name", new StringValue(name) }
             });
 
         }

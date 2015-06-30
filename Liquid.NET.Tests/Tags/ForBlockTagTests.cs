@@ -197,7 +197,8 @@ namespace Liquid.NET.Tests.Tags
             String result = template.Render(new TemplateContext());
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : <li>H</li><li>e</li><li>l</li><li>l</li><li>o</li>"));
+            //Assert.That(result, Is.EqualTo("Result : <li>H</li><li>e</li><li>l</li><li>l</li><li>o</li>"));
+            Assert.That(result, Is.EqualTo("Result : <li>Hello</li>"));
 
         }
 
@@ -290,7 +291,23 @@ namespace Liquid.NET.Tests.Tags
 
         }
 
+        [Test]
+        public void It_Should_Print_Loop_Variables_From_A_String()
+        {
 
+            // Arrange
+            String input = @"{%for val in string%}{{forloop.name}}-{{forloop.index}}-{{forloop.length}}-{{forloop.index0}}-{{forloop.rindex}}-{{forloop.rindex0}}-{{forloop.first}}-{{forloop.last}}-{{val}}{%endfor%}";
+            ITemplateContext ctx = new TemplateContext();
+
+            ctx.Define("string", new StringValue("test string"));
+            var template = LiquidTemplate.Create(input);
+
+            // Act
+            String result = template.Render(ctx);
+            Console.WriteLine(result);
+            // Assert
+            Assert.That(result.Trim(), Is.EqualTo(@"val-string-1-1-0-1-0-true-true-test string"));
+        }
 
         /// <summary>
         /// forloop.length      # => length of the entire for loop
@@ -428,13 +445,15 @@ namespace Liquid.NET.Tests.Tags
         }
 
         [Test]
-        [TestCase("\'\'", "")]
-        [TestCase("\'abc\'", "char:a char:b char:c ")]
+        [TestCase("\'\'", "char:")]
+        //[TestCase("\'abc\'", "char:a char:b char:c ")]// these don't work this way
+        [TestCase("\'abc\'", "char:abc")]
+        //[Ignore("Looks like liquid doesn't iterate over a string.")]
         public void It_Should_Iterate_Over_A_Strings_Characters(String str, String expected)
         {
             //[TestCase(@"{% for char in characters %}I WILL NOT BE OUTPUT{% endfor %}", @"{""characters"":""""}", @"")]
             TemplateContext ctx = new TemplateContext();
-            var template = LiquidTemplate.Create(@"{% for char in "+str+" %}char:{{char}} {% endfor %}");
+            var template = LiquidTemplate.Create(@"{% for char in "+str+" %}char:{{char}}{% endfor %}");
             // Act
             String result = template.Render(ctx);
 

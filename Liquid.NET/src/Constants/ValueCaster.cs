@@ -228,8 +228,10 @@ namespace Liquid.NET.Constants
 
             if (destType == typeof (ArrayValue))
             {
-                var expressionConstants = str.StringVal.Select(x => (Option<IExpressionConstant>) new Some<IExpressionConstant>(new StringValue(x.ToString())));
-                return LiquidExpressionResult.Success(new ArrayValue(expressionConstants.ToList()));
+                var expressionConstants = new Some<IExpressionConstant>(str);
+                // IN liquid, it doesn't seem to cast a string to an array of chars---it casts to an array of one element.
+                //var expressionConstants = str.StringVal.Select(x => (Option<IExpressionConstant>) new Some<IExpressionConstant>(new StringValue(x.ToString())));
+                return LiquidExpressionResult.Success(new ArrayValue(new List<Option<IExpressionConstant>>{expressionConstants}));
             }
             return LiquidExpressionResult.Error("Can't convert from string to " + destType);
            

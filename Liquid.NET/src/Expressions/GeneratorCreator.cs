@@ -28,10 +28,11 @@ namespace Liquid.NET.Expressions
 
         public IEnumerable<IExpressionConstant> Eval(SymbolTableStack symbolTableStack)
         {
-            return _stringValue.StringVal
-                .ToCharArray()
-                .Select(x => new StringValue("" + x));
-            
+//            return _stringValue.StringVal
+//                .ToCharArray()
+//                .Select(x => new StringValue("" + x));
+            // In ruby liquid, it will not iterate through a string's characters---it will treat it as an array of one string.
+            return new List<IExpressionConstant>{_stringValue};
         }
     }
 
@@ -47,7 +48,11 @@ namespace Liquid.NET.Expressions
         public IEnumerable<IExpressionConstant> Eval(SymbolTableStack symbolTableStack)
         {            
             var expressionConstant = LiquidExpressionEvaluator.Eval(_arrayValueExpression, symbolTableStack);
-            
+
+            if (expressionConstant.IsError || !expressionConstant.SuccessResult.HasValue)
+            {
+                return new List<IExpressionConstant>();
+            }
             var castResult = ValueCaster.Cast<IExpressionConstant, ArrayValue>(expressionConstant.SuccessResult.Value);
             if (castResult.IsError)
             {

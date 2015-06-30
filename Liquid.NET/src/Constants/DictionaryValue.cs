@@ -34,6 +34,11 @@ namespace Liquid.NET.Constants
             //get { return _value.Keys.Any(); }
         }
 
+        public override string LiquidTypeName
+        {
+            get { return "hash"; }
+        }
+
         public Option<IExpressionConstant> ValueAt(String key)
         {
             //Console.WriteLine("VALUE AT " + key);

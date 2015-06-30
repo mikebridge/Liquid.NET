@@ -63,7 +63,8 @@ namespace Liquid.NET.Filters
 
             if (arrayValue.ArrValue.Count == 0)
             {
-                return LiquidExpressionResult.Error("array is empty: " + propertyNameString);
+                //return LiquidExpressionResult.Error("array is empty: " + propertyNameString);
+                return LiquidExpressionResult.Success(new None<IExpressionConstant>()); // not an error in Ruby liquid.
             }
             var result = arrayValue.ValueAt(index); 
             return LiquidExpressionResult.Success(result);

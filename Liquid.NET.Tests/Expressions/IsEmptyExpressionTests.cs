@@ -19,6 +19,9 @@ namespace Liquid.NET.Tests.Expressions
         [TestCase("\"  \"", "==", false)]
         [TestCase("null", "==", false)]
         [TestCase("null", "!=", true)]
+        [TestCase("\"\"", "!=", false)]
+        [TestCase("\" \"", "!=", true)]
+        [TestCase("0", "!=", true)]
         public void It_Should_Test_That_A_Value_Is_Empty(String val, String op, bool expected)
         {
             // Arrange

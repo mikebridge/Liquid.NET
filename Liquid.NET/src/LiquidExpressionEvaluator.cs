@@ -22,11 +22,11 @@ namespace Liquid.NET
         {
             // Evaluate the children, depth first
             var leaves = expr.Children.Select(x => Eval(x, symbolTableStack)).ToList();
-            if (leaves.Any(x => x.IsError))
+            if (leaves.Any(x => x != null && x.IsError))
             {
                 return leaves.First(x => x.IsError); // TODO: maybe aggregate tehse
             }
-            return Eval(expr.Data, leaves.Select(x => x.SuccessResult), symbolTableStack);
+            return Eval(expr.Data, leaves.Select(x => x == null? new None<IExpressionConstant>() : x.SuccessResult), symbolTableStack);
         }
 
         public static LiquidExpressionResult Eval(
@@ -51,7 +51,8 @@ namespace Liquid.NET
             // until the expression is changed to an option type, an expression may be null.  If it's null, it evaluates to null.
             if (expression.Expression == null)
             {
-                return null;
+                //return null;
+                return LiquidExpressionResult.Success(new None<IExpressionConstant>());
             }
 
 

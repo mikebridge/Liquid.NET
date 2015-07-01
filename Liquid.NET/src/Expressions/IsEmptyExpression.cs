@@ -30,5 +30,6 @@ namespace Liquid.NET.Expressions
             }
             return LiquidExpressionResult.Success(new BooleanValue(EmptyChecker.IsEmpty(list[0].Value)));
         }
+        
     }
 }

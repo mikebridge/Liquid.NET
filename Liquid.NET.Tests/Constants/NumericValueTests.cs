@@ -1,10 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using Liquid.NET.Constants;
 using Liquid.NET.Symbols;
 using Liquid.NET.Utils;
@@ -48,6 +43,7 @@ namespace Liquid.NET.Tests.Constants
         }
 
         [Test]
+        [Ignore("Should this be changed?")]
         public void It_Should_Format_Without_Trailing_Zeroes()
         {
             // Arrange

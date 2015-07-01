@@ -26,6 +26,13 @@ namespace Liquid.NET.Tests.Expressions
         //[TestCase("null", "==", "null", "TRUE")]
         [TestCase("1", ">", "null", "FALSE")]
         [TestCase("2", "<=", "1", "FALSE")]
+        [TestCase("1", "!=", "null", "TRUE")]
+        [TestCase("1", ">", "null", "FALSE")]
+        [TestCase("1", "<", "null", "FALSE")]
+        [TestCase("1", "<=", "null", "FALSE")]
+        [TestCase("1", ">=", "null", "FALSE")]
+        [TestCase("null", "!=", "null", "FALSE")]
+        [TestCase("1", "!=", "1", "FALSE")]
         public void It_Should_Compare_Two_Args(String arg1, string op, String arg2, string expected)
         {
             // Arrange

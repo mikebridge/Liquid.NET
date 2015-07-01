@@ -22,7 +22,7 @@ namespace Liquid.NET.Expressions
             var list = expressions.ToList();
             if (list.Count() != 1)
             {
-                throw new Exception("Expected one variable to compare with \"null\""); // this will be obsolete when the lexer/parser is split
+                throw new Exception("Expected one variable to compare with \"null\" but received " + list.Count()); // this will be obsolete when the lexer/parser is split
             }
             if (!list[0].HasValue)
             {

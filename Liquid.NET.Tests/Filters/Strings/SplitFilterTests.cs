@@ -18,7 +18,8 @@ namespace Liquid.NET.Tests.Filters.Strings
             Console.WriteLine(result);
 
             // Assert            
-            Assert.That(result, Is.EqualTo(@"[ ""Uses"", ""cheat"", ""codes,"", ""calls"", ""the"", ""game"", ""boring."" ]"));
+            //Assert.That(result, Is.EqualTo(@"[ ""Uses"", ""cheat"", ""codes,"", ""calls"", ""the"", ""game"", ""boring."" ]"));
+            Assert.That(result, Is.EqualTo(@"Usescheatcodes,callsthegameboring."));
         }
 
         [Test]
@@ -32,7 +33,8 @@ namespace Liquid.NET.Tests.Filters.Strings
             Console.WriteLine(result);
 
             // Assert            
-            Assert.That(result, Is.EqualTo(@"[ ""Uses"", ""cheat"", ""codes,"", ""calls"", ""the"", ""game"", ""boring."" ]"));
+            //Assert.That(result, Is.EqualTo(@"[ ""Uses"", ""cheat"", ""codes,"", ""calls"", ""the"", ""game"", ""boring."" ]"));
+            Assert.That(result, Is.EqualTo(@"Usescheatcodes,callsthegameboring."));
         
         }
 

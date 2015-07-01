@@ -1215,26 +1215,27 @@ namespace Liquid.NET
         {
             base.EnterComparisonExpr(comparisonContext);
             Console.WriteLine(" === creating COMPARISON expression >" + comparisonContext.GetText() + "<");
-
-            if (IsNullComparison(comparisonContext))
-            {
-                if (comparisonContext.EQ() != null)
-                {
-                    Console.WriteLine(" +++ EQUALS NULL");
-                    AddExpressionToCurrentExpressionBuilder(new IsNullExpression());
-                } 
-                else if (comparisonContext.NEQ() != null)
-                {
-                    Console.WriteLine(" +++ NOT EQUALS NULL");
-                    AddExpressionToCurrentExpressionBuilder(new NotExpression());
-                    AddExpressionToCurrentExpressionBuilder(new IsNullExpression());
-                }
-                else
-                {
-                    AddExpressionToCurrentExpressionBuilder(new FalseExpression());
-                }
-            } 
-            else if (comparisonContext.EQ() != null)
+//
+//            if (IsNullComparison(comparisonContext))
+//            {
+//                if (comparisonContext.EQ() != null)
+//                {
+//                    Console.WriteLine(" +++ EQUALS NULL");
+//                    AddExpressionToCurrentExpressionBuilder(new IsNullExpression());
+//                } 
+//                else if (comparisonContext.NEQ() != null)
+//                {
+//                    Console.WriteLine(" +++ NOT EQUALS NULL");
+//                    AddExpressionToCurrentExpressionBuilder(new NotExpression());
+//                    AddExpressionToCurrentExpressionBuilder(new IsNullExpression());
+//                }
+//                else
+//                {
+//                    AddExpressionToCurrentExpressionBuilder(new FalseExpression());
+//                }
+//            } 
+//            else 
+            if (comparisonContext.EQ() != null)
             {
                 Console.WriteLine(" +++ EQUALS");
                 AddExpressionToCurrentExpressionBuilder(new EqualsExpression());
@@ -1279,26 +1280,26 @@ namespace Liquid.NET
         {
             base.ExitComparisonExpr(comparisonContext);
             Console.WriteLine(" --- exiting COMPARISON expression >" + comparisonContext.GetText() + "<");
-            if (IsNullComparison(comparisonContext))
-            {
-                if (comparisonContext.EQ() != null)
-                {
-                    MarkCurrentExpressionComplete();
-                }
-                else if (comparisonContext.NEQ() != null)
-                {
-                    MarkCurrentExpressionComplete();
-                    MarkCurrentExpressionComplete();
-                }
-                else
-                {
-                    MarkCurrentExpressionComplete();
-                }
-            }
-            else
-            {
+//            if (IsNullComparison(comparisonContext))
+//            {
+//                if (comparisonContext.EQ() != null)
+//                {
+//                    MarkCurrentExpressionComplete();
+//                }
+//                else if (comparisonContext.NEQ() != null)
+//                {
+//                    MarkCurrentExpressionComplete();
+//                    MarkCurrentExpressionComplete();
+//                }
+//                else
+//                {
+//                    MarkCurrentExpressionComplete();
+//                }
+//            }
+//            else
+//            {
                 MarkCurrentExpressionComplete();
-            }
+           // }
         }
 
 
@@ -1368,21 +1369,17 @@ namespace Liquid.NET
             MarkCurrentExpressionComplete();
         }
 
-//        public override void EnterNullObject(LiquidParser.NullObjectContext context)
-//        {
-//            base.EnterNullObject(context);
-//            //context.NULL();
-//            //var nullObj = new StringValue(null) {IsUndefined = true}; // TODO: Is null undefined??
-//            //var nullObj = new NilValue();
-//            //AddExpressionToCurrentExpressionBuilder(nullObj);
-//            AddExpressionToCurrentExpressionBuilder(null);
-//        }
-//
-//        public override void ExitNullObject(LiquidParser.NullObjectContext context)
-//        {
-//            base.ExitNullObject(context);
-//            MarkCurrentExpressionComplete();
-//        }
+        public override void EnterNullObject(LiquidParser.NullObjectContext context)
+        {
+            base.EnterNullObject(context);
+            AddExpressionToCurrentExpressionBuilder(null);
+        }
+
+        public override void ExitNullObject(LiquidParser.NullObjectContext context)
+        {
+            base.ExitNullObject(context);
+            MarkCurrentExpressionComplete();
+        }
 
         /// <summary>
         /// TODO: Strip the quotes in the parser/lexer.  Until then, we'll do it here.

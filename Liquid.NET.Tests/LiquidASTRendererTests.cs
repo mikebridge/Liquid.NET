@@ -364,7 +364,8 @@ namespace Liquid.NET.Tests
             // Act
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : [ \"aaa\", 123 ]"));
+            //Assert.That(result, Is.EqualTo("Result : [ \"aaa\", 123 ]"));
+            Assert.That(result, Is.EqualTo("Result : aaa123"));
 
         }
 

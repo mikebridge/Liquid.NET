@@ -48,6 +48,17 @@ namespace Liquid.NET.Tests.Constants
         }
 
         [Test]
+        public void It_Should_Format_Without_Trailing_Zeroes()
+        {
+            // Arrange
+            var result = RenderingHelper.RenderTemplate("Result : {{ 0.0075| times: 100 }}");
+
+            // Assert
+            Assert.That(result, Is.EqualTo("Result : 0.75"));
+        }
+
+
+        [Test]
         public void It_Should_Cast_A_Non_Numeric_String_To_Zero()
         {
             // Act

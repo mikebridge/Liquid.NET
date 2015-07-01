@@ -138,6 +138,8 @@ mode INLIQUIDTAG ;
 
 TAGEND :				'%}'			-> popMode ;
 
+//TOKEN:					VARIABLENAME;
+
 INCLUDE_TAG :			'include' ;
 WITH:					'with' ;
 IF_TAG :				'if' ;

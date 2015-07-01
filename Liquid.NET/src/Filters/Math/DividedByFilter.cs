@@ -27,11 +27,13 @@ namespace Liquid.NET.Filters.Math
             {
                 return LiquidExpressionResult.Error("The divisor is missing.");
             }
-            if (_divisor.DecimalValue == 0)
+            if (_divisor.DecimalValue == 0.0m)
             {
                 return LiquidExpressionResult.Error("Liquid error: divided by 0");
             }
-            return LiquidExpressionResult.Success(new NumericValue(dividend.DecimalValue / _divisor.DecimalValue ));
+            var val = dividend.DecimalValue / _divisor.DecimalValue;
+    
+            return LiquidExpressionResult.Success(new NumericValue(val));
         }
     }
 

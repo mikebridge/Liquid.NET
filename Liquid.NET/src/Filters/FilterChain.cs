@@ -65,6 +65,10 @@ namespace Liquid.NET.Filters
                 {
                     return initValue;
                 }
+                if (current.IsError)
+                {
+                    return current;
+                }
                 LiquidExpressionResult result;
                 if (current.SuccessResult.HasValue)
                 {

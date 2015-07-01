@@ -281,7 +281,7 @@ namespace Liquid.NET.Tests.Tags
             TemplateContext ctx = new TemplateContext();
             ctx.Define("limit", new NumericValue(3));
             ctx.Define("offset", new NumericValue(1));
-            var template = LiquidTemplate.Create("Result : {% for for in \"Hello\" limit:limit offset:offset %}<li>{{ for }}</li>{% endfor %}");
+            var template = LiquidTemplate.Create("Result : {% for wef in \"Hello\" limit:limit offset:offset %}<li>{{ for }}</li>{% endfor %}");
 
             // Act
             String result = template.Render(new TemplateContext());

@@ -76,34 +76,12 @@ namespace Liquid.NET.Constants
 
         }
 
-        private static LiquidExpressionResult Convert<TDest>(NilValue undef)
-            where TDest : IExpressionConstant
-        {
-            throw new ApplicationException("Can't convert to nil");
-//            var destType = typeof(TDest);
-//            if (destType == typeof(NilValue))
-//            {
-//                return undef;
-//            }
-//
-//            if (destType == typeof(StringValue))
-//            {
-//                return new StringValue(undef.Value.ToString());
-//            }           
-//            // TODO: Should this return the default value for whatever TDest is requested?
-//            return LiquidExpressionResult.Error("Can't convert from an undefined ("+undef.Value+") to " + destType);
-            //return ExpressionConstant.CreateError<TDest>("Can't convert from an undefined to " + destType);
-        }
-
+       
         private static LiquidExpressionResult Convert<TDest>(DictionaryValue dictionaryValue)
            where TDest : IExpressionConstant
         {
             //Console.WriteLine("Rendering dictionary");
             var destType = typeof(TDest);
-            if (destType == typeof(NilValue))
-            {
-                return LiquidExpressionResult.Success(new NilValue());
-            }
 
             if (destType == typeof(StringValue))
             {
@@ -152,17 +130,19 @@ namespace Liquid.NET.Constants
 
         private static string FormatArray(ArrayValue arrayValue)
         {
+            // The JSON way:
+            //var strs = arrayValue.ArrValue.Select(x => Quote(GetWrappedType(x), RenderAsString(x)));
+            //return "[ " + String.Join(", ", strs) + " ]"; 
 
-            var strs = arrayValue.ArrValue.Select(x => Quote(GetWrappedType(x), RenderAsString(x)));
-            //var strs = arrayValue.ArrValue.Select(x => Quote(x.GetType(), Convert<StringValue>((dynamic) x).Value.ToString()));
-            return "[ " + String.Join(", ", strs) + " ]"; 
+            // The Concatenated way:
+            var strs = arrayValue.ArrValue.Select(RenderAsString);
+            return String.Join("", strs); 
 
         }
 
 
         private static String FormatKvPair(string key, Option<IExpressionConstant> expressionConstant)
         {
-            //var strSymbol = Convert<StringValue>((dynamic) expressionConstant);
             Type wrappedType = GetWrappedType(expressionConstant);
             String exprConstantAsString = RenderAsString(expressionConstant);
             return "{ " + Quote(typeof(StringValue), key) + " : " + Quote(wrappedType, exprConstantAsString) + " }";
@@ -173,9 +153,8 @@ namespace Liquid.NET.Constants
         {
             if (expressionConstant.HasValue)
             {
-                //var nestedType = expressionConstant.GetType().GetGenericArguments()[0];
                 var nestedType = expressionConstant.Value.GetType();
-                Console.WriteLine("NEsted type " + nestedType);
+                //Console.WriteLine("NEsted type " + nestedType);
                 return nestedType;
             }
             else
@@ -184,10 +163,8 @@ namespace Liquid.NET.Constants
             }
         }
 
-        // TODO: quote JSON here
         private static String Quote(Type origType, String str)
         {
-            //Console.WriteLine("casting type" + origType);
             if (origType == null)
             {
                 return "null";
@@ -201,8 +178,6 @@ namespace Liquid.NET.Constants
                 return "\"" + str + "\"";
             }
         }
-
-
 
         private static LiquidExpressionResult Convert<TDest>(StringValue str)
             where TDest : IExpressionConstant
@@ -307,19 +282,9 @@ namespace Liquid.NET.Constants
 
         public static string RenderAsString(Option<IExpressionConstant> val)
         {
-//            if (val == null)
-//            {
-//                return "";
-//            }
-//            if (!val.HasValue)
-//            {
-//                return "";
-//            }
+
             return val.HasValue ? RenderAsString(val.Value) : "";
 
-            //var stringResult = Cast<IExpressionConstant, StringValue>(new Some<IExpressionConstant>(val));
-//            var stringResult = Cast<IExpressionConstant, StringValue>((dynamic)val);
-//
 //            // TODO: Does this render an error if it can't cast or an empty string?
 //            if (stringResult.IsError)
 //            {
@@ -338,7 +303,6 @@ namespace Liquid.NET.Constants
 
             var stringResult = Cast<IExpressionConstant, StringValue>(val);
 
-            // TODO: Does this render an error if it can't cast or an empty string?
             if (stringResult.IsError)
             {
                 return "";

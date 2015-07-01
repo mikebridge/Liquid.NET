@@ -61,11 +61,27 @@ namespace Liquid.NET.Tests.Constants
 
         }
 
+//        [Test]
+//        public void It_Should_Format_An_Array_Like_Json()
+//        {
+//            // Arrange
+//            var num = new ArrayValue(new List<IExpressionConstant>{new NumericValue(123.4m), new NumericValue(5)});
+//
+//            // Act
+//            var stringliteral = ValueCaster.Cast<ArrayValue, StringValue>(num)
+//                .SuccessValue<StringValue>()
+//                .StringVal;
+//
+//            // Assert
+//            Assert.That(stringliteral, Is.EqualTo("[ 123.4, 5 ]"));
+//
+//        }
+
         [Test]
-        public void It_Should_Format_An_Array_Like_Json()
+        public void It_Should_Format_An_Array_By_Concatenating_Each_Elements_STring_Value()
         {
             // Arrange
-            var num = new ArrayValue(new List<IExpressionConstant>{new NumericValue(123.4m), new NumericValue(5)});
+            var num = new ArrayValue(new List<IExpressionConstant> { new StringValue("a"), new StringValue("b"), new StringValue("c") });
 
             // Act
             var stringliteral = ValueCaster.Cast<ArrayValue, StringValue>(num)
@@ -73,7 +89,7 @@ namespace Liquid.NET.Tests.Constants
                 .StringVal;
 
             // Assert
-            Assert.That(stringliteral, Is.EqualTo("[ 123.4, 5 ]"));
+            Assert.That(stringliteral, Is.EqualTo("abc"));
 
         }
 
@@ -121,6 +137,21 @@ namespace Liquid.NET.Tests.Constants
 
         }
 
+//        [Test]
+//        public void It_Should_Format_A_Number_Without_Extra_Zeroes()
+//        {
+//            // Arrange
+//            var num = new NumericValue(123.0000m);
+//
+//            // Act
+//            var stringliteral = ValueCaster.RenderAsString((IExpressionConstant) num);
+//               
+//            // Assert
+//            Assert.That(stringliteral, Is.EqualTo("123.00"));
+//
+//        }
+
+
         [Test]
         [TestCase(123.0, 123)]
         [TestCase(123.45, 123)]
@@ -139,6 +170,8 @@ namespace Liquid.NET.Tests.Constants
             Assert.That(result, Is.EqualTo(expected));
 
         }
+
+
 
 //        [Test]
 //        public void It_Should_Cast_A_String_To_An_Array_Of_Strings()

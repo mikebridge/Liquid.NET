@@ -421,7 +421,8 @@ namespace Liquid.NET
 
         public void Visit(TableRowBlockTag tableRowBlockTag)
         {
-            new TableRowRenderer(this, _astRenderer).Render(tableRowBlockTag, _symbolTableStack);
+            new TableRowRenderer(this, _astRenderer)
+                .Render(tableRowBlockTag, _symbolTableStack, str => _result += str);
         }
 
         public void Visit(RootDocumentNode rootDocumentNode)

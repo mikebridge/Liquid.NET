@@ -1,5 +1,5 @@
 ﻿using System;
-
+using Antlr4.Runtime;
 using Liquid.NET.Tests.Ruby;
 using NUnit.Framework;
 
@@ -18,11 +18,11 @@ namespace Liquid.NET.Tests.Tags
             
             // Act
             String result = template.Render(ctx);
-
+            Console.WriteLine(result);
             String expected =
-                @"<tr class=""row1""><td class=""col1"">1</td><td class=""col2"">2</td></tr><tr class=""row2"">" +
-                @"<td class=""col1"">1</td><td class=""col2"">2</td></tr><tr class=""row3"">" +
-                @"<td class=""col1"">1</td><td class=""col2"">2</td></tr>";
+                @"<tr class=""row1""><td class=""col1"">ITER1</td><td class=""col2"">ITER2</td></tr><tr class=""row2"">" +
+                @"<td class=""col1"">ITER3</td><td class=""col2"">ITER4</td></tr><tr class=""row3"">" +
+                @"<td class=""col1"">ITER5</td><td class=""col2"">ITER6</td></tr>";
             // Act
 
             // Assert

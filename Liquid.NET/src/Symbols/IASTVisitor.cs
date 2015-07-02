@@ -52,5 +52,8 @@ namespace Liquid.NET.Symbols
         void Visit(ErrorNode errorNode);
 
         void Visit(IfChangedBlockTag ifChangedBlockTag);
+
+        void Visit(TableRowBlockTag tableRowBlockTag);
+
     }
 }

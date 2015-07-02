@@ -7,6 +7,7 @@ using System.Security.Cryptography.X509Certificates;
 using Liquid.NET.Constants;
 using Liquid.NET.Expressions;
 using Liquid.NET.Rendering;
+using Liquid.NET.src.Rendering;
 using Liquid.NET.Symbols;
 using Liquid.NET.Tags;
 using Liquid.NET.Tags.Custom;
@@ -416,6 +417,11 @@ namespace Liquid.NET
             }
             _result += _isChangedRenderer.Next(ifChangedBlockTag.UniqueId, ifChangedBlockTag.LiquidBlock, _astRenderer);
 
+        }
+
+        public void Visit(TableRowBlockTag tableRowBlockTag)
+        {
+            new TableRowRenderer(this, _astRenderer).Render(tableRowBlockTag, _symbolTableStack);
         }
 
         public void Visit(RootDocumentNode rootDocumentNode)

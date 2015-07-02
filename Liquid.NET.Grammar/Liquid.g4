@@ -133,7 +133,7 @@ for_block:			block* ;
 
 for_params: 		PARAM_REVERSED | for_param_offset | for_param_limit ; // todo: limit to one of each?
 
-for_param_offset:	PARAM_OFFSET COLON (KEYWORDS | NUMBER) ;
+for_param_offset:	PARAM_OFFSET COLON (variable | NUMBER) ;
 
 for_param_limit:	PARAM_LIMIT COLON (variable | NUMBER)  ;
 
@@ -141,11 +141,17 @@ for_label:			VARIABLENAME ;
 
 for_iterable:		variable | STRING  | generator;
 
-tablerow_tag:		TAGSTART TABLEROW_TAG VARIABLENAME FOR_IN for_iterable tablerow_params* TAGEND tablerow_block TAGSTART ENDTABLEROW_TAG TAGEND ;
+tablerow_tag:		TAGSTART TABLEROW_TAG tablerow_label FOR_IN tablerow_iterable tablerow_params* TAGEND tablerow_block TAGSTART ENDTABLEROW_TAG TAGEND ;
+
+tablerow_label:		VARIABLENAME ;
 
 tablerow_block:		block* ;
 
-tablerow_params: 	for_param_offset | for_param_limit ; 
+tablerow_params: 	tablerow_cols | for_param_offset | for_param_limit ; 
+
+tablerow_cols:		TABLEROW_TAG_COLS COLON (variable | NUMBER) ;
+
+tablerow_iterable:	variable | STRING  | generator;
 
 variable:			VARIABLENAME objectvariableindex* ;
 

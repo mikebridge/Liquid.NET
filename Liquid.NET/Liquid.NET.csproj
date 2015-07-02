@@ -175,6 +175,7 @@
     <Compile Include="src\Rendering\IfChangedRenderer.cs" />
     <Compile Include="src\Rendering\IncludeRenderer.cs" />
     <Compile Include="src\Rendering\MacroRenderer.cs" />
+    <Compile Include="src\Rendering\TableRowRenderer.cs" />
     <Compile Include="src\Symbols\ErrorNode.cs" />
     <Compile Include="src\Symbols\FilterSymbol.cs" />
     <Compile Include="src\LiquidASTRenderer.cs" />

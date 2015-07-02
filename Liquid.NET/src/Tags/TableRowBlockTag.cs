@@ -14,17 +14,17 @@ namespace Liquid.NET.Tags
         public TreeNode<LiquidExpression> Cols;
         public TreeNode<LiquidExpression> Limit;
         public TreeNode<LiquidExpression> Offset;
-        public TreeNode<LiquidExpression> Range;
+        //public TreeNode<LiquidExpression> Range;
 
         public void Accept(IASTVisitor visitor)
         {
-            throw new NotImplementedException();
+           visitor.Visit(this);
         }
 
         public TreeNode<IASTNode> LiquidBlock = new TreeNode<IASTNode>(new RootDocumentNode());
 
         /// <summary>
-        /// The local variable name (the "item" in "for item in ..."
+        /// The local variable name (the "item" in "tablerow item in ..."
         /// </summary>
         public String LocalVariable { get; set; }
 

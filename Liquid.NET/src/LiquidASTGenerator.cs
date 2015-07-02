@@ -304,6 +304,9 @@ namespace Liquid.NET
         public override void ExitFor_tag(LiquidParser.For_tagContext forContext)
         {
             //Console.WriteLine("@@@ EXITING FOR TAG *" + forContext.GetText() + "*");
+            // TODO: I thik we need to pop the ForBlockstack in currentbuildercontext
+
+
 
             base.ExitFor_tag(forContext);
             _astNodeStack.Pop(); // stop capturing the block inside the for tag.
@@ -402,20 +405,16 @@ namespace Liquid.NET
 
         public override void ExitFor_iterable(LiquidParser.For_iterableContext context)
         {
-            //Console.WriteLine("  ^^^ DONE FOR ITERABLE");
             base.ExitFor_iterable(context);
 
             if (context.variable() != null )
             {
-                //Console.WriteLine("CALLING FINISH OBJ"); 
-                //FinishLiquidExpressionTree();
                 MarkCurrentExpressionComplete();
             }
         }
 
         private GeneratorCreator CreateGeneratorContext(LiquidParser.GeneratorContext generatorContext)
-        {
-            Console.WriteLine("CREATING GENERATOR");
+        {          
             TreeNode<LiquidExpression> startExpression = null;
             TreeNode<LiquidExpression> endExpression = null;
 
@@ -542,6 +541,127 @@ namespace Liquid.NET
       
 
         #endregion
+
+        public override void EnterTablerow_tag(LiquidParser.Tablerow_tagContext context)
+        {
+            base.EnterTablerow_tag(context);
+            var tableRowTag = new TableRowBlockTag
+            {
+                LocalVariable = context.tablerow_label().VARIABLENAME().ToString()
+            };
+            var newNode = CreateTreeNode<IASTNode>(tableRowTag);
+
+            CurrentAstNode.AddChild(newNode);
+            CurrentBuilderContext.TableRowBlockTagStack.Push(tableRowTag);
+
+            _astNodeStack.Push(tableRowTag.LiquidBlock); // capture the block
+
+        }
+
+        public override void ExitTablerow_tag(LiquidParser.Tablerow_tagContext context)
+        {
+            base.ExitTablerow_tag(context);
+            CurrentBuilderContext.TableRowBlockTagStack.Pop();
+            _astNodeStack.Pop();
+        }
+
+        public override void EnterTablerow_params(LiquidParser.Tablerow_paramsContext context)
+        {
+            base.EnterTablerow_params(context);
+
+            var tableRowBlock = CurrentBuilderContext.TableRowBlockTagStack.Peek();
+            
+            if (context.tablerow_cols() != null)
+            {
+                if (context.tablerow_cols().NUMBER() != null)
+                {
+                    tableRowBlock.Cols = CreateObjectSimpleExpressionNode(
+                        CreateIntNumericValueFromString(context.tablerow_cols().NUMBER().ToString()));
+                }
+                else
+                {
+                    StartNewLiquidExpressionTree(x => tableRowBlock.Cols = x);
+                    StartCapturingVariable(context.for_param_limit().variable());
+                    MarkCurrentExpressionComplete();
+                }
+            }
+            if (context.for_param_limit() != null)
+            {
+                if (context.for_param_limit().NUMBER() != null)
+                {
+                    tableRowBlock.Limit = CreateObjectSimpleExpressionNode(
+                        CreateIntNumericValueFromString(context.for_param_limit().NUMBER().ToString()));
+                }
+                else
+                {
+                    StartNewLiquidExpressionTree(x => tableRowBlock.Limit = x);
+                    StartCapturingVariable(context.for_param_limit().variable());
+                    MarkCurrentExpressionComplete();
+                }
+            }
+            if (context.for_param_offset() != null)
+            {
+                if (context.for_param_offset().NUMBER() != null)
+                {
+                    tableRowBlock.Offset = CreateObjectSimpleExpressionNode(
+                        CreateIntNumericValueFromString(context.for_param_offset().NUMBER().ToString()));
+                }
+                else
+                {
+                    StartNewLiquidExpressionTree(x => tableRowBlock.Offset = x);
+                    StartCapturingVariable(context.for_param_offset().variable());
+                    MarkCurrentExpressionComplete();
+                }
+            }
+            
+        }
+
+        public override void EnterTablerow_iterable(LiquidParser.Tablerow_iterableContext context)
+        {
+            base.EnterTablerow_iterable(context);
+            var tableRowBlock = CurrentBuilderContext.TableRowBlockTagStack.Peek();
+            if (context.STRING() != null)
+            {
+                //Console.WriteLine("  +++ FOUND a STRING ");
+                tableRowBlock.IterableCreator =
+                    new StringValueIterableCreator(GenerateStringSymbol(context.STRING().GetText()));
+            }
+            else if (context.variable() != null)
+            {
+                //Console.WriteLine("  +++ FOUND a VARIABLE ");
+
+                StartNewLiquidExpressionTree(result =>
+                {
+                    //Console.WriteLine("   --- Setting ExpRESSION TREE TO " + result);
+                    tableRowBlock.IterableCreator = new ArrayValueCreator(result);
+
+                });
+                StartCapturingVariable(context.variable()); // marked complete in ExitFor_iterable.
+
+
+            }
+            else if (context.generator() != null)
+            {
+                Console.WriteLine("  +++ FOUND a GENERATOR ");
+
+                tableRowBlock.IterableCreator = CreateGeneratorContext(context.generator());
+            }
+            else
+            {
+                //Console.WriteLine("TODO: Process the missing iterable");
+                // TODO: Maybe put an UNDEFINED variable in the AST?  Or an Erroneous If?
+            }
+
+        }
+
+        public override void ExitTablerow_iterable(LiquidParser.Tablerow_iterableContext context)
+        {
+            base.ExitTablerow_iterable(context);
+            if (context.variable() != null)
+            {
+                MarkCurrentExpressionComplete();
+            }
+        }
 
         #region Custom Tags
 
@@ -1580,7 +1700,7 @@ namespace Liquid.NET
             public readonly Stack<MacroBlockTag> MacroBlockTagStack = new Stack<MacroBlockTag>();
             public readonly Stack<ForBlockTag> ForBlockStack = new Stack<ForBlockTag>();
             public readonly Stack<IncludeTag> IncludeTagStack = new Stack<IncludeTag>();
-
+            public readonly Stack<TableRowBlockTag> TableRowBlockTagStack = new Stack<TableRowBlockTag>();  
             public LiquidExpressionTreeBuilder LiquidExpressionBuilder { get; set; }
         }
 

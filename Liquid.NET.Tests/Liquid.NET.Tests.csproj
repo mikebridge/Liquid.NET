@@ -170,6 +170,7 @@
     <Compile Include="Tags\ForBlockTagTests.cs" />
     <Compile Include="Tags\IfThenElseBlockTagTests.cs" />
     <Compile Include="Tags\IncrementTagTests.cs" />
+    <Compile Include="Tags\TableRowBlockTagTests.cs" />
     <Compile Include="Tags\UnlessBlockTagTests.cs" />
     <Compile Include="TemplateContextTests.cs" />
     <Compile Include="Utils\StrFTimeTests.cs" />

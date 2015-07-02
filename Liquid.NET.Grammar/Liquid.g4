@@ -41,7 +41,7 @@ tag:				raw_tag
 					| break_tag
 					| continue_tag
 					| macro_tag
-//					| ifchanged_tag
+					| ifchanged_tag
 					;
 
 // text wrapped in a raw tag
@@ -98,6 +98,10 @@ when_tag:			TAGSTART WHEN_TAG when_expressions TAGEND whenblock;
 when_expressions:	outputexpression ((COMMA | OR) outputexpression)*;
 
 whenblock:			block*;
+
+ifchanged_tag:		TAGSTART IFCHANGED_TAG TAGEND ifchanged_block TAGSTART ENDIFCHANGED_TAG TAGEND ;
+
+ifchanged_block:	block*;
 
 cycle_tag:			TAGSTART CYCLE_TAG cycle_group? cycle_value (COMMA cycle_value)* TAGEND ;
 

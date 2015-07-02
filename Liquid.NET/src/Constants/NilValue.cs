@@ -10,7 +10,7 @@ namespace Liquid.NET.Constants
     //
     /// </summary>
     [Obsolete]
-    public class NilValue : ExpressionConstant
+    public class NilValueX : ExpressionConstant
     {
         public override object Value
         {

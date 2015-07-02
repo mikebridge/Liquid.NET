@@ -109,6 +109,11 @@ namespace Liquid.NET.Tests
             _result += errorNode.ToString();
         }
 
+        public void Visit(IfChangedBlockTag ifChangedBlockTag)
+        {
+            _result += ifChangedBlockTag.ToString();
+        }
+
         private String VisitIfTag(TreeNode<LiquidExpression> exprNode)
         {
             String result = " IF => " + exprNode.Data;

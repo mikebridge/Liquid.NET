@@ -24,7 +24,7 @@ namespace Liquid.NET.Rendering
             var i = 0;
             foreach (var varName in macroBlocktag.Args.Take(args.Count))
             {
-                macroScope.DefineVariable(varName, args[i].HasValue? args[i].Value : new NilValue());
+                macroScope.DefineVariable(varName, args[i].HasValue? args[i].Value : null);
                 i++;
             }
             symbolTableStack.Push(macroScope);

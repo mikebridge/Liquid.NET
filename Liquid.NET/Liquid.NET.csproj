@@ -172,6 +172,7 @@
     <Compile Include="src\RenderingVisitor.cs" />
     <Compile Include="src\Rendering\Expressions\VariableReferenceResolver.cs" />
     <Compile Include="src\Rendering\ForRenderer.cs" />
+    <Compile Include="src\Rendering\IfChangedRenderer.cs" />
     <Compile Include="src\Rendering\IncludeRenderer.cs" />
     <Compile Include="src\Rendering\MacroRenderer.cs" />
     <Compile Include="src\Symbols\ErrorNode.cs" />

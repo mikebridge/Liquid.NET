@@ -14,11 +14,29 @@ namespace Liquid.NET.Tests.Tags
         public void It_Should_Render_If_Changed()
         {
             // Arrange
+            ITemplateContext ctx = new TemplateContext().WithAllFilters();
+            var template = LiquidTemplate.Create("{% assign x = \"one|two|two|three\" | split: \"|\" %}{% for i in x %}{% ifchanged %}{{ i }}{% endifchanged %}{% endfor %}");
 
             // Act
+            String result = template.Render(ctx);
 
             // Assert
-            Assert.Fail("Not Implemented Yet");
+            Assert.That(result, Is.EqualTo("onetwothree"));
+
+        }
+
+        [Test]
+        public void Two_Tags_Should_Not_Conflict()
+        {
+            // Arrange
+            ITemplateContext ctx = new TemplateContext().WithAllFilters();
+            var template = LiquidTemplate.Create("{% assign x = \"two|two|two|two\" | split: \"|\" %}{% for i in x %}{% ifchanged %}{{ i }}{% endifchanged %}{% endfor %}{% for i in x %}{% ifchanged %}{{ i }}{% endifchanged %}{% endfor %}");
+
+            // Act
+            String result = template.Render(ctx);
+
+            // Assert
+            Assert.That(result, Is.EqualTo("twotwo"));
 
         }
 

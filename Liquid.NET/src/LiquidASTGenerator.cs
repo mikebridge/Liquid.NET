@@ -772,6 +772,24 @@ namespace Liquid.NET
             _astNodeStack.Pop();
         }
 
+        public override void EnterIfchanged_tag(LiquidParser.Ifchanged_tagContext context)
+        {
+            base.EnterIfchanged_tag(context);
+            var ifChangedBlockTag = new IfChangedBlockTag();
+            var newNode = CreateTreeNode<IASTNode>(ifChangedBlockTag);
+            
+            CurrentAstNode.AddChild(newNode);
+
+            _astNodeStack.Push(ifChangedBlockTag.LiquidBlock); // capture the block
+        }
+
+        public override void ExitIfchanged_tag(LiquidParser.Ifchanged_tagContext context)
+        {
+            base.ExitIfchanged_tag(context);
+            _astNodeStack.Pop();
+
+        }
+
         public override void EnterIncrement_tag(LiquidParser.Increment_tagContext incrementContext)
         {
             base.EnterIncrement_tag(incrementContext);
@@ -1112,102 +1130,6 @@ namespace Liquid.NET
             }
 
         }
-//        {
-//            base.EnterIsEmptyOrNullExpr(context);
-//            //Console.WriteLine(" --- exiting IS EMPTY expression >" + context.GetText() + "<");
-//            MarkCurrentExpressionComplete();
-//            if (context.NEQ() != null)
-//            {
-//                MarkCurrentExpressionComplete();
-//            }
-//        }
-
-//        public override void EnterIsEmptyOrNullExpr(LiquidParser.IsEmptyOrNullExprContext isEmptyExprContext)
-//        {
-//            Console.WriteLine("Is empty or null...");
-//            base.EnterIsEmptyOrNullExpr(isEmptyExprContext);
-//            if (isEmptyExprContext.NEQ() == null && isEmptyExprContext.EQ() == null)
-//                // any comparison other than == and != will fail
-//            {
-//                AddExpressionToCurrentExpressionBuilder(new FalseExpression());
-//            }
-//            else
-//            {
-//                if (isEmptyExprContext.NEQ() != null)
-//                {
-//                    AddExpressionToCurrentExpressionBuilder(new NotExpression());
-//                }
-//
-//                if (isEmptyExprContext.EMPTY() != null)
-//                {
-//                    AddExpressionToCurrentExpressionBuilder(new IsEmptyExpression());
-//                }
-//                if (isEmptyExprContext.NULL() != null)
-//                {
-//                    AddExpressionToCurrentExpressionBuilder(new IsNullExpression());
-//                }
-//                if (isEmptyExprContext.BLANK() != null)
-//                {
-//                    AddExpressionToCurrentExpressionBuilder(new IsBlankExpression());
-//                }
-//            }
-//
-//        }
-//
-//        public override void ExitIsEmptyOrNullExpr(LiquidParser.IsEmptyOrNullExprContext context)
-//        {
-//            base.EnterIsEmptyOrNullExpr(context);
-//            //Console.WriteLine(" --- exiting IS EMPTY expression >" + context.GetText() + "<");
-//            MarkCurrentExpressionComplete();
-//            if (context.NEQ() != null)
-//            {
-//                MarkCurrentExpressionComplete();
-//            }
-//        }
-
-//        public override void EnterIsEmptyExpr(LiquidParser.IsEmptyExprContext isEmptyExprContext)
-//        {
-//            base.EnterIsEmptyExpr(isEmptyExprContext);
-//            if (isEmptyExprContext.NEQ() != null)
-//            {
-//                AddExpressionToCurrentExpressionBuilder(new NotExpression());
-//            }
-//            AddExpressionToCurrentExpressionBuilder(new IsEmptyExpression());
-//        }
-//
-//        public override void ExitIsEmptyExpr(LiquidParser.IsEmptyExprContext context)
-//        {
-//            base.ExitIsEmptyExpr(context);
-//            //Console.WriteLine(" --- exiting IS EMPTY expression >" + context.GetText() + "<");
-//            MarkCurrentExpressionComplete();
-//            if (context.NEQ() != null)
-//            {
-//                MarkCurrentExpressionComplete();
-//            }
-//        }
-//
-//        public override void EnterIsNullExpr(LiquidParser.IsNullExprContext isNullExprContext)
-//        {
-//
-//            Console.WriteLine("Is NULL CHECK!!");
-//            base.EnterIsNullExpr(isNullExprContext);
-//            if (isNullExprContext.NEQ() != null)
-//            {
-//                AddExpressionToCurrentExpressionBuilder(new NotExpression());
-//            }
-//            AddExpressionToCurrentExpressionBuilder(new IsNullExpression());
-//        }
-//
-//        public override void ExitIsNullExpr(LiquidParser.IsNullExprContext isNullExprContext)
-//        {
-//            base.ExitIsNullExpr(isNullExprContext);
-//            Console.WriteLine(" --- exiting IS NULL expression >" + isNullExprContext.GetText() + "<");
-//            MarkCurrentExpressionComplete();
-//            if (isNullExprContext.NEQ() != null)
-//            {
-//                MarkCurrentExpressionComplete();
-//            }
-//        }
 
 
 
@@ -1215,39 +1137,20 @@ namespace Liquid.NET
         {
             base.EnterComparisonExpr(comparisonContext);
             Console.WriteLine(" === creating COMPARISON expression >" + comparisonContext.GetText() + "<");
-//
-//            if (IsNullComparison(comparisonContext))
-//            {
-//                if (comparisonContext.EQ() != null)
-//                {
-//                    Console.WriteLine(" +++ EQUALS NULL");
-//                    AddExpressionToCurrentExpressionBuilder(new IsNullExpression());
-//                } 
-//                else if (comparisonContext.NEQ() != null)
-//                {
-//                    Console.WriteLine(" +++ NOT EQUALS NULL");
-//                    AddExpressionToCurrentExpressionBuilder(new NotExpression());
-//                    AddExpressionToCurrentExpressionBuilder(new IsNullExpression());
-//                }
-//                else
-//                {
-//                    AddExpressionToCurrentExpressionBuilder(new FalseExpression());
-//                }
-//            } 
-//            else 
+
             if (comparisonContext.EQ() != null)
             {
-                Console.WriteLine(" +++ EQUALS");
+                //Console.WriteLine(" +++ EQUALS");
                 AddExpressionToCurrentExpressionBuilder(new EqualsExpression());
             }
             else if (comparisonContext.GT() != null)
             {
-                Console.WriteLine(" +++ GT");
+                //Console.WriteLine(" +++ GT");
                 AddExpressionToCurrentExpressionBuilder(new GreaterThanExpression());
             }
             else if (comparisonContext.LT() != null)
             {
-                Console.WriteLine(" +++ LT");
+                //Console.WriteLine(" +++ LT");
                 AddExpressionToCurrentExpressionBuilder(new LessThanExpression());
             }
             else if (comparisonContext.LTE() != null)
@@ -1260,46 +1163,23 @@ namespace Liquid.NET
             } 
             else if (comparisonContext.NEQ() != null)
             {
-                Console.WriteLine(" +++ NOT");
+                //Console.WriteLine(" +++ NOT");
                 AddExpressionToCurrentExpressionBuilder(new NotEqualsExpression());
             }
             else
-            {
-                // TODO: figure out what to return here
+            {               
                 throw new Exception("Invalid comparison: "+ comparisonContext.GetText()); 
             }
         }
 
-        private static bool IsNullComparison(LiquidParser.ComparisonExprContext comparisonContext)
-        {
-            return comparisonContext.children.Select(x => (x as LiquidParser.OutputExpressionContext))
-                .Where(x => x != null).Any(x => "null".Equals(x.GetText().ToLower()) || "nil".Equals(x.GetText().ToLower()));
-        }
 
         public override void ExitComparisonExpr(LiquidParser.ComparisonExprContext comparisonContext)
         {
             base.ExitComparisonExpr(comparisonContext);
             Console.WriteLine(" --- exiting COMPARISON expression >" + comparisonContext.GetText() + "<");
-//            if (IsNullComparison(comparisonContext))
-//            {
-//                if (comparisonContext.EQ() != null)
-//                {
-//                    MarkCurrentExpressionComplete();
-//                }
-//                else if (comparisonContext.NEQ() != null)
-//                {
-//                    MarkCurrentExpressionComplete();
-//                    MarkCurrentExpressionComplete();
-//                }
-//                else
-//                {
-//                    MarkCurrentExpressionComplete();
-//                }
-//            }
-//            else
-//            {
-                MarkCurrentExpressionComplete();
-           // }
+
+            MarkCurrentExpressionComplete();
+
         }
 
 

@@ -127,7 +127,7 @@ namespace Liquid.NET.Rendering
                 localBlockScope.DefineVariable(def.Key,
                     liquidExpressionREsult.SuccessResult.HasValue
                         ? liquidExpressionREsult.SuccessResult.Value
-                        : new NilValue());
+                        : null);
             }
         }
     }

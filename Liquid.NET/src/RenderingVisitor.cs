@@ -27,6 +27,7 @@ namespace Liquid.NET
         private readonly ConcurrentDictionary<String, int> _counters = new ConcurrentDictionary<string, int>();
 
         public readonly IList<LiquidError> Errors = new List<LiquidError>();
+        private IfChangedRenderer _isChangedRenderer;
 
         public bool HasErrors { get { return Errors.Any();  } }
 
@@ -406,6 +407,17 @@ namespace Liquid.NET
             _result += errorNode.LiquidError.ToString();
         }
 
+        public void Visit(IfChangedBlockTag ifChangedBlockTag)
+        {
+            // This maintains state, so there's only one.
+            if (_isChangedRenderer == null)
+            {
+                _isChangedRenderer = new IfChangedRenderer(this, _astRenderer, _symbolTableStack);
+            }
+            _result += _isChangedRenderer.Next(ifChangedBlockTag.UniqueId, ifChangedBlockTag.LiquidBlock, _astRenderer);
+
+        }
+
         public void Visit(RootDocumentNode rootDocumentNode)
         {
            // noop
@@ -430,7 +442,7 @@ namespace Liquid.NET
             Console.WriteLine("Visiting Object Expression ");
             var liquidResult = LiquidExpressionEvaluator.Eval(liquidExpression, new List<Option<IExpressionConstant>>(), _symbolTableStack)
                 .WhenSuccess(x => x.WhenSome(some => _result += Render(x.Value))
-                                   .WhenNone(() => _result += Render(new NilValue())))
+                                   .WhenNone(() => _result += ""))
                  .WhenError(RenderError);
 //            if (liquidResult.HasValue)
 //            {
@@ -441,11 +453,6 @@ namespace Liquid.NET
 //                _result += Render(new NilValue());
 //            }
 
-        }
-
-        public void Visit(NilValue nilValue)
-        {
-            // do not render anything for nil
         }
 
         public void Visit(LiquidExpressionTree liquidExpressionTree)

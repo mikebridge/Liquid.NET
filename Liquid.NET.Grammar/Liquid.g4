@@ -17,7 +17,6 @@ init:				block*;
 
 block:				outputmarkup | tag | rawtext ;
 
-// TODO: name this something other than rawtext (e.g. ocean text)
 rawtext:			TEXT+ ;
 
 				
@@ -56,9 +55,6 @@ custom_blocktag:	TAGSTART custom_block_start_tag customtagblock_expr* TAGEND cus
 //					| TAGSTART custom_block_start_tag customtagblock_expr* TAGEND custom_blocktag_block TAGSTART LABEL TAGEND {NotifyErrorListeners("Liquid error: end tag does not match start tag '" + _localctx.custom_block_start_tag().GetText() + "'");} ;
 
 custom_block_start_tag:		VARIABLENAME;
-
-//custom_block_end_tag:		{ _localctx.GetText().Equals("end") + ??? }? ENDLABEL;c
-
 custom_block_end_tag:		ENDLABEL;
 
 customtagblock_expr:		outputexpression;
@@ -87,7 +83,11 @@ ifexpr:				expr ;
 
 ifblock:			block*;
 
-case_tag:			TAGSTART CASE_TAG outputexpression TAGEND whenblock case_tag_contents TAGSTART ENDCASE_TAG TAGEND ;
+//case_tag:			TAGSTART CASE_TAG outputexpression TAGEND whenblock case_tag_contents TAGSTART ENDCASE_TAG TAGEND ;
+
+case_tag:			TAGSTART CASE_TAG case_expr TAGEND whenblock case_tag_contents TAGSTART ENDCASE_TAG TAGEND ;
+
+case_expr:			expr;
 
 case_tag_contents:	when_tag* when_else_tag? ;
 

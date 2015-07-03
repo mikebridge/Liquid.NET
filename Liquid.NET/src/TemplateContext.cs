@@ -179,7 +179,7 @@ namespace Liquid.NET
             _filterRegistry.Register<UpCaseFilter>("upcase");
             // url_encode
             _filterRegistry.Register<UrlEscapeFilter>("url_escape");
-
+            _filterRegistry.Register<DefaultFilter>("default");
 
             return this;   
         }

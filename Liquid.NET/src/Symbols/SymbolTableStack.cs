@@ -11,7 +11,6 @@ namespace Liquid.NET.Symbols
     public class SymbolTableStack
     {
         private readonly IList<SymbolTable> _symbolTables = new List<SymbolTable>();
-        public IFileSystem FileSystem { get; set; }
 
         public void Push(SymbolTable symbolTable)
         {

@@ -14,7 +14,7 @@ namespace Liquid.NET.Expressions
     /// 
     public interface IIterableCreator
     {
-        IEnumerable<IExpressionConstant> Eval(SymbolTableStack symbolTableStack);
+        IEnumerable<IExpressionConstant> Eval(ITemplateContext templateContext);
     }
 
     public class StringValueIterableCreator : IIterableCreator
@@ -26,7 +26,7 @@ namespace Liquid.NET.Expressions
             _stringValue = stringValue;
         }
 
-        public IEnumerable<IExpressionConstant> Eval(SymbolTableStack symbolTableStack)
+        public IEnumerable<IExpressionConstant> Eval(ITemplateContext templateContext)
         {
 //            return _stringValue.StringVal
 //                .ToCharArray()
@@ -45,9 +45,9 @@ namespace Liquid.NET.Expressions
             _arrayValueExpression = arrayValueExpression;
         }
 
-        public IEnumerable<IExpressionConstant> Eval(SymbolTableStack symbolTableStack)
-        {            
-            var expressionConstant = LiquidExpressionEvaluator.Eval(_arrayValueExpression, symbolTableStack);
+        public IEnumerable<IExpressionConstant> Eval(ITemplateContext templateContext)
+        {
+            var expressionConstant = LiquidExpressionEvaluator.Eval(_arrayValueExpression, templateContext);
 
             if (expressionConstant.IsError || !expressionConstant.SuccessResult.HasValue)
             {
@@ -77,19 +77,19 @@ namespace Liquid.NET.Expressions
             _endExpression = end;
         }
 
-        public IEnumerable<IExpressionConstant> Eval(SymbolTableStack symbolTableStack)
+        public IEnumerable<IExpressionConstant> Eval(ITemplateContext templateContext)
         {
-            var startValue = ValueAsNumeric(_startExpression, symbolTableStack);
-            var endValue = ValueAsNumeric(_endExpression, symbolTableStack);
+            var startValue = ValueAsNumeric(_startExpression, templateContext);
+            var endValue = ValueAsNumeric(_endExpression, templateContext);
             //Console.WriteLine("*** Generating sequence from "+ startValue.IntValue+ " to " +endValue.IntValue);
             var generatorValue = new GeneratorValue(startValue, endValue);
             return generatorValue;
 
         }
 
-        private NumericValue ValueAsNumeric(TreeNode<LiquidExpression> expr, SymbolTableStack symbolTableStack)
+        private NumericValue ValueAsNumeric(TreeNode<LiquidExpression> expr, ITemplateContext templateContext)
         {
-            var liquidExpressionResult = LiquidExpressionEvaluator.Eval(expr, symbolTableStack);
+            var liquidExpressionResult = LiquidExpressionEvaluator.Eval(expr, templateContext);
             if (liquidExpressionResult.IsError)
             {
                 return new NumericValue(0);

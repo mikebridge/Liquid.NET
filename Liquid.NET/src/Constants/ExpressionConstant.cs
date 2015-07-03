@@ -131,18 +131,13 @@ namespace Liquid.NET.Constants
         }
 
 
-//        protected bool Equals(ExpressionConstant other)
-//        {
-//            throw new NotImplementedException();
-//        }
-
         public override int GetHashCode()
         {
             return Value == null ? 0 : Value.GetHashCode();
         }
 
         public override LiquidExpressionResult Eval(
-            SymbolTableStack symbolTableStack,
+            ITemplateContext templateContext,
             IEnumerable<Option<IExpressionConstant>> childresults)
         {
             return LiquidExpressionResult.Success(this);

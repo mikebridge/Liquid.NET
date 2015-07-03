@@ -11,19 +11,19 @@ namespace Liquid.NET.Rendering
         private readonly ConcurrentDictionary<String, String> ifChangedCache = new ConcurrentDictionary<String, String>(); 
         private readonly RenderingVisitor _renderingVisitor;
         private readonly LiquidASTRenderer _astRenderer;
-        private readonly SymbolTableStack _symbolTableStack;
+        private readonly ITemplateContext _templateContext;
 
-        public IfChangedRenderer(RenderingVisitor renderingVisitor, LiquidASTRenderer astRenderer, SymbolTableStack symbolTableStack)
+        public IfChangedRenderer(RenderingVisitor renderingVisitor, LiquidASTRenderer astRenderer, ITemplateContext templateContext)
         {
             _renderingVisitor = renderingVisitor;
             _astRenderer = astRenderer;
-            _symbolTableStack = symbolTableStack;
+            _templateContext = templateContext;
         }
 
         public String Next(string identifier, TreeNode<IASTNode> liquidBlock, LiquidASTRenderer astRenderer)
         {
 
-            var hiddenVisitor = new RenderingVisitor(_astRenderer, _symbolTableStack);
+            var hiddenVisitor = new RenderingVisitor(_astRenderer, _templateContext);
             _astRenderer.StartVisiting(hiddenVisitor, liquidBlock);
             var result = hiddenVisitor.Text;
             foreach (var error in hiddenVisitor.Errors)
@@ -40,8 +40,6 @@ namespace Liquid.NET.Rendering
                 ifChangedCache[identifier] = result;
                 return result;
             }
-
-            //_astRenderer.StartVisiting(_renderingVisitor, liquidBlock);
         }
     }
 }

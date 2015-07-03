@@ -65,13 +65,13 @@ namespace Liquid.NET.Tests.Tags
         {
 
             public StringValue Render(
-                    SymbolTableStack symbolTableStack, 
+                    ITemplateContext templatecontext, 
                     TreeNode<IASTNode> liquidBlock,
                     IList<Option<IExpressionConstant>> args)
             {
                 //var argsAsString = String.Join(", ", args.Select(x => x.GetType().Name + ":" + ValueCaster.RenderAsString(x)));
 
-                var result = EvalLiquidBlock(symbolTableStack, liquidBlock);
+                var result = EvalLiquidBlock(templatecontext, liquidBlock);
 
                 var words = result.Split(new []{' '}, StringSplitOptions.RemoveEmptyEntries);
                 
@@ -80,10 +80,10 @@ namespace Liquid.NET.Tests.Tags
 
             }
 
-            private static String EvalLiquidBlock(SymbolTableStack symbolTableStack, TreeNode<IASTNode> liquidBlock)
+            private static String EvalLiquidBlock(ITemplateContext templateContext, TreeNode<IASTNode> liquidBlock)
             {
                 var evaluator = new LiquidASTRenderer();
-                var subRenderer = new RenderingVisitor(evaluator, symbolTableStack);
+                var subRenderer = new RenderingVisitor(evaluator, templateContext);
                 evaluator.StartVisiting(subRenderer, liquidBlock);
                 return subRenderer.Text;
             }

@@ -23,9 +23,9 @@ namespace Liquid.NET.Expressions
             visitor.Visit(this);
         }
 
-        public override LiquidExpressionResult Eval(SymbolTableStack symbolTableStack, IEnumerable<Option<IExpressionConstant>> childresults)
+        public override LiquidExpressionResult Eval(ITemplateContext templateContext, IEnumerable<Option<IExpressionConstant>> childresults)
         {
-            return symbolTableStack.Reference(Name);
+            return templateContext.SymbolTableStack.Reference(Name);
         }
 
 

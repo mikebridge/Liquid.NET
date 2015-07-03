@@ -19,11 +19,11 @@ namespace Liquid.NET.Expressions
             _index = index;
         }
 
-        public override LiquidExpressionResult Eval(SymbolTableStack symbolTableStack, IEnumerable<Option<IExpressionConstant>> expressions)
+        public override LiquidExpressionResult Eval(ITemplateContext templateContext, IEnumerable<Option<IExpressionConstant>> expressions)
         {
             //_variableReference.Eval(symbolTableStack, new List<IExpressionConstant>())
 
-            var liquidExpressionResult = _variableReference.Eval(symbolTableStack, new List<Option<IExpressionConstant>>());
+            var liquidExpressionResult = _variableReference.Eval(templateContext, new List<Option<IExpressionConstant>>());
             if (liquidExpressionResult.IsError)
             {
                 return liquidExpressionResult;

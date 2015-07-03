@@ -10,15 +10,7 @@ namespace Liquid.NET.Expressions
     {
         void Accept(IExpressionDescriptionVisitor expressionDescriptionVisitor);
 
-        LiquidExpressionResult Eval(SymbolTableStack symbolTableStack, IEnumerable<Option<IExpressionConstant>> childresults);
-
-//        bool HasError { get; }
-//
-//        String ErrorMessage { get; set; }
-//
-//        bool HasWarning { get; }
-//
-//        String WarningMessage { get; set; }
+        LiquidExpressionResult Eval(ITemplateContext symbolTableStack, IEnumerable<Option<IExpressionConstant>> childresults);
 
     }
 }

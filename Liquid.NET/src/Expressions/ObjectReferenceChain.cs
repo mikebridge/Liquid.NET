@@ -20,10 +20,10 @@ namespace Liquid.NET.Expressions
             _liquidExpression = liquidExpression;
         }
 
-        public override LiquidExpressionResult Eval(SymbolTableStack symbolTableStack, IEnumerable<Option<IExpressionConstant>> expressions)
+        public override LiquidExpressionResult Eval(ITemplateContext templateContext, IEnumerable<Option<IExpressionConstant>> expressions)
         {
             // something got screwed up here
-            return LiquidExpressionEvaluator.Eval(_liquidExpression, new List<Option<IExpressionConstant>>(), symbolTableStack);
+            return LiquidExpressionEvaluator.Eval(_liquidExpression, new List<Option<IExpressionConstant>>(), templateContext);
         }
     }
 }

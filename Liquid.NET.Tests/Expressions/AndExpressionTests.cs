@@ -27,7 +27,7 @@ namespace Liquid.NET.Tests.Expressions
             var expr = new AndExpression();
 
             // Act
-            var result = expr.Eval(SymbolTableStackFactory.CreateSymbolTableStack(new TemplateContext()), new List<Option<IExpressionConstant>>
+            var result = expr.Eval(new TemplateContext(), new List<Option<IExpressionConstant>>
             {
                 new BooleanValue(expr1),
                 new BooleanValue(expr2)

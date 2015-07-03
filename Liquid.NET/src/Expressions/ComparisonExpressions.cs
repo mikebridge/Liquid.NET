@@ -16,7 +16,7 @@ namespace Liquid.NET.Expressions
             expressionDescriptionVisitor.Visit(this);
         }
 
-        public override LiquidExpressionResult Eval(SymbolTableStack symbolTableStack,
+        public override LiquidExpressionResult Eval(ITemplateContext templateContext,
             IEnumerable<Option<IExpressionConstant>> expressions)
         {
             var expressionList = expressions.ToList();
@@ -35,7 +35,7 @@ namespace Liquid.NET.Expressions
             expressionDescriptionVisitor.Visit(this);
         }
 
-        public override LiquidExpressionResult Eval(SymbolTableStack symbolTableStack,
+        public override LiquidExpressionResult Eval(ITemplateContext templateContext,
             IEnumerable<Option<IExpressionConstant>> expressions)
         {
             var expressionList = expressions.ToList();
@@ -54,7 +54,7 @@ namespace Liquid.NET.Expressions
             expressionDescriptionVisitor.Visit(this);
         }
 
-        public override LiquidExpressionResult Eval(SymbolTableStack symbolTableStack,
+        public override LiquidExpressionResult Eval(ITemplateContext templateContext,
             IEnumerable<Option<IExpressionConstant>> expressions)
         {
             var expressionList = expressions.ToList();
@@ -73,7 +73,7 @@ namespace Liquid.NET.Expressions
             expressionDescriptionVisitor.Visit(this);
         }
 
-        public override LiquidExpressionResult Eval(SymbolTableStack symbolTableStack,
+        public override LiquidExpressionResult Eval(ITemplateContext templateContext,
             IEnumerable<Option<IExpressionConstant>> expressions)
         {
             var expressionList = expressions.ToList();

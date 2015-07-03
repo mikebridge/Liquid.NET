@@ -11,7 +11,7 @@ namespace Liquid.NET.Expressions
 {
     public class FalseExpression : ExpressionDescription
     {
-        public override LiquidExpressionResult Eval(SymbolTableStack symbolTableStack, IEnumerable<Option<IExpressionConstant>> expressions)
+        public override LiquidExpressionResult Eval(ITemplateContext templateContext, IEnumerable<Option<IExpressionConstant>> expressions)
         {
             return LiquidExpressionResult.Success(new Some<IExpressionConstant>(new BooleanValue(false)));
         }

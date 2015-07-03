@@ -24,12 +24,10 @@ namespace Liquid.NET.Rendering
         /// this calls the renderer with the astRenderer to render
         /// the block.
         /// </summary>
-        /// <param name="forBlockTag"></param>
-        /// <param name="symbolTableStack"></param>
-        public void Render(ForBlockTag forBlockTag, SymbolTableStack symbolTableStack)
+        public void Render(ForBlockTag forBlockTag, ITemplateContext templateContext)
         {
             var localBlockScope = new SymbolTable();
-            symbolTableStack.Push(localBlockScope);
+            templateContext.SymbolTableStack.Push(localBlockScope);
             try
             {
                 var iterableFactory = forBlockTag.IterableCreator;
@@ -37,27 +35,27 @@ namespace Liquid.NET.Rendering
                 // TODO: the Eval may result in an ArrayValue with no Array
                 // (i.e. it's undefined).  THe ToList therefore fails....
                 // this should use Bind
-                var iterable = iterableFactory.Eval(symbolTableStack).ToList();
+                var iterable = iterableFactory.Eval(templateContext).ToList();
 
                 if (forBlockTag.Reversed.BoolValue)
                 {
                     iterable.Reverse(); // stupid thing does it in-place.
                 }
-                IterateBlock(forBlockTag, symbolTableStack, iterable);
+                IterateBlock(forBlockTag, templateContext, iterable);
             }
             finally
             {
-                symbolTableStack.Pop();
+                templateContext.SymbolTableStack.Pop();
             }
         }
 
-        private void IterateBlock(ForBlockTag forBlockTag, SymbolTableStack symbolTableStack, List<IExpressionConstant> iterable)
+        private void IterateBlock(ForBlockTag forBlockTag, ITemplateContext templateContext, List<IExpressionConstant> iterable)
         {
             var offset = new NumericValue(0);
             var  limit = new NumericValue(50);
             if (forBlockTag.Offset != null)
             {
-                var result = LiquidExpressionEvaluator.Eval(forBlockTag.Offset, symbolTableStack);
+                var result = LiquidExpressionEvaluator.Eval(forBlockTag.Offset, templateContext);
                 if (result.IsSuccess)
                 {
                     offset = result.SuccessValue<NumericValue>();
@@ -65,7 +63,7 @@ namespace Liquid.NET.Rendering
             }
             if (forBlockTag.Limit != null)
             {
-                var result = LiquidExpressionEvaluator.Eval(forBlockTag.Limit, symbolTableStack);
+                var result = LiquidExpressionEvaluator.Eval(forBlockTag.Limit, templateContext);
                 if (result.IsSuccess)
                 {
                     limit = result.SuccessValue<NumericValue>();
@@ -83,9 +81,9 @@ namespace Liquid.NET.Rendering
             foreach (var item in iterable.Skip(offset.IntValue).Take(limit.IntValue))
             {
                 String typename = item == null ? "null" : item.LiquidTypeName;
-                symbolTableStack.Define("forloop", CreateForLoopDescriptor(
-                    forBlockTag.LocalVariable + "-" + typename, iter, length, symbolTableStack));
-                symbolTableStack.Define(forBlockTag.LocalVariable, item);
+                templateContext.SymbolTableStack.Define("forloop", CreateForLoopDescriptor(
+                    forBlockTag.LocalVariable + "-" + typename, iter, length, templateContext.SymbolTableStack));
+                templateContext.SymbolTableStack.Define(forBlockTag.LocalVariable, item);
 
                 try
                 {

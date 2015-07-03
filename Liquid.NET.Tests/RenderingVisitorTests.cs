@@ -26,8 +26,8 @@ namespace Liquid.NET.Tests
 
         private static RenderingVisitor CreateRenderingVisitor()
         {
-            var stack = StackHelper.CreateSymbolTableStack(new TemplateContext());
-            return new RenderingVisitor(new LiquidASTRenderer(), stack);
+            var ctx = new TemplateContext();
+            return new RenderingVisitor(new LiquidASTRenderer(), ctx);
         }
     }
 }

@@ -26,11 +26,10 @@ namespace Liquid.NET.Tests.Expressions
             var templateContext = new TemplateContext();
             IDictionary<String, IExpressionConstant> dict = new Dictionary<string, IExpressionConstant> { { "test", new StringValue("aaa") } };
             templateContext.Define("myvar", new DictionaryValue(dict));
-            var symbolTableStack = StackHelper.CreateSymbolTableStack(templateContext);
 
             // Act
 
-            var result = variableReferenceIndex.Eval(symbolTableStack, new List<Option<IExpressionConstant>>());
+            var result = variableReferenceIndex.Eval(templateContext, new List<Option<IExpressionConstant>>());
 
             // Assert
             Assert.That(result.SuccessValue<StringValue>().StringVal, Is.EqualTo("aaa"));

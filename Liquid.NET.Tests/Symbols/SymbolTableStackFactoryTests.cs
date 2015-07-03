@@ -20,7 +20,7 @@ namespace Liquid.NET.Tests.Symbols
             var ctx = new TemplateContext().WithFilter<SortFilter>("abcde");
             
             // Act
-            var result = SymbolTableStackFactory.CreateSymbolTableStack(ctx);
+            var result = ctx.SymbolTableStack;
 
             // Assert
             Assert.That(result.HasFilter("abcde"));
@@ -31,7 +31,7 @@ namespace Liquid.NET.Tests.Symbols
         public void It_Should_Initialize_The_Lookup_Filter()
         {
             // Act
-            var result = SymbolTableStackFactory.CreateSymbolTableStack(new TemplateContext());
+            var result = new TemplateContext().SymbolTableStack;
 
             // Assert
             Assert.That(result.HasFilter("lookup"));

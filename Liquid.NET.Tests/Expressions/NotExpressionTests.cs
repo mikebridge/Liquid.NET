@@ -26,7 +26,7 @@ namespace Liquid.NET.Tests.Expressions
             var expr = new NotExpression();
 
             // Act
-            var result = expr.Eval(StackHelper.CreateSymbolTableStack(), new List<Option<IExpressionConstant>>{boolTrue}).SuccessValue<BooleanValue>();
+            var result = expr.Eval(new TemplateContext(), new List<Option<IExpressionConstant>>{boolTrue}).SuccessValue<BooleanValue>();
 
             // Assert
             Assert.That(result.Value, Is.False);

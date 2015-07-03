@@ -24,7 +24,8 @@ namespace Liquid.NET.Filters.Math
             {
                 return LiquidExpressionResult.Error("Liquid error: divided by 0");
             }
-            return LiquidExpressionResult.Success(new NumericValue(numericValue.DecimalValue % _operand.DecimalValue));
+            var val = (int) (numericValue.DecimalValue % _operand.DecimalValue);
+            return LiquidExpressionResult.Success(new NumericValue(val));
         }
     }
 }

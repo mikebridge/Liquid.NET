@@ -30,7 +30,7 @@ namespace Liquid.NET.Tests.Filters.Strings
             var result = RenderingHelper.RenderTemplate("Result : {{ 123456789123456789 | remove_first : 456 }}");
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : 123789123456789"));
+            Assert.That(result, Is.EqualTo("Result : 123789123456789.0"));
         }
     }
 }

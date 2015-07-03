@@ -31,10 +31,11 @@ namespace Liquid.NET.Filters.Math
             {
                 return LiquidExpressionResult.Error("Liquid error: divided by 0");
             }
-            var val = dividend.DecimalValue / _divisor.DecimalValue;
-    
-            return LiquidExpressionResult.Success(new NumericValue(val));
+            var result = dividend.DecimalValue / _divisor.DecimalValue;
+            return MathHelper.GetReturnValue(result, dividend, _divisor);
         }
+
+        
     }
 
 }

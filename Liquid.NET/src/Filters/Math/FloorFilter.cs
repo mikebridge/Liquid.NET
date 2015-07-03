@@ -8,7 +8,8 @@ namespace Liquid.NET.Filters.Math
 
         public override LiquidExpressionResult Apply(NumericValue val)
         {
-            return LiquidExpressionResult.Success(new NumericValue(System.Math.Floor(val.DecimalValue)));
+            var floor = (int) System.Math.Floor(val.DecimalValue);
+            return LiquidExpressionResult.Success(new NumericValue(floor));
         }
     }
 }

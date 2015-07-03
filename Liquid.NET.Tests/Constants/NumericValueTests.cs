@@ -65,5 +65,31 @@ namespace Liquid.NET.Tests.Constants
 
         }
 
+        [Test]        
+        public void It_Should_Remember_If_It_Is_An_Int_Or_Double()
+        {
+
+            // Assert
+            Assert.That(new NumericValue(123.0m).IsInt, Is.False);
+
+            // Assert
+            Assert.That( new NumericValue(123).IsInt, Is.True);
+
+
+        }
+
+        [Test]
+        [TestCase("123", true)]
+        [TestCase("123.0", false)]
+        [TestCase("123.1", false)]
+        public void It_Should_Remember_If_It_Is_An_Int_Or_Double_When_Parsed(String input, bool isInt)
+        {
+
+            // Assert
+            Assert.That(NumericValue.Parse(input).SuccessValue<NumericValue>().IsInt, Is.EqualTo(isInt));
+
+        }
+
+
     }
 }

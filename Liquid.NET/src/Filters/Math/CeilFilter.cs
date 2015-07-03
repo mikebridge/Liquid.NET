@@ -12,7 +12,9 @@ namespace Liquid.NET.Filters.Math
     {
         public override LiquidExpressionResult Apply(NumericValue val)
         {
-            return LiquidExpressionResult.Success(new NumericValue(System.Math.Ceiling(val.DecimalValue)));
+            var ceiling = (int) System.Math.Ceiling(val.DecimalValue);
+
+            return LiquidExpressionResult.Success(new NumericValue(ceiling));
         }
     }
 }

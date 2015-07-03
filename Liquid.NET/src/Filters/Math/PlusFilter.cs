@@ -18,7 +18,9 @@ namespace Liquid.NET.Filters.Math
             {
                 return LiquidExpressionResult.Error("The argument to \"add\" is missing.");
             }
-            return LiquidExpressionResult.Success(new NumericValue(numericValue.DecimalValue +  _operand.DecimalValue));
+            var val = numericValue.DecimalValue +  _operand.DecimalValue;
+
+            return MathHelper.GetReturnValue(val, numericValue, _operand);
         }
     }
 }

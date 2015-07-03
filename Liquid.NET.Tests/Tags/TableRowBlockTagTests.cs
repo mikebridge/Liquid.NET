@@ -20,13 +20,14 @@ namespace Liquid.NET.Tests.Tags
             String result = template.Render(ctx);
             Console.WriteLine(result);
             String expected =
-                @"<tr class=""row1""><td class=""col1"">ITER1</td><td class=""col2"">ITER2</td></tr><tr class=""row2"">" +
-                @"<td class=""col1"">ITER3</td><td class=""col2"">ITER4</td></tr><tr class=""row3"">" +
-                @"<td class=""col1"">ITER5</td><td class=""col2"">ITER6</td></tr>";
+                "<tr class=\"row1\">\r\n" +
+                @"<td class=""col1"">ITER1</td><td class=""col2"">ITER2</td></tr>"+"\r\n"+
+                @"<tr class=""row2""><td class=""col1"">ITER3</td><td class=""col2"">ITER4</td></tr>" + "\r\n"+
+                @"<tr class=""row3""><td class=""col1"">ITER5</td><td class=""col2"">ITER6</td></tr>";
             // Act
 
             // Assert
-            Assert.That(result, Is.EqualTo(expected));
+            Assert.That(result, Is.StringContaining(expected));
 
         }
     }

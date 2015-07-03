@@ -21,10 +21,21 @@ namespace Liquid.NET.Tests.Filters.Math
         }
 
         [Test]
-        public void It_Should_Return_A_Decimal_When_Dividing_IntLike_Numbers()
+        public void It_Should_Return_An_Int_When_Dividing_IntLike_Strings()
         {
             // Arrange
             var result = RenderingHelper.RenderTemplate("Result : {{ 10 | divided_by: 4 }}");
+
+            // Assert
+            //Assert.That(result, Is.EqualTo("Result : 2.5"));
+            Assert.That(result, Is.EqualTo("Result : 2"));
+        }
+
+        [Test]
+        public void It_Should_Return_A_Decimal_When_Dividing_IntLike_Strings()
+        {
+            // Arrange
+            var result = RenderingHelper.RenderTemplate("Result : {{ 10.0 | divided_by: 4 }}");
 
             // Assert
             Assert.That(result, Is.EqualTo("Result : 2.5"));
@@ -37,7 +48,8 @@ namespace Liquid.NET.Tests.Filters.Math
             var result = RenderingHelper.RenderTemplate("Result : {{ \"10\" | divided_by: \"4\" }}");
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : 2.5"));
+            //Assert.That(result, Is.EqualTo("Result : 2.5"));
+            Assert.That(result, Is.EqualTo("Result : 2"));
         }
 
     }

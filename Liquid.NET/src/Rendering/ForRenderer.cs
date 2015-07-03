@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
+using System.Reflection.Emit;
 using Liquid.NET.Constants;
 using Liquid.NET.Symbols;
 using Liquid.NET.Tags;
@@ -72,12 +72,6 @@ namespace Liquid.NET.Rendering
                 }
             }
 
-            
-
-            //ar offset = forBlockTag.Offset.IntValue; // zero indexed
-            //var limit = forBlockTag.Limit.IntValue; // max number of iterations.
-
-            // the offset and limit slice the iterable and sends the result to the loop.
             int length = iterable.Skip(offset.IntValue).Take(limit.IntValue).Count();
             if (length <= 0) 
             {
@@ -88,8 +82,9 @@ namespace Liquid.NET.Rendering
             int iter = 0;
             foreach (var item in iterable.Skip(offset.IntValue).Take(limit.IntValue))
             {
+                String typename = item == null ? "null" : item.LiquidTypeName;
                 symbolTableStack.Define("forloop", CreateForLoopDescriptor(
-                    forBlockTag.LocalVariable +"-"+item.LiquidTypeName, iter, length, symbolTableStack));
+                    forBlockTag.LocalVariable + "-" + typename, iter, length, symbolTableStack));
                 symbolTableStack.Define(forBlockTag.LocalVariable, item);
 
                 try

@@ -24,7 +24,7 @@ namespace Liquid.NET.Tests.Tags
             String result = template.Render(ctx);
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : <li>a string</li><li>123</li><li>456</li><li>false</li>"));
+            Assert.That(result, Is.EqualTo("Result : <li>a string</li><li>123</li><li>456.0</li><li>false</li>"));
         }
 
         [Test]
@@ -40,7 +40,7 @@ namespace Liquid.NET.Tests.Tags
             String result = template.Render(ctx);
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : <li>false</li><li>456</li><li>123</li><li>a string</li>"));
+            Assert.That(result, Is.EqualTo("Result : <li>false</li><li>456.0</li><li>123</li><li>a string</li>"));
         }
 
         [Test]
@@ -56,7 +56,7 @@ namespace Liquid.NET.Tests.Tags
             String result = template.Render(ctx);
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : <li>456</li><li>false</li>"));
+            Assert.That(result, Is.EqualTo("Result : <li>456.0</li><li>false</li>"));
         }
 
         [Test]
@@ -89,7 +89,7 @@ namespace Liquid.NET.Tests.Tags
             String result = template.Render(ctx);
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : <li>456</li>"));
+            Assert.That(result, Is.EqualTo("Result : <li>456.0</li>"));
         }
 
         [Test]
@@ -105,7 +105,7 @@ namespace Liquid.NET.Tests.Tags
             String result = template.Render(ctx);
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : <li>456</li><li>false</li>"));
+            Assert.That(result, Is.EqualTo("Result : <li>456.0</li><li>false</li>"));
         }
 
         [Test]
@@ -139,7 +139,7 @@ namespace Liquid.NET.Tests.Tags
             String result = template.Render(ctx);
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : Inside: a string Inside: 123 Inside: 456 Inside: false Outside: ")); // undefined is blank.
+            Assert.That(result, Is.EqualTo("Result : Inside: a string Inside: 123 Inside: 456.0 Inside: false Outside: ")); // undefined is blank.
         }
 
         [Test]
@@ -182,7 +182,7 @@ namespace Liquid.NET.Tests.Tags
             String result = template.Render(ctx);
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : <li>a string</li><li>123</li><li>456</li><li>false</li>"));
+            Assert.That(result, Is.EqualTo("Result : <li>a string</li><li>123</li><li>456.0</li><li>false</li>"));
 
         }
 
@@ -275,6 +275,7 @@ namespace Liquid.NET.Tests.Tags
         }
 
         [Test]
+        [Ignore("Can't do this yet")]
         public void It_Can_Use_Reserved_Words()
         {
             // Arrange

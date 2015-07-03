@@ -27,7 +27,7 @@ namespace Liquid.NET.Tests.Filters.Strings
             var result = RenderingHelper.RenderTemplate("Result : {{ 123456789123456789 | replace : '456' , 'x'}}");
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : 123x789123x789"));
+            Assert.That(result, Is.EqualTo("Result : 123x789123x789.0"));
         }
     }
 }

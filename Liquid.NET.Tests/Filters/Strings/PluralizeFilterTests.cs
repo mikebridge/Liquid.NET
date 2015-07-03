@@ -12,12 +12,8 @@ namespace Liquid.NET.Tests.Filters.Strings
     public class PluralizeFilterTests
     {
         [Test]
-        [TestCase(2, "2 things")]
-        [TestCase(1, "1 thing")]
-        [TestCase(1, "1 thing")]
         [TestCase(1.2, "1.2 things")]
-        [TestCase(0, "0 things")]
-        public void It_Should_Pluralize_A_Number(decimal input, String expected)
+        public void It_Should_Pluralize_A_Decimal_Number(decimal input, String expected)
         {
             // Arrange
             TemplateContext ctx = new TemplateContext();
@@ -29,6 +25,21 @@ namespace Liquid.NET.Tests.Filters.Strings
 
         }
 
+        [TestCase(2, "2 things")]
+        [TestCase(1, "1 thing")]
+        [TestCase(1, "1 thing")]
+        [TestCase(0, "0 things")]
+        public void It_Should_Pluralize_An_Integerr(int input, String expected)
+        {
+            // Arrange
+            TemplateContext ctx = new TemplateContext();
+            ctx.Define("input", new NumericValue(input));
+            var result = RenderingHelper.RenderTemplate("Result : {{ input | pluralize: 'thing', 'things' }}", ctx);
+
+            // Assert
+            Assert.That(result, Is.EqualTo("Result : " + expected));
+
+        }
         [Test]
         [TestCase("2", "2 things")]
         [TestCase("1", "1 thing")]

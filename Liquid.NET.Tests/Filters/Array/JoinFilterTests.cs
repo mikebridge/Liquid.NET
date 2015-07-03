@@ -26,7 +26,7 @@ namespace Liquid.NET.Tests.Filters.Array
             var result = filter.Apply(arrayValue).SuccessValue<StringValue>();
 
             // Assert
-            Assert.That(result.StringVal, Is.EqualTo("a string, 123, 456, false"));
+            Assert.That(result.StringVal, Is.EqualTo("a string, 123, 456.0, false"));
      
         }
 

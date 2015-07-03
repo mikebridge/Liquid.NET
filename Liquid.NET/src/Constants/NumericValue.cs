@@ -13,6 +13,7 @@ namespace Liquid.NET.Constants
 
         public decimal DecimalValue { get { return _val; } }
 
+        public bool IsInt { get; private set; }
 
         public int IntValue
         {
@@ -26,8 +27,6 @@ namespace Liquid.NET.Constants
             try
             {
                 return ValueCaster.Cast<IExpressionConstant, NumericValue>(new StringValue(str));
-                //return ValueCaster.Cast<StringValue,NumericValue>((dynamic) new StringValue(str));
-                //return new NumericValue(Convert.ToDecimal(str));
             }
             catch
             {
@@ -41,9 +40,14 @@ namespace Liquid.NET.Constants
         public NumericValue(decimal val)
         {
             _val = val;
+            IsInt = false;
         }
 
-
+        public NumericValue(int val)
+        {
+            _val = val;
+            IsInt = true;
+        }
         public override bool IsTrue
         {
             get { return _val != 0; }

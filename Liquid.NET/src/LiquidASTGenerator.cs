@@ -334,12 +334,12 @@ namespace Liquid.NET
                     forBlock.Limit = CreateObjectSimpleExpressionNode(
                         CreateIntNumericValueFromString(context.for_param_limit().NUMBER().ToString()));
                 }
-//                else if (context.for_param_limit().variable() != null)
-//                {
-//                    StartNewLiquidExpressionTree(x => forBlock.Limit = x);
-//                    StartCapturingVariable(context.for_param_limit().variable());
-//                    MarkCurrentExpressionComplete();
-//                }
+                else if (context.for_param_limit().variable() != null)
+                {
+                    StartNewLiquidExpressionTree(x => forBlock.Limit = x);
+                    StartCapturingVariable(context.for_param_limit().variable());
+                    MarkCurrentExpressionComplete();
+                }
                 //forBlock.Limit = CreateIntNumericValueFromString(context.for_param_limit().NUMBER().ToString());
             }
             if (context.for_param_offset() != null)
@@ -349,12 +349,12 @@ namespace Liquid.NET
                     forBlock.Offset = CreateObjectSimpleExpressionNode(
                         CreateIntNumericValueFromString(context.for_param_offset().NUMBER().ToString()));
                 }
-//                else if (context.for_param_offset().variable() != null)
-//                {
-//                    StartNewLiquidExpressionTree(x => forBlock.Offset = x);
-//                    StartCapturingVariable(context.for_param_offset().variable());
-//                    MarkCurrentExpressionComplete();
-//                }
+                else if (context.for_param_offset().variable() != null)
+                {
+                    StartNewLiquidExpressionTree(x => forBlock.Offset = x);
+                    StartCapturingVariable(context.for_param_offset().variable());
+                    MarkCurrentExpressionComplete();
+                }
                 //
             }
         }

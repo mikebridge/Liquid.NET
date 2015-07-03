@@ -24,7 +24,8 @@ namespace Liquid.NET.Filters.Strings
 
         public override LiquidExpressionResult ApplyTo(NumericValue numericValue)
         {
-            var str = new StringValue(ValueCaster.RenderAsString((IExpressionConstant) numericValue)+" ");
+            String numericString = ValueCaster.RenderAsString((IExpressionConstant) numericValue);
+            var str = new StringValue(numericString+" ");
             return LiquidExpressionResult.Success(str.Join(numericValue.DecimalValue == 1 ? _single : _plural));
         }
     }

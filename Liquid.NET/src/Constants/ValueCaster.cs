@@ -52,7 +52,12 @@ namespace Liquid.NET.Constants
 
             if (destType == typeof (StringValue))
             {
-                return LiquidExpressionResult.Success(new StringValue(num.Value.ToString()));
+                var strResult = num.IsInt ? 
+                    num.IntValue.ToString():
+                    num.DecimalValue.ToString("0.0###");
+                    //num.DecimalValue.ToString("G29");
+
+                return LiquidExpressionResult.Success(new StringValue(strResult));
             }
             return LiquidExpressionResult.Success(new NumericValue(0)); // Liquid seems to convert unknowns to numeric.
             //return ConstantFactory.CreateError<TDest>("Can't convert from numeric to " + destType);
@@ -192,7 +197,33 @@ namespace Liquid.NET.Constants
             {
                 try
                 {
-                    return LiquidExpressionResult.Success(new NumericValue(decimal.Parse(str.StringVal)));
+                    var stringVal = str.StringVal;
+                    if (stringVal == null)
+                    {
+                        return LiquidExpressionResult.Success(new NumericValue(0));  // liquid to_numeric seems to convert these to 0.
+                    }
+                    if (stringVal.Contains("."))
+                    {
+                        var val = decimal.Parse(stringVal);
+
+                        return LiquidExpressionResult.Success(new NumericValue(val));
+                    }
+                    else
+                    {
+                        try
+                        {
+                            var val = int.Parse(stringVal);
+                            return LiquidExpressionResult.Success(new NumericValue(val));
+                        }
+                        catch (OverflowException oex)
+                        {
+                            var val = decimal.Parse(stringVal);
+
+                            return LiquidExpressionResult.Success(new NumericValue(val));
+                        }
+                    }
+                   
+                    
                 }
                 catch
                 {

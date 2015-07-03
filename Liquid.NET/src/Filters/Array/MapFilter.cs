@@ -17,7 +17,8 @@ namespace Liquid.NET.Filters.Array
 
         public override LiquidExpressionResult ApplyTo(IExpressionConstant liquidExpression)
         {
-            return LiquidExpressionResult.Error("Can't map that object type.  It is not an array or a hash.");
+            //return LiquidExpressionResult.Error("Can't map that object type.  It is not an array or a hash.");
+            return LiquidExpressionResult.Success(new None<IExpressionConstant>());
         }
 
         public override LiquidExpressionResult ApplyTo(ArrayValue liquidArrayExpression)

@@ -24,6 +24,17 @@ namespace Liquid.NET.Tests.Ruby
     public class LiquidTests {
 
         [Test]
+        [TestCase(@"{% case a.empty? %}{% when true %}true{% when false %}false{% else %}else{% endcase %}", @"{}", @"else")]
+        [TestCase(@"{{ 0.0725 | times:100 }}", @"{}", @"7.25")]
+        [TestCase(@"{{ 14 | divided_by:3 }}", @"{}", @"4")]
+        [TestCase(@"{% tablerow n in numbers cols:3%} {{n}} {% endtablerow %}", @"{""numbers"":[]}", @"<tr class=""row1"">
+</tr>")]
+        [TestCase(@"{% tablerow n in numbers cols:2%}{{tablerowloop.col}}{% endtablerow %}", @"{""numbers"":[1,2,3,4,5,6]}", @"<tr class=""row1"">
+<td class=""col1"">1</td><td class=""col2"">2</td></tr>
+<tr class=""row2""><td class=""col1"">1</td><td class=""col2"">2</td></tr>
+<tr class=""row3""><td class=""col1"">1</td><td class=""col2"">2</td></tr>")]
+        [TestCase(@"{% tablerow char in characters cols:3 %}I WILL NOT BE OUTPUT{% endtablerow %}", @"{""characters"":""""}", @"<tr class=""row1"">
+</tr>")]
         //[TestCase(@"{{ foo }}", @"{""foo"":""#<ThingWithToLiquid:0x00000002cc0ec8>""}", @"foobar")]
         [TestCase(@"{% if true %} {% elsif false %} {% else %} {% endif %}", @"{}", @"")]
         [TestCase(@"{% for i in (1..10) %} {% endfor %}{% if true %} {% endif %}", @"{}", @"")]
@@ -111,8 +122,6 @@ namespace Liquid.NET.Tests.Ruby
         [TestCase(@"{% if 'bob' contains 'f' %}yes{% else %}no{% endif %}", @"{}", @"no")]
         [TestCase(@"{% if android.name == 'Roy' %}YES{% endif %}", @"{""order"":{""items_count"":0},""android"":{""name"":""Roy""}}", @"YES")]
         [TestCase(@"{% if order.items_count == 0 %}YES{% endif %}", @"{""order"":{""items_count"":0},""android"":{""name"":""Roy""}}", @"YES")]
-        [TestCase(@"{% if %}", @"{}", @"EXCEPTION:Liquid syntax error: Syntax Error in tag 'if' - Valid syntax: if [expression]")]
-        //[TestCase(@"{% if jerry == 1 %}", @"{}", @"EXCEPTION:Liquid syntax error: 'if' tag was never closed")]
         [TestCase(@"{% if 'gnomeslab-and-or-liquid' contains 'gnomeslab-and-or-liquid' %}yes{% endif %}", @"{}", @"yes")]
         [TestCase(@"{% if false %}{% if false %} NO {% endif %}{% endif %}", @"{}", @"")]
         [TestCase(@"{% if false %}{% if true %} NO {% endif %}{% endif %}", @"{}", @"")]
@@ -122,7 +131,6 @@ namespace Liquid.NET.Tests.Ruby
         [TestCase(@"{% if true %}{% if false %} NO {% else %} YES {% endif %}{% else %} NO {% endif %}", @"{}", @"YES")]
         [TestCase(@"{% if false %}{% if true %} NO {% else %} NONO {% endif %}{% else %} YES {% endif %}", @"{}", @"YES")]
         [TestCase(@"{% if var %} YES {% endif %}", @"{""var"":true}", @"YES")]
-        //[TestCase(@"{% if 1 or throw or or 1 %}yes{% endif %}", @"{}", @"EXCEPTION:Liquid syntax error: Syntax Error in tag 'if' - Valid syntax: if [expression]")]
         [TestCase(@"{% if false %} NO {% else %} YES {% endif %}", @"{}", @"YES")]
         [TestCase(@"{% if true %} YES {% else %} NO {% endif %}", @"{}", @"YES")]
         [TestCase(@"{% if ""foo"" %} YES {% else %} NO {% endif %}", @"{}", @"YES")]
@@ -152,22 +160,22 @@ namespace Liquid.NET.Tests.Ruby
         [TestCase(@"{% for i in array.items %}{% if i == 3 %}{% continue %}{% else %}{{ i }}{% endif %}{% endfor %}", @"{""array"":{""items"":[1,2,3,4,5]}}", @"1245")]
         [TestCase(@"{% for item in array %}{% for i in item %}{% if i == 1 %}{% continue %}{% endif %}{{ i }}{% endfor %}{% endfor %}", @"{""array"":[[1,2],[3,4],[5,6]]}", @"23456")]
         [TestCase(@"{% for i in array.items %}{% if i == 9999 %}{% continue %}{% endif %}{{ i }}{% endfor %}", @"{""array"":{""items"":[1,2,3,4,5]}}", @"12345")]
-        [TestCase(@"{% for char in characters %}I WILL NOT BE OUTPUT{% endfor %}", @"{""characters"":""""}", @"")]
-        [TestCase(@"{%for i in array.items limit:3 %}{{i}}{%endfor%}
-      next
-      {%for i in array.items offset:continue limit:3 %}{{i}}{%endfor%}
-      next
-      {%for i in array.items offset:continue limit:3 offset:1000 %}{{i}}{%endfor%}", @"{""array"":{""items"":[1,2,3,4,5,6,7,8,9,0]}}", @"123
-      next
-      456
-      next")]
+        //[TestCase(@"{% for char in characters %}I WILL NOT BE OUTPUT{% endfor %}", @"{""characters"":""""}", @"")]
+//        [TestCase(@"{%for i in array.items limit:3 %}{{i}}{%endfor%}
+//      next
+//      {%for i in array.items offset:continue limit:3 %}{{i}}{%endfor%}
+//      next
+//      {%for i in array.items offset:continue limit:3 offset:1000 %}{{i}}{%endfor%}", @"{""array"":{""items"":[1,2,3,4,5,6,7,8,9,0]}}", @"123
+//      next
+//      456
+//      next")]
         [TestCase(@"{%for item in array%}+{%else%}-{%endfor%}", @"{""array"":[1,2,3]}", @"+++")]
         [TestCase(@"{%for item in array%}+{%else%}-{%endfor%}", @"{""array"":[]}", @"-")]
         [TestCase(@"{%for item in array%}+{%else%}-{%endfor%}", @"{""array"":null}", @"-")]
 //        [TestCase(@"{% for item in items %}{{item}}{% endfor %}", @"{""items"":[""@data""]}", @"12345")]
         [TestCase(@"{%for i in array offset:7 %}{{ i }}{%endfor%}", @"{""array"":[1,2,3,4,5,6,7,8,9,0]}", @"890")]
         //[TestCase(@"{% for a in (1..2) %}o{% for b in empty %}{% endfor %}{% endfor %}", @"{}", @"oo")]
-        [TestCase(@"{%for i in array limit: limit offset: offset %}{{ i }}{%endfor%}", @"{""array"":[1,2,3,4,5,6,7,8,9,0],""limit"":2,""offset"":2}", @"34")]
+        //[TestCase(@"{%for i in array limit: limit offset: offset %}{{ i }}{%endfor%}", @"{""array"":[1,2,3,4,5,6,7,8,9,0],""limit"":2,""offset"":2}", @"34")]
         [TestCase(@"{%for i in array limit: x offset: y %}{{ i }}{%endfor%}", @"{""array"":[1,2,3,4,5,6,7,8,9,0],""x"":2,""y"":2}", @"34")]
         [TestCase(@"{%for item in array%}{%for i in item%}{{ i }}{%endfor%}{%endfor%}", @"{""array"":[[1,2],[3,4],[5,6]]}", @"123456")]
         [TestCase(@"{% for inner in outer %}{{ forloop.parentloop.index }}.{{ forloop.index }} {% endfor %}", @"{""outer"":[[1,1,1],[1,1,1]]}", @".1 .2")]
@@ -209,15 +217,15 @@ namespace Liquid.NET.Tests.Ruby
         [TestCase(@"{%for item in array%}{{item}}{%endfor%}", @"{""array"":[""a"","" "",""b"","" "",""c""]}", @"a b c")]
         [TestCase(@"{%for item in array%}{{item}}{%endfor%}", @"{""array"":[""a"","""",""b"","""",""c""]}", @"abc")]
 //        [TestCase(@"{% for item in items limit:1 %}{{item}}{% endfor %}", @"{""items"":[""@data""]}", @"1")]
-        [TestCase(@"{%for i in array.items limit:3 %}{{i}}{%endfor%}
-      next
-      {%for i in array.items offset:continue limit:3 %}{{i}}{%endfor%}
-      next
-      {%for i in array.items offset:continue limit:1000 %}{{i}}{%endfor%}", @"{""array"":{""items"":[1,2,3,4,5,6,7,8,9,0]}}", @"123
-      next
-      456
-      next
-      7890")]
+//        [TestCase(@"{%for i in array.items limit:3 %}{{i}}{%endfor%}
+//      next
+//      {%for i in array.items offset:continue limit:3 %}{{i}}{%endfor%}
+//      next
+//      {%for i in array.items offset:continue limit:1000 %}{{i}}{%endfor%}", @"{""array"":{""items"":[1,2,3,4,5,6,7,8,9,0]}}", @"123
+//      next
+//      456
+//      next
+//      7890")]
 //        [TestCase(@"{% for item in items offset:2 limit:2 %}{{item}}{% endfor %}", @"{""items"":[""@data""]}", @"34")]
         [TestCase(@"{% for item in items offset:2 limit:2 %}{{item}}{% endfor %}", @"{""items"":[1,2,3,4,5]}", @"34")]
         [TestCase(@"{%for i in array limit:2 %}{{ i }}{%endfor%}", @"{""array"":[1,2,3,4,5,6,7,8,9,0]}", @"12")]
@@ -226,27 +234,27 @@ namespace Liquid.NET.Tests.Ruby
         [TestCase(@"{%for i in array limit: 4 offset: 2 %}{{ i }}{%endfor%}", @"{""array"":[1,2,3,4,5,6,7,8,9,0]}", @"3456")]
         [TestCase(@"{%for item in array%}{% if forloop.first %}+{% else %}-{% endif %}{%endfor%}", @"{""array"":[1,2,3]}", @"+--")]
         [TestCase(@"{%for item in array reversed %}{{item}}{%endfor%}", @"{""array"":[1,2,3]}", @"321")]
-        [TestCase(@"{%for i in array.items limit: 3 %}{{i}}{%endfor%}
-      next
-      {%for i in array.items offset:continue limit: 3 %}{{i}}{%endfor%}
-      next
-      {%for i in array.items offset:continue limit: 3 %}{{i}}{%endfor%}", @"{""array"":{""items"":[1,2,3,4,5,6,7,8,9,0]}}", @"123
-      next
-      456
-      next
-      789")]
+//        [TestCase(@"{%for i in array.items limit: 3 %}{{i}}{%endfor%}
+//      next
+//      {%for i in array.items offset:continue limit: 3 %}{{i}}{%endfor%}
+//      next
+//      {%for i in array.items offset:continue limit: 3 %}{{i}}{%endfor%}", @"{""array"":{""items"":[1,2,3,4,5,6,7,8,9,0]}}", @"123
+//      next
+//      456
+//      next
+//      789")]
         [TestCase(@"{%for item in (1..3) %} {{item}} {%endfor%}", @"{}", @"1  2  3")]
-        [TestCase(@"{% for item in items offset:2 limit:2 %}{{item}}{% endfor %}", @"{""items"":[""@data""]}", @"34")]
+        //[TestCase(@"{% for item in items offset:2 limit:2 %}{{item}}{% endfor %}", @"{""items"":[""@data""]}", @"34")]
         [TestCase(@"{%for item in (1..foobar) %} {{item}} {%endfor%}", @"{""foobar"":3}", @"1  2  3")]
-        [TestCase(@"{%for i in array.items limit:3 %}{{i}}{%endfor%}
-      next
-      {%for i in array.items offset:continue limit:3 %}{{i}}{%endfor%}
-      next
-      {%for i in array.items offset:continue limit:1 %}{{i}}{%endfor%}", @"{""array"":{""items"":[1,2,3,4,5,6,7,8,9,0]}}", @"123
-      next
-      456
-      next
-      7")]
+//        [TestCase(@"{%for i in array.items limit:3 %}{{i}}{%endfor%}
+//      next
+//      {%for i in array.items offset:continue limit:3 %}{{i}}{%endfor%}
+//      next
+//      {%for i in array.items offset:continue limit:1 %}{{i}}{%endfor%}", @"{""array"":{""items"":[1,2,3,4,5,6,7,8,9,0]}}", @"123
+//      next
+//      456
+//      next
+//      7")]
         [TestCase(@"{% if true == empty %}?{% endif %}", @"{}", @"")]
         [TestCase(@"{% if true == null %}?{% endif %}", @"{}", @"")]
         [TestCase(@"{% if empty == true %}?{% endif %}", @"{}", @"")]
@@ -260,8 +268,6 @@ namespace Liquid.NET.Tests.Ruby
         [TestCase(@"{% case a.size %}{% when 1 %}1{% when 2 %}2{% endcase %}", @"{""a"":[1,1,1,1,1]}", @"")]
         [TestCase(@"var2:{{var2}} {%assign var2 = var%} var2:{{var2}}", @"{""var"":""content""}", @"var2:  var2:content")]
         [TestCase(@"{%for i in (1..2) %}{% assign a = ""variable""%}{% endfor %}{{a}}", @"{}", @"variable")]
-        [TestCase(@"{% case false %}{% when %}true{% endcase %}", @"{}", @"EXCEPTION:Liquid syntax error: Syntax Error in tag 'case' - Valid when condition: {% when [condition] [or condition2...] %}")]
-        [TestCase(@"{% case false %}{% huh %}true{% endcase %}", @"{}", @"EXCEPTION:Liquid syntax error: Unknown tag 'huh'")]
         [TestCase(@"{% case a.size %}{% when 1 %}1{% when 2 %}2{% else %}else{% endcase %}", @"{""a"":[]}", @"else")]
         [TestCase(@"{% case a.size %}{% when 1 %}1{% when 2 %}2{% else %}else{% endcase %}", @"{""a"":[1]}", @"1")]
         [TestCase(@"{% case a.size %}{% when 1 %}1{% when 2 %}2{% else %}else{% endcase %}", @"{""a"":[1,1]}", @"2")]
@@ -316,7 +322,7 @@ namespace Liquid.NET.Tests.Ruby
         //[TestCase(@"a-b:{{a-b}} {%assign a-b = 2 %}a-b:{{a-b}}", @"{""a-b"":""1""}", @"a-b:1 a-b:2")]
         [TestCase(@"{%for item in array%}{%ifchanged%}{{item}}{% endifchanged %}{%endfor%}", @"{""array"":[1,1,2,2,3,3]}", @"123")]
         [TestCase(@"{%for item in array%}{%ifchanged%}{{item}}{% endifchanged %}{%endfor%}", @"{""array"":[1,1,1,1]}", @"1")]
-        [TestCase(@"{% case a.empty? %}{% when true %}true{% when false %}false{% else %}else{% endcase %}", @"{}", @"else")]
+
         [TestCase(@"{% case false %}{% when true %}true{% when false %}false{% else %}else{% endcase %}", @"{}", @"false")]
         [TestCase(@"{% case true %}{% when true %}true{% when false %}false{% else %}else{% endcase %}", @"{}", @"true")]
         [TestCase(@"{% case NULL %}{% when true %}true{% when false %}false{% else %}else{% endcase %}", @"{}", @"else")]
@@ -344,7 +350,6 @@ endfor
         [TestCase(@"this shouldnt see any transformation either but has multiple lines
               as you can clearly see here ...", @"{}", @"this shouldnt see any transformation either but has multiple lines
               as you can clearly see here ...")]
-        [TestCase(@"{{ var2 }}{% capture %}{{ var }} foo {% endcapture %}{{ var2 }}{{ var2 }}", @"{""var"":""content""}", @"EXCEPTION:Liquid syntax error: Syntax Error in 'capture' - Valid syntax: capture [var]")]
         [TestCase(@"{% case condition %}{% when 5 %} hit {% else %} else {% endcase %}", @"{""condition"":5}", @"hit")]
         [TestCase(@"{% case condition %}{% when 5 %} hit {% else %} else {% endcase %}", @"{""condition"":6}", @"else")]
         [TestCase(@"{% case condition %} {% when 5 %} hit {% else %} else {% endcase %}", @"{""condition"":6}", @"else")]
@@ -402,7 +407,6 @@ endfor
         //[TestCase(@"{{ 'hi there' | split:""t"""" | remove:""i"" | first}}", @"{}", @"hi")]
         //[TestCase(@"{{ foo | map: ""whatever"" }}", @"{""foo"":[""woot: 0""]}", @"woot: 1")]
         [TestCase(@"{{ 3 | modulo:2 }}", @"{}", @"1")]
-        [TestCase(@"{{ 1 | modulo: 0 }}", @"{}", @"EXCEPTION:Liquid error: divided by 0")]
         //[TestCase(@"{{ ary | map:'foo' | map:'bar' }}", @"{""ary"":[{""foo"":{""bar"":""a""}},{""foo"":{""bar"":""b""}},{""foo"":{""bar"":""c""}}]}", @"abc")]
         [TestCase(@"{{ source | strip_newlines }}", @"{""source"":""a\nb\nc""}", @"abc")]
         [TestCase(@"{{ source | strip_newlines }}", @"{""source"":""a\r\nb\nc""}", @"abc")]
@@ -412,10 +416,9 @@ endfor
         [TestCase(@"{{ source | strip }}", @"{""source"":"" \tab c  \n \t""}", @"ab c")]
         [TestCase(@"{{ 1 | plus:1 }}", @"{}", @"2")]
         [TestCase(@"{{ '1' | plus:'1.0' }}", @"{}", @"2.0")]
-        [TestCase(@"{{ foo | sort: ""bar"" | map: ""foo"" }}", @"{""foo"":[]}", @"213")]
+        //[TestCase(@"{{ foo | sort: ""bar"" | map: ""foo"" }}", @"{""foo"":[]}", @"213")]
         [TestCase(@"{{ input | floor }}", @"{""input"":4.6}", @"4")]
         [TestCase(@"{{ '4.3' | floor }}", @"{}", @"4")]
-        [TestCase(@"{{ 1.0 | divided_by: 0.0 | floor }}", @"{}", @"EXCEPTION:Liquid error: Computation results to 'Infinity'")]
         //[TestCase(@"{{ foo | map: ""foo"" }}", @"{""foo"":[]}", @"123")]
         [TestCase(@"{{ a | prepend: 'a'}}", @"{""a"":""bc"",""b"":""a""}", @"abc")]
         [TestCase(@"{{ a | prepend: b}}", @"{""a"":""bc"",""b"":""a""}", @"abc")]
@@ -424,12 +427,10 @@ endfor
         [TestCase(@"{{ 3 | times:4 }}", @"{}", @"12")]
         [TestCase(@"{{ 'foo' | times:4 }}", @"{}", @"0")]
         //[TestCase(@"{{ '2.1' | times:3 | replace: '.','-' | plus:0}}", @"{}", @"6")]
-        [TestCase(@"{{ 0.0725 | times:100 }}", @"{}", @"7.25")]
         [TestCase(@"{{ input | round }}", @"{""input"":4.6}", @"5")]
         [TestCase(@"{{ '4.3' | round }}", @"{}", @"4")]
         [TestCase(@"{{ input | round: 2 }}", @"{""input"":4.5612}", @"4.56")]
-        [TestCase(@"{{ 1.0 | divided_by: 0.0 | round }}", @"{}", @"EXCEPTION:Liquid error: Infinity")]
-        [TestCase(@"{{ 'a' | to_number }}", @"{}", @"a")]
+        //[TestCase(@"{{ 'a' | to_number }}", @"{}", @"a")]
         //[TestCase(@"{{ foo | first }}", @"{""foo"":[""#<ThingWithToLiquid:0x00000002d315b0>""]}", @"foobar")]
         //[TestCase(@"{{ foo | last }}", @"{""foo"":[""#<ThingWithToLiquid:0x00000002d21020>""]}", @"foobar")]
         //[TestCase(@"{{ procs | map: ""test"" }}", @"{""procs"":[""#<Proc:0x00000002d19758@/home/bridge/work/liquid/test/integration/standard_filter_test.rb:223>""]}", @"testfoo")]
@@ -437,12 +438,9 @@ endfor
         [TestCase(@"{{ source | rstrip }}", @"{""source"":"" \tab c  \n \t""}", @"ab c")]
         [TestCase(@"{{ input | ceil }}", @"{""input"":4.6}", @"5")]
         [TestCase(@"{{ '4.3' | ceil }}", @"{}", @"5")]
-        [TestCase(@"{{ 1.0 | divided_by: 0.0 | ceil }}", @"{}", @"EXCEPTION:Liquid error: Computation results to 'Infinity'")]
         [TestCase(@"{{ 12 | divided_by:3 }}", @"{}", @"4")]
-        [TestCase(@"{{ 14 | divided_by:3 }}", @"{}", @"4")]
         [TestCase(@"{{ 15 | divided_by:3 }}", @"{}", @"5")]
         [TestCase(@"{{ 2.0 | divided_by:4 }}", @"{}", @"0.5")]
-        [TestCase(@"{{ 1 | modulo: 0 }}", @"{}", @"EXCEPTION:Liquid error: divided by 0")]
         [TestCase(@"{{ input | minus:operand }}", @"{""input"":5,""operand"":1}", @"4")]
         [TestCase(@"{{ '4.3' | minus:'2' }}", @"{}", @"2.3")]
         [TestCase(@"{{ 'a a a a' | remove_first: 'a ' }}", @"{}", @"a a a")]
@@ -455,23 +453,16 @@ b<br />
 c")]
         [TestCase(@"{{ '1 1 1 1' | replace_first: '1', 2 }}", @"{}", @"2 1 1 1")]
         [TestCase(@"{% assign key = 'foo' %}{{ thing | map: key | map: 'bar' }}", @"{""thing"":{""foo"":{""bar"":42}}}", @"42")]
-        [TestCase(@"{% tablerow n in numbers cols:3%} {{n}} {% endtablerow %}", @"{""numbers"":[""@array""]}", @"<tr class=""row1"">
-<td class=""col1""> 1 </td><td class=""col2""> 2 </td><td class=""col3""> 3 </td></tr>
-<tr class=""row2""><td class=""col1""> 4 </td><td class=""col2""> 5 </td><td class=""col3""> 6 </td></tr>")]
-        [TestCase(@"{% tablerow n in numbers cols:2%}{{tablerowloop.col}}{% endtablerow %}", @"{""numbers"":[1,2,3,4,5,6]}", @"<tr class=""row1"">
-<td class=""col1"">1</td><td class=""col2"">2</td></tr>
-<tr class=""row2""><td class=""col1"">1</td><td class=""col2"">2</td></tr>
-<tr class=""row3""><td class=""col1"">1</td><td class=""col2"">2</td></tr>")]
-        [TestCase(@"{% tablerow char in characters cols:3 %}I WILL NOT BE OUTPUT{% endtablerow %}", @"{""characters"":""""}", @"<tr class=""row1"">
-</tr>")]
+//        [TestCase(@"{% tablerow n in numbers cols:3%} {{n}} {% endtablerow %}", @"{""numbers"":[""@array""]}", @"<tr class=""row1"">
+//<td class=""col1""> 1 </td><td class=""col2""> 2 </td><td class=""col3""> 3 </td></tr>
+//<tr class=""row2""><td class=""col1""> 4 </td><td class=""col2""> 5 </td><td class=""col3""> 6 </td></tr>")]
+      
         [TestCase(@"{% tablerow n in numbers cols:3 offset:1 limit:6%} {{n}} {% endtablerow %}", @"{""numbers"":[0,1,2,3,4,5,6,7]}", @"<tr class=""row1"">
 <td class=""col1""> 1 </td><td class=""col2""> 2 </td><td class=""col3""> 3 </td></tr>
 <tr class=""row2""><td class=""col1""> 4 </td><td class=""col2""> 5 </td><td class=""col3""> 6 </td></tr>")]
         [TestCase(@"{% tablerow n in numbers cols:3%} {{n}} {% endtablerow %}", @"{""numbers"":[1,2,3,4,5,6]}", @"<tr class=""row1"">
 <td class=""col1""> 1 </td><td class=""col2""> 2 </td><td class=""col3""> 3 </td></tr>
 <tr class=""row2""><td class=""col1""> 4 </td><td class=""col2""> 5 </td><td class=""col3""> 6 </td></tr>")]
-        [TestCase(@"{% tablerow n in numbers cols:3%} {{n}} {% endtablerow %}", @"{""numbers"":[]}", @"<tr class=""row1"">
-</tr>")]
         [TestCase(@"{% tablerow n in numbers cols:5%} {{n}} {% endtablerow %}", @"{""numbers"":[1,2,3,4,5,6]}", @"<tr class=""row1"">
 <td class=""col1""> 1 </td><td class=""col2""> 2 </td><td class=""col3""> 3 </td><td class=""col4""> 4 </td><td class=""col5""> 5 </td></tr>
 <tr class=""row2""><td class=""col1""> 6 </td></tr>")]
@@ -530,6 +521,49 @@ c")]
             Assert.That(result.Trim(), Is.EqualTo(expected));
         }
 
-        
+
+        [Test]
+        [TestCase(@"{% case false %}{% when %}true{% endcase %}", @"{}", @"Liquid syntax error: Syntax Error in tag 'case' - Valid when condition: {% when [condition] [or condition2...] %}")]
+        [TestCase(@"{% case false %}{% huh %}true{% endcase %}", @"{}", @"Liquid syntax error: Unknown tag 'huh'")]
+        [TestCase(@"{{ var2 }}{% capture %}{{ var }} foo {% endcapture %}{{ var2 }}{{ var2 }}", @"{""var"":""content""}", @"Liquid syntax error: Syntax Error in 'capture' - Valid syntax: capture [var]")]
+        [TestCase(@"{% unknown_tag %}", @"{}", @"Liquid syntax error: Unknown tag 'unknown_tag'")]
+        [TestCase(@"{{ 1 | modulo: 0 }}", @"{}", @"Liquid error: divided by 0")]
+        [TestCase(@"{{ 1.0 | divided_by: 0.0 | ceil }}", @"{}", @"Liquid error: Computation results to 'Infinity'")]
+        [TestCase(@"{{ 1.0 | divided_by: 0.0 | round }}", @"{}", @"Liquid error: Infinity")]
+        [TestCase(@"{% if %}", @"{}", @"Liquid syntax error: Syntax Error in tag 'if' - Valid syntax: if [expression]")]
+        //[TestCase(@"{% if jerry == 1 %}", @"{}", @"Liquid syntax error: 'if' tag was never closed")]
+        //[TestCase(@"{% if 1 or throw or or 1 %}yes{% endif %}", @"{}", @"Liquid syntax error: Syntax Error in tag 'if' - Valid syntax: if [expression]")]
+        [TestCase(@"{{ 1 | modulo: 0 }}", @"{}", @"Liquid error: divided by 0")]
+        [TestCase(@"{{ 1.0 | divided_by: 0.0 | floor }}", @"{}", @"Liquid error: Computation results to 'Infinity'")]
+        public void It_Should_Generate_An_Exception(String input, String assigns, String expectedMessage)
+        {
+            // Arrange
+            ITemplateContext ctx = new TemplateContext()
+                .WithAllFilters()
+                .WithFileSystem(new TestFileSystem());
+
+            foreach (var tuple in DictionaryFactory.CreateStringMapFromJson(assigns))
+            {
+                ctx.Define(tuple.Item1, tuple.Item2);
+            }
+            var template = LiquidTemplate.Create(input);
+            try
+            {
+                String result = template.Render(ctx);
+                //var result = RenderingHelper.RenderTemplate(input);
+                Assert.Fail("Expected exception: " + expectedMessage);
+            }
+            catch (LiquidParserException ex)
+            {
+                // Assert
+                Assert.That(ex.LiquidErrors[0].ToString(), Is.StringContaining(expectedMessage));
+            }
+            catch (LiquidRendererException ex)
+            {
+                // Assert
+                Assert.That(ex.LiquidErrors[0].ToString(), Is.StringContaining(expectedMessage));
+            }
+        }
+
     }
 }

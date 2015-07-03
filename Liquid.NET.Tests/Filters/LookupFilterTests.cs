@@ -18,7 +18,7 @@ namespace Liquid.NET.Tests.Filters
         [TestCase("4", "")]
         [TestCase("30", "")]
         [TestCase("-1", "false")]
-        [TestCase("-2", "456")]
+        [TestCase("-2", "456.0")]
         [TestCase("-4", "a string")]
         [TestCase("-5", "")]
         [TestCase("4", "")]

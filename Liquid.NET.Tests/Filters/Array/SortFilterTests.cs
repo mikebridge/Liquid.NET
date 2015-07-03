@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection.Emit;
-using System.Text;
-using System.Threading.Tasks;
 using Liquid.NET.Constants;
 using Liquid.NET.Filters.Array;
 using NUnit.Framework;
@@ -32,7 +29,7 @@ namespace Liquid.NET.Tests.Filters.Array
             var resultStrings = result.SuccessValue<ArrayValue>().Select(ValueCaster.RenderAsString);
             
             // Assert
-            Assert.That(resultStrings, Is.EqualTo(new List<String>{"123", "456", "a string", "false"}));
+            Assert.That(resultStrings, Is.EqualTo(new List<String>{"123", "456.0", "a string", "false"}));
 
         }
 

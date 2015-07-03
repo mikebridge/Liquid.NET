@@ -22,8 +22,8 @@ namespace Liquid.NET.Filters.Math
 
         public override LiquidExpressionResult ApplyTo(NumericValue addend2)
         {
-            return LiquidExpressionResult.Success(new NumericValue(_addend1.DecimalValue * addend2.DecimalValue));
+            var result = _addend1.DecimalValue * addend2.DecimalValue;
+            return MathHelper.GetReturnValue(result, _addend1, addend2);
         }
-
     }
 }

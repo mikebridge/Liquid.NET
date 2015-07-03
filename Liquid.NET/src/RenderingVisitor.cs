@@ -2,12 +2,10 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Remoting.Messaging;
-using System.Security.Cryptography.X509Certificates;
+
 using Liquid.NET.Constants;
 using Liquid.NET.Expressions;
 using Liquid.NET.Rendering;
-using Liquid.NET.src.Rendering;
 using Liquid.NET.Symbols;
 using Liquid.NET.Tags;
 using Liquid.NET.Tags.Custom;

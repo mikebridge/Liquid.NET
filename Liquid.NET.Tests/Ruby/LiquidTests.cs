@@ -33,8 +33,8 @@ namespace Liquid.NET.Tests.Ruby
 <td class=""col1"">1</td><td class=""col2"">2</td></tr>
 <tr class=""row2""><td class=""col1"">1</td><td class=""col2"">2</td></tr>
 <tr class=""row3""><td class=""col1"">1</td><td class=""col2"">2</td></tr>")]
-        [TestCase(@"{% tablerow char in characters cols:3 %}I WILL NOT BE OUTPUT{% endtablerow %}", @"{""characters"":""""}", @"<tr class=""row1"">
-</tr>")]
+//        [TestCase(@"{% tablerow char in characters cols:3 %}I WILL NOT BE OUTPUT{% endtablerow %}", @"{""characters"":""""}", @"<tr class=""row1"">
+//</tr>")]
         //[TestCase(@"{{ foo }}", @"{""foo"":""#<ThingWithToLiquid:0x00000002cc0ec8>""}", @"foobar")]
         [TestCase(@"{% if true %} {% elsif false %} {% else %} {% endif %}", @"{}", @"")]
         [TestCase(@"{% for i in (1..10) %} {% endfor %}{% if true %} {% endif %}", @"{}", @"")]

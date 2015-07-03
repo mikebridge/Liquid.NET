@@ -16,7 +16,7 @@ fragment RAWBLOCK:				( RAW | . )*?;
 fragment RAWSTART:		TAGSTART [ \t]* 'raw' [ \t]* TAGEND ;
 fragment RAWEND:		TAGSTART [ \t]* 'endraw' [ \t]* TAGEND ;
 
-TAGSTART :				'{%'			-> pushMode(INLIQUIDTAG) ;
+TAGSTART :				'{%'	-> pushMode(INLIQUIDTAG) ;
 OUTPUTMKUPSTART :		'{{'			-> pushMode(INLIQUIDFILTER) ;
 //TEXT :					.+? ;
 
@@ -136,7 +136,7 @@ MINUS3:					MINUS -> type(MINUS) ;
 
 mode INLIQUIDTAG ;
 
-TAGEND :				'%}'			-> popMode ;
+TAGEND :				('-%}' | '%}')			-> popMode ;
 
 //TOKEN:					VARIABLENAME;
 

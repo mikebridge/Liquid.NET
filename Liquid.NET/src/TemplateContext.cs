@@ -1,6 +1,7 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
+
 using Liquid.NET.Constants;
 using Liquid.NET.Filters;
 using Liquid.NET.Filters.Array;
@@ -8,7 +9,6 @@ using Liquid.NET.Filters.Math;
 using Liquid.NET.Filters.Strings;
 using Liquid.NET.Symbols;
 using Liquid.NET.Tags.Custom;
-using Liquid.NET.Utils;
 
 namespace Liquid.NET
 {
@@ -20,26 +20,25 @@ namespace Liquid.NET
     /// </summary>
     public class TemplateContext : ITemplateContext
     {
-
+        
         public SymbolTableStack SymbolTableStack {get {return _symbolTablestack;}}
         private readonly SymbolTableStack _symbolTablestack = new SymbolTableStack();
-
         private readonly SymbolTable _globalSymbolTable;
-
+        private readonly IDictionary<String, Object> _registers = new ConcurrentDictionary<String, Object>();
+        public IDictionary<string, object> Registers { get { return _registers;} }
         private IFileSystem _fileSystem;
 
         public TemplateContext()
         {            
             _globalSymbolTable = new SymbolTable();
             _globalSymbolTable.DefineFilter<LookupFilter>("lookup"); // TODO: make this global somehow.
-            _symbolTablestack.Push(_globalSymbolTable);
-            
+            _symbolTablestack.Push(_globalSymbolTable);            
         }        
 
 
-        public ITemplateContext Define(String name, IExpressionConstant constant)
+        public ITemplateContext DefineLocalVariable(String name, IExpressionConstant constant)
         {
-            _globalSymbolTable.DefineVariable(name, constant);
+            _globalSymbolTable.DefineLocalVariable(name, constant);
             return this;
         }
 
@@ -61,6 +60,24 @@ namespace Liquid.NET
             return this;
         }
 
+        public ITemplateContext WithRegisters(IDictionary<string, object> dict)
+        {
+            foreach (var kv in dict)
+            {
+                _registers.Add(kv);
+            }
+            return this;
+        }
+
+        public ITemplateContext WithLocalVariables(IDictionary<string, IExpressionConstant> dict)
+        {
+            foreach (var kv in dict)
+            {
+                _globalSymbolTable.DefineLocalVariable(kv.Key, kv.Value);
+            }
+            return this;
+        }
+
 //        public int GetOrAddCounter(String key, int val)
 //        {
 //            return _counters.GetOrAdd(key, val);;
@@ -70,44 +87,11 @@ namespace Liquid.NET
 //        {
 //            return _counters.TryUpdate(key, newVal, comparisonValue); ;
 //        }
-//
-//        internal FilterRegistry FilterRegistry
-//        {
-//            get { return _filterRegistry; }
-//        }
-//
-//        internal IDictionary<String, IExpressionConstant> VariableDictionary
-//        {
-//            get { return _varDictionary; }
-//        }
-//
-//        internal Registry<ICustomTagRenderer> CustomTagRendererRegistry
-//        {
-//            get { return _customTagRegistry; }
-//        }
-//
-//        internal Registry<ICustomBlockTagRenderer> CustomBlockTagRendererRegistry
-//        {
-//            get { return _customBlockTagRegistry; }
-//        }
 
         public IFileSystem FileSystem
         {
             get { return _fileSystem; }
         }
-
-        //public Option<IExpressionConstant> Reference(String name)
-        //{
-//            if (_varDictionary.ContainsKey(name))
-//            {
-//                return new Some<IExpressionConstant>(_varDictionary[name]);
-//            }
-//            else
-//            {
-//                return new None<IExpressionConstant>();
-//            }
-            //return new Undefined(name);
-        //}
 
         public ITemplateContext WithStandardFilters()
         {
@@ -227,20 +211,5 @@ namespace Liquid.NET
 
 
       
-    }
-
-    public interface ITemplateContext
-    {
-        ITemplateContext WithStandardFilters();
-        ITemplateContext WithShopifyFilters();
-        ITemplateContext WithAllFilters();
-        ITemplateContext WithFilter<T>(String name) where T : IFilterExpression;
-        ITemplateContext Define(String name, IExpressionConstant constant);
-        ITemplateContext WithCustomTagRenderer<T>(string echoargs) where T: ICustomTagRenderer;
-        ITemplateContext WithCustomTagBlockRenderer<T>(string echoargs)  where T: ICustomBlockTagRenderer;
-        ITemplateContext WithFileSystem(IFileSystem fileSystem);
-
-        IFileSystem FileSystem { get; }
-        SymbolTableStack SymbolTableStack { get; }
     }
 }

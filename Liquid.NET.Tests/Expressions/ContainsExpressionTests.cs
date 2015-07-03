@@ -37,7 +37,7 @@ namespace Liquid.NET.Tests.Expressions
         {
             // Arrange
             var ctx = new TemplateContext();
-            ctx.Define("array", CreateArray());
+            ctx.DefineLocalVariable("array", CreateArray());
 
             // Act
             var result = RenderingHelper.RenderTemplate("{%if array contains " + contains + " %}TRUE{% else %}FALSE{% endif %}", ctx);
@@ -56,7 +56,7 @@ namespace Liquid.NET.Tests.Expressions
         {
             // Arrange
             var ctx = new TemplateContext();
-            ctx.Define("dict", CreateDictionary());
+            ctx.DefineLocalVariable("dict", CreateDictionary());
 
             // Act
             var result = RenderingHelper.RenderTemplate("{%if dict contains " + contains + " %}TRUE{% else %}FALSE{% endif %}", ctx);
@@ -72,7 +72,7 @@ namespace Liquid.NET.Tests.Expressions
         {
             // Arrange
             var ctx = new TemplateContext();
-            ctx.Define("array", CreateArray());
+            ctx.DefineLocalVariable("array", CreateArray());
 
             // Act
             var result = RenderingHelper.RenderTemplate("{%if 3 contains 3 %}TRUE{% else %}FALSE{% endif %}");

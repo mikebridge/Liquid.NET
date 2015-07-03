@@ -46,7 +46,7 @@ namespace Liquid.NET.Tests.Tags
         {
             // Arrange
             TemplateContext ctx = new TemplateContext();
-            ctx.Define("array", CreateArrayValues());
+            ctx.DefineLocalVariable("array", CreateArrayValues());
             var template = LiquidTemplate.Create("{% assign foo = array %}{{ foo[1] }}");
 
             // Act
@@ -62,7 +62,7 @@ namespace Liquid.NET.Tests.Tags
         {
             // Arrange
             ITemplateContext ctx = new TemplateContext().WithAllFilters();
-            ctx.Define("array", CreateArrayValues());
+            ctx.DefineLocalVariable("array", CreateArrayValues());
             var template = LiquidTemplate.Create("{% assign foo = \"test\" | upcase %}{{ foo }}");
 
             // Act

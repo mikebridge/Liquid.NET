@@ -130,7 +130,7 @@ namespace Liquid.NET.Tests.Tags
         {
             // Arrange
             var ctx = new TemplateContext();
-            ctx.Define("payments", new ArrayValue(new List<IExpressionConstant>()));
+            ctx.DefineLocalVariable("payments", new ArrayValue(new List<IExpressionConstant>()));
 
             const String str = "{% if payments == empty %}This is empty{% endif %}";
 
@@ -155,7 +155,7 @@ namespace Liquid.NET.Tests.Tags
             {
                 {"payments", new ArrayValue(payments)}
             };
-            ctx.Define("user", new DictionaryValue(dict));
+            ctx.DefineLocalVariable("user", new DictionaryValue(dict));
             return ctx;
         }
     }

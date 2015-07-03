@@ -73,9 +73,9 @@ namespace Liquid.NET.Rendering
                 int iter = 0;
                 foreach (var item in iterable.Skip(offset.IntValue).Take(limit.IntValue))
                 {
-                    templateContext.Define(tableRowBlockTag.LocalVariable, item);
+                    templateContext.DefineLocalVariable(tableRowBlockTag.LocalVariable, item);
                     String typename = item == null ? "null" : item.LiquidTypeName;
-                    templateContext.Define("tablerowloop", CreateForLoopDescriptor(
+                    templateContext.DefineLocalVariable("tablerowloop", CreateForLoopDescriptor(
                         tableRowBlockTag.LocalVariable + "-" + typename, 
                         // ReSharper disable RedundantArgumentName
                         iter: iter, 

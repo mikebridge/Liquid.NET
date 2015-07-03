@@ -13,7 +13,7 @@ namespace Liquid.NET.Tests.Helpers
             _lookupTable = lookupTable;
         }
 
-        public string Include(string key)
+        public string Include(ITemplateContext ctx, string key)
         {
             if (_lookupTable.ContainsKey(key))
             {

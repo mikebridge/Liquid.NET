@@ -19,10 +19,10 @@ namespace Liquid.NET.Tests.Expressions
             var str = new StringValue("FOO");
 
             // Act
-            symbolTable.DefineVariable("foo", str);
+            symbolTable.DefineLocalVariable("foo", str);
 
             // Assert
-            Assert.That(symbolTable.ReferenceVariable("foo").SuccessValue<StringValue>(), Is.EqualTo(str));            
+            Assert.That(symbolTable.ReferenceLocalVariable("foo").SuccessValue<StringValue>(), Is.EqualTo(str));            
 
         }
 
@@ -51,10 +51,10 @@ namespace Liquid.NET.Tests.Expressions
             const string varname = "objlist";
             var arrayValue = CreateArrayValue();
             var symbolTable = new SymbolTable();
-            symbolTable.DefineVariable(varname, arrayValue);
+            symbolTable.DefineLocalVariable(varname, arrayValue);
 
             // Act
-            var arr = symbolTable.ReferenceVariable(varname).SuccessValue<ArrayValue>();
+            var arr = symbolTable.ReferenceLocalVariable(varname).SuccessValue<ArrayValue>();
 
             // Assert
             Assert.That(arr, Is.TypeOf<ArrayValue>());

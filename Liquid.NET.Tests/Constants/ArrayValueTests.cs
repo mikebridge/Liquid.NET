@@ -42,7 +42,7 @@ namespace Liquid.NET.Tests.Constants
             };
             ArrayValue arrayValue = new ArrayValue(objlist);
             var ctx = new TemplateContext().WithAllFilters();
-            ctx.Define("myarray", arrayValue);
+            ctx.DefineLocalVariable("myarray", arrayValue);
             // Act
             var result = RenderingHelper.RenderTemplate("Result : {{ myarray.size }}", ctx);
 

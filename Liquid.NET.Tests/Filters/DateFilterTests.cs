@@ -24,7 +24,7 @@ namespace Liquid.NET.Tests.Filters
             // Arrange
             TemplateContext ctx = new TemplateContext();
             DateTime dateTime = new DateTime(2015, 3, 30, 23, 1, 12);
-            ctx.Define("mydate", new DateValue(dateTime));
+            ctx.DefineLocalVariable("mydate", new DateValue(dateTime));
             // Act
             var result = RenderingHelper.RenderTemplate("Result : {{ mydate | date: \""+format+"\" }}", ctx);
 
@@ -37,7 +37,7 @@ namespace Liquid.NET.Tests.Filters
         {
             // Arrange
             TemplateContext ctx = new TemplateContext();
-            ctx.Define("mydate", new DateValue(null));
+            ctx.DefineLocalVariable("mydate", new DateValue(null));
             // Act
             var result = RenderingHelper.RenderTemplate("Result : {{ mydate | date: \"%y\" }}", ctx);
 

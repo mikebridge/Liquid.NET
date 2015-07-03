@@ -16,7 +16,7 @@ namespace Liquid.NET.Tests.Filters.Strings
         {
             // Arrange
             TemplateContext ctx = new TemplateContext();
-            ctx.Define("email", new StringValue("mike@bridgecanada.com"));
+            ctx.DefineLocalVariable("email", new StringValue("mike@bridgecanada.com"));
             const string tmpl = "<img src=\"https://www.gravatar.com/avatar/{{ email | md5 }}\" />";
             var result = RenderingHelper.RenderTemplate(tmpl, ctx);
             Console.WriteLine(result);

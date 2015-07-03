@@ -54,7 +54,7 @@ namespace Liquid.NET.Tests.Tags
         {
             // Arrange
             var ctx = CreateContext(new Dictionary<String, String> { { "test", "Test Snippet: {{ test }} " } });
-            ctx.Define("array",CreateArrayValues());
+            ctx.DefineLocalVariable("array",CreateArrayValues());
             //ctx.Define("payments", new ArrayValue(new List<IExpressionConstant>()));
 
             const String str = "{% include 'test' for array %}";

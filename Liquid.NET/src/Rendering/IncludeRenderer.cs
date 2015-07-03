@@ -36,7 +36,7 @@ namespace Liquid.NET.Rendering
                 return;
             }
 
-            String snippet = templateContext.FileSystem.Include(virtualFileName);
+            String snippet = templateContext.FileSystem.Include(templateContext, virtualFileName);
 
             var snippetAst = new LiquidASTGenerator().Generate(snippet);
 
@@ -55,7 +55,7 @@ namespace Liquid.NET.Rendering
                     DefineLocalVariables(templateContext, localBlockScope, includeTag.Definitions);
 
                     var exprValue = LiquidExpressionEvaluator.Eval(includeTag.ForExpression, templateContext);
-                    localBlockScope.DefineVariable(virtualFileName, exprValue.SuccessResult.Value);
+                    localBlockScope.DefineLocalVariable(virtualFileName, exprValue.SuccessResult.Value);
 
                     RenderWithLocalScope(templateContext, localBlockScope, snippetAst.RootNode);
                 }
@@ -80,11 +80,11 @@ namespace Liquid.NET.Rendering
                         DefineLocalVariables(templateContext, localBlockScope, includeTag.Definitions);
                         if (val.HasValue)
                         {
-                            localBlockScope.DefineVariable(virtualFileName, val.Value);
+                            localBlockScope.DefineLocalVariable(virtualFileName, val.Value);
                         }
                         else
                         {
-                            localBlockScope.DefineVariable(virtualFileName, null);
+                            localBlockScope.DefineLocalVariable(virtualFileName, null);
                         }
                         RenderWithLocalScope(templateContext, localBlockScope, snippetAst.RootNode);
                     }
@@ -97,7 +97,7 @@ namespace Liquid.NET.Rendering
                 if (includeTag.WithExpression != null)
                 {
                     var withExpression = LiquidExpressionEvaluator.Eval(includeTag.WithExpression, templateContext);
-                    localBlockScope.DefineVariable(virtualFileName, withExpression.SuccessResult.Value);
+                    localBlockScope.DefineLocalVariable(virtualFileName, withExpression.SuccessResult.Value);
                 }
                 RenderWithLocalScope(templateContext, localBlockScope, snippetAst.RootNode);
             }
@@ -124,7 +124,7 @@ namespace Liquid.NET.Rendering
                 {
                     // TODO: check if this should ignore this or not.
                 }
-                localBlockScope.DefineVariable(def.Key,
+                localBlockScope.DefineLocalVariable(def.Key,
                     liquidExpressionREsult.SuccessResult.HasValue
                         ? liquidExpressionREsult.SuccessResult.Value
                         : null);

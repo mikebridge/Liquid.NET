@@ -8,7 +8,7 @@ namespace Liquid.NET.Tests.Ruby
 {
     public class TestFileSystem : IFileSystem
     {
-        public string Include(string key)
+        public string Include(ITemplateContext ctx, string key)
         {
             String result = key;
             switch (key)

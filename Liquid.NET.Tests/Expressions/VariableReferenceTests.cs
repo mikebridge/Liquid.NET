@@ -20,7 +20,7 @@ namespace Liquid.NET.Tests.Expressions
             // Arrange
             var variableReference = new VariableReference("myvar");
             var templateContext = new TemplateContext();
-            templateContext.Define("myvar", new StringValue("HELLO"));
+            templateContext.DefineLocalVariable("myvar", new StringValue("HELLO"));
 
             // Act
             var result = variableReference.Eval(templateContext, new List<Option<IExpressionConstant>>()).SuccessValue<StringValue>();

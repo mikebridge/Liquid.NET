@@ -33,7 +33,7 @@ namespace Liquid.NET.Tests.Tags
         {
             // Arrange
             TemplateContext ctx = new TemplateContext();
-            ctx.Define("array", CreateArrayValues());
+            ctx.DefineLocalVariable("array", CreateArrayValues());
 
             var template = LiquidTemplate.Create("Result : {% for item in array %}ITEM:{% cycle 'odd', 'even' %} {% endfor %}");
 
@@ -54,7 +54,7 @@ namespace Liquid.NET.Tests.Tags
         {
             // Arrange
             TemplateContext ctx = new TemplateContext();
-            ctx.Define("array", CreateArrayValues());
+            ctx.DefineLocalVariable("array", CreateArrayValues());
 
             var template = LiquidTemplate.Create("Result : {% for item in array %}{% cycle '1', '2', '3' %}{% endfor %}{% for item in array %}{% cycle '1', '2', '3' %}{% endfor %}");
 
@@ -70,7 +70,7 @@ namespace Liquid.NET.Tests.Tags
         public void It_Should_Cycle_Through_Strings_In_Different_Groups()
         {
             TemplateContext ctx = new TemplateContext();
-            ctx.Define("array", CreateArrayValues());
+            ctx.DefineLocalVariable("array", CreateArrayValues());
 
             var template = LiquidTemplate.Create("Result : {% for item in array %}{% cycle 'group1': '1', '2', '3' %}{% endfor %}{% for item in array %}{% cycle 'group2': '1', '2', '3' %}{% endfor %}");
 
@@ -86,10 +86,10 @@ namespace Liquid.NET.Tests.Tags
         public void It_Should_Cycle_Through_Variables()
         {
             TemplateContext ctx = new TemplateContext();
-            ctx.Define("var1", new StringValue("ONE"));
-            ctx.Define("var2", new StringValue("TWO"));
-            ctx.Define("var3", new BooleanValue(false));
-            ctx.Define("var4", new NumericValue(9));
+            ctx.DefineLocalVariable("var1", new StringValue("ONE"));
+            ctx.DefineLocalVariable("var2", new StringValue("TWO"));
+            ctx.DefineLocalVariable("var3", new BooleanValue(false));
+            ctx.DefineLocalVariable("var4", new NumericValue(9));
 
             var template = LiquidTemplate.Create("Result : {% for item in (1..4) %}{% cycle var1, var2, var3, var4 %}{% endfor %}");
 
@@ -112,7 +112,7 @@ namespace Liquid.NET.Tests.Tags
             
             foreach (var tuple in DictionaryFactory.CreateStringMapFromJson(assigns))
             {
-                ctx.Define(tuple.Item1, tuple.Item2);
+                ctx.DefineLocalVariable(tuple.Item1, tuple.Item2);
             }
 
             

@@ -28,7 +28,7 @@ namespace Liquid.NET.Tests.Filters
             // Arrange
             TemplateContext ctx = new TemplateContext();
             var arrayValue = DataFixtures.CreateArrayValue();
-            ctx.Define("myarray", arrayValue);
+            ctx.DefineLocalVariable("myarray", arrayValue);
             String tmpl = "{{ myarray | " + LOOKUP + ": "+index+" }}";
 
             // Act
@@ -49,7 +49,7 @@ namespace Liquid.NET.Tests.Filters
             // Arrange
             TemplateContext ctx = new TemplateContext();
             var dictValue = DataFixtures.CreateDictionary(1, "Property 1", "prop2");
-            ctx.Define("mydict", dictValue);
+            ctx.DefineLocalVariable("mydict", dictValue);
             String tmpl = "{{ "+liquid+" }}";
 
             // Act
@@ -85,7 +85,7 @@ namespace Liquid.NET.Tests.Filters
             // Arrange
             TemplateContext ctx = new TemplateContext();
             var arrayValue = DataFixtures.CreateArrayValue();
-            ctx.Define("myarray", arrayValue);
+            ctx.DefineLocalVariable("myarray", arrayValue);
             String tmpl = "{{ myarray."+property+" }}";
 
             // Act
@@ -102,7 +102,7 @@ namespace Liquid.NET.Tests.Filters
             // Arrange
             TemplateContext ctx = new TemplateContext();
             var dictValue = DataFixtures.CreateDictionary(1, "Property 1", "prop2");
-            ctx.Define("mydict", dictValue);
+            ctx.DefineLocalVariable("mydict", dictValue);
             String tmpl = "{{ mydict." + property + " }}";
 
             // Act

@@ -73,6 +73,21 @@ namespace Liquid.NET.Tests.Tags
 
         }
 
+        [Test]
+        public void It_Should_Assign_Empty_Values()
+        {
+            ITemplateContext ctx = new TemplateContext().WithAllFilters();
+            var template = LiquidTemplate.Create("{% assign content_column_width = content_column_width | minus: image_column_width | minus: 10 -%}");
+
+            // Act
+            String result = template.Render(ctx);
+
+            // Assert
+            Assert.That(result, Is.EqualTo("0"));
+            
+        }
+
+
         private ArrayValue CreateArrayValues()
         {
             var list = new List<IExpressionConstant>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Liquid.NET.Constants;
 
 using Liquid.NET.Symbols;
@@ -38,8 +39,22 @@ namespace Liquid.NET.Rendering
 
             String snippet = templateContext.FileSystem.Include(templateContext, virtualFileName);
 
-            var snippetAst = new LiquidASTGenerator().Generate(snippet);
-
+            LiquidAST snippetAst;
+            try
+            {
+                snippetAst = new LiquidASTGenerator().Generate(snippet);
+            }
+            catch (LiquidParserException ex)
+            {
+                foreach (var error in ex.LiquidErrors)
+                {
+                    if (String.IsNullOrEmpty(error.TokenSource))
+                    {
+                        error.TokenSource = virtualFileName;
+                    }
+                }
+                throw;
+            }
 
             if (includeTag.ForExpression != null)
             {

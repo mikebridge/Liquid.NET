@@ -391,12 +391,7 @@ namespace Liquid.NET
         }
 
         public void Visit(MacroBlockTag macroBlockTag)
-        {
-            // not implemented yet
-            
-            //Console.WriteLine("Creating a macro "+ macroBlockTag.Name);
-            //Console.WriteLine("That takes args " + String.Join(",", macroBlockTag.Args));
-            //Console.WriteLine("and has body " + macroBlockTag.LiquidBlock);
+        {            
             _templateContext.SymbolTableStack.DefineMacro(macroBlockTag.Name, macroBlockTag);
         }
 

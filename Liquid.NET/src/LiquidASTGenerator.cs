@@ -61,7 +61,7 @@ namespace Liquid.NET
             var liquidErrorListener = new LiquidErrorListener();
             liquidErrorListener.ParsingErrorEventHandler += ParsingErrorEventHandler;
             liquidErrorListener.ParsingErrorEventHandler += ErrorHandler;
-
+            
             var liquidLexer = new LiquidLexer(new AntlrInputStream(stringReader));
 
             _tokenStream = new CommonTokenStream(liquidLexer);
@@ -1656,7 +1656,7 @@ namespace Liquid.NET
         private void ErrorHandler(LiquidError liquiderror)
         {
 
-            Console.WriteLine("GRABBING A ERROR  " + liquiderror);
+            Console.WriteLine("hANDLING ERROR: " + liquiderror);
             //CurrentAstNode.AddChild(CreateTreeNode<IASTNode>(new ErrorNode(liquiderror)));
             this.LiquidErrors.Add(liquiderror);
         }     

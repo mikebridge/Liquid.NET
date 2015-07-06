@@ -24,20 +24,43 @@ namespace Liquid.NET.Tests.Ruby
     public class FilterTests {
 
         [Test]
-        [TestCase(@"", @"")]
-        [TestCase(@"{{ ""1"" | divided_by: ""0"" }}", @"Liquid error: divided by 0")]
-        [TestCase(@"{{ ""x"" | divided_by: ""1"" }}", @"0")]
-        public void It_Should_Match_Ruby_Output(String input, String expected) {
+        [TestCase(@"{{ ""1"" | divided_by: ""0"" }}", @"", @"Liquid error: divided by 0")]
+        [TestCase(@"{{ ""x"" | divided_by: ""1"" }}", @"", @"0")]
+        [TestCase(@"{{ null | plus: ""1"" }}", @"", @"1")]
+        [TestCase(@"{% assign v = null %}{{ null | plus: v }}", @"", @"0")]
+        [TestCase(@"{% assign v = null %}{{ 1 | plus: v }}", @"", @"1")]
+        [TestCase(@"{{ null | minus: ""1"" }}", @"", @"-1")]
+        [TestCase(@"{% assign v = null %}{{ null | minus: v }}", @"", @"0")]
+        [TestCase(@"{% assign v = null %}{{ 1 | minus: v }}", @"", @"1")]
+        [TestCase(@"{{ null | divided_by: ""1"" }}", @"", @"0")]
+        [TestCase(@"{% assign v = null %}{{ null | divided_by: v }}", @"", @"Liquid error: divided by 0")]
+        [TestCase(@"{% assign v = null %}{{ 1 | divided_by: v }}", @"", @"Liquid error: divided by 0")]
+        [TestCase(@"{{ null | times: ""1"" }}", @"", @"0")]
+        [TestCase(@"{% assign v = null %}{{ null | times: v }}", @"", @"0")]
+        [TestCase(@"{% assign v = null %}{{ 1 | times: v }}", @"", @"0")]
+        [TestCase(@"{{ null | ceil }}", @"", @"0")]
+        [TestCase(@"{{ null | floor }}", @"", @"0")]
+        [TestCase(@"{{ null | round: 2 }}", @"", @"0.0")]
+        [TestCase(@"{{ null | modulo: 2 }}", @"", @"0")]
+        [TestCase(@"{{ null | append: ""test"" }}", @"", @"test")]
+        public void It_Should_Match_Ruby_Output(String input, String assigns, String expected) {
 
             // Arrange
             ITemplateContext ctx = new TemplateContext().WithAllFilters();
+            
+            foreach (var tuple in DictionaryFactory.CreateStringMapFromJson(assigns))
+            {
+                ctx.DefineLocalVariable(tuple.Item1, tuple.Item2);
+            }
+
+            
             var template = LiquidTemplate.Create(input);
-        
+            
             // Act
             String result = template.Render(ctx);
         
             // Assert
-            Assert.That(result, Is.EqualTo(expected));
+            Assert.That(result.Trim(), Is.EqualTo(expected));
         }
 
         

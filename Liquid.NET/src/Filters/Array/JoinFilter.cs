@@ -15,7 +15,7 @@ namespace Liquid.NET.Filters.Array
             _separator = separator;
         }
 
-        public override LiquidExpressionResult ApplyTo(ArrayValue liquidArrayExpression)
+        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, ArrayValue liquidArrayExpression)
         {
             var vals = liquidArrayExpression
                 .ArrValue
@@ -25,7 +25,7 @@ namespace Liquid.NET.Filters.Array
             return LiquidExpressionResult.Success(new StringValue(String.Join(_separator.StringVal, vals)));
         }
 
-        public override LiquidExpressionResult ApplyTo(StringValue liquidStringExpression)
+        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, StringValue liquidStringExpression)
         {
             if (String.IsNullOrEmpty(liquidStringExpression.StringVal))
             {

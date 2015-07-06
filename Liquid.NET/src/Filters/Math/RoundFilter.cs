@@ -16,7 +16,7 @@ namespace Liquid.NET.Filters.Math
             }
         }
 
-        public override LiquidExpressionResult Apply(NumericValue val)
+        public override LiquidExpressionResult Apply(ITemplateContext ctx, NumericValue val)
         {            
             var round = System.Math.Round(val.DecimalValue, decimalPlaces, MidpointRounding.AwayFromZero);
             return LiquidExpressionResult.Success(decimalPlaces == 0 ? new NumericValue((int) round) : new NumericValue(round));

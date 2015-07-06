@@ -1,10 +1,4 @@
 ﻿using System;
-using System.CodeDom;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Policy;
-using System.Text;
-using System.Threading.Tasks;
 using Liquid.NET.Constants;
 using Liquid.NET.Utils;
 
@@ -21,7 +15,7 @@ namespace Liquid.NET.Filters.Strings
             _truncateString = truncateString == null || truncateString.Value == null ? new StringValue("...") : truncateString;
         }
 
-        public override LiquidExpressionResult ApplyTo(IExpressionConstant liquidExpression)
+        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, IExpressionConstant liquidExpression)
         {
             return LiquidExpressionResult.Success(StringUtils.Eval(liquidExpression, Truncate));
         }

@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Liquid.NET.Constants;
 using Liquid.NET.Utils;
 
@@ -18,7 +15,7 @@ namespace Liquid.NET.Filters.Strings
             _length = length;
             _truncateString = truncateString == null || truncateString.Value == null ? new StringValue("...") : truncateString;
         }
-        public override LiquidExpressionResult ApplyTo(StringValue liquidStringExpression)
+        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, StringValue liquidStringExpression)
         {
             return LiquidExpressionResult.Success(StringUtils.Eval(liquidStringExpression, TruncateWords));
             

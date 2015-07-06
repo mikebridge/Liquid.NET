@@ -171,6 +171,32 @@ namespace Liquid.NET.Tests.Constants
 
         }
 
+        [Test]
+        public void It_Should_Convert_Null_To_Numeric_Zero()
+        {
+
+            // Act
+            var result = ValueCaster.ConvertFromNull<NumericValue>();
+            var numericResult = result.SuccessValue<NumericValue>();
+
+            // Assert
+            Assert.That(numericResult.IsInt, Is.True);
+            Assert.That(numericResult.IntValue, Is.EqualTo(0));
+
+        }
+
+        [Test]
+        public void It_Should_Convert_Null_To_EmptyString()
+        {
+
+            // Act
+            var result = ValueCaster.ConvertFromNull<StringValue>();
+            var stringResult = result.SuccessValue<StringValue>();
+
+            // Assert
+            Assert.That(stringResult.StringVal, Is.EqualTo(""));
+
+        }
 
 
 //        [Test]

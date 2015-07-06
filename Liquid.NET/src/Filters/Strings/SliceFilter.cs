@@ -24,12 +24,12 @@ namespace Liquid.NET.Filters.Strings
             _length = length;
         }
 
-        public override LiquidExpressionResult ApplyTo(IExpressionConstant liquidExpression)
+        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, IExpressionConstant liquidExpression)
         {
             return LiquidExpressionResult.Error("Can't find sub-elements from that object.  It is not an array or a string.");
         }
 
-        public override LiquidExpressionResult ApplyTo(ArrayValue liquidArrayExpression)
+        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, ArrayValue liquidArrayExpression)
         {
             if (liquidArrayExpression == null || liquidArrayExpression.Value == null)
             {
@@ -45,7 +45,7 @@ namespace Liquid.NET.Filters.Strings
             return LiquidExpressionResult.Success(new ArrayValue(SliceList(list)));
         }
 
-        public override  LiquidExpressionResult ApplyTo(StringValue stringValue)
+        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, StringValue stringValue)
         {
             if (stringValue == null || stringValue.Value == null)
             {

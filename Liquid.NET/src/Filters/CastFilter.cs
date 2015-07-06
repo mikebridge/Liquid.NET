@@ -10,7 +10,7 @@ namespace Liquid.NET.Filters
         where TResult : IExpressionConstant
     {
 
-        public override LiquidExpressionResult Apply(TSource liquidExpression)
+        public override LiquidExpressionResult Apply(ITemplateContext ctx, TSource liquidExpression)
         {
             //Console.WriteLine("Casting from " + typeof(TSource) + " to " + typeof(TResult));
             var result= ValueCaster.Cast<TSource, TResult>(liquidExpression);

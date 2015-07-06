@@ -16,7 +16,7 @@ namespace Liquid.NET.Filters
             _format = format;
         }
 
-        public override LiquidExpressionResult ApplyTo(DateValue dateValue)
+        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, DateValue dateValue)
         {
             if (/*dateValue.IsUndefined ||*/ !dateValue.DateTimeValue.HasValue)
             {

@@ -25,7 +25,7 @@ namespace Liquid.NET.Tests.Filters
             var toIntFilter = new ToIntFilter();
 
             // Act
-            var result = toIntFilter.Apply(new StringValue(input)).SuccessValue<NumericValue>();
+            var result = toIntFilter.Apply(new TemplateContext(), new StringValue(input)).SuccessValue<NumericValue>();
 
             // Assert
             Assert.That(result.DecimalValue, Is.EqualTo((decimal) expected));
@@ -41,7 +41,7 @@ namespace Liquid.NET.Tests.Filters
             var toIntFilter = new ToIntFilter();
 
             // Act
-            var result = toIntFilter.Apply(new BooleanValue(val)).SuccessValue<NumericValue>();
+            var result = toIntFilter.Apply(new TemplateContext(), new BooleanValue(val)).SuccessValue<NumericValue>();
 
             // Assert
             Assert.That(result.DecimalValue, Is.EqualTo((decimal)expected));

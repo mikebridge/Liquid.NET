@@ -12,7 +12,7 @@ namespace Liquid.NET.Filters.Strings
     public class Md5Filter : FilterExpression<IExpressionConstant, StringValue>
     {
 
-        public override LiquidExpressionResult ApplyTo(IExpressionConstant liquidExpression)
+        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, IExpressionConstant liquidExpression)
         {
             return LiquidExpressionResult.Success(StringUtils.Eval(liquidExpression, ToMd5));
             

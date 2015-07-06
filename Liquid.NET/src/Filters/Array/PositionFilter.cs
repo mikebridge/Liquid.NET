@@ -18,12 +18,12 @@ namespace Liquid.NET.Filters.Array
             _index = index;
         }
 
-        public override LiquidExpressionResult ApplyTo(IExpressionConstant liquidExpression)
+        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, IExpressionConstant liquidExpression)
         {
             return LiquidExpressionResult.Error("Can't find sub-elements from that object.  It is not an array or a string.");
         }
 
-        public override LiquidExpressionResult ApplyTo(ArrayValue liquidArrayExpression)
+        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, ArrayValue liquidArrayExpression)
         {
             if (liquidArrayExpression == null || liquidArrayExpression.Value == null)
             {
@@ -47,7 +47,7 @@ namespace Liquid.NET.Filters.Array
 //                ConstantFactory.CreateError<ArrayValue>("Array has no element at position " + _index.IntValue));
         }
 
-        public override LiquidExpressionResult ApplyTo(StringValue liquidStringExpression)
+        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, StringValue liquidStringExpression)
         {
             if (liquidStringExpression == null || liquidStringExpression.Value == null)
             {

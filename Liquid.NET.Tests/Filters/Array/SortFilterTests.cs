@@ -25,7 +25,7 @@ namespace Liquid.NET.Tests.Filters.Array
             var filter = new SortFilter(new StringValue(""));
 
             // Act            
-            var result = filter.Apply(arrayValue);
+            var result = filter.Apply(new TemplateContext(), arrayValue);
             var resultStrings = result.SuccessValue<ArrayValue>().Select(ValueCaster.RenderAsString);
             
             // Assert
@@ -49,7 +49,7 @@ namespace Liquid.NET.Tests.Filters.Array
             SortFilter sizeFilter = new SortFilter(new StringValue("field1"));
 
             // Act
-            var result = sizeFilter.Apply(arrayValue);
+            var result = sizeFilter.Apply(new TemplateContext(), arrayValue);
 
             // Assert
             Assert.That(IdAt(result.SuccessValue<ArrayValue>(), 0, "field1").Value, Is.EqualTo("Aa"));

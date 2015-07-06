@@ -20,7 +20,7 @@ namespace Liquid.NET.Filters.Math
         }
 
 
-        public override LiquidExpressionResult ApplyTo(NumericValue addend2)
+        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, NumericValue addend2)
         {
             var result = _addend1.DecimalValue * addend2.DecimalValue;
             return MathHelper.GetReturnValue(result, _addend1, addend2);

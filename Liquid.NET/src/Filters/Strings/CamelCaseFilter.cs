@@ -17,7 +17,7 @@ namespace Liquid.NET.Filters.Strings
     public class CamelCaseFilter : FilterExpression<IExpressionConstant, StringValue>
     {
 
-        public override LiquidExpressionResult ApplyTo(IExpressionConstant liquidExpression)
+        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, IExpressionConstant liquidExpression)
         {
 
             return LiquidExpressionResult.Success(StringUtils.Eval(liquidExpression, before =>

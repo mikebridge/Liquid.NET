@@ -23,7 +23,7 @@ namespace Liquid.NET.Tests.Filters.Array
             var filter = new JoinFilter(new StringValue(", "));
 
             // Act
-            var result = filter.Apply(arrayValue).SuccessValue<StringValue>();
+            var result = filter.Apply(new TemplateContext(), arrayValue).SuccessValue<StringValue>();
 
             // Assert
             Assert.That(result.StringVal, Is.EqualTo("a string, 123, 456.0, false"));
@@ -38,7 +38,7 @@ namespace Liquid.NET.Tests.Filters.Array
             var filter = new JoinFilter(new StringValue(", "));
 
             // Act
-            var result = filter.Apply(new StringValue("Hello World")).SuccessValue<StringValue>();
+            var result = filter.Apply(new TemplateContext(), new StringValue("Hello World")).SuccessValue<StringValue>();
 
             // Assert
             Assert.That(result.Value, Is.EqualTo("H, e, l, l, o,  , W, o, r, l, d"));

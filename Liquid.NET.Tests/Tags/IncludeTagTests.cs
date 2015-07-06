@@ -42,10 +42,17 @@ namespace Liquid.NET.Tests.Tags
             const String str = "{% include 'test' %}";
 
             // Act
-            var result = RenderingHelper.RenderTemplate(str, ctx);
-
+            try
+            {
+                var result = RenderingHelper.RenderTemplate(str, ctx);
+                Assert.Fail("Expected exception");
+            }
+            catch (LiquidParserException ex)
+            {
+                Assert.That(ex.LiquidErrors[0].TokenSource, Is.EqualTo("test"));    
+            }
             // Assert
-            Assert.That(result, Is.EqualTo("Test Snippet"));
+            
 
         }
 

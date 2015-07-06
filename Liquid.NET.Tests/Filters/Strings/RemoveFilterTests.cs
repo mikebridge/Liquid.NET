@@ -14,7 +14,7 @@ namespace Liquid.NET.Tests.Filters.Strings
             var removeFilter = new RemoveFilter(new StringValue("123"));
 
             // Act
-            var result = removeFilter.Apply(new StringValue("Remove the 123 in this string.")).SuccessValue<StringValue>();
+            var result = removeFilter.Apply(new TemplateContext(), new StringValue("Remove the 123 in this string.")).SuccessValue<StringValue>();
 
             // Assert
             Assert.That(result.Value, Is.EqualTo("Remove the  in this string."));

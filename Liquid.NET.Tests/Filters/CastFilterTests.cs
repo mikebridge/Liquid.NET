@@ -16,7 +16,7 @@ namespace Liquid.NET.Tests.Filters
             var inputObj = new StringValue("123");
 
             // Act
-            var result = castFilter.Apply(inputObj).SuccessValue<NumericValue>();
+            var result = castFilter.Apply(new TemplateContext(),inputObj).SuccessValue<NumericValue>();
             //result.Eval(new SymbolTableStack(new TemplateContext()), new List<IExpressionConstant>());
 
             // Assert
@@ -35,7 +35,7 @@ namespace Liquid.NET.Tests.Filters
             var castFilter = new CastFilter<NumericValue, StringValue>();
 
             // Act
-            var result = castFilter.Apply(new NumericValue(input)).SuccessValue<StringValue>();
+            var result = castFilter.Apply(new TemplateContext(), new NumericValue(input)).SuccessValue<StringValue>();
 
             // Assert
             Assert.That(result.StringVal, Is.EqualTo(expected));
@@ -51,7 +51,7 @@ namespace Liquid.NET.Tests.Filters
             var castFilter = new CastFilter<NumericValue, StringValue>();
 
             // Act
-            var result = castFilter.Apply(new NumericValue(input)).SuccessValue<StringValue>();
+            var result = castFilter.Apply(new TemplateContext(), new NumericValue(input)).SuccessValue<StringValue>();
 
             // Assert
             Assert.That(result.StringVal, Is.EqualTo(expected));

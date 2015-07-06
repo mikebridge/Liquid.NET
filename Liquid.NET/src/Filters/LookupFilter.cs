@@ -20,7 +20,7 @@ namespace Liquid.NET.Filters
 //            //Console.WriteLine("APPLYING LOOKUP ");
 //            return ApplyTo((dynamic) liquidExpression);
 //        }
-        public override LiquidExpressionResult ApplyTo(IExpressionConstant liquidExpression)
+        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, IExpressionConstant liquidExpression)
         {
             //return base.ApplyTo(liquidExpression);
             //Console.WriteLine("  ()() TRIED TO DEREFERENCE  " + _propertyName.Value.ToString());
@@ -34,7 +34,7 @@ namespace Liquid.NET.Filters
         }
 
 
-        public override LiquidExpressionResult ApplyTo(ArrayValue arrayValue)
+        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, ArrayValue arrayValue)
         {
 
             String propertyNameString = ValueCaster.RenderAsString((IExpressionConstant)_propertyName);
@@ -73,7 +73,7 @@ namespace Liquid.NET.Filters
             return LiquidExpressionResult.Success(result);
         }
 
-        public override LiquidExpressionResult ApplyTo(DictionaryValue dictionaryValue)
+        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, DictionaryValue dictionaryValue)
         {
 
             String propertyNameString = ValueCaster.RenderAsString((IExpressionConstant)_propertyName);
@@ -86,7 +86,7 @@ namespace Liquid.NET.Filters
         }
 
         // TODO: this is inefficient and ugly and duplicates much of ArrayValue
-        public override LiquidExpressionResult ApplyTo(StringValue strValue)
+        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, StringValue strValue)
         {
             var strValues = strValue.StringVal.ToCharArray().Select(ch => new StringValue(ch.ToString()).ToOption()).ToList();
             String propertyNameString = ValueCaster.RenderAsString((IExpressionConstant)_propertyName);

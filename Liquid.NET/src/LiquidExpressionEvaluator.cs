@@ -85,6 +85,7 @@ namespace Liquid.NET
 
             var filterChain = FilterChain.CreateChain(
                 objResult.GetType(),
+                templateContext,
                 filterExpressionTuples.Select(x => x.Item2));
 
             // apply the composed function to the object

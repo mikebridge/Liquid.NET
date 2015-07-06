@@ -20,7 +20,7 @@ namespace Liquid.NET.Filters.Array
             _sortField = sortField;
         }
 
-        public override LiquidExpressionResult ApplyTo(ArrayValue liquidArrayExpression)
+        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, ArrayValue liquidArrayExpression)
         {            
             var sortfield = _sortField.StringVal;
 

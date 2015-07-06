@@ -20,7 +20,7 @@ namespace Liquid.NET.Filters.Strings
         }
 
 
-        public override LiquidExpressionResult ApplyTo(IExpressionConstant liquidExpression)
+        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, IExpressionConstant liquidExpression)
         {
             return LiquidExpressionResult.Success(StringUtils.Eval(liquidExpression, x => x.Replace(_stringToRemove.StringVal, _replacementString.StringVal)));
         }

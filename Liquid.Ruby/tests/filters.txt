@@ -2,3 +2,39 @@
 {{ "1" | divided_by: "0" }}
 #
 {{ "x" | divided_by: "1" }}
+#
+{{ null | plus: "1" }}
+#
+{% assign v = null %}{{ null | plus: v }}
+#
+{% assign v = null %}{{ 1 | plus: v }}
+#
+{{ null | minus: "1" }}
+#
+{% assign v = null %}{{ null | minus: v }}
+#
+{% assign v = null %}{{ 1 | minus: v }}
+#
+{{ null | divided_by: "1" }}
+#
+{% assign v = null %}{{ null | divided_by: v }}
+#
+{% assign v = null %}{{ 1 | divided_by: v }}
+#
+{{ null | times: "1" }}
+#
+{% assign v = null %}{{ null | times: v }}
+#
+{% assign v = null %}{{ 1 | times: v }}
+#
+{{ null | ceil }}
+#
+{{ null | floor }}
+#
+{{ null | round: 2 }}
+#
+{{ null | modulo: 2 }}
+#
+{{ null | append: "test" }}
+
+

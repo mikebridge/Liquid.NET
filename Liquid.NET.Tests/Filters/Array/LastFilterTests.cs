@@ -28,7 +28,7 @@ namespace Liquid.NET.Tests.Filters.Array
             var filter = new LastFilter();
 
             // Act
-            var result = filter.Apply(arrayValue).SuccessValue<BooleanValue>();
+            var result = filter.Apply(new TemplateContext(), arrayValue).SuccessValue<BooleanValue>();
 
             // Assert
             Assert.That(result, Is.EqualTo(objlist[objlist.Count() - 1]));
@@ -42,7 +42,7 @@ namespace Liquid.NET.Tests.Filters.Array
             var filter = new LastFilter();
 
             // Act
-            var result = filter.Apply(new StringValue("Hello World")).SuccessValue<StringValue>();
+            var result = filter.Apply(new TemplateContext(), new StringValue("Hello World")).SuccessValue<StringValue>();
 
             // Assert
             Assert.That(result.StringVal, Is.EqualTo("d"));
@@ -57,7 +57,7 @@ namespace Liquid.NET.Tests.Filters.Array
             var filter = new LastFilter();
 
             // Act
-            var result = filter.Apply(arrayValue);
+            var result = filter.Apply(new TemplateContext(), arrayValue);
 
             // Assert
             Assert.That(result.IsError, Is.True);
@@ -71,7 +71,7 @@ namespace Liquid.NET.Tests.Filters.Array
             var filter = new LastFilter();
 
             // Act
-            var result = filter.Apply(new StringValue(""));
+            var result = filter.Apply(new TemplateContext(), new StringValue(""));
 
             // Assert
             Assert.That(result.IsError, Is.True);
@@ -85,7 +85,7 @@ namespace Liquid.NET.Tests.Filters.Array
             var filter = new LastFilter();
 
             // Act
-            var result = filter.Apply(new StringValue(null));
+            var result = filter.Apply(new TemplateContext(), new StringValue(null));
 
             // Assert
             Assert.That(result.IsError, Is.True);

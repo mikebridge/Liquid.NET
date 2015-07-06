@@ -20,7 +20,7 @@ namespace Liquid.NET.Tests.Filters.Array
             var mapFilter = new MapFilter(new StringValue(field));
 
             // Act
-            var result = mapFilter.Apply(array).SuccessValue<ArrayValue>();
+            var result = mapFilter.Apply(new TemplateContext(), array).SuccessValue<ArrayValue>();
 
             // Assert
             var dictionaryValues = array.ArrValue.Select(x => x.Value).Cast<DictionaryValue>();
@@ -45,7 +45,7 @@ namespace Liquid.NET.Tests.Filters.Array
             var mapFilter = new MapFilter(new StringValue(field));
 
             // Act
-            var result = (mapFilter.Apply(array).SuccessValue<ArrayValue>()).ToList();
+            var result = (mapFilter.Apply(new TemplateContext(), array).SuccessValue<ArrayValue>()).ToList();
 
 
             // Assert
@@ -79,7 +79,7 @@ namespace Liquid.NET.Tests.Filters.Array
                 new StringValue("Test")
             };
             // Act
-            var result = mapFilter.Apply(new ArrayValue(objlist)).SuccessValue<ArrayValue>();
+            var result = mapFilter.Apply(new TemplateContext(), new ArrayValue(objlist)).SuccessValue<ArrayValue>();
 
             // Assert
             Assert.That(result.ArrValue.Count, Is.EqualTo(objlist.Count()));
@@ -96,7 +96,7 @@ namespace Liquid.NET.Tests.Filters.Array
             var mapFilter = new MapFilter(new StringValue(field));
 
             // Act
-            var result = mapFilter.Apply(dict).SuccessValue<StringValue>();
+            var result = mapFilter.Apply(new TemplateContext(), dict).SuccessValue<StringValue>();
 
             // Assert
             Assert.That(result, Is.EquivalentTo("Value 1 A"));

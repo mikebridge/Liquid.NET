@@ -19,6 +19,7 @@ namespace Liquid.NET.Filters
         /// <returns></returns>
         public static Func<Option<IExpressionConstant>, LiquidExpressionResult> CreateChain(
             Type objExprType,
+            ITemplateContext ctx,
             IEnumerable<IFilterExpression> filterExpressions)
         {
             var expressions = filterExpressions.ToList();
@@ -30,7 +31,7 @@ namespace Liquid.NET.Filters
             // create the casting filter which will cast the incoming object to the input type of filter #1
             
             Func<IExpressionConstant, LiquidExpressionResult> castFn = 
-                objExpr => objExpr!=null? CreateCastFilter(objExpr.GetType(), expressions[0].SourceType).Apply(objExpr) : LiquidExpressionResult.Success(new None<IExpressionConstant>());
+                objExpr => objExpr!=null? CreateCastFilter(objExpr.GetType(), expressions[0].SourceType).Apply(ctx, objExpr) : LiquidExpressionResult.Success(new None<IExpressionConstant>());
             //Func<Option<IExpressionConstant>, LiquidExpressionResult> castFn = 
                 //objExpr => CreateCastFilter(objExpr.GetType(), expressions[0].SourceType).Apply(objExpr);
 
@@ -38,7 +39,7 @@ namespace Liquid.NET.Filters
 //            return objExpression => objExpression.Bind(x => castFn(objExpression))
 //                                                 .Bind(CreateChain(expressions));      
             // TODO: Figure out how to do this.  It should call ApplyNil() or something.
-            return optionExpression => (castFn(optionExpression.HasValue ? optionExpression.Value : null)).Bind(CreateChain(expressions));
+            return optionExpression => (castFn(optionExpression.HasValue ? optionExpression.Value : null)).Bind(CreateChain(ctx, expressions));
             //return optionExpression => optionExpression.HasValue ? castFn(optionExpression.Value) : LiquidExpressionResult.Success(new None<IExpressionConstant>()).Bind(CreateChain(expressions));
 
             //return objExpression => objExpression.Bind(x => castFn(objExpression))
@@ -47,16 +48,19 @@ namespace Liquid.NET.Filters
         }
 
 
-        public static Func<Option<IExpressionConstant>, LiquidExpressionResult> CreateChain(IEnumerable<IFilterExpression> filterExpressions)
+        public static Func<Option<IExpressionConstant>, LiquidExpressionResult> CreateChain(
+            ITemplateContext ctx,
+            IEnumerable<IFilterExpression> filterExpressions)
         {
             return x =>
             {
-                var bindAll = BindAll(InterpolateCastFilters(filterExpressions));
+                var bindAll = BindAll(ctx, InterpolateCastFilters(filterExpressions));
                 return bindAll(LiquidExpressionResult.Success(x)); // TODO: Is this the best way to kick off the chain?
             };
         }
 
         public static Func<LiquidExpressionResult, LiquidExpressionResult> BindAll(
+            ITemplateContext ctx,
             IEnumerable<IFilterExpression> filterExpressions)
         {
             return initValue => filterExpressions.Aggregate(initValue, (current, filter) =>
@@ -72,11 +76,12 @@ namespace Liquid.NET.Filters
                 LiquidExpressionResult result;
                 if (current.SuccessResult.HasValue)
                 {
-                    result = filter.Apply(current.SuccessResult.Value);
+
+                    result = filter.Apply(ctx, current.SuccessResult.Value);
                 }
                 else
                 {
-                    result = filter.ApplyToNil();
+                    result = filter.ApplyToNil(ctx);
                 }
                 return result;
 //                if (result.IsSuccess)

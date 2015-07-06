@@ -97,7 +97,15 @@ namespace Liquid.NET.Filters
                     }
                     else
                     {
-                        result.Add(null);
+                        // TODO: This is a test
+                        if (argType == typeof (NumericValue))
+                        {
+                            result.Add(new NumericValue(0));
+                        }
+                        else
+                        {
+                            result.Add(null);
+                        }
                     }
 
 //                    if (filterList[i].HasValue)

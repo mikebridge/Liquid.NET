@@ -12,7 +12,7 @@ namespace Liquid.NET.Filters.Strings
     public class UrlEscapeFilter : FilterExpression<IExpressionConstant, StringValue>
     {
 
-        public override LiquidExpressionResult ApplyTo(IExpressionConstant liquidExpression)
+        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, IExpressionConstant liquidExpression)
         {
             //return StringUtils.Eval(liquidStringExpression, x => WebUtility.UrlEncode(x));
             // Dunno if this is right but it seems to do the same as CGI::escape

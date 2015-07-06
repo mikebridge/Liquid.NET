@@ -10,7 +10,7 @@ namespace Liquid.NET.Filters.Math
 {
     public class CeilFilter : FilterExpression<NumericValue, NumericValue>
     {
-        public override LiquidExpressionResult Apply(NumericValue val)
+        public override LiquidExpressionResult Apply(ITemplateContext ctx, NumericValue val)
         {
             var ceiling = (int) System.Math.Ceiling(val.DecimalValue);
 

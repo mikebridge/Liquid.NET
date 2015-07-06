@@ -22,7 +22,7 @@ namespace Liquid.NET.Filters.Strings
             _plural = plural;
         }
 
-        public override LiquidExpressionResult ApplyTo(NumericValue numericValue)
+        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, NumericValue numericValue)
         {
             String numericString = ValueCaster.RenderAsString((IExpressionConstant) numericValue);
             var str = new StringValue(numericString+" ");

@@ -14,7 +14,7 @@ namespace Liquid.NET.Filters.Math
 
         public ModuloFilter(NumericValue operand) { _operand = operand; }
 
-        public override LiquidExpressionResult Apply(NumericValue numericValue)
+        public override LiquidExpressionResult Apply(ITemplateContext ctx, NumericValue numericValue)
         {
             if (_operand == null)
             {

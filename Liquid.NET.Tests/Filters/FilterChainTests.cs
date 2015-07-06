@@ -37,7 +37,7 @@ namespace Liquid.NET.Tests.Filters
             var removeFilter = new RemoveFilter(new StringValue("123"));
             var upCase = new UpCaseFilter();
             var filterList = new List<IFilterExpression> {removeFilter, upCase};
-            var compositeFilterFn = FilterChain.CreateChain(filterList);
+            var compositeFilterFn = FilterChain.CreateChain(new TemplateContext(), filterList);
 
             // Act
             var result = compositeFilterFn(new StringValue("test123")).SuccessValue<StringValue>();

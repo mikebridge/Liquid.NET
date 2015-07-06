@@ -17,7 +17,7 @@ namespace Liquid.NET.Filters.Math
             _divisor = divisor;
         }
 
-        public override LiquidExpressionResult Apply(NumericValue dividend)
+        public override LiquidExpressionResult Apply(ITemplateContext ctx, NumericValue dividend)
         {
             if (dividend == null)
             {

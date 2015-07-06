@@ -19,12 +19,12 @@ namespace Liquid.NET.Filters
             _defaultValue = defaultValue;
         }
 
-        public override LiquidExpressionResult ApplyTo(IExpressionConstant liquidExpression)
+        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, IExpressionConstant liquidExpression)
         {
             return LiquidExpressionResult.Success(liquidExpression.ToOption());
         }
 
-        public override LiquidExpressionResult ApplyToNil()
+        public override LiquidExpressionResult ApplyToNil(ITemplateContext ctx)
         {
             Option<IExpressionConstant> result = _defaultValue == null
                 ? (Option<IExpressionConstant>) new None<IExpressionConstant>()

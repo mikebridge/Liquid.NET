@@ -27,7 +27,7 @@ namespace Liquid.NET.Tests.Filters.Array
             var filter = new SizeFilter();
 
             // Act
-            var result = filter.Apply(arrayValue).SuccessValue<NumericValue>();
+            var result = filter.Apply(new TemplateContext(), arrayValue).SuccessValue<NumericValue>();
 
             // Assert
             Assert.That(result.Value, Is.EqualTo(4));
@@ -42,7 +42,7 @@ namespace Liquid.NET.Tests.Filters.Array
             var filter = new SizeFilter();
             
             // Act
-            var result = filter.Apply(arrayValue).SuccessValue<NumericValue>();
+            var result = filter.Apply(new TemplateContext(), arrayValue).SuccessValue<NumericValue>();
 
             // Assert
             Assert.That(result.Value, Is.EqualTo(0));
@@ -63,7 +63,7 @@ namespace Liquid.NET.Tests.Filters.Array
             SizeFilter sizeFilter = new SizeFilter();
 
             // Act
-            var result = sizeFilter.Apply(dictValue).SuccessValue<NumericValue>();
+            var result = sizeFilter.Apply(new TemplateContext(), dictValue).SuccessValue<NumericValue>();
 
             // Assert
             Assert.That(result.Value, Is.EqualTo(dict.Keys.Count()));
@@ -78,7 +78,7 @@ namespace Liquid.NET.Tests.Filters.Array
             var filter = new SizeFilter();
 
             // Act
-            var result = filter.Apply(dictValue).SuccessValue<NumericValue>();
+            var result = filter.Apply(new TemplateContext(), dictValue).SuccessValue<NumericValue>();
 
             // Assert
             Assert.That(result.Value, Is.EqualTo(0));
@@ -93,7 +93,7 @@ namespace Liquid.NET.Tests.Filters.Array
             var filter = new SizeFilter();
 
             // Act
-            var result = filter.Apply(strVal).SuccessValue<NumericValue>();
+            var result = filter.Apply(new TemplateContext(), strVal).SuccessValue<NumericValue>();
 
             // Assert
             Assert.That(result.Value, Is.EqualTo(strVal.StringVal.Count()));
@@ -108,7 +108,7 @@ namespace Liquid.NET.Tests.Filters.Array
             var filter = new SizeFilter();
 
             // Act
-            var result = filter.Apply(strVal).SuccessValue<NumericValue>();
+            var result = filter.Apply(new TemplateContext(), strVal).SuccessValue<NumericValue>();
 
             // Assert
             Assert.That(result.Value, Is.EqualTo(0));
@@ -123,7 +123,7 @@ namespace Liquid.NET.Tests.Filters.Array
             var filter = new SizeFilter();
 
             // Act
-            var result = filter.ApplyToNil().SuccessValue<NumericValue>();
+            var result = filter.ApplyToNil(new TemplateContext()).SuccessValue<NumericValue>();
 
             // Assert
             Assert.That(result.Value, Is.EqualTo(0));
@@ -138,7 +138,7 @@ namespace Liquid.NET.Tests.Filters.Array
             var filter = new SizeFilter();
 
             // Act
-            var result = filter.Apply(strVal).SuccessValue<NumericValue>();
+            var result = filter.Apply(new TemplateContext(), strVal).SuccessValue<NumericValue>();
 
             // Assert
             Assert.That(result.Value, Is.EqualTo(8));

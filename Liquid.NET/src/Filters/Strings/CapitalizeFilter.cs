@@ -13,7 +13,7 @@ namespace Liquid.NET.Filters.Strings
     /// </summary>
     public class CapitalizeFilter : FilterExpression<IExpressionConstant, StringValue>
     {
-        public override LiquidExpressionResult ApplyTo(IExpressionConstant liquidExpression)
+        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, IExpressionConstant liquidExpression)
         {
             String before = ValueCaster.RenderAsString(liquidExpression);
             if (String.IsNullOrWhiteSpace(before))

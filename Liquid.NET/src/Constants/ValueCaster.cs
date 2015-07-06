@@ -26,20 +26,27 @@ namespace Liquid.NET.Constants
 
             return Convert<TDest>((dynamic)src);
         }
-//
-//        public static LiquidExpressionResult Cast<TSource, TDest>(Option<TSource> src)
-//            where TDest : IExpressionConstant
-//            where TSource : IExpressionConstant
-//        {
-//            if (!src.HasValue)
-//            {
-//                //new LiquidExpressionResult(result);
-//                return LiquidExpressionResult.Success(Option<IExpressionConstant>.None());
-//            }
-//            return Cast<TSource,TDest>(src.Value);
-//
-//           
-//        }
+
+        /// <summary>
+        /// This applies the liquid casting rules, e.g. "null is zero when NumericValue" or 
+        /// "null is empty string when StringValue".
+        /// </summary>
+        /// <typeparam name="TDest"></typeparam>
+        /// <returns></returns>
+        public static LiquidExpressionResult ConvertFromNull<TDest>()
+            where TDest : IExpressionConstant
+        {
+            var destType = typeof(TDest);
+            if (destType == typeof(NumericValue))
+            {
+                return LiquidExpressionResult.Success(new Some<IExpressionConstant>(new NumericValue(0)));
+            }
+            if (destType == typeof(StringValue))
+            {
+                return LiquidExpressionResult.Success(new Some<IExpressionConstant>(new StringValue(String.Empty)));
+            }
+            return LiquidExpressionResult.Success(new None<IExpressionConstant>());
+        }
 
         private static LiquidExpressionResult Convert<TDest>(NumericValue num)
             where TDest : IExpressionConstant

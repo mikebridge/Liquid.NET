@@ -13,7 +13,7 @@ namespace Liquid.NET.Filters.Strings
             _replacement = replacement;
         }
         // TODO: use StringUtils.Eval?
-        public override LiquidExpressionResult Apply(StringValue liquidStringExpression)
+        public override LiquidExpressionResult Apply(ITemplateContext ctx, StringValue liquidStringExpression)
         {
             // TODO: Return errors
             Console.WriteLine("APPLYING REMOVE " + _replacement.Value + "TO " + liquidStringExpression.Value);

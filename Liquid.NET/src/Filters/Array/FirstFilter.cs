@@ -16,10 +16,10 @@ namespace Liquid.NET.Filters.Array
         {
             _positionFilter = new PositionFilter(new NumericValue(0));
         }
-        
-        public override LiquidExpressionResult Apply(ExpressionConstant liquidConstantExpression)
+
+        public override LiquidExpressionResult Apply(ITemplateContext ctx, ExpressionConstant liquidConstantExpression)
         {
-            return _positionFilter.Apply(liquidConstantExpression);
+            return _positionFilter.Apply(ctx, liquidConstantExpression);
         }
     }
 }

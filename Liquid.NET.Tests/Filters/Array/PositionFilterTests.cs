@@ -27,7 +27,7 @@ namespace Liquid.NET.Tests.Filters.Array
             var filter = new PositionFilter(new NumericValue(0));
            
             // Act
-            var result = filter.Apply(arrayValue).SuccessValue<StringValue>();
+            var result = filter.Apply(new TemplateContext(), arrayValue).SuccessValue<StringValue>();
 
             // Assert
             Assert.That(result, Is.EqualTo(objlist[0]));

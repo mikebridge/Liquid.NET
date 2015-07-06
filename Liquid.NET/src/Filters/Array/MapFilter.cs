@@ -15,13 +15,13 @@ namespace Liquid.NET.Filters.Array
             _selector = selector;
         }
 
-        public override LiquidExpressionResult ApplyTo(IExpressionConstant liquidExpression)
+        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, IExpressionConstant liquidExpression)
         {
             //return LiquidExpressionResult.Error("Can't map that object type.  It is not an array or a hash.");
             return LiquidExpressionResult.Success(new None<IExpressionConstant>());
         }
 
-        public override LiquidExpressionResult ApplyTo(ArrayValue liquidArrayExpression)
+        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, ArrayValue liquidArrayExpression)
         {
             if (liquidArrayExpression == null || liquidArrayExpression.Value == null)
             {
@@ -33,7 +33,7 @@ namespace Liquid.NET.Filters.Array
             return LiquidExpressionResult.Success(new ArrayValue(list));
         }
 
-        public override LiquidExpressionResult ApplyTo(DictionaryValue liquidDictionaryValue)
+        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, DictionaryValue liquidDictionaryValue)
         {
             if (liquidDictionaryValue == null || liquidDictionaryValue.Value == null)
             {

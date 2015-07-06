@@ -15,7 +15,7 @@ namespace Liquid.NET.Filters.Strings
             _delimiter = delimiter;
         }
 
-        public override LiquidExpressionResult ApplyTo(StringValue liquidStringExpression)
+        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, StringValue liquidStringExpression)
         {
             var strings = liquidStringExpression.StringVal.Split(new[] { _delimiter.StringVal }, StringSplitOptions.RemoveEmptyEntries);
             return LiquidExpressionResult.Success(new ArrayValue(strings.Select(s => new StringValue(s).ToOption()).ToList()));

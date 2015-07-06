@@ -147,7 +147,7 @@ UNLESS_TAG :			'unless' ;
 CASE_TAG :				'case' ;
 WHEN_TAG :				'when' ;
 ENDCASE_TAG :			'endcase' ;
-ELSIF_TAG :				'elsif' ;
+ELSIF_TAG :				'elsif' | 'elseif' ; // dotliquid allows elseif...
 ELSE_TAG :				'else' ;
 ENDIF_TAG :				'endif' ;
 ENDUNLESS_TAG :			'endunless' ;

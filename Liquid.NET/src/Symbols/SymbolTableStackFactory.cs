@@ -7,28 +7,28 @@ using Liquid.NET.Filters;
 
 namespace Liquid.NET.Symbols
 {
-    public class SymbolTableStackFactory
+    public class SymbolTableStackFactoryOLD
     {
-        public static SymbolTableStack CreateSymbolTableStack(ITemplateContext templateContext)
-        {
-            var result = new SymbolTableStack();
-          
-            // TODO: Fix this cast (the interface was to shield the user from the dict and the registry...
-            var globalScopeSymbolTable = new SymbolTable(
-                ((TemplateContext) templateContext).VariableDictionary,
-                ((TemplateContext) templateContext).FilterRegistry,
-                ((TemplateContext) templateContext).CustomTagRendererRegistry,
-                ((TemplateContext) templateContext).CustomBlockTagRendererRegistry
-                );
-
-            result.FileSystem = ((TemplateContext)templateContext).FileSystem;
-
-            // TODO: make this less prone to collision:
-            globalScopeSymbolTable.DefineFilter<LookupFilter>("lookup");
-
-            result.Push(globalScopeSymbolTable);
-
-            return result;
-        }
+//        public static SymbolTableStack CreateSymbolTableStack(ITemplateContext templateContext)
+//        {
+//            var result = new SymbolTableStack();
+//          
+//            // TODO: Fix this cast (the interface was to shield the user from the dict and the registry...
+//            var globalScopeSymbolTable = new SymbolTable(
+//                ((TemplateContext) templateContext).VariableDictionary,
+//                ((TemplateContext) templateContext).FilterRegistry,
+//                ((TemplateContext) templateContext).CustomTagRendererRegistry,
+//                ((TemplateContext) templateContext).CustomBlockTagRendererRegistry
+//                );
+//
+//            result.FileSystem = ((TemplateContext)templateContext).FileSystem;
+//
+//            // TODO: make this less prone to collision:
+//            globalScopeSymbolTable.DefineFilter<LookupFilter>("lookup");
+//
+//            result.Push(globalScopeSymbolTable);
+//
+//            return result;
+//        }
     }
 }

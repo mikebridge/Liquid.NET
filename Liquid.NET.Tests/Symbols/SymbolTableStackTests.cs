@@ -17,7 +17,7 @@ namespace Liquid.NET.Tests.Symbols
             // Arrange
             const string str = "This is a test.";
             var templateContext = new TemplateContext();
-            templateContext.Define("test", new StringValue(str));
+            templateContext.DefineLocalVariable("test", new StringValue(str));
             var stack = StackHelper.CreateSymbolTableStack(templateContext);
 
             // Act

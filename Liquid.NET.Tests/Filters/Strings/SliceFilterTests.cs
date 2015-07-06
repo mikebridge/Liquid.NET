@@ -41,7 +41,7 @@ namespace Liquid.NET.Tests.Filters.Strings
         {
             // Arrange
             var ctx = new TemplateContext();
-            ctx.Define("array", CreateArray());
+            ctx.DefineLocalVariable("array", CreateArray());
             // Act
             var result = RenderingHelper.RenderTemplate("Result : {{ array | slice : " + slice + " }}", ctx);
 

@@ -51,8 +51,9 @@ namespace Liquid.NET.Filters
                 throw new Exception("The \""+filterType+"\" class for " + name + " has more than one constructor.  Please contact the developer to fix this.");
             }
             //filterArgs.Select(x => x.HasValue ? x.Value : new NilValue());
-            return InstantiateFilter(filterType, CreateArguments(filterArgs, constructors[0]));
-           
+            var filter = InstantiateFilter(filterType, CreateArguments(filterArgs, constructors[0]));
+            filter.Name = name;
+            return filter;
         }
 
         private static IFilterExpression InstantiateFilter(Type filterType, IList<object> args)

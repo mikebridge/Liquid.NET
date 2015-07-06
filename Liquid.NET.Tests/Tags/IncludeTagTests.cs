@@ -32,6 +32,24 @@ namespace Liquid.NET.Tests.Tags
         }
 
         [Test]
+        public void It_Should_Include_Name_Of_VirtualFile_With_Errors()
+        {
+            // Arrange
+            var ctx = CreateContext(new Dictionary<String, String> { { "test", "{% if .wefiouhwef %}" } });
+
+            //ctx.Define("payments", new ArrayValue(new List<IExpressionConstant>()));
+
+            const String str = "{% include 'test' %}";
+
+            // Act
+            var result = RenderingHelper.RenderTemplate(str, ctx);
+
+            // Assert
+            Assert.That(result, Is.EqualTo("Test Snippet"));
+
+        }
+
+        [Test]
         public void It_Should_Include_A_Virtual_File_With_With()
         {
             // Arrange
@@ -54,7 +72,7 @@ namespace Liquid.NET.Tests.Tags
         {
             // Arrange
             var ctx = CreateContext(new Dictionary<String, String> { { "test", "Test Snippet: {{ test }} " } });
-            ctx.Define("array",CreateArrayValues());
+            ctx.DefineLocalVariable("array",CreateArrayValues());
             //ctx.Define("payments", new ArrayValue(new List<IExpressionConstant>()));
 
             const String str = "{% include 'test' for array %}";

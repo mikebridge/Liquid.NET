@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Runtime.CompilerServices;
+
 using Liquid.NET.Constants;
 using Liquid.NET.Utils;
 
@@ -7,6 +7,8 @@ namespace Liquid.NET.Filters
 {
     public interface IFilterExpression
     {
+        String Name { get; set; }
+
         Type SourceType { get; }
         Type ResultType { get; }
 
@@ -27,6 +29,7 @@ namespace Liquid.NET.Filters
         where TSource : IExpressionConstant
         where TResult : IExpressionConstant
     {
+        public String Name {get; set;}
 
         // TODO: I don't think this should be virtual
         //public virtual TResult Apply(TSource liquidExpression)

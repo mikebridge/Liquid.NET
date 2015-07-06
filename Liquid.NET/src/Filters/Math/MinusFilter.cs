@@ -14,6 +14,10 @@ namespace Liquid.NET.Filters.Math
 
         public override LiquidExpressionResult Apply(NumericValue liquidExpression)
         {
+            if (_operand == null)
+            {
+                return LiquidExpressionResult.Error("The operand to \"" + Name + "\" is missing.");
+            }
             var result = liquidExpression.DecimalValue - _operand.DecimalValue;
             return MathHelper.GetReturnValue(result, liquidExpression, _operand);
         }

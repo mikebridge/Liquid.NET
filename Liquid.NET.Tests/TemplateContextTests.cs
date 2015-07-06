@@ -1,4 +1,5 @@
-﻿using Liquid.NET.Constants;
+﻿using System.Numerics;
+using Liquid.NET.Constants;
 using NUnit.Framework;
 
 namespace Liquid.NET.Tests
@@ -12,15 +13,33 @@ namespace Liquid.NET.Tests
             // Arrange
             const string varname = "hello";
             var templateContext = new TemplateContext();            
-            templateContext.Define(varname, new StringValue("HELLO"));
+            templateContext.DefineLocalVariable(varname, new StringValue("HELLO"));
 
             // Act
-            var result = templateContext.Reference(varname);
+            var result = templateContext.SymbolTableStack.Reference(varname);
 
             // Assert
-            Assert.That(result.Value, Is.EqualTo("HELLO"));
+            Assert.That(result.SuccessValue<StringValue>().StringVal, Is.EqualTo("HELLO"));
 
         }
+
+        [Test]
+        public void It_Should_Add_A_Register()
+        {
+            // Arrange
+            const string varname = "hello";
+            var templateContext = new TemplateContext();
+            
+
+            // Act
+            var orig = new BigInteger(123);
+            templateContext.Registers.Add(varname, orig);
+            var val = (BigInteger) templateContext.Registers[varname];
+
+            // Assert
+            Assert.That(val, Is.EqualTo(orig));
+        }
+
 
 
     }

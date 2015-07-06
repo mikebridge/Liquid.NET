@@ -17,36 +17,36 @@ namespace Liquid.NET
     {
         
         public static LiquidExpressionResult Eval(
-            TreeNode<LiquidExpression> expr, 
-            SymbolTableStack symbolTableStack)
+            TreeNode<LiquidExpression> expr,
+            ITemplateContext templateContext)
         {
             // Evaluate the children, depth first
-            var leaves = expr.Children.Select(x => Eval(x, symbolTableStack)).ToList();
+            var leaves = expr.Children.Select(x => Eval(x, templateContext)).ToList();
             if (leaves.Any(x => x != null && x.IsError))
             {
                 return leaves.First(x => x.IsError); // TODO: maybe aggregate tehse
             }
-            return Eval(expr.Data, leaves.Select(x => x == null? new None<IExpressionConstant>() : x.SuccessResult), symbolTableStack);
+            return Eval(expr.Data, leaves.Select(x => x == null ? new None<IExpressionConstant>() : x.SuccessResult), templateContext);
         }
 
         public static LiquidExpressionResult Eval(
             LiquidExpressionTree expressiontree, 
-            SymbolTableStack symbolTableStack)
+            ITemplateContext templateContext)
         {
             // Evaluate the children, depth first
-            var leaves = expressiontree.ExpressionTree.Children.Select(x => Eval(x, symbolTableStack)).ToList();
+            var leaves = expressiontree.ExpressionTree.Children.Select(x => Eval(x, templateContext)).ToList();
             if (leaves.Any(x => x.IsError))
             {
                 return leaves.First(x => x.IsError); // TODO: maybe aggregate tehse
             }
             // pass the results to the parent
-            return Eval(expressiontree.ExpressionTree.Data, leaves.Select(x => x.SuccessResult), symbolTableStack);
+            return Eval(expressiontree.ExpressionTree.Data, leaves.Select(x => x.SuccessResult), templateContext);
         }
 
         public static LiquidExpressionResult Eval(
             LiquidExpression expression,
             IEnumerable<Option<IExpressionConstant>> leaves, 
-            SymbolTableStack symbolTableStack)
+            ITemplateContext templateContext)
         {
             // until the expression is changed to an option type, an expression may be null.  If it's null, it evaluates to null.
             if (expression.Expression == null)
@@ -56,7 +56,7 @@ namespace Liquid.NET
             }
 
 
-            LiquidExpressionResult objResult = expression.Expression.Eval(symbolTableStack, leaves);
+            LiquidExpressionResult objResult = expression.Expression.Eval(templateContext, leaves);
             if (objResult.IsError)
             {
                 return objResult;
@@ -67,7 +67,7 @@ namespace Liquid.NET
             try
             {
                 filterExpressionTuples = expression.FilterSymbols.Select(symbol =>
-                    new Tuple<FilterSymbol, IFilterExpression>(symbol, InstantiateFilter(symbolTableStack, symbol)))
+                    new Tuple<FilterSymbol, IFilterExpression>(symbol, InstantiateFilter(templateContext, symbol)))
                     .ToList();
             }
             catch (Exception ex)
@@ -94,9 +94,9 @@ namespace Liquid.NET
         }
 
 
-        private static IFilterExpression InstantiateFilter(SymbolTableStack stack, FilterSymbol filterSymbol)
+        private static IFilterExpression InstantiateFilter(ITemplateContext templateContext, FilterSymbol filterSymbol)
         {
-            var filterType = stack.LookupFilterType(filterSymbol.Name);
+            var filterType = templateContext.SymbolTableStack.LookupFilterType(filterSymbol.Name);
             if (filterType == null)
             {
                 //TODO: make this return an error filter or something?
@@ -104,7 +104,7 @@ namespace Liquid.NET
                 //return new Tuple<String, IFilterExpression>(filterSymbol.Name, null);
                 return null;
             }
-            var expressionConstants = filterSymbol.Args.Select(x => x.Eval(stack, new List<Option<IExpressionConstant>>())).ToList();
+            var expressionConstants = filterSymbol.Args.Select(x => x.Eval(templateContext, new List<Option<IExpressionConstant>>())).ToList();
             // TODO: Handle the error if any
             //return FilterFactory.InstantiateFilter(filterSymbol.Name, filterType, expressionConstants.Select(x => x.IsSuccess? x.SuccessResult));
             if (expressionConstants.Any(x => x.IsError))

@@ -17,7 +17,7 @@ namespace Liquid.NET.Tests.Tags
             // Arrange
             const string templateString = "Result : {% for item in array %}<li>{{ item }}</li>{% endfor %}";            
             TemplateContext ctx = new TemplateContext();
-            ctx.Define("array", CreateArrayValues());
+            ctx.DefineLocalVariable("array", CreateArrayValues());
             var template = LiquidTemplate.Create(templateString);
 
             // Act
@@ -33,7 +33,7 @@ namespace Liquid.NET.Tests.Tags
             // Arrange
             const string templateString = "Result : {% for item in array reversed %}<li>{{ item }}</li>{% endfor %}";
             TemplateContext ctx = new TemplateContext();
-            ctx.Define("array", CreateArrayValues());
+            ctx.DefineLocalVariable("array", CreateArrayValues());
             var template = LiquidTemplate.Create(templateString);
 
             // Act
@@ -49,7 +49,7 @@ namespace Liquid.NET.Tests.Tags
             // Arrange
             const string templateString = "Result : {% for item in array offset: 2%}<li>{{ item }}</li>{% endfor %}";
             TemplateContext ctx = new TemplateContext();
-            ctx.Define("array", CreateArrayValues());
+            ctx.DefineLocalVariable("array", CreateArrayValues());
             var template = LiquidTemplate.Create(templateString);
 
             // Act
@@ -65,7 +65,7 @@ namespace Liquid.NET.Tests.Tags
             // Arrange
             const string templateString = "Result : {% for item in array limit: 2%}<li>{{ item }}</li>{% endfor %}";
             TemplateContext ctx = new TemplateContext();
-            ctx.Define("array", CreateArrayValues());
+            ctx.DefineLocalVariable("array", CreateArrayValues());
             var template = LiquidTemplate.Create(templateString);
 
             // Act
@@ -82,7 +82,7 @@ namespace Liquid.NET.Tests.Tags
             // Arrange
             const string templateString = "Result : {% for item in array limit: 1 offset: 2 %}<li>{{ item }}</li>{% endfor %}";
             TemplateContext ctx = new TemplateContext();
-            ctx.Define("array", CreateArrayValues());
+            ctx.DefineLocalVariable("array", CreateArrayValues());
             var template = LiquidTemplate.Create(templateString);
 
             // Act
@@ -98,7 +98,7 @@ namespace Liquid.NET.Tests.Tags
             // Arrange
             const string templateString = "Result : {% for item in array limit: 6 offset: 2 %}<li>{{ item }}</li>{% endfor %}";
             TemplateContext ctx = new TemplateContext();
-            ctx.Define("array", CreateArrayValues());
+            ctx.DefineLocalVariable("array", CreateArrayValues());
             var template = LiquidTemplate.Create(templateString);
 
             // Act
@@ -114,7 +114,7 @@ namespace Liquid.NET.Tests.Tags
             // Arrange
             const string templateString = "Result : {% for item in array offset: 10 %}<li>{{ item }}</li>{% endfor %}";
             TemplateContext ctx = new TemplateContext();
-            ctx.Define("array", CreateArrayValues());
+            ctx.DefineLocalVariable("array", CreateArrayValues());
             var template = LiquidTemplate.Create(templateString);
 
             // Act
@@ -132,7 +132,7 @@ namespace Liquid.NET.Tests.Tags
             // Arrange
             const string templateString = "Result :{% for item in array %} Inside: {{ item }}{% endfor %} Outside: {{ item }}";
             TemplateContext ctx = new TemplateContext();
-            ctx.Define("array", CreateArrayValues());
+            ctx.DefineLocalVariable("array", CreateArrayValues());
             var template = LiquidTemplate.Create(templateString);
 
             // Act
@@ -156,7 +156,7 @@ namespace Liquid.NET.Tests.Tags
             var array2 = new ArrayValue(numericValues);
             //var array1 = Enumerable.Range(0, 3).Select(x => new ArrayValue(array2);
             var array1 = new ArrayValue(new List<IExpressionConstant> { array2, array2, array2 });
-            ctx.Define("array1", array1);
+            ctx.DefineLocalVariable("array1", array1);
             
             var template = LiquidTemplate.Create(templateString);
 
@@ -175,7 +175,7 @@ namespace Liquid.NET.Tests.Tags
             const string templateString = "Result : {% for item in array[1] %}<li>{{ item }}</li>{% endfor %}";
             Console.WriteLine(templateString);
             TemplateContext ctx = new TemplateContext();
-            ctx.Define("array", new ArrayValue(new List<IExpressionConstant> {new StringValue("HELLO"), CreateArrayValues()}));
+            ctx.DefineLocalVariable("array", new ArrayValue(new List<IExpressionConstant> {new StringValue("HELLO"), CreateArrayValues()}));
             var template = LiquidTemplate.Create(templateString);
 
             // Act
@@ -225,7 +225,7 @@ namespace Liquid.NET.Tests.Tags
         {
             // Arrange
             TemplateContext ctx = new TemplateContext();
-            ctx.Define("array", new ArrayValue(new List<IExpressionConstant> { new NumericValue(10), new NumericValue(13) }));
+            ctx.DefineLocalVariable("array", new ArrayValue(new List<IExpressionConstant> { new NumericValue(10), new NumericValue(13) }));
 
             var template = LiquidTemplate.Create("Result : {% for item in (array[0]..array[1]) %}{{ item }}{% endfor %}");
 
@@ -244,7 +244,7 @@ namespace Liquid.NET.Tests.Tags
         {
             // Arrange
             TemplateContext ctx = new TemplateContext();
-            ctx.Define("array", new ArrayValue(new List<IExpressionConstant> { new NumericValue(5), new NumericValue(3) }));
+            ctx.DefineLocalVariable("array", new ArrayValue(new List<IExpressionConstant> { new NumericValue(5), new NumericValue(3) }));
 
             var template = LiquidTemplate.Create("Result : {% for item in (array[0]..array[1]) %}{{ item }}{% endfor %}");
 
@@ -262,7 +262,7 @@ namespace Liquid.NET.Tests.Tags
             
             TemplateContext ctx = new TemplateContext();
             //ctx.Define("outer", new ArrayValue(new List<IExpressionConstant> { new NumericValue(1), new NumericValue(1), new NumericValue(1) }));
-            ctx.Define("outer", DictionaryFactory.CreateArrayFromJson("[[1, 1, 1], [1, 1, 1]]"));
+            ctx.DefineLocalVariable("outer", DictionaryFactory.CreateArrayFromJson("[[1, 1, 1], [1, 1, 1]]"));
 
             var template = LiquidTemplate.Create("Result :{% for inner in outer %}{% for k in inner %} {{ forloop.parentloop.index }}.{{ forloop.index }}{% endfor %}{% endfor %}");
 
@@ -280,8 +280,8 @@ namespace Liquid.NET.Tests.Tags
         {
             // Arrange
             TemplateContext ctx = new TemplateContext();
-            ctx.Define("limit", new NumericValue(3));
-            ctx.Define("offset", new NumericValue(1));
+            ctx.DefineLocalVariable("limit", new NumericValue(3));
+            ctx.DefineLocalVariable("offset", new NumericValue(1));
             var template = LiquidTemplate.Create("Result : {% for wef in \"Hello\" limit:limit offset:offset %}<li>{{ for }}</li>{% endfor %}");
 
             // Act
@@ -300,7 +300,7 @@ namespace Liquid.NET.Tests.Tags
             String input = @"{%for val in string%}{{forloop.name}}-{{forloop.index}}-{{forloop.length}}-{{forloop.index0}}-{{forloop.rindex}}-{{forloop.rindex0}}-{{forloop.first}}-{{forloop.last}}-{{val}}{%endfor%}";
             ITemplateContext ctx = new TemplateContext();
 
-            ctx.Define("string", new StringValue("test string"));
+            ctx.DefineLocalVariable("string", new StringValue("test string"));
             var template = LiquidTemplate.Create(input);
 
             // Act
@@ -331,7 +331,7 @@ namespace Liquid.NET.Tests.Tags
         public void It_Should_Insert_ForLoop_First(String varname, String parms, String expected)
         {
             TemplateContext ctx = new TemplateContext();
-            ctx.Define("array", CreateArrayValues());
+            ctx.DefineLocalVariable("array", CreateArrayValues());
 
             var template = LiquidTemplate.Create("Result : {% for item in array "+parms +"%}{{ "+varname+" }} {% endfor %}");
 
@@ -351,7 +351,7 @@ namespace Liquid.NET.Tests.Tags
         {
             // Arrange
             TemplateContext ctx = new TemplateContext();
-            ctx.Define("dict", new DictionaryValue(
+            ctx.DefineLocalVariable("dict", new DictionaryValue(
                 new Dictionary<string, IExpressionConstant>
                 {
                     {"start", new NumericValue(1)},
@@ -379,7 +379,7 @@ namespace Liquid.NET.Tests.Tags
 
             // Arrange
             TemplateContext ctx = new TemplateContext();
-            ctx.Define("dict", new DictionaryValue(
+            ctx.DefineLocalVariable("dict", new DictionaryValue(
                 new Dictionary<string, IExpressionConstant>
                 {
                     {"one", new StringValue("ONE")},
@@ -434,7 +434,7 @@ namespace Liquid.NET.Tests.Tags
             const string templateString = "Result : {% for item in array  %}<li>{{ item }}</li>{% else %}"+emptystr+"{% endfor %}";
             Console.WriteLine(templateString);
             TemplateContext ctx = new TemplateContext();
-            ctx.Define("array", new ArrayValue(new List<IExpressionConstant>()));
+            ctx.DefineLocalVariable("array", new ArrayValue(new List<IExpressionConstant>()));
             var template = LiquidTemplate.Create(templateString);
 
             // Act

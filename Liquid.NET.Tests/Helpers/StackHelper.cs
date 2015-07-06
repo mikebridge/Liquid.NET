@@ -17,7 +17,8 @@ namespace Liquid.NET.Tests.Helpers
                 ctx = new TemplateContext();    
             }
             ctx.WithAllFilters();
-            return SymbolTableStackFactory.CreateSymbolTableStack(ctx);
+            return ctx.SymbolTableStack;
+            //return SymbolTableStackFactory.CreateSymbolTableStack(ctx);
         }
 
     }

@@ -15,6 +15,8 @@ namespace Liquid.NET
             
             InvokeErrorEvent(new LiquidError
             {
+                TokenSource = offendingSymbol.TokenSource.SourceName,
+                //Context = offendingSymbol..SourceName,
                 Message = msg, 
                 Line = line, 
                 CharPositionInLine = charPositionInLine,

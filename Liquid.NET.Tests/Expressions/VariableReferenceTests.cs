@@ -20,11 +20,10 @@ namespace Liquid.NET.Tests.Expressions
             // Arrange
             var variableReference = new VariableReference("myvar");
             var templateContext = new TemplateContext();
-            templateContext.Define("myvar", new StringValue("HELLO"));
-            var symbolTableStack = SymbolTableStackFactory.CreateSymbolTableStack(templateContext);
+            templateContext.DefineLocalVariable("myvar", new StringValue("HELLO"));
 
             // Act
-            var result = variableReference.Eval(symbolTableStack, new List<Option<IExpressionConstant>>()).SuccessValue<StringValue>();
+            var result = variableReference.Eval(templateContext, new List<Option<IExpressionConstant>>()).SuccessValue<StringValue>();
 
             // Assert
             Assert.That(result.Value, Is.EqualTo("HELLO"));

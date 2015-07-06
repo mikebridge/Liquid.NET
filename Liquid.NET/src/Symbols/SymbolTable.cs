@@ -48,7 +48,7 @@ namespace Liquid.NET.Symbols
             _customBlockTagRendererRegistry.Register<T>(name);
         }
 
-        public void DefineVariable(String key, IExpressionConstant obj)
+        public void DefineLocalVariable(String key, IExpressionConstant obj)
         {
             if (_variableDictionary.ContainsKey(key))
             {
@@ -124,7 +124,7 @@ namespace Liquid.NET.Symbols
             }
         }
 
-        public LiquidExpressionResult ReferenceVariable(String key)
+        public LiquidExpressionResult ReferenceLocalVariable(String key)
         {
             if (HasVariableReference(key))
             {

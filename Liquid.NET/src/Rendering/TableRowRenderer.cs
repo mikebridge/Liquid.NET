@@ -19,14 +19,14 @@ namespace Liquid.NET.Rendering
             _renderingVisitor = renderingVisitor;
             _astRenderer = astRenderer;
         }
-        public void Render(TableRowBlockTag tableRowBlockTag, SymbolTableStack symbolTableStack, Func<String, String> appender)
+        public void Render(TableRowBlockTag tableRowBlockTag, ITemplateContext templateContext, Func<String, String> appender)
         {
             var offset = new NumericValue(0);
             var  limit = new NumericValue(50);
             var cols = new NumericValue(5); // TODO: What is the default? https://github.com/Shopify/liquid/blob/master/lib/liquid/tags/table_row.rb
             if (tableRowBlockTag.Offset != null)
             {
-                var result = LiquidExpressionEvaluator.Eval(tableRowBlockTag.Offset, symbolTableStack);
+                var result = LiquidExpressionEvaluator.Eval(tableRowBlockTag.Offset, templateContext);
                 if (result.IsSuccess)
                 {
                     offset = result.SuccessValue<NumericValue>();
@@ -34,7 +34,7 @@ namespace Liquid.NET.Rendering
             }
             if (tableRowBlockTag.Limit != null)
             {
-                var result = LiquidExpressionEvaluator.Eval(tableRowBlockTag.Limit, symbolTableStack);
+                var result = LiquidExpressionEvaluator.Eval(tableRowBlockTag.Limit, templateContext);
                 if (result.IsSuccess)
                 {
                     limit = result.SuccessValue<NumericValue>();
@@ -42,14 +42,14 @@ namespace Liquid.NET.Rendering
             }
             if (tableRowBlockTag.Cols != null)
             {
-                var result = LiquidExpressionEvaluator.Eval(tableRowBlockTag.Cols, symbolTableStack);
+                var result = LiquidExpressionEvaluator.Eval(tableRowBlockTag.Cols, templateContext);
                 if (result.IsSuccess)
                 {
                     cols = result.SuccessValue<NumericValue>();
                 }
             }
             var localBlockScope = new SymbolTable();
-            symbolTableStack.Push(localBlockScope);
+            templateContext.SymbolTableStack.Push(localBlockScope);
             try
             {
                 var iterableFactory = tableRowBlockTag.IterableCreator;
@@ -57,7 +57,7 @@ namespace Liquid.NET.Rendering
                 // TODO: the Eval may result in an ArrayValue with no Array
                 // (i.e. it's undefined).  THe ToList therefore fails....
                 // this should use Bind
-                var iterable = iterableFactory.Eval(symbolTableStack).ToList();
+                var iterable = iterableFactory.Eval(templateContext).ToList();
 
                 int length = iterable.Skip(offset.IntValue).Take(limit.IntValue).Count();
 
@@ -73,17 +73,17 @@ namespace Liquid.NET.Rendering
                 int iter = 0;
                 foreach (var item in iterable.Skip(offset.IntValue).Take(limit.IntValue))
                 {
-                    symbolTableStack.Define(tableRowBlockTag.LocalVariable, item);
+                    templateContext.DefineLocalVariable(tableRowBlockTag.LocalVariable, item);
                     String typename = item == null ? "null" : item.LiquidTypeName;
-                    symbolTableStack.Define("tablerowloop", CreateForLoopDescriptor(
+                    templateContext.DefineLocalVariable("tablerowloop", CreateForLoopDescriptor(
                         tableRowBlockTag.LocalVariable + "-" + typename, 
                         // ReSharper disable RedundantArgumentName
                         iter: iter, 
                         length: length, 
                         col: currentcol, 
                         maxcol: cols.IntValue, 
-                        row: currentrow, 
-                        stack: symbolTableStack));
+                        row: currentrow,
+                        stack: templateContext.SymbolTableStack));
                         // ReSharper restore RedundantArgumentName
                     int rowFromOne = currentrow + 1;
                     int colFromOne = currentcol + 1;
@@ -120,7 +120,7 @@ namespace Liquid.NET.Rendering
             }
             finally
             {
-                symbolTableStack.Pop();
+                templateContext.SymbolTableStack.Pop();
             }
         }
 

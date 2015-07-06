@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 
 using Liquid.NET.Constants;
@@ -6,8 +7,8 @@ using Liquid.NET.Filters;
 using Liquid.NET.Filters.Array;
 using Liquid.NET.Filters.Math;
 using Liquid.NET.Filters.Strings;
+using Liquid.NET.Symbols;
 using Liquid.NET.Tags.Custom;
-using Liquid.NET.Utils;
 
 namespace Liquid.NET
 {
@@ -19,40 +20,61 @@ namespace Liquid.NET
     /// </summary>
     public class TemplateContext : ITemplateContext
     {
-        private readonly IDictionary<String, IExpressionConstant> _varDictionary = new Dictionary<string, IExpressionConstant>();
-
-        private readonly FilterRegistry _filterRegistry = new FilterRegistry();
-
-        private readonly Registry<ICustomTagRenderer> _customTagRegistry = new Registry<ICustomTagRenderer>();
-
-        private readonly Registry<ICustomBlockTagRenderer> _customBlockTagRegistry = new Registry<ICustomBlockTagRenderer>();
-
-        //private readonly ConcurrentDictionary<String, int> _counters = new ConcurrentDictionary<string, int>();
-
+        
+        public SymbolTableStack SymbolTableStack {get {return _symbolTablestack;}}
+        private readonly SymbolTableStack _symbolTablestack = new SymbolTableStack();
+        private readonly SymbolTable _globalSymbolTable;
+        private readonly IDictionary<String, Object> _registers = new ConcurrentDictionary<String, Object>();
+        public IDictionary<string, object> Registers { get { return _registers;} }
         private IFileSystem _fileSystem;
 
-        public ITemplateContext Define(String name, IExpressionConstant constant)
+        public TemplateContext()
+        {            
+            _globalSymbolTable = new SymbolTable();
+            _globalSymbolTable.DefineFilter<LookupFilter>("lookup"); // TODO: make this global somehow.
+            _symbolTablestack.Push(_globalSymbolTable);            
+        }        
+
+
+        public ITemplateContext DefineLocalVariable(String name, IExpressionConstant constant)
         {
-            if (_varDictionary.ContainsKey(name))
-            {
-                _varDictionary[name] = constant;
-            }
-            else
-            {
-                _varDictionary.Add(name, constant);
-            }
+            _globalSymbolTable.DefineLocalVariable(name, constant);
             return this;
         }
 
         public ITemplateContext WithCustomTagRenderer<T>(string name) where T : ICustomTagRenderer
         {
-            _customTagRegistry.Register<T>(name);
+            _globalSymbolTable.DefineCustomTag<T>(name);
+            return this;
+        }
+
+        public ITemplateContext WithCustomTagBlockRenderer<T>(string name) where T : ICustomBlockTagRenderer
+        {
+            _globalSymbolTable.DefineCustomBlockTag<T>(name);
             return this;
         }
 
         public ITemplateContext WithFileSystem(IFileSystem fileSystem)
         {
             _fileSystem = fileSystem;
+            return this;
+        }
+
+        public ITemplateContext WithRegisters(IDictionary<string, object> dict)
+        {
+            foreach (var kv in dict)
+            {
+                _registers.Add(kv);
+            }
+            return this;
+        }
+
+        public ITemplateContext WithLocalVariables(IDictionary<string, IExpressionConstant> dict)
+        {
+            foreach (var kv in dict)
+            {
+                _globalSymbolTable.DefineLocalVariable(kv.Key, kv.Value);
+            }
             return this;
         }
 
@@ -66,132 +88,107 @@ namespace Liquid.NET
 //            return _counters.TryUpdate(key, newVal, comparisonValue); ;
 //        }
 
-        public ITemplateContext WithCustomTagBlockRenderer<T>(string name) where T : ICustomBlockTagRenderer
+        public IFileSystem FileSystem
         {
-            _customBlockTagRegistry.Register<T>(name);
-            return this;
-        }
-       
-        internal FilterRegistry FilterRegistry { get { return _filterRegistry; } }
-
-        internal IDictionary<String, IExpressionConstant> VariableDictionary { get { return _varDictionary; } }
-
-        internal Registry<ICustomTagRenderer> CustomTagRendererRegistry { get { return _customTagRegistry; } }
-
-        internal Registry<ICustomBlockTagRenderer> CustomBlockTagRendererRegistry { get { return _customBlockTagRegistry; } }
-
-        internal IFileSystem FileSystem { get { return _fileSystem; } }
-
-        [Obsolete] // this should be transferred to the ScopeStack
-        public Option<IExpressionConstant> Reference(String name)
-        {
-            if (_varDictionary.ContainsKey(name))
-            {
-                return new Some<IExpressionConstant>(_varDictionary[name]);
-            }
-            else
-            {
-                return new None<IExpressionConstant>();
-            }
-            //return new Undefined(name);
+            get { return _fileSystem; }
         }
 
         public ITemplateContext WithStandardFilters()
         {
 
             // append
-            _filterRegistry.Register<AppendFilter>("append");
+            _globalSymbolTable.DefineFilter<AppendFilter>("append");
             // capitalize
-            _filterRegistry.Register<CapitalizeFilter>("capitalize");
+            _globalSymbolTable.DefineFilter<CapitalizeFilter>("capitalize");
             // ceil
-            _filterRegistry.Register<CeilFilter>("ceil");
+            _globalSymbolTable.DefineFilter<CeilFilter>("ceil");
             // concat
             // date
-            _filterRegistry.Register<DateFilter>("date");
+            _globalSymbolTable.DefineFilter<DateFilter>("date");
             // default
             // divided_by
-            _filterRegistry.Register<DividedByFilter>("divided_by");
+            _globalSymbolTable.DefineFilter<DividedByFilter>("divided_by");
             // downcase
-            _filterRegistry.Register<DownCaseFilter>("downcase");
+            _globalSymbolTable.DefineFilter<DownCaseFilter>("downcase");
             // escape // NOTE: this is aliased "h"
-            _filterRegistry.Register<EscapeFilter>("escape");
-            _filterRegistry.Register<EscapeFilter>("h");
+            _globalSymbolTable.DefineFilter<EscapeFilter>("escape");
+            _globalSymbolTable.DefineFilter<EscapeFilter>("h");
             // escape_once
             // first
-            _filterRegistry.Register<FirstFilter>("first");
+            _globalSymbolTable.DefineFilter<FirstFilter>("first");
             // floor
-            _filterRegistry.Register<FloorFilter>("floor");
+            _globalSymbolTable.DefineFilter<FloorFilter>("floor");
             // join
-            _filterRegistry.Register<JoinFilter>("join");
+            _globalSymbolTable.DefineFilter<JoinFilter>("join");
             // last
-            _filterRegistry.Register<LastFilter>("last");
+            _globalSymbolTable.DefineFilter<LastFilter>("last");
             // lstrip
-            _filterRegistry.Register<LStripFilter>("lstrip");
+            _globalSymbolTable.DefineFilter<LStripFilter>("lstrip");
             // map
-            _filterRegistry.Register<MapFilter>("map");
+            _globalSymbolTable.DefineFilter<MapFilter>("map");
             // minus
-            _filterRegistry.Register<MinusFilter>("minus");
+            _globalSymbolTable.DefineFilter<MinusFilter>("minus");
             // modulo
-            _filterRegistry.Register<ModuloFilter>("modulo");
+            _globalSymbolTable.DefineFilter<ModuloFilter>("modulo");
             // newline_to_br
-            _filterRegistry.Register<NewlineToBrFilter>("newline_to_br");
+            _globalSymbolTable.DefineFilter<NewlineToBrFilter>("newline_to_br");
             // plus
-            _filterRegistry.Register<PlusFilter>("plus");
+            _globalSymbolTable.DefineFilter<PlusFilter>("plus");
             // prepend
-            _filterRegistry.Register<PrependFilter>("prepend");
+            _globalSymbolTable.DefineFilter<PrependFilter>("prepend");
             // remove
-            _filterRegistry.Register<RemoveFilter>("remove");
+            _globalSymbolTable.DefineFilter<RemoveFilter>("remove");
             // remove_first
-            _filterRegistry.Register<RemoveFirstFilter>("remove_first");
+            _globalSymbolTable.DefineFilter<RemoveFirstFilter>("remove_first");
             // replace_first
-            _filterRegistry.Register<ReplaceFirstFilter>("replace_first");
+            _globalSymbolTable.DefineFilter<ReplaceFirstFilter>("replace_first");
             // reverse
-            _filterRegistry.Register<ReplaceFilter>("replace");
+            _globalSymbolTable.DefineFilter<ReplaceFilter>("replace");
             // round
-            _filterRegistry.Register<RoundFilter>("round");
+            _globalSymbolTable.DefineFilter<RoundFilter>("round");
             // rstrip
-            _filterRegistry.Register<RStripFilter>("rstrip");
+            _globalSymbolTable.DefineFilter<RStripFilter>("rstrip");
             // size
-            _filterRegistry.Register<SizeFilter>("size");
+            _globalSymbolTable.DefineFilter<SizeFilter>("size");
             // slice
-            _filterRegistry.Register<SliceFilter>("slice");
+            _globalSymbolTable.DefineFilter<SliceFilter>("slice");
             // sort
-            _filterRegistry.Register<SortFilter>("sort");
+            _globalSymbolTable.DefineFilter<SortFilter>("sort");
             // split
-            _filterRegistry.Register<SplitFilter>("split");
+            _globalSymbolTable.DefineFilter<SplitFilter>("split");
             // strip
-            _filterRegistry.Register<StripFilter>("strip");
+            _globalSymbolTable.DefineFilter<StripFilter>("strip");
             // strip_html
-            _filterRegistry.Register<StripHtmlFilter>("strip_html");
+            _globalSymbolTable.DefineFilter<StripHtmlFilter>("strip_html");
             // strip_newlines
-            _filterRegistry.Register<StripNewlinesFilter>("strip_newlines");
+            _globalSymbolTable.DefineFilter<StripNewlinesFilter>("strip_newlines");
             // times
-            _filterRegistry.Register<TimesFilter>("times");
+            _globalSymbolTable.DefineFilter<TimesFilter>("times");
             // to_date
             // to_number
             // truncate
-            _filterRegistry.Register<TruncateFilter>("truncate");
+            _globalSymbolTable.DefineFilter<TruncateFilter>("truncate");
             // truncatewords
-            _filterRegistry.Register<TruncateWordsFilter>("truncatewords");
+            _globalSymbolTable.DefineFilter<TruncateWordsFilter>("truncatewords");
             // uniq
-            _filterRegistry.Register<UniqFilter>("uniq");
+            _globalSymbolTable.DefineFilter<UniqFilter>("uniq");
             // upcase
-            _filterRegistry.Register<UpCaseFilter>("upcase");
+            _globalSymbolTable.DefineFilter<UpCaseFilter>("upcase");
             // url_encode
-            _filterRegistry.Register<UrlEscapeFilter>("url_escape");
-            _filterRegistry.Register<DefaultFilter>("default");
+            _globalSymbolTable.DefineFilter<UrlEscapeFilter>("url_escape");
+            _globalSymbolTable.DefineFilter<DefaultFilter>("default");
 
-            return this;   
+            return this;
         }
 
         public ITemplateContext WithShopifyFilters()
         {
-            _filterRegistry.Register<CamelCaseFilter>("camelcase");
-            //_filterRegistry.Register<PascalCaseFilter>("pascalcase");
-            _filterRegistry.Register<HandleizeFilter>("handleize");
-            _filterRegistry.Register<Md5Filter>("md5");
-            _filterRegistry.Register<PluralizeFilter>("pluralize");
-            _filterRegistry.Register<UrlParamEscapeFilter>("url_param_escape");
+            _globalSymbolTable.DefineFilter<CamelCaseFilter>("camelcase");
+            //_globalSymbolTable.DefineFilter<PascalCaseFilter>("pascalcase");
+            _globalSymbolTable.DefineFilter<HandleizeFilter>("handleize");
+            _globalSymbolTable.DefineFilter<Md5Filter>("md5");
+            _globalSymbolTable.DefineFilter<PluralizeFilter>("pluralize");
+            _globalSymbolTable.DefineFilter<UrlParamEscapeFilter>("url_param_escape");
             return this;
         }
 
@@ -206,24 +203,13 @@ namespace Liquid.NET
 
 
         public ITemplateContext WithFilter<T>(String name)
-            where T: IFilterExpression
+            where T : IFilterExpression
         {
-            _filterRegistry.Register<T>(name);
+            _globalSymbolTable.DefineFilter<T>(name);
             return this;
         }
 
 
-    }
-
-    public interface ITemplateContext
-    {
-        ITemplateContext WithStandardFilters();
-        ITemplateContext WithShopifyFilters();
-        ITemplateContext WithAllFilters();
-        ITemplateContext WithFilter<T>(String name) where T : IFilterExpression;
-        ITemplateContext Define(String name, IExpressionConstant constant);
-        ITemplateContext WithCustomTagRenderer<T>(string echoargs) where T: ICustomTagRenderer;
-        ITemplateContext WithCustomTagBlockRenderer<T>(string echoargs)  where T: ICustomBlockTagRenderer;
-        ITemplateContext WithFileSystem(IFileSystem fileSystem);
+      
     }
 }

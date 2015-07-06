@@ -46,7 +46,7 @@ namespace Liquid.NET.Tests.Tags
         {
             // Arrange
             TemplateContext ctx = new TemplateContext();
-            ctx.Define("array", CreateArrayValues());
+            ctx.DefineLocalVariable("array", CreateArrayValues());
             var template = LiquidTemplate.Create("{% assign foo = array %}{{ foo[1] }}");
 
             // Act
@@ -62,7 +62,7 @@ namespace Liquid.NET.Tests.Tags
         {
             // Arrange
             ITemplateContext ctx = new TemplateContext().WithAllFilters();
-            ctx.Define("array", CreateArrayValues());
+            ctx.DefineLocalVariable("array", CreateArrayValues());
             var template = LiquidTemplate.Create("{% assign foo = \"test\" | upcase %}{{ foo }}");
 
             // Act
@@ -72,6 +72,21 @@ namespace Liquid.NET.Tests.Tags
             Assert.That(result, Is.EqualTo("TEST"));
 
         }
+
+        [Test]
+        public void It_Should_Assign_Empty_Values()
+        {
+            ITemplateContext ctx = new TemplateContext().WithAllFilters();
+            var template = LiquidTemplate.Create("{% assign content_column_width = content_column_width | minus: image_column_width | minus: 10 -%}");
+
+            // Act
+            String result = template.Render(ctx);
+
+            // Assert
+            Assert.That(result, Is.EqualTo("0"));
+            
+        }
+
 
         private ArrayValue CreateArrayValues()
         {

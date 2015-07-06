@@ -14,7 +14,7 @@ namespace Liquid.NET.Expressions
             expressionDescriptionVisitor.Visit(this);
         }
 
-        public override LiquidExpressionResult Eval(SymbolTableStack symbolTableStack, IEnumerable<Option<IExpressionConstant>> expressions)
+        public override LiquidExpressionResult Eval(ITemplateContext templateContext, IEnumerable<Option<IExpressionConstant>> expressions)
         {
             IList<Option<IExpressionConstant>> exprList = expressions.ToList();
 

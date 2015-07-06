@@ -11,7 +11,6 @@ namespace Liquid.NET.Symbols
     public class SymbolTableStack
     {
         private readonly IList<SymbolTable> _symbolTables = new List<SymbolTable>();
-        public IFileSystem FileSystem { get; set; }
 
         public void Push(SymbolTable symbolTable)
         {
@@ -38,7 +37,7 @@ namespace Liquid.NET.Symbols
                 Console.WriteLine("Looking up" + reference);
                 if (_symbolTables[i].HasVariableReference(reference))
                 {
-                    return _symbolTables[i].ReferenceVariable(reference);
+                    return _symbolTables[i].ReferenceLocalVariable(reference);
                 }
             }
             return LiquidExpressionResult.Success(new None<IExpressionConstant>());
@@ -54,7 +53,7 @@ namespace Liquid.NET.Symbols
                 Console.WriteLine("Looking up" + reference);
                 if (_symbolTables[i].HasVariableReference(reference))
                 {
-                    var liquidExpressionResult = _symbolTables[i].ReferenceVariable(reference);
+                    var liquidExpressionResult = _symbolTables[i].ReferenceLocalVariable(reference);
                     if (liquidExpressionResult.IsError)
                     {
                         ifNotFoundAction();
@@ -74,12 +73,12 @@ namespace Liquid.NET.Symbols
         public void Define(string reference, IExpressionConstant obj)
         {
             //Console.WriteLine("Adding " + reference + " to current scope");
-            _symbolTables.Last().DefineVariable(reference, obj);
+            _symbolTables.Last().DefineLocalVariable(reference, obj);
         }
 
         public void DefineGlobal(string key, IExpressionConstant obj)
         {
-            _symbolTables[0].DefineVariable(key, obj);
+            _symbolTables[0].DefineLocalVariable(key, obj);
         }
 
         public bool HasFilter(String name)

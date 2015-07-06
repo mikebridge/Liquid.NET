@@ -38,7 +38,7 @@ namespace Liquid.NET.Tests.Ruby
             
             foreach (var tuple in DictionaryFactory.CreateStringMapFromJson(assigns))
             {
-                ctx.Define(tuple.Item1, tuple.Item2);
+                ctx.DefineLocalVariable(tuple.Item1, tuple.Item2);
             }
 
             

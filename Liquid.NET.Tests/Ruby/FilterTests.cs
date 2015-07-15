@@ -43,6 +43,8 @@ namespace Liquid.NET.Tests.Ruby
         [TestCase(@"{{ null | round: 2 }}", @"", @"0.0")]
         [TestCase(@"{{ null | modulo: 2 }}", @"", @"0")]
         [TestCase(@"{{ null | append: ""test"" }}", @"", @"test")]
+        [TestCase(@"{{ ""2"" | plus: ""3""}}", @"", @"5")]
+        [TestCase(@"", @"", @"")]
         public void It_Should_Match_Ruby_Output(String input, String assigns, String expected) {
 
             // Arrange

@@ -36,5 +36,7 @@
 {{ null | modulo: 2 }}
 #
 {{ null | append: "test" }}
-
+#
+{{ "2" | plus: "3"}}
+#
 

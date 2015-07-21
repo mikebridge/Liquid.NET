@@ -51,6 +51,22 @@ namespace Liquid.NET.Tests.Constants
             Assert.That(result, Is.EqualTo("Result : 4" ));
         }
 
+        [Test]
+        public void It_Should_Save_Meta_Data()
+        {
+            // Arrange
+
+            var expected = "Hello";
+            ArrayValue arrayValue = new ArrayValue(new List<IExpressionConstant>());
+
+            // Act
+            arrayValue.MetaData["test"] = expected;
+
+            // Assert
+            Assert.That(arrayValue.MetaData.ContainsKey("test"));
+            Assert.That(arrayValue.MetaData["test"], Is.EqualTo(expected));
+            
+        }
 
 
     }

@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using Liquid.NET.Expressions;
-using Liquid.NET.Symbols;
 using Liquid.NET.Utils;
-using Liquid.NET;
+
 
 using ExpressionResult = Liquid.NET.Utils.Either<Liquid.NET.LiquidError, Liquid.NET.Utils.Option<Liquid.NET.Constants.IExpressionConstant>>;
 
@@ -11,7 +10,10 @@ namespace Liquid.NET.Constants
 {
     public abstract class ExpressionConstant : ExpressionDescription, IExpressionConstant
     {
-
+        protected ExpressionConstant()
+        {
+            MetaData = new Dictionary<string, object>();
+        }
 
 
         public abstract object Value
@@ -29,10 +31,6 @@ namespace Liquid.NET.Constants
         }
 
         public abstract string LiquidTypeName { get; }
-//
-//        public bool IsUndefined { get; set; }
-//
-//        public virtual bool IsNil { get { return Value == null; } }
 
         /// <summary>
         /// </summary>
@@ -41,7 +39,8 @@ namespace Liquid.NET.Constants
         public LiquidExpressionResult Bind(Func<IExpressionConstant, LiquidExpressionResult> f)
         {
             throw new Exception("NEED TO MOVE THIS");
-//            //Console.WriteLine("Old Bind");
+
+            //            //Console.WriteLine("Old Bind");
 //            if (HasError)
 //            {
 //                Console.WriteLine("Bind Sees an error: " + ErrorMessage);
@@ -97,6 +96,8 @@ namespace Liquid.NET.Constants
                 return new None<IExpressionConstant>();
             }
         }
+
+        public IDictionary<string, object> MetaData { get; private set; }
 
         public static implicit operator Option<IExpressionConstant>(ExpressionConstant t)
         {

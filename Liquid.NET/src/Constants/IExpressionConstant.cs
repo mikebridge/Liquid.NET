@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Liquid.NET.Expressions;
 using Liquid.NET.Utils;
 
@@ -13,8 +14,6 @@ namespace Liquid.NET.Constants
 
         String LiquidTypeName { get; }
 
-        //bool IsNil { get; set; }
-
         LiquidExpressionResult Bind(Func<IExpressionConstant, LiquidExpressionResult> f);
 
         TOut Bind<TOut>(Func<LiquidExpressionResult, TOut> f)
@@ -23,5 +22,8 @@ namespace Liquid.NET.Constants
         T ValueAs<T>();
 
         Option<IExpressionConstant> ToOption();
+
+        IDictionary<String, Object> MetaData { get; }
+
     }
 }

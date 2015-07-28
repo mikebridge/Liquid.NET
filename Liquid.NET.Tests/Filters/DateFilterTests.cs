@@ -33,6 +33,19 @@ namespace Liquid.NET.Tests.Filters
         }
 
         [Test]
+        public void It_Should_Format_A_Date_With_A_Culture()
+        {
+            TemplateContext ctx = new TemplateContext();
+            DateTime dateTime = new DateTime(2015, 3, 30, 23, 1, 12);
+            ctx.DefineLocalVariable("mydate", new DateValue(dateTime));
+            // Act
+            var result = RenderingHelper.RenderTemplate("Result : {{ mydate | date: \"%A, %B %-d, %Y\", \"fr-CA\"  }}", ctx);
+
+            // Assert
+            Assert.That(result, Is.EqualTo("Result : lundi, mars 30, 2015"));
+        }
+
+        [Test]
         public void It_Should_Ignore_An_Empty_Date()
         {
             // Arrange
@@ -57,8 +70,6 @@ namespace Liquid.NET.Tests.Filters
 
             // Assert
             Assert.That(result, Is.EqualTo("Result : "));
-
         }
-
     }
 }

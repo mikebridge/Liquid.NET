@@ -1,8 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.Globalization;
-using System.Security.Policy;
 using Liquid.NET.Constants;
-using Liquid.NET.Utils;
 using NUnit.Framework;
 
 namespace Liquid.NET.Tests.Constants

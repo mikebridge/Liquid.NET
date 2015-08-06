@@ -144,5 +144,9 @@ namespace Liquid.NET.Constants
             return LiquidExpressionResult.Success(this);
         }
 
+        public override string ToString()
+        {
+            return ValueCaster.RenderAsString((IExpressionConstant)this);
+        }
     }
 }

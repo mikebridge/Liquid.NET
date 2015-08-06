@@ -35,6 +35,18 @@ namespace Liquid.NET.Tests.Constants
 
         }
 
+        [Test]
+        public void ToString_Should_Render_As_String()
+        {
+            // Arrange
+            var var1 = new NumericValue(1);
+
+            // Assert
+            Assert.That(var1.ToString(), Is.EqualTo("1"));
+
+        }
+
+
 //        [Test]
 //        public void It_Should_Chain_A_Function()
 //        {

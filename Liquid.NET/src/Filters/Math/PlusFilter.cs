@@ -22,5 +22,10 @@ namespace Liquid.NET.Filters.Math
 
             return MathHelper.GetReturnValue(val, numericValue, _operand);
         }
+
+        public override LiquidExpressionResult ApplyToNil(ITemplateContext ctx)
+        {
+            return LiquidExpressionResult.Success(_operand);
+        }
     }
 }

@@ -21,5 +21,10 @@ namespace Liquid.NET.Filters.Math
             var round = System.Math.Round(val.DecimalValue, decimalPlaces, MidpointRounding.AwayFromZero);
             return LiquidExpressionResult.Success(decimalPlaces == 0 ? new NumericValue((int) round) : new NumericValue(round));
         }
+
+        public override LiquidExpressionResult ApplyToNil(ITemplateContext ctx)
+        {
+            return Apply(ctx, new NumericValue(0));
+        }
     }
 }

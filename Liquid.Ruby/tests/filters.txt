@@ -7,6 +7,14 @@
 #
 {% assign v = null %}{{ null | plus: v }}
 #
+{% assign v = null %}{{ v | plus: 10 }}
+#
+{% assign v = null %}{{ v | minus: 10 }}
+#
+{% assign v = null %}{{ v | divided_by: 10 }}
+#
+{% assign v = null %}{{ v | times: 10 }}
+#
 {% assign v = null %}{{ 1 | plus: v }}
 #
 {{ null | minus: "1" }}
@@ -39,4 +47,5 @@
 #
 {{ "2" | plus: "3"}}
 #
-
+{{ "" | split: "|" | default: "EMPTY"}}
+#

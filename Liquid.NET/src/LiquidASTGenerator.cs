@@ -1369,6 +1369,10 @@ namespace Liquid.NET
             MarkCurrentExpressionComplete();
         }
 
+        /// <summary>
+        /// Create a null literal
+        /// </summary>
+        /// <param name="context"></param>
         public override void EnterNullObject(LiquidParser.NullObjectContext context)
         {
             base.EnterNullObject(context);

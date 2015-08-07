@@ -27,5 +27,10 @@ namespace Liquid.NET.Filters.Math
             var val = (int) (numericValue.DecimalValue % _operand.DecimalValue);
             return LiquidExpressionResult.Success(new NumericValue(val));
         }
+
+        public override LiquidExpressionResult ApplyToNil(ITemplateContext ctx)
+        {
+            return LiquidExpressionResult.Success(new NumericValue(0));
+        }
     }
 }

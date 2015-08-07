@@ -21,5 +21,11 @@ namespace Liquid.NET.Filters.Math
             var result = liquidExpression.DecimalValue - _operand.DecimalValue;
             return MathHelper.GetReturnValue(result, liquidExpression, _operand);
         }
+
+        public override LiquidExpressionResult ApplyToNil(ITemplateContext ctx)
+        {
+            return MathHelper.GetReturnValue(-_operand.DecimalValue, new NumericValue(0), _operand);
+        }
+
     }
 }

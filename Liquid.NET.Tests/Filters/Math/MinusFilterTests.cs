@@ -24,5 +24,15 @@ namespace Liquid.NET.Tests.Filters.Math
             // Assert
             Assert.That(result, Is.EqualTo("Result : 11"));
         }
+
+        [Test]
+        public void It_Should_Treat_Null_As_Zero()
+        {
+            // Arrange
+            var result = RenderingHelper.RenderTemplate("Result : {{ x | minus: \"12\" }}");
+
+            // Assert
+            Assert.That(result, Is.EqualTo("Result : -12"));
+        }
     }
 }

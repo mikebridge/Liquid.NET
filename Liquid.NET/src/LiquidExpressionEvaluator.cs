@@ -48,19 +48,16 @@ namespace Liquid.NET
             IEnumerable<Option<IExpressionConstant>> leaves, 
             ITemplateContext templateContext)
         {
-            // until the expression is changed to an option type, an expression may be null.  If it's null, it evaluates to null.
-            if (expression.Expression == null)
-            {
-                //return null;
-                return LiquidExpressionResult.Success(new None<IExpressionConstant>());
-            }
+            // calculate the first part of the expression
+            var objResult = expression.Expression == null ? 
+                LiquidExpressionResult.Success(new None<IExpressionConstant>()) : 
+                expression.Expression.Eval(templateContext, leaves);
 
-
-            LiquidExpressionResult objResult = expression.Expression.Eval(templateContext, leaves);
             if (objResult.IsError)
             {
                 return objResult;
             }
+
             // Compose a chain of filters, making sure type-casting
             // is done between them.
             IEnumerable<Tuple<FilterSymbol, IFilterExpression>> filterExpressionTuples;

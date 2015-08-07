@@ -22,6 +22,16 @@ namespace Liquid.NET.Tests.Filters.Strings
         }
 
         [Test]
+        public void It_Should_Append_Text_To_Empty()
+        {
+            // Arrange
+            var result = RenderingHelper.RenderTemplate("Result : {{ \"\" | append : \"jpg\" }}");
+
+            // Assert
+            Assert.That(result, Is.EqualTo("Result : jpg"));
+        }
+
+        [Test]
         public void It_Should_Append_Text_To_A_Number()
         {
             // Arrange

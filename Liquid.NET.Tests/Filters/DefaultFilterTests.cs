@@ -37,5 +37,31 @@ namespace Liquid.NET.Tests.Filters
 
         }
 
+        [Test]
+        public void It_Should_Return_Default_If_Array_Has_No_Elements()
+        {
+            // Arrange
+            TemplateContext ctx = new TemplateContext();
+
+            // Act
+            var result = RenderingHelper.RenderTemplate("Result : {% assign arr=\"\" | split: \"|\"%}{{ arr | default: \"DEFAULT\" }}", ctx);
+
+            // Assert
+            Assert.That(result, Is.EqualTo("Result : DEFAULT"));
+        }
+
+        [Test]
+        public void It_Should_Return_Default_If_Array_Is_Null()
+        {
+            // Arrange
+            TemplateContext ctx = new TemplateContext();
+
+            // Act
+            var result = RenderingHelper.RenderTemplate("Result : {{ arr | default: \"DEFAULT\" }}", ctx);
+
+            // Assert
+            Assert.That(result, Is.EqualTo("Result : DEFAULT"));
+        }
+
     }
 }

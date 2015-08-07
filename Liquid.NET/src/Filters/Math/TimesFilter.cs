@@ -25,5 +25,10 @@ namespace Liquid.NET.Filters.Math
             var result = _addend1.DecimalValue * addend2.DecimalValue;
             return MathHelper.GetReturnValue(result, _addend1, addend2);
         }
+
+        public override LiquidExpressionResult ApplyToNil(ITemplateContext ctx)
+        {
+            return LiquidExpressionResult.Success(new NumericValue(0)); 
+        }
     }
 }

@@ -11,7 +11,7 @@ namespace Liquid.NET.Filters.Strings
     /// <summary>
     /// https://docs.shopify.com/themes/liquid-documentation/filters/string-filters#append
     /// </summary>
-    public class AppendFilter : FilterExpression<IExpressionConstant, StringValue>
+    public class AppendFilter : FilterExpression<StringValue, StringValue>
     {
         private readonly StringValue _strToAppend;
 
@@ -20,9 +20,15 @@ namespace Liquid.NET.Filters.Strings
             _strToAppend = strToAppend;
         }
 
-        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, IExpressionConstant liquidExpression)
+        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, StringValue liquidExpression)
         {
-            return LiquidExpressionResult.Success(StringUtils.Eval(liquidExpression, x => x + _strToAppend.StringVal)); 
+            return LiquidExpressionResult.Success(new StringValue(liquidExpression.StringVal + _strToAppend.StringVal)); 
         }
+
+        public override LiquidExpressionResult ApplyToNil(ITemplateContext ctx)
+        {
+            return ApplyTo(ctx, new StringValue(""));
+        }
+
     }
 }

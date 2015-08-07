@@ -35,7 +35,11 @@ namespace Liquid.NET.Filters.Math
             return MathHelper.GetReturnValue(result, dividend, _divisor);
         }
 
-        
+        public override LiquidExpressionResult ApplyToNil(ITemplateContext ctx)
+        {
+            return Apply(ctx, new NumericValue(0));
+
+        }
     }
 
 }

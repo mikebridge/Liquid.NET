@@ -28,6 +28,10 @@ namespace Liquid.NET.Tests.Ruby
         [TestCase(@"{{ ""x"" | divided_by: ""1"" }}", @"", @"0")]
         [TestCase(@"{{ null | plus: ""1"" }}", @"", @"1")]
         [TestCase(@"{% assign v = null %}{{ null | plus: v }}", @"", @"0")]
+        [TestCase(@"{% assign v = null %}{{ v | plus: 10 }}", @"", @"10")]
+        [TestCase(@"{% assign v = null %}{{ v | minus: 10 }}", @"", @"-10")]
+        [TestCase(@"{% assign v = null %}{{ v | divided_by: 10 }}", @"", @"0")]
+        [TestCase(@"{% assign v = null %}{{ v | times: 10 }}", @"", @"0")]
         [TestCase(@"{% assign v = null %}{{ 1 | plus: v }}", @"", @"1")]
         [TestCase(@"{{ null | minus: ""1"" }}", @"", @"-1")]
         [TestCase(@"{% assign v = null %}{{ null | minus: v }}", @"", @"0")]
@@ -44,7 +48,7 @@ namespace Liquid.NET.Tests.Ruby
         [TestCase(@"{{ null | modulo: 2 }}", @"", @"0")]
         [TestCase(@"{{ null | append: ""test"" }}", @"", @"test")]
         [TestCase(@"{{ ""2"" | plus: ""3""}}", @"", @"5")]
-        [TestCase(@"", @"", @"")]
+        [TestCase(@"{{ """" | split: ""|"" | default: ""EMPTY""}}", @"", @"EMPTY")]
         public void It_Should_Match_Ruby_Output(String input, String assigns, String expected) {
 
             // Arrange

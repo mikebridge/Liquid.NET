@@ -60,5 +60,22 @@ namespace Liquid.NET.Tests.Filters
 
         }
 
+        [Test]
+        public void It_Should_Format_With_Hour_Day_Month_Minute_Meridian_Second()
+        {
+            // Arrange
+            TemplateContext ctx = new TemplateContext();
+            DateTime localDateTime = new DateTime(2014, 9, 13, 16, 29, 55, DateTimeKind.Local); //Saturday, September 13, 2014, 4:29:55 PM MDT/MST
+            ctx.DefineLocalVariable("mydate", new DateValue(localDateTime));
+            String resultString = "HourOfDay24 16, HourOfDay12 04, DayOfYear 256, MonthOfYear 09, Minute 29, Meridian PM, Second 55";
+            
+            // Act
+            String result = RenderingHelper.RenderTemplate("Result: {{ mydate | date: 'HourOfDay24 %H, HourOfDay12 %I, DayOfYear %j, MonthOfYear %m, Minute %M, Meridian %p, Second %S' }}", ctx);
+
+            // Assert
+            Console.WriteLine(result);
+            Assert.That(result.Trim(), Is.EqualTo("Result: " + resultString));
+        }
+
     }
 }

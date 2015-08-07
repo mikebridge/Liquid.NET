@@ -46,5 +46,17 @@ namespace Liquid.NET.Tests.Filters.Math
             Assert.That(result, Is.EqualTo("Result : " +expected));
         }
 
+        [Test]
+        public void It_Should_Round_To_Int_When_No_Arg()
+        {
+            // Act
+            //var result = LiquidHtmlFilters.ToInt(input);
+            var result = RenderingHelper.RenderTemplate("Result : {{ 12.5 | round }}");
+
+            // Assert
+            Assert.That(result, Is.EqualTo("Result : 13"));
+        }
+
+
     }
 }

@@ -38,12 +38,12 @@ namespace Liquid.NET.Tests.Ruby
         [TestCase(@"{% assign myvar = 123 %}{% if myvar.empty? %}TRUTHY{% else %}NOT TRUTHY{% endif %}", @"", @"NOT TRUTHY")]
         [TestCase(@"{% if myvar.empty? %}TRUTHY{% else %}NOT TRUTHY{% endif %}", @"", @"NOT TRUTHY")]
         [TestCase(@"{% if myvar.blank? %}TRUTHY{% else %}NOT TRUTHY{% endif %}", @"", @"NOT TRUTHY")]
+        [TestCase(@"{% if myvar.present? %}TRUTHY{% else %}NOT TRUTHY{% endif %}", @"", @"NOT TRUTHY")]
         [TestCase(@"{% assign myvar = 123 %}{% if myvar == empty %}TRUTHY{% else %}NOT TRUTHY{% endif %}", @"", @"NOT TRUTHY")]
         [TestCase(@"{% assign myarray = ""1,2"" |split: "","" %}{% if myarray == blank %}TRUTHY{% else %}NOT TRUTHY{% endif %}", @"", @"NOT TRUTHY")]
         [TestCase(@"{% assign myarray = """" |split: "","" %}{% if myarray == blank %}TRUTHY{% else %}NOT TRUTHY{% endif %}", @"", @"TRUTHY")]
         [TestCase(@"{% assign myarray = ""1,2"" |split: "","" %}{% if myarray == empty %}TRUTHY{% else %}NOT TRUTHY{% endif %}", @"", @"NOT TRUTHY")]
         [TestCase(@"{% assign myarray = """" |split: "","" %}{% if myarray == empty %}TRUTHY{% else %}NOT TRUTHY{% endif %}", @"", @"TRUTHY")]
-        [TestCase(@"{% assign myarray = """" |split: "","" %}{% if myarray == present %}TRUTHY{% else %}NOT TRUTHY{% endif %}", @"", @"NOT TRUTHY")]
         public void It_Should_Match_Ruby_Output(String input, String assigns, String expected) {
 
             // Arrange

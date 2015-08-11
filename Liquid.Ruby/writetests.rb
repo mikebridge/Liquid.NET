@@ -1,6 +1,8 @@
 #!/usr/bin/env ruby
 
 require 'liquid'
+#require 'active_support/core_ext/object/blank'
+require 'active_support/all'
 
 def escape(str)
   str.gsub('"','""')

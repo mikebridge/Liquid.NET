@@ -220,11 +220,11 @@ expr:				PARENOPEN expr PARENCLOSE			# GroupedExpr
 					| outputexpression					# OutputExpression
 					| NOT expr					        # NotExpr
 					| expr CONTAINS expr				# ContainsExpression   // TODO: implement this
-					| expr (MULT | DIV | MOD) expr      # MultExpr
-					| expr (MINUS | ADD) expr           # AddSubExpr
-					| expr PERIOD (ISEMPTY | ISBLANK)	# IsEmptyOrBlankExpr
-					| expr (GT | LT | GTE | LTE | EQ | NEQ) (EMPTY | BLANK)    # IsEmptyOrBlankExpr // TODO can 'empty' be used anywhere else? 
-					| (EMPTY | BLANK) (GT | LT | GTE | LTE | EQ | NEQ) expr    # IsEmptyOrBlankExpr // TODO can 'empty' be used anywhere else? 
+					//| expr (MULT | DIV | MOD) expr      # MultExpr
+					//| expr (MINUS | ADD) expr           # AddSubExpr
+					| expr PERIOD (ISEMPTY | ISBLANK | ISPRESENT)	# IsEmptyOrBlankOrPresentExpr
+					| expr (GT | LT | GTE | LTE | EQ | NEQ) (EMPTY | BLANK | PRESENT)    # IsEmptyOrBlankOrPresentExpr // TODO can 'empty' be used anywhere else? 
+					| (EMPTY | BLANK | PRESENT) (GT | LT | GTE | LTE | EQ | NEQ) expr    # IsEmptyOrBlankOrPresentExpr // TODO can 'empty' be used anywhere else? 
 					| expr (GT | LT | GTE | LTE | EQ | NEQ) expr      # ComparisonExpr // this covers "NULL" as well.
 					| expr AND expr                     # AndExpr
 					| expr OR expr                      # OrExpr

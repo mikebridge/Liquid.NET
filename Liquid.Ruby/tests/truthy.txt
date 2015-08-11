@@ -10,5 +10,32 @@
 #
 {% if nil == empty %}TRUTHY{% else %}NOT TRUTHY{% endif %}
 #
-{% if ' ' == blank %}TRUTHY{% else %}NOT TRUTHY{% endif %}
+{% if " " == blank %}TRUTHY{% else %}NOT TRUTHY{% endif %}
 #
+{% if "notblank" == blank %}TRUTHY{% else %}NOT TRUTHY{% endif %}
+#
+{% assign space = " " %}{% if space == blank %}TRUTHY{% else %}NOT TRUTHY{% endif %}
+#
+{% assign space = " " %}{% if space == empty %}TRUTHY{% else %}NOT TRUTHY{% endif %}
+#
+{% if " ".empty? %}TRUTHY{% else %}NOT TRUTHY{% endif %}
+#
+{% if " ".blank? %}TRUTHY{% else %}NOT TRUTHY{% endif %}
+#
+{% assign myvar = 123 %}{% if myvar.empty? %}TRUTHY{% else %}NOT TRUTHY{% endif %}
+#
+{% if myvar.empty? %}TRUTHY{% else %}NOT TRUTHY{% endif %}
+#
+{% if myvar.blank? %}TRUTHY{% else %}NOT TRUTHY{% endif %}
+#
+{% assign myvar = 123 %}{% if myvar == empty %}TRUTHY{% else %}NOT TRUTHY{% endif %}
+#
+{% assign myarray = "1,2" |split: "," %}{% if myarray == blank %}TRUTHY{% else %}NOT TRUTHY{% endif %}
+#
+{% assign myarray = "" |split: "," %}{% if myarray == blank %}TRUTHY{% else %}NOT TRUTHY{% endif %}
+#
+{% assign myarray = "1,2" |split: "," %}{% if myarray == empty %}TRUTHY{% else %}NOT TRUTHY{% endif %}
+#
+{% assign myarray = "" |split: "," %}{% if myarray == empty %}TRUTHY{% else %}NOT TRUTHY{% endif %}
+#
+{% assign myarray = "" |split: "," %}{% if myarray == present %}TRUTHY{% else %}NOT TRUTHY{% endif %}

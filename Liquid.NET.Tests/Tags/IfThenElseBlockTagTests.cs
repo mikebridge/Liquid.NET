@@ -142,6 +142,23 @@ namespace Liquid.NET.Tests.Tags
 
         }
 
+        [Test]
+        public void It_Should_Test_Value_Against_Blank()
+        {
+            // Arrange
+            var ctx = new TemplateContext();
+            ctx.DefineLocalVariable("payments", new ArrayValue(new List<IExpressionConstant>()));
+
+            const String str = "{% if payments.blank? %}This is empty{% endif %}";
+
+            // Act
+            var result = RenderingHelper.RenderTemplate(str, ctx);
+
+            // Assert
+            Assert.That(result, Is.EqualTo("This is empty"));
+
+        }
+
         private static TemplateContext CreateContextWithDictionary()
         {
             var ctx = new TemplateContext();

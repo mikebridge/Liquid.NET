@@ -41,5 +41,7 @@ namespace Liquid.NET.Expressions
         void Visit(ContainsExpression expressionDescription);
 
         void Visit(IsBlankExpression expressionDescription);
+
+        void Visit(IsPresentExpression expressionDescription);
     }
 }

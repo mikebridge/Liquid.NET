@@ -49,3 +49,4 @@
 #
 {{ "" | split: "|" | default: "EMPTY"}}
 #
+{% assign v-1 = "hyphen" %}{{v-1}}

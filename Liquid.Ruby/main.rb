@@ -5,6 +5,7 @@
 #
 
 require 'liquid'
+require 'active_support/core_ext/object/blank'
 
 var1 = 'test'
 

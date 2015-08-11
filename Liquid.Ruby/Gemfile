@@ -1,2 +1,5 @@
 source 'https://rubygems.org'
 gem 'liquid'
+# this is for blank support, see
+# https://github.com/Shopify/liquid/issues/224
+gem 'activesupport'

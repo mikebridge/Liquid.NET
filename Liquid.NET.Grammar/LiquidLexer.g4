@@ -42,7 +42,10 @@ ISEMPTY:				'empty?';
 EMPTY :					'empty';
 NULL :					'null'|'nil'; // Liquid uses both? (Note: this is also hardcoded in LiquidASTGenerator)
 BLANK :					'blank';
-ISBLANK:				'isblank?'; 
+ISBLANK:				'blank?'; 
+PRESENT :				'present';
+ISPRESENT:				'present?'; 
+
 
 STRING :				'"' STRDOUBLE '"' | '\'' STRSINGLE '\'' ;  
 fragment STRDOUBLE :	(ESC | ~["\\])* ;
@@ -53,11 +56,12 @@ fragment HEX :			[0-9a-fA-F] ;
 
 VARIABLENAME:			LABEL;
 
-fragment LABEL :					ALPHA (ALPHA|DIGIT|UNDERSCORE)* ;
+fragment LABEL :		ALPHA (ALPHA|DIGIT|UNDERSCORE|MINUS_KWD)* ;
 
 fragment UNDERSCORE:	'_' ;
 fragment ALPHA:			[a-zA-Z] ;
 fragment DIGIT:			[0-9] ;
+fragment MINUS_KWD:			'-' ;
  
 FILTERPIPE :			'|' ;
 
@@ -100,6 +104,9 @@ ISEMPTY1:				ISEMPTY -> type(ISEMPTY);
 
 BLANK1:					BLANK -> type(BLANK);
 ISBLANK1:				ISBLANK -> type(ISBLANK);
+
+PRESENT1:				PRESENT -> type(PRESENT);
+ISPRESENT1:				ISPRESENT -> type(ISPRESENT);
 
 NUMBER1:				NUMBER -> type(NUMBER);
 
@@ -180,6 +187,10 @@ EMPTY2:					EMPTY -> type(EMPTY);
 ISEMPTY2:				ISEMPTY -> type(ISEMPTY);
 BLANK2:					BLANK -> type(BLANK);
 ISBLANK2:				ISBLANK -> type(ISBLANK);
+PRESENT2:				PRESENT -> type(PRESENT);
+ISPRESENT2:				ISPRESENT -> type(ISPRESENT);
+
+
 
 COLON1 :				':' -> type(COLON);
 COMMA1 :				',' -> type(COMMA);

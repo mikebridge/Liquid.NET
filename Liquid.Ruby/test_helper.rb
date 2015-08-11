@@ -8,7 +8,10 @@ require 'json'
 $:.unshift(File.join(File.expand_path(__dir__), '..', 'lib'))
 require 'liquid.rb'
 require 'liquid/profiler'
-
+# see: https://github.com/Shopify/liquid/issues/589
+#require 'active_support/core_ext/object/blank'
+#require 'active_support/all'
+#require 'active_support/core_ext/object/blank'
 
 # MONKEY PATCH Liquid::Drop.to_json
 module Liquid

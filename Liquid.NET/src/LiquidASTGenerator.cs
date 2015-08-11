@@ -1142,17 +1142,17 @@ namespace Liquid.NET
             MarkCurrentExpressionComplete();
         }
 
-        public override void EnterMultExpr(LiquidParser.MultExprContext multContext)
-        {
-            base.EnterMultExpr(multContext);
-            Console.WriteLine(" === creating MULTIPLICATION expression >" + multContext.GetText() + "<");
-        }
-
-        public override void EnterAddSubExpr(LiquidParser.AddSubExprContext addContext)
-        {
-            base.EnterAddSubExpr(addContext);
-            Console.WriteLine(" === creating ADD expression >" + addContext.GetText() + "<");
-        }
+//        public override void EnterMultExpr(LiquidParser.MultExprContext multContext)
+//        {
+//            base.EnterMultExpr(multContext);
+//            Console.WriteLine(" === creating MULTIPLICATION expression >" + multContext.GetText() + "<");
+//        }
+//
+//        public override void EnterAddSubExpr(LiquidParser.AddSubExprContext addContext)
+//        {
+//            base.EnterAddSubExpr(addContext);
+//            Console.WriteLine(" === creating ADD expression >" + addContext.GetText() + "<");
+//        }
 
         public override void EnterAndExpr(LiquidParser.AndExprContext andContext)
         {
@@ -1198,10 +1198,10 @@ namespace Liquid.NET
             MarkCurrentExpressionComplete();
         }
 
-        public override void EnterIsEmptyOrBlankExpr(LiquidParser.IsEmptyOrBlankExprContext context)
+        public override void EnterIsEmptyOrBlankOrPresentExpr(LiquidParser.IsEmptyOrBlankOrPresentExprContext context)
         {
-            base.EnterIsEmptyOrBlankExpr(context);
-            if (context.NEQ() == null && context.EQ() == null && context.ISEMPTY() == null && context.ISBLANK() != null)
+            base.EnterIsEmptyOrBlankOrPresentExpr(context);
+            if (context.NEQ() == null && context.EQ() == null && context.ISEMPTY() == null && context.ISBLANK() != null && context.ISPRESENT() != null)
                 // any comparison other than == and != will fail
             {
                 AddExpressionToCurrentExpressionBuilder(new FalseExpression());
@@ -1210,24 +1210,37 @@ namespace Liquid.NET
             {
                 if (context.NEQ() != null)
                 {
+                    Console.WriteLine("Completing NEQ");
                     AddExpressionToCurrentExpressionBuilder(new NotExpression());
                 }
 
                 if (context.EMPTY() != null || context.ISEMPTY() != null)
                 {
+                    Console.WriteLine("Completing ISEMPTY");
                     AddExpressionToCurrentExpressionBuilder(new IsEmptyExpression());
                 }
 
                 if (context.BLANK() != null || context.ISBLANK() != null)
                 {
+                    Console.WriteLine("Completing ISBLANK");
                     AddExpressionToCurrentExpressionBuilder(new IsBlankExpression());
+                }
+
+                if (context.PRESENT() != null || context.ISPRESENT() != null)
+                {
+                    Console.WriteLine("Completing PRESENT");
+                    AddExpressionToCurrentExpressionBuilder(new IsPresentExpression());
                 }
             }
         }
 
-        public override void ExitIsEmptyOrBlankExpr(LiquidParser.IsEmptyOrBlankExprContext context)
+        public override void ExitIsEmptyOrBlankOrPresentExpr(LiquidParser.IsEmptyOrBlankOrPresentExprContext context)
         {
-            if (context.NEQ() == null && context.EQ() == null && context.ISEMPTY() == null && context.ISBLANK() != null)
+            if (context.NEQ() == null 
+                && context.EQ() == null 
+                && context.ISEMPTY() == null 
+                && context.ISBLANK() != null
+                && context.ISPRESENT() == null)
             {
                 MarkCurrentExpressionComplete();
             }
@@ -1247,6 +1260,12 @@ namespace Liquid.NET
                 {
                     MarkCurrentExpressionComplete();
                 }
+
+                if (context.PRESENT() != null || context.ISPRESENT() != null)
+                {
+                    MarkCurrentExpressionComplete();
+                }
+
             }
 
         }

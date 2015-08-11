@@ -10,7 +10,7 @@ using ExpressionResult = Liquid.NET.Utils.Either<Liquid.NET.LiquidError, Liquid.
 
 namespace Liquid.NET.Expressions
 {
-    public class IsEmptyExpression : ExpressionDescription
+    public class IsPresentExpression : ExpressionDescription
     {
         public override void Accept(IExpressionDescriptionVisitor expressionDescriptionVisitor)
         {
@@ -19,18 +19,17 @@ namespace Liquid.NET.Expressions
 
         public override LiquidExpressionResult Eval(ITemplateContext templateContext, IEnumerable<Option<IExpressionConstant>> expressions)
         {
-            Console.WriteLine("** ISEMPTY EXPRESSION");
+            Console.WriteLine("PRESENT EXPRESSION...?");
             var list = expressions.ToList();
             if (list.Count() != 1)
             {
-                return LiquidExpressionResult.Error("Expected one variable to compare with \"empty\"");
+                return LiquidExpressionResult.Error("Expected one variable to compare with \"present\"");
             }
             if (!list[0].HasValue)
             {
-                return LiquidExpressionResult.Success(new BooleanValue(false)); // nulls are not empty.
+                return LiquidExpressionResult.Success(new BooleanValue(false)); // null is not present.
             }
-            return LiquidExpressionResult.Success(new BooleanValue(EmptyChecker.IsEmpty(list[0].Value)));
+            return LiquidExpressionResult.Success(new BooleanValue(!EmptyChecker.IsEmpty(list[0].Value)));
         }
-        
     }
 }

@@ -48,6 +48,20 @@ namespace Liquid.NET.Tests.Filters.Strings
             // Assert
             Assert.That(result, Is.EqualTo("The"));
         }
+
+        [Test]
+        public void It_Should_Have_A_Default()
+        {
+            // Arrange
+            const String tmpl = @"{{ ""The"" | truncatewords }}";
+
+            // Act
+            var result = RenderingHelper.RenderTemplate(tmpl);
+
+            // Assert
+            Assert.That(result, Is.EqualTo("The"));
+        }
+
         [Test]
         public void It_Should_Not_Count_Blank_Words()
         {

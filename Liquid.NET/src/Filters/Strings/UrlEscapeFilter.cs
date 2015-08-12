@@ -17,7 +17,6 @@ namespace Liquid.NET.Filters.Strings
             //return StringUtils.Eval(liquidStringExpression, x => WebUtility.UrlEncode(x));
             // Dunno if this is right but it seems to do the same as CGI::escape
             return LiquidExpressionResult.Success(StringUtils.Eval(liquidExpression, Uri.EscapeUriString));
-            
         }
 
     }

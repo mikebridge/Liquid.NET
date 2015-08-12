@@ -57,7 +57,32 @@ namespace Liquid.NET.Tests.Filters.Strings
             // Assert
             Assert.That(result, Is.EqualTo("Result : " + expected));
 
-        } 
+        }
 
+        [Test]
+        public void It_Should_Return_The_String_When_Insufficient_Args()
+        {
+            // Arrange
+            TemplateContext ctx = new TemplateContext();
+            ctx.DefineLocalVariable("input", new StringValue("1"));
+            var result = RenderingHelper.RenderTemplate("Result : {{ input | pluralize }}", ctx);
+
+            // Assert
+            Assert.That(result, Is.EqualTo("Result : 1" ));
+
+        }
+
+        [Test]
+        public void It_Should_Return_The_String_When_Missing_Plural()
+        {
+            // Arrange
+            TemplateContext ctx = new TemplateContext();
+            ctx.DefineLocalVariable("input", new StringValue("1"));
+            var result = RenderingHelper.RenderTemplate("Result : {{ input | pluralize: 'thing' }}", ctx);
+
+            // Assert
+            Assert.That(result, Is.EqualTo("Result : 1 thing"));
+
+        } 
     }
 }

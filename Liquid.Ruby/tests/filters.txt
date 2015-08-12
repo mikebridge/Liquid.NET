@@ -51,4 +51,4 @@
 #
 {% assign v-1 = "hyphen" %}{{v-1}}
 #
-{{ "     test    ,     this       string    ,  now  " | split: ',' | strip | join : '|' }}
+{{ "The quick brown dog" | truncate_words }}

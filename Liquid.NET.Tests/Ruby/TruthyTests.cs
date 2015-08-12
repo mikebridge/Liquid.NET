@@ -115,8 +115,8 @@ namespace Liquid.NET.Tests.Ruby
         [TestCase(@"{% assign arrayEmpty = """" | split: "","" %}{% if arrayEmpty == false %}TRUTHY X{% else %}FALSY{% endif %}", @"", @"FALSY")]
         [TestCase(@"{% assign arrayEmpty = """" | split: "","" %}{% if arrayEmpty == empty %}TRUTHY{% else %}FALSY X{% endif %}", @"", @"TRUTHY")]
         [TestCase(@"{% assign arrayEmpty = """" | split: "","" %}{% if arrayEmpty == blank %}TRUTHY{% else %}FALSY X{% endif %}", @"", @"TRUTHY")]
-        [TestCase(@"{% assign arrayEmpty = """" | split: "","" %}{% if arrayEmpty.empty? %}TRUTHY{% else %}FALSY X{% endif %}", @"", @"FALSY X")] // Liquid.Net Error
-        [TestCase(@"{% assign arrayEmpty = """" | split: "","" %}{% if arrayEmpty.blank? %}TRUTHY{% else %}FALSY X{% endif %}", @"", @"FALSY X")] // Liquid.Net Error
+        [TestCase(@"{% assign arrayEmpty = """" | split: "","" %}{% if arrayEmpty.empty? %}TRUTHY{% else %}FALSY X{% endif %}", @"", @"FALSY X")] // liquid Error
+        [TestCase(@"{% assign arrayEmpty = """" | split: "","" %}{% if arrayEmpty.blank? %}TRUTHY{% else %}FALSY X{% endif %}", @"", @"FALSY X")] // liquid Error
         public void It_Should_Match_Ruby_Output(String input, String assigns, String expected) {
 
             // Arrange

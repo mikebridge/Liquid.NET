@@ -14,7 +14,7 @@ namespace Liquid.NET.Filters.Strings
     public class PluralizeFilter : FilterExpression<NumericValue, StringValue>
     {
         private readonly StringValue _single;
-        private readonly StringValue _plural;
+        private StringValue _plural;
 
         public PluralizeFilter(StringValue single, StringValue plural)
         {
@@ -25,6 +25,14 @@ namespace Liquid.NET.Filters.Strings
         public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, NumericValue numericValue)
         {
             String numericString = ValueCaster.RenderAsString((IExpressionConstant) numericValue);
+            if (_single == null && _plural == null)
+            {
+                return LiquidExpressionResult.Success(new StringValue(numericString));
+            }
+            if (_plural == null)
+            {
+                _plural = new StringValue("");
+            }
             var str = new StringValue(numericString+" ");
             return LiquidExpressionResult.Success(str.Join(numericValue.DecimalValue == 1 ? _single : _plural));
         }

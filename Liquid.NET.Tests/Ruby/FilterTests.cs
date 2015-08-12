@@ -50,6 +50,7 @@ namespace Liquid.NET.Tests.Ruby
         [TestCase(@"{{ ""2"" | plus: ""3""}}", @"", @"5")]
         [TestCase(@"{{ """" | split: ""|"" | default: ""EMPTY""}}", @"", @"EMPTY")]
         [TestCase(@"{% assign v-1 = ""hyphen"" %}{{v-1}}", @"", @"hyphen")]
+        [TestCase(@"{{ ""The quick brown dog"" | truncate_words }}", @"", @"The quick brown dog")]
         public void It_Should_Match_Ruby_Output(String input, String assigns, String expected) {
 
             // Arrange

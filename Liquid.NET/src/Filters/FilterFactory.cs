@@ -66,18 +66,19 @@ namespace Liquid.NET.Filters
         private static IList<object> CreateArguments(IEnumerable<Option<IExpressionConstant>> filterArgs, ConstructorInfo argConstructor)
         {
             IList<Object> result = new List<object>();
-            int i = 0;
+            int i = -1;
             var filterList = filterArgs.ToList();
 
             foreach (var argType in argConstructor.GetParameters()
                                                     .Select(parameter => parameter.ParameterType))
             {
-                Console.WriteLine("There are " + filterList.Count + " args in the filter.");
+                i++;
+                //Console.WriteLine("There are " + filterList.Count + " args in the filter.");
                 if (i < filterList.Count)
                 {
                     if (filterList[i].HasValue)
                     {
-                        Console.WriteLine("COMPARING " + filterList[i].Value.GetType() + " TO " + argType);
+                        //Console.WriteLine("COMPARING " + filterList[i].Value.GetType() + " TO " + argType);
                         if (argType == typeof (ExpressionConstant) || argType == typeof (IExpressionConstant)) // most generic type
                         {
                             Console.WriteLine("Skipping ExpressionConstant...");
@@ -160,7 +161,7 @@ namespace Liquid.NET.Filters
 //                    //result.Add(CreateUndefinedForType(parmType, defaultParams));
                     //result.Add(null);
                 }
-                i++;
+               
             }
             return result;
         }

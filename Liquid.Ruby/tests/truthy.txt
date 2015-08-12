@@ -39,3 +39,182 @@
 {% assign myarray = "1,2" |split: "," %}{% if myarray == empty %}TRUTHY{% else %}NOT TRUTHY{% endif %}
 #
 {% assign myarray = "" |split: "," %}{% if myarray == empty %}TRUTHY{% else %}NOT TRUTHY{% endif %}
+#
+{% assign myval = "123" %}{% if myval == true %}TRUTHY{% else %}NOT TRUTHY{% endif %}
+#
+{% assign myval = "123" %}{% if myval == false %}TRUTHY{% else %}NOT TRUTHY{% endif %}
+#
+{% assign myval = "" %}{% if myval == true %}TRUTHY{% else %}NOT TRUTHY{% endif %}
+#
+{% assign myval = "" %}{% if myval == false %}TRUTHY{% else %}NOT TRUTHY{% endif %}
+#
+{% assign myval = "  " %}{% if myval == true %}TRUTHY{% else %}NOT TRUTHY{% endif %}
+#
+{% assign myval = "  " %}{% if myval == false %}TRUTHY{% else %}NOT TRUTHY{% endif %}
+#
+{% assign myarray = "" |split: "," %}{% if myarray == true %}TRUTHY{% else %}NOT TRUTHY{% endif %}
+#
+{% assign myarray = "" |split: "," %}{% if myarray == false %}TRUTHY{% else %}NOT TRUTHY{% endif %}
+#
+{% assign testNil = nil %}{% if testNil == nil %}TRUTHY{% else %}FALSY X{% endif %}
+#
+{% assign testNil = nil %}{% if testNil == true %}TRUTHY X{% else %}FALSY{% endif %}
+#
+{% assign testNil = nil %}{% if testNil == false %}TRUTHY X{% else %}FALSY{% endif %}
+#
+{% assign testNil = nil %}{% if testNil == empty %}TRUTHY{% else %}FALSY X{% endif %}
+#
+{% assign testNil = nil %}{% if testNil == blank %}TRUTHY{% else %}FALSY X{% endif %}
+#
+{% assign testNil = nil %}{% if testNil == present %}TRUTHY X{% else %}FALSY{% endif %}
+#
+{% assign testNil = nil %}{% if testNil.empty? %}TRUTHY X{% else %}FALSY X{% endif %}
+#
+{% assign testNil = nil %}{% if testNil.blank? %}TRUTHY{% else %}FALSY X{% endif %}
+#
+{% assign testNil = nil %}{% if testNil.present? %}TRUTHY X{% else %}FALSY{% endif %}
+#
+{% assign testNull = null %}{% if testNull == nil %}TRUTHY{% else %}FALSY X{% endif %}
+#
+{% assign testNull = null %}{% if testNull == true %}TRUTHY X{% else %}FALSY{% endif %}
+#
+{% assign testNull = null %}{% if testNull == false %}TRUTHY X{% else %}FALSY{% endif %}
+#
+{% assign testNull = null %}{% if testNull == empty %}TRUTHY X{% else %}FALSY X{% endif %}
+#
+{% assign testNull = null %}{% if testNil == blank %}TRUTHY{% else %}FALSY X{% endif %}
+#
+{% assign testNull = null %}{% if testNil == present %}TRUTHY X{% else %}FALSY{% endif %}
+#
+{% assign testNull = null %}{% if testNil.empty? %}TRUTHY X{% else %}FALSY X{% endif %}
+#
+{% assign testNull = null %}{% if testNil.blank? %}TRUTHY{% else %}FALSY X{% endif %}
+#
+{% assign testNull = null %}{% if testNil.present? %}TRUTHY X{% else %}FALSY{% endif %}
+#
+{% assign boolTrue = true %}{% if boolTrue == nil %}TRUTHY X{% else %}FALSY{% endif %}
+#
+{% assign boolTrue = true %}{% if boolTrue == true %}TRUTHY{% else %}FALSY X{% endif %}
+#
+{% assign boolTrue = true %}{% if boolTrue == false %}TRUTHY X{% else %}FALSY{% endif %}
+#
+{% assign boolTrue = true %}{% if boolTrue == empty %}TRUTHY X{% else %}FALSY{% endif %}
+#
+{% assign boolTrue = true %}{% if boolTrue == blank %}TRUTHY X{% else %}FALSY{% endif %}
+#
+{% assign boolTrue = true %}{% if boolTrue == present %}TRUTHY{% else %}FALSY X{% endif %}
+#
+{% assign boolTrue = true %}{% if boolTrue.empty? %}TRUTHY X{% else %}FALSY{% endif %}
+#
+{% assign boolTrue = true %}{% if boolTrue.blank? %}TRUTHY X{% else %}FALSY{% endif %}
+#
+{% assign boolTrue = true %}{% if boolTrue.present? %}TRUTHY{% else %}FALSY X{% endif %}
+#
+{% assign boolFalse = false %}{% if boolFalse == nil %}TRUTHY X{% else %}FALSY{% endif %}
+#
+{% assign boolFalse = false %}{% if boolFalse == true %}TRUTHY X{% else %}FALSY{% endif %}
+#
+{% assign boolFalse = false %}{% if boolFalse == false %}TRUTHY{% else %}FALSY X{% endif %}
+#
+{% assign boolFalse = false %}{% if boolFalse == empty %}TRUTHY X{% else %}FALSY X{% endif %}
+#
+{% assign boolFalse = false %}{% if boolFalse == blank %}TRUTHY{% else %}FALSY X{% endif %}
+#
+{% assign boolFalse = false %}{% if boolFalse == present %}TRUTHY X{% else %}FALSY{% endif %}
+#
+{% assign boolFalse = false %}{% if boolFalse.empty? %}TRUTHY X{% else %}FALSY X{% endif %}
+#
+{% assign boolFalse = false %}{% if boolFalse.blank? %}TRUTHY{% else %}FALSY X{% endif %}
+#
+{% assign boolFalse = false %}{% if boolFalse.present? %}TRUTHY X{% else %}FALSY{% endif %}
+#
+{% assign stringWithContents = "Hello World" %}{% if stringWithContents == nil %}TRUTHY X{% else %}FALSY{% endif %}
+#
+{% assign stringWithContents = "Hello World" %}{% if stringWithContents == true %}TRUTHY{% else %}FALSY X{% endif %}
+#
+{% assign stringWithContents = "Hello World" %}{% if stringWithContents == false %}TRUTHY X{% else %}FALSY{% endif %}
+#
+{% assign stringWithContents = "Hello World" %}{% if stringWithContents == empty %}TRUTHY X{% else %}FALSY{% endif %}
+#
+{% assign stringWithContents = "Hello World" %}{% if stringWithContents == blank %}TRUTHY X{% else %}FALSY{% endif %}
+#
+{% assign stringWithContents = "Hello World" %}{% if stringWithContents == present %}TRUTHY{% else %}FALSY X{% endif %}
+#
+{% assign stringWithContents = "Hello World" %}{% if stringWithContents.empty? %}TRUTHY X{% else %}FALSY{% endif %}
+#
+{% assign stringWithContents = "Hello World" %}{% if stringWithContents.blank? %}TRUTHY X{% else %}FALSY{% endif %}
+#
+{% assign stringWithContents = "Hello World" %}{% if stringWithContents.present? %}TRUTHY{% else %}FALSY X{% endif %}
+#
+{% assign stringEmpty = "" %}{% if stringEmpty == nil %}TRUTHY X{% else %}FALSY{% endif %}
+#
+{% assign stringEmpty = "" %}{% if stringEmpty == true %}TRUTHY{% else %}FALSY X{% endif %}
+#
+{% assign stringEmpty = "" %}{% if stringEmpty == false %}TRUTHY X{% else %}FALSY{% endif %}
+#
+{% assign stringEmpty = "" %}{% if stringEmpty == empty %}TRUTHY{% else %}FALSY X{% endif %}
+#
+{% assign stringEmpty = "" %}{% if stringEmpty == blank %}TRUTHY{% else %}FALSY X{% endif %}
+#
+{% assign stringEmpty = "" %}{% if stringEmpty == present %}TRUTHY X{% else %}FALSY{% endif %}
+#
+{% assign stringEmpty = "" %}{% if stringEmpty.empty? %}TRUTHY{% else %}FALSY X{% endif %}
+#
+{% assign stringEmpty = "" %}{% if stringEmpty.blank? %}TRUTHY{% else %}FALSY X{% endif %}
+#
+{% assign stringEmpty = "" %}{% if stringEmpty.present? %}TRUTHY X{% else %}FALSY{% endif %}
+#
+{% assign stringWhitespace = "     " %}{% if stringWhitespace == nil %}TRUTHY X{% else %}FALSY{% endif %}
+#
+{% assign stringWhitespace = "     " %}{% if stringWhitespace == true %}TRUTHY{% else %}FALSY X{% endif %}
+#
+{% assign stringWhitespace = "     " %}{% if stringWhitespace == false %}TRUTHY X{% else %}FALSY{% endif %}
+#
+{% assign stringWhitespace = "     " %}{% if stringWhitespace == empty %}TRUTHY X{% else %}FALSY{% endif %}
+#
+{% assign stringWhitespace = "     " %}{% if stringWhitespace == blank %}TRUTHY{% else %}FALSY X{% endif %}
+#
+{% assign stringWhitespace = "     " %}{% if stringWhitespace == present %}TRUTHY X{% else %}FALSY{% endif %}
+#
+{% assign stringWhitespace = "     " %}{% if stringWhitespace.empty? %}TRUTHY X{% else %}FALSY{% endif %}
+#
+{% assign stringWhitespace = "     " %}{% if stringWhitespace.blank? %}TRUTHY{% else %}FALSY X{% endif %}
+#
+{% assign stringWhitespace = "     " %}{% if stringWhitespace.present? %}TRUTHY X{% else %}FALSY{% endif %}
+#
+{% assign intWithContents = 123 %}{% if intWithContents == nil %}TRUTHY X{% else %}FALSY{% endif %}
+#
+{% assign intWithContents = 123 %}{% if intWithContents == true %}TRUTHY{% else %}FALSY X{% endif %}
+#
+{% assign intWithContents = 123 %}{% if intWithContents == false %}TRUTHY X{% else %}FALSY{% endif %}
+#
+{% assign intWithContents = 123 %}{% if intWithContents == empty %}TRUTHY X{% else %}FALSY{% endif %}
+#
+{% assign intWithContents = 123 %}{% if intWithContents == blank %}TRUTHY X{% else %}FALSY{% endif %}
+#
+{% assign intWithContents = 123 %}{% if intWithContents == present %}TRUTHY{% else %}FALSY X{% endif %}
+#
+{% assign intWithContents = 123 %}{% if intWithContents.empty? %}TRUTHY X{% else %}FALSY{% endif %}
+#
+{% assign intWithContents = 123 %}{% if intWithContents.blank? %}TRUTHY X{% else %}FALSY{% endif %}
+#
+{% assign intWithContents = 123 %}{% if intWithContents.present? %}TRUTHY{% else %}FALSY X{% endif %}
+#
+{% assign arrayEmpty = "" | split: "," %}{% if arrayEmpty == nil %}TRUTHY X{% else %}FALSY{% endif %}
+#
+{% assign arrayEmpty = "" | split: "," %}{% if arrayEmpty == true %}TRUTHY{% else %}FALSY X{% endif %}
+#
+{% assign arrayEmpty = "" | split: "," %}{% if arrayEmpty == false %}TRUTHY X{% else %}FALSY{% endif %}
+#
+{% assign arrayEmpty = "" | split: "," %}{% if arrayEmpty == empty %}TRUTHY{% else %}FALSY X{% endif %}
+#
+{% assign arrayEmpty = "" | split: "," %}{% if arrayEmpty == blank %}TRUTHY{% else %}FALSY X{% endif %}
+#
+{% assign arrayEmpty = "" | split: "," %}{% if arrayEmpty == present %}TRUTHY X{% else %}FALSY{% endif %}
+#
+{% assign arrayEmpty = "" | split: "," %}{% if arrayEmpty.empty? %}TRUTHY{% else %}FALSY X{% endif %}
+#
+{% assign arrayEmpty = "" | split: "," %}{% if arrayEmpty.blank? %}TRUTHY{% else %}FALSY X{% endif %}
+#
+{% assign arrayEmpty = "" | split: "," %}{% if arrayEmpty.present? %}TRUTHY X{% else %}FALSY{% endif %}
+

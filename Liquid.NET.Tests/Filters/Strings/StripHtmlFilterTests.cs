@@ -21,5 +21,7 @@ namespace Liquid.NET.Tests.Filters.Strings
             Assert.That(result, Is.EqualTo("Hello World"));
 
         }
+
+
     }
 }

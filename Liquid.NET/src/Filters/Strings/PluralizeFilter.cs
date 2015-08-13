@@ -36,5 +36,10 @@ namespace Liquid.NET.Filters.Strings
             var str = new StringValue(numericString+" ");
             return LiquidExpressionResult.Success(str.Join(numericValue.DecimalValue == 1 ? _single : _plural));
         }
+
+        public override LiquidExpressionResult ApplyToNil(ITemplateContext ctx)
+        {
+            return ApplyTo(ctx, new NumericValue(0));
+        }
     }
 }

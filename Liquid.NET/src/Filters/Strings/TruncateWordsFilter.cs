@@ -7,7 +7,7 @@ namespace Liquid.NET.Filters.Strings
 {
     public class TruncateWordsFilter : FilterExpression<StringValue, StringValue>
     {
-        private readonly NumericValue _length;
+        private NumericValue _length;
         private readonly StringValue _truncateString;
 
         public TruncateWordsFilter(NumericValue length, StringValue truncateString)
@@ -29,7 +29,7 @@ namespace Liquid.NET.Filters.Strings
             }
             if (_length == null)
             {
-                return s;
+                _length = new NumericValue(15);
             }
             var words = s.Split(new [] {' ', '\t'}, StringSplitOptions.RemoveEmptyEntries);
             if (words.Length <= _length.IntValue)

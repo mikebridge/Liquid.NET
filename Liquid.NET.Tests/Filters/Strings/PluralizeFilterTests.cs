@@ -73,7 +73,7 @@ namespace Liquid.NET.Tests.Filters.Strings
         }
 
         [Test]
-        public void It_Should_Return_The_String_When_Missing_Plural()
+        public void It_Should_Ignore_Missing_Plural()
         {
             // Arrange
             TemplateContext ctx = new TemplateContext();
@@ -83,6 +83,20 @@ namespace Liquid.NET.Tests.Filters.Strings
             // Assert
             Assert.That(result, Is.EqualTo("Result : 1 thing"));
 
+        }
+
+        [Test]
+        public void It_Should_Return_Zero_When_Null()
+        {
+            // Arrange
+            TemplateContext ctx = new TemplateContext();
+            ctx.DefineLocalVariable("input", null);
+            var result = RenderingHelper.RenderTemplate("Result : {{ input | pluralize: 'thing', 'things' }}", ctx);
+
+            // Assert
+            Assert.That(result, Is.EqualTo("Result : 0 things"));
+
         } 
+
     }
 }

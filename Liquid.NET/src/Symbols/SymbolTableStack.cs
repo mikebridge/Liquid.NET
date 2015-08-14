@@ -34,7 +34,7 @@ namespace Liquid.NET.Symbols
         {
             for (int i = _symbolTables.Count() - 1 - skiplevels; i >= 0; i--)
             {
-                Console.WriteLine("Looking up" + reference);
+                //Console.WriteLine("Looking up" + reference);
                 if (_symbolTables[i].HasVariableReference(reference))
                 {
                     return _symbolTables[i].ReferenceLocalVariable(reference);
@@ -50,7 +50,7 @@ namespace Liquid.NET.Symbols
 
             for (int i = _symbolTables.Count() - 1; i >= 0; i--) // iterate backwards from most-specific scope
             {
-                Console.WriteLine("Looking up" + reference);
+                //Console.WriteLine("Looking up" + reference);
                 if (_symbolTables[i].HasVariableReference(reference))
                 {
                     var liquidExpressionResult = _symbolTables[i].ReferenceLocalVariable(reference);

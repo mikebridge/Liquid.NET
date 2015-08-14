@@ -9,7 +9,7 @@ namespace Liquid.NET.Filters.Array
 
         public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, IExpressionConstant liquidExpression)
         {
-            Console.WriteLine("In IExpressionConstant");
+            //Console.WriteLine("In IExpressionConstant");
             if (liquidExpression == null || liquidExpression.Value == null)
             {
                 return LiquidExpressionResult.Success(new NumericValue(0));

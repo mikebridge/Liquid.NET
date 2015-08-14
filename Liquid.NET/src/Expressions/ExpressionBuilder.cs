@@ -22,16 +22,16 @@ namespace Liquid.NET.Expressions
         public void AddExpression(IExpressionDescription expressionDescription)
         {
             var child = new TreeNode<IExpressionDescription>(expressionDescription);
-            Console.WriteLine("Appending " + expressionDescription);
+            //Console.WriteLine("Appending " + expressionDescription);
             
             if (_currentStack.Any())
             {
-                Console.WriteLine(" to " + _currentStack.Peek());
+                //Console.WriteLine(" to " + _currentStack.Peek());
                 _currentStack.Peek().AddChild(child);
             }
             else
             {
-                Console.WriteLine(" to ROOT ");
+                //Console.WriteLine(" to ROOT ");
                 _rootNode = child;
             }
             _currentStack.Push(child);
@@ -43,12 +43,12 @@ namespace Liquid.NET.Expressions
             {
                 if (_rootNode != null)
                 {
-                    Console.WriteLine("Expr "+_rootNode.Data.GetType()+" Returns " + _rootNode.Data);
+                    //Console.WriteLine("Expr "+_rootNode.Data.GetType()+" Returns " + _rootNode.Data);
                     IExpressionConstant constant = _rootNode.Data as IExpressionConstant;
-                    if (constant != null)
-                    {
-                        Console.WriteLine(constant.Value);
-                    }
+//                    if (constant != null)
+//                    {
+//                        Console.WriteLine(constant.Value);
+//                    }
 
                 }
                 return _rootNode;

@@ -19,7 +19,7 @@ namespace Liquid.NET.Expressions
 
         public override LiquidExpressionResult Eval(ITemplateContext templateContext, IEnumerable<Option<IExpressionConstant>> expressions)
         {
-            Console.WriteLine("** ISEMPTY EXPRESSION");
+            //Console.WriteLine("** ISEMPTY EXPRESSION");
             var list = expressions.ToList();
             if (list.Count() != 1)
             {
@@ -27,7 +27,7 @@ namespace Liquid.NET.Expressions
             }
             if (!list[0].HasValue)
             {
-                return LiquidExpressionResult.Success(new BooleanValue(false)); // nulls are not empty.
+                return LiquidExpressionResult.Success(new BooleanValue(true)); // nulls are empty.
             }
             return LiquidExpressionResult.Success(new BooleanValue(EmptyChecker.IsEmpty(list[0].Value)));
         }

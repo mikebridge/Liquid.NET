@@ -33,7 +33,7 @@ namespace Liquid.NET.Expressions
 
         private LiquidExpressionResult Contains(IExpressionConstant expr, IExpressionConstant expressionConstant)
         {
-            Console.WriteLine("ERROR");
+            //Console.WriteLine("ERROR");
             return LiquidExpressionResult.Error("Unable to use 'contains' on this type."); 
         }
 

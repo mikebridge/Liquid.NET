@@ -16,7 +16,7 @@ namespace Liquid.NET.Filters.Strings
         public override LiquidExpressionResult Apply(ITemplateContext ctx, StringValue liquidStringExpression)
         {
             // TODO: Return errors
-            Console.WriteLine("APPLYING REMOVE " + _replacement.Value + "TO " + liquidStringExpression.Value);
+            //Console.WriteLine("APPLYING REMOVE " + _replacement.Value + "TO " + liquidStringExpression.Value);
             if (_replacement == null || _replacement.Value == null)
             {
                 return LiquidExpressionResult.Error("Please specify a replacement string.");
@@ -29,7 +29,7 @@ namespace Liquid.NET.Filters.Strings
         private StringValue Remove(String orig, StringValue stringToRemove)
         {
             var result = orig.Replace((String) stringToRemove.Value, "");
-            Console.WriteLine("  REMOVE RESULT : "+result);
+            //Console.WriteLine("  REMOVE RESULT : "+result);
             return new StringValue(result);
         }
 

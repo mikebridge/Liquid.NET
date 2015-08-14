@@ -29,8 +29,8 @@ namespace Liquid.NET.Filters.Array
             {
                 return LiquidExpressionResult.Error("Array is nil");
             }
-            Console.WriteLine("Array is " + liquidArrayExpression.ArrValue.Count);
-            Console.WriteLine("Index is " + _index.IntValue);
+            //Console.WriteLine("Array is " + liquidArrayExpression.ArrValue.Count);
+            //Console.WriteLine("Index is " + _index.IntValue);
             
             if (liquidArrayExpression.ArrValue.Count > 0 && liquidArrayExpression.ArrValue.Count >= _index.IntValue + 1)
             {

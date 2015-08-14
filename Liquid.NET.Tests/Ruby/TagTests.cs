@@ -41,7 +41,6 @@ namespace Liquid.NET.Tests.Ruby
         [TestCase(@"{% if "" "" == empty %}EMPTY{% else %}NOT EMPTY{% endif %}", @"NOT EMPTY")]
         [TestCase(@"{% if "" "" == empty %}EMPTY{% else %}NOT EMPTY{% endif %}", @"NOT EMPTY")]
         [TestCase(@"{% if null == empty %}EMPTY{% else %}NOT EMPTY{% endif %}", @"NOT EMPTY")]
-        [TestCase(@"{% assign myarray = ""1"" |split: "","" %}{% if x != empty %}NOT EMPTY{% else %}EMPTY{% endif %}", @"NOT EMPTY")]
         [TestCase(@"{% if "" "" != empty %}NOT EMPTY{% else %}EMPTY{% endif %}", @"NOT EMPTY")]
         [TestCase(@"{% if "" "" != empty %}NOT EMPTY{% else %}EMPTY{% endif %}", @"NOT EMPTY")]
         [TestCase(@"{% if null != empty %}NOT EMPTY{% else %}EMPTY{% endif %}", @"NOT EMPTY")]

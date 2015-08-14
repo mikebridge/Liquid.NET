@@ -15,20 +15,20 @@ namespace Liquid.NET.Constants
             //Check whether the compared objects reference the same data.
             if (ReferenceEquals(x, y))
             {
-                Console.WriteLine("1 EQUAL");
+                //Console.WriteLine("1 EQUAL");
                 return true;
             }
 
             //Check whether any of the compared objects is null.
             if (ReferenceEquals(x, null) || ReferenceEquals(y, null))
             {
-                Console.WriteLine("2 UNEQUAL");
+                //Console.WriteLine("2 UNEQUAL");
                 return false;
             }
 
             //Check whether the products' properties are equal.
             //Console.WriteLine("3 EQ: " + (x.Value == y.Value));
-            Console.WriteLine("3 EQ: " + (x.Value.Equals(y.Value)));
+            //Console.WriteLine("3 EQ: " + (x.Value.Equals(y.Value)));
             //return x.Value == y.Value;
             return x.Value.Equals(y.Value);
         }
@@ -36,7 +36,7 @@ namespace Liquid.NET.Constants
         
         public int GetHashCode(IExpressionConstant obj)
         {
-            Console.WriteLine("Hashing " + obj.Value);
+            //Console.WriteLine("Hashing " + obj.Value);
             //Check whether the object is null
 
             if (ReferenceEquals(obj, null)) return 0;
@@ -45,7 +45,7 @@ namespace Liquid.NET.Constants
             int hasConstantValue = obj.Value == null ? 0 : obj.Value.GetHashCode();
 
             //Calculate the hash code for the object.
-            Console.WriteLine("HASH FOR " + obj.Value + " is " + hasConstantValue);
+            //Console.WriteLine("HASH FOR " + obj.Value + " is " + hasConstantValue);
             return hasConstantValue;
         }
     }

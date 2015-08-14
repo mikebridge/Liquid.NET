@@ -56,7 +56,7 @@ namespace Liquid.NET
 
         public void Visit(CustomTag customTag)
         {
-            Console.WriteLine("Looking up Custom Tag " + customTag.TagName);
+            //Console.WriteLine("Looking up Custom Tag " + customTag.TagName);
             var tagType = _templateContext.SymbolTableStack.LookupCustomTagRendererType(customTag.TagName);
             if (tagType != null)
             {
@@ -64,7 +64,7 @@ namespace Liquid.NET
                 return;
             }
 
-            Console.WriteLine("Looking up Macro "+ customTag.TagName);
+            //Console.WriteLine("Looking up Macro "+ customTag.TagName);
             var macroDescription = _templateContext.SymbolTableStack.LookupMacro(customTag.TagName);
             if (macroDescription != null)
             {
@@ -439,7 +439,7 @@ namespace Liquid.NET
         /// <param name="liquidExpression"></param>
         public void Visit(LiquidExpression liquidExpression)
         {
-            Console.WriteLine("Visiting Object Expression ");
+            //Console.WriteLine("Visiting Object Expression ");
             var liquidResult = LiquidExpressionEvaluator.Eval(liquidExpression, new List<Option<IExpressionConstant>>(), _templateContext)
                 .WhenSuccess(x => x.WhenSome(some => _result += Render(x.Value))
                                    .WhenNone(() => _result += ""))
@@ -457,7 +457,7 @@ namespace Liquid.NET
 
         public void Visit(LiquidExpressionTree liquidExpressionTree)
         {
-            Console.WriteLine("Visiting Object Expression Tree ");
+            //Console.WriteLine("Visiting Object Expression Tree ");
 
             var constResult = LiquidExpressionEvaluator.Eval(liquidExpressionTree, _templateContext)
                 .WhenSuccess(success => success.WhenSome(x => _result += Render(x)))
@@ -466,7 +466,7 @@ namespace Liquid.NET
 
         public String Render(IExpressionConstant result)
         {
-            Console.WriteLine("Rendering IExpressionConstant " + result.Value);
+            //Console.WriteLine("Rendering IExpressionConstant " + result.Value);
 
 //            if (result.HasError)
 //            {

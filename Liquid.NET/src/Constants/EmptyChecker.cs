@@ -47,16 +47,16 @@ namespace Liquid.NET.Constants
     {
         public static bool IsBlank(IExpressionConstant val)
         {
-            if (val == null /* || val.IsNil */)
+            if (val == null)
             {
-                return false; // this appears to be the case in liquid?
+                return true; // regardless of what shopify liquid + activesupport do
             }
             return CheckIsBlank((dynamic)val);
         }
 
-        private static bool CheckIsBlank(IExpressionConstant val)
+        private static bool CheckIsBlank(IExpressionConstant _)
         {
-            return false; // the only conditions will have been caught by IsEmpty
+            return false; // the only conditions will have been caught by IsBlank -- other types are never blank
         }
 
         private static bool CheckIsBlank(StringValue val)

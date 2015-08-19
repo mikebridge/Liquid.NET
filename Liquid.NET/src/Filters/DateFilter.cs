@@ -23,7 +23,12 @@ namespace Liquid.NET.Filters
                 return LiquidExpressionResult.Success(new StringValue(""));
             }
             //Console.WriteLine("Formatting " + dateValue.Value + " with format "+_format.StringVal);
-            return LiquidExpressionResult.Success(new StringValue(dateValue.DateTimeValue.Value.ToStrFTime(_format.StringVal)));
+            String format = "%m/%d/%Y";
+            if (_format != null )
+            {
+                format = _format.StringVal;
+            }
+            return LiquidExpressionResult.Success(new StringValue(dateValue.DateTimeValue.Value.ToStrFTime(format)));
             
         }
 

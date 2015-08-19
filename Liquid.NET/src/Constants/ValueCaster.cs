@@ -88,7 +88,18 @@ namespace Liquid.NET.Constants
 
         }
 
-       
+        private static LiquidExpressionResult Convert<TDest>(DateValue date)
+             where TDest : IExpressionConstant
+        {
+            var destType = typeof(TDest);
+            if (destType == typeof(StringValue))
+            {
+                return LiquidExpressionResult.Success(new StringValue(date.Value.ToString().ToLower()));
+            }
+            return LiquidExpressionResult.Error("Can't convert from date to " + destType);
+
+        }
+
         private static LiquidExpressionResult Convert<TDest>(DictionaryValue dictionaryValue)
            where TDest : IExpressionConstant
         {
@@ -147,7 +158,7 @@ namespace Liquid.NET.Constants
             //return "[ " + String.Join(", ", strs) + " ]"; 
 
             // The Concatenated way:
-            var strs = arrayValue.ArrValue.Select(RenderAsString);
+            var strs = arrayValue.ArrValue.Select(RenderOptionAsString);
             return String.Join("", strs); 
 
         }
@@ -156,7 +167,7 @@ namespace Liquid.NET.Constants
         private static String FormatKvPair(string key, Option<IExpressionConstant> expressionConstant)
         {
             Type wrappedType = GetWrappedType(expressionConstant);
-            String exprConstantAsString = RenderAsString(expressionConstant);
+            String exprConstantAsString = RenderOptionAsString(expressionConstant);
             return "{ " + Quote(typeof(StringValue), key) + " : " + Quote(wrappedType, exprConstantAsString) + " }";
         }
 
@@ -318,7 +329,7 @@ namespace Liquid.NET.Constants
             return (IFilterExpression)Activator.CreateInstance(constructedClass);
         }
 
-        public static string RenderAsString(Option<IExpressionConstant> val)
+        public static string RenderOptionAsString(Option<IExpressionConstant> val)
         {
 
             return val.HasValue ? RenderAsString(val.Value) : "";

@@ -61,6 +61,39 @@ namespace Liquid.NET.Tests.Filters
         }
 
         [Test]
+        public void It_Should_Return_The_Default_When_No_Format()
+        {
+            // Arrange
+            TemplateContext ctx = new TemplateContext();
+            DateTime dateTime = new DateTime(2015, 8, 19, 23, 1, 12);
+            ctx.DefineLocalVariable("mydate", new DateValue(dateTime));
+
+            // Act
+            var result = RenderingHelper.RenderTemplate("Result : {{ mydate | date }}", ctx);
+
+            // Assert
+            Assert.That(result, Is.EqualTo("Result : 08/19/2015"));
+
+        }
+
+        [Test]
+        public void It_Should_Not_Fail_When_Format_Is_Invalid()
+        {
+            // Arrange
+            TemplateContext ctx = new TemplateContext();
+            DateTime dateTime = new DateTime(2015, 3, 30, 23, 1, 12);
+            ctx.DefineLocalVariable("mydate", new DateValue(dateTime));
+
+            // Act
+            var result = RenderingHelper.RenderTemplate("Result : {{ mydate | date : \"%V\" }}", ctx);
+
+            // Assert
+            Assert.That(result, Is.EqualTo("Result : %V"));
+
+        }
+
+
+        [Test]
         public void It_Should_Format_With_Hour_Day_Month_Minute_Meridian_Second()
         {
             // Arrange

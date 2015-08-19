@@ -26,7 +26,7 @@ namespace Liquid.NET.Tests.Filters.Array
 
             // Act            
             var result = filter.Apply(new TemplateContext(), arrayValue);
-            var resultStrings = result.SuccessValue<ArrayValue>().Select(ValueCaster.RenderAsString);
+            var resultStrings = result.SuccessValue<ArrayValue>().Select(ValueCaster.RenderOptionAsString);
             
             // Assert
             Assert.That(resultStrings, Is.EqualTo(new List<String>{"123", "456.0", "a string", "false"}));

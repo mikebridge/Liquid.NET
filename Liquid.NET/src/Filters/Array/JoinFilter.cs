@@ -19,7 +19,7 @@ namespace Liquid.NET.Filters.Array
         {
             var vals = liquidArrayExpression
                 .ArrValue
-                .Select(ValueCaster.RenderAsString);
+                .Select(ValueCaster.RenderOptionAsString);
                 //.Select(ValueCaster.Cast<IExpressionConstant, StringValue>)
                 //.Select(x => x.Value);
             return LiquidExpressionResult.Success(new StringValue(String.Join(_separator.StringVal, vals)));

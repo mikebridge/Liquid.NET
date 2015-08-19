@@ -41,5 +41,16 @@ namespace Liquid.NET.Tests.Filters.Strings
             Assert.That(result, Is.EqualTo("Result : 123789"));
         }
 
+        [Test]
+        public void It_Should_Remove_Nil_From_A_String()
+        {
+            // Arrange
+            var result = RenderingHelper.RenderTemplate("Result : {{ \"test\" | remove : x }}");
+
+            // Assert
+            Assert.That(result, Is.EqualTo("Result : Please specify a replacement string."));
+        }
+
+
     }
 }

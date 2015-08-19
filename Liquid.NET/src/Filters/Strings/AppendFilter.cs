@@ -22,7 +22,8 @@ namespace Liquid.NET.Filters.Strings
 
         public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, StringValue liquidExpression)
         {
-            return LiquidExpressionResult.Success(new StringValue(liquidExpression.StringVal + _strToAppend.StringVal)); 
+            var strToAppend = _strToAppend == null ? "" : _strToAppend.StringVal;
+            return LiquidExpressionResult.Success(new StringValue(liquidExpression.StringVal + strToAppend));
         }
 
         public override LiquidExpressionResult ApplyToNil(ITemplateContext ctx)

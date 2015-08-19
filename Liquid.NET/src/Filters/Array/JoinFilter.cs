@@ -17,12 +17,13 @@ namespace Liquid.NET.Filters.Array
 
         public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, ArrayValue liquidArrayExpression)
         {
+            String separator = _separator == null ? "" : _separator.StringVal;
+
             var vals = liquidArrayExpression
                 .ArrValue
-                .Select(ValueCaster.RenderOptionAsString);
-                //.Select(ValueCaster.Cast<IExpressionConstant, StringValue>)
-                //.Select(x => x.Value);
-            return LiquidExpressionResult.Success(new StringValue(String.Join(_separator.StringVal, vals)));
+                .Select(ValueCaster.RenderAsString);
+
+            return LiquidExpressionResult.Success(new StringValue(String.Join(separator, vals)));
         }
 
         public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, StringValue liquidStringExpression)

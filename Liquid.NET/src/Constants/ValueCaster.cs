@@ -158,7 +158,7 @@ namespace Liquid.NET.Constants
             //return "[ " + String.Join(", ", strs) + " ]"; 
 
             // The Concatenated way:
-            var strs = arrayValue.ArrValue.Select(RenderOptionAsString);
+            var strs = arrayValue.ArrValue.Select(RenderAsString);
             return String.Join("", strs); 
 
         }
@@ -167,7 +167,7 @@ namespace Liquid.NET.Constants
         private static String FormatKvPair(string key, Option<IExpressionConstant> expressionConstant)
         {
             Type wrappedType = GetWrappedType(expressionConstant);
-            String exprConstantAsString = RenderOptionAsString(expressionConstant);
+            String exprConstantAsString = RenderAsString(expressionConstant);
             return "{ " + Quote(typeof(StringValue), key) + " : " + Quote(wrappedType, exprConstantAsString) + " }";
         }
 
@@ -329,7 +329,7 @@ namespace Liquid.NET.Constants
             return (IFilterExpression)Activator.CreateInstance(constructedClass);
         }
 
-        public static string RenderOptionAsString(Option<IExpressionConstant> val)
+        public static string RenderAsString(Option<IExpressionConstant> val)
         {
 
             return val.HasValue ? RenderAsString(val.Value) : "";

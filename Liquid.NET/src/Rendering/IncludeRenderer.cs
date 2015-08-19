@@ -42,7 +42,7 @@ namespace Liquid.NET.Rendering
             LiquidAST snippetAst;
             try
             {
-                snippetAst = new LiquidASTGenerator().Generate(snippet);
+                snippetAst = GenerateSnippetAst(snippet);
             }
             catch (LiquidParserException ex)
             {
@@ -118,6 +118,12 @@ namespace Liquid.NET.Rendering
             }
             
                        
+        }
+
+        private static LiquidAST GenerateSnippetAst(string snippet)
+        {
+            return new CachingLiquidASTGenerator(new LiquidASTGenerator()).Generate(snippet);
+            //return new LiquidASTGenerator().Generate(snippet);
         }
 
         private void RenderWithLocalScope(ITemplateContext templateContext, SymbolTable localBlockScope, TreeNode<IASTNode> rootNode)

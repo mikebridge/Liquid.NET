@@ -55,6 +55,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ASTWalker.cs" />
+    <Compile Include="CachingLiquidASTGeneratorTests.cs" />
     <Compile Include="Constants\ArrayValueTests.cs" />
     <Compile Include="Constants\BooleanValueTests.cs" />
     <Compile Include="Constants\ConstantFactoryTests.cs" />

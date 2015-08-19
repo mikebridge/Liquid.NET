@@ -37,6 +37,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -63,6 +64,7 @@
     <Compile Include="..\Liquid.NET.Grammar\obj\Debug\LiquidVisitor.cs">
       <Link>src\LiquidVisitor.cs</Link>
     </Compile>
+    <Compile Include="src\CachingLiquidASTGenerator.cs" />
     <Compile Include="src\Constants\ArrayIndexer.cs" />
     <Compile Include="src\Constants\ArrayValue.cs" />
     <Compile Include="src\Constants\BooleanValue.cs" />
@@ -159,6 +161,7 @@
     <Compile Include="src\Filters\ToDecimalFilter.cs" />
     <Compile Include="src\Filters\ToIntFilter.cs" />
     <Compile Include="src\IFileSystem.cs" />
+    <Compile Include="src\ILiquidASTGenerator.cs" />
     <Compile Include="src\ITemplateContext.cs" />
     <Compile Include="src\LiquidAST.cs" />
     <Compile Include="src\LiquidASTGenerator.cs" />

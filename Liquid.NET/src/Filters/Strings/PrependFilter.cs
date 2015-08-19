@@ -19,7 +19,8 @@ namespace Liquid.NET.Filters.Strings
 
         public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, IExpressionConstant liquidExpression)
         {
-            return LiquidExpressionResult.Success(StringUtils.Eval(liquidExpression, x => _prependedStr.StringVal + x));
+            var strToPrepend = _prependedStr == null ? "" : _prependedStr.StringVal;
+            return LiquidExpressionResult.Success(StringUtils.Eval(liquidExpression, x => strToPrepend + x));
         }
     }
 }

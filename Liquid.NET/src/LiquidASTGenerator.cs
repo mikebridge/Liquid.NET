@@ -27,7 +27,7 @@ namespace Liquid.NET
     /// An object expression is an object with a series of filters after it.  This is usually found in a node of a tree structure.
     /// </summary>
 
-    public class LiquidASTGenerator : LiquidBaseListener
+    public class LiquidASTGenerator : LiquidBaseListener, ILiquidASTGenerator
     {
         // TODO: WHen done it shoudl check if all the stacks are reset.
 

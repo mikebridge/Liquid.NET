@@ -16,6 +16,7 @@ namespace Liquid.NET.Tests.Filters.Strings
         [TestCase("a", "A")]
         [TestCase("the capital", "The capital")]
         [TestCase("  the capital  ", "  The capital  ")]
+        [TestCase(null, "")]
         public void It_Should_Convert_Ruby_Case_To_Camel_Case(String before, String expected)
         {
             // Arrange

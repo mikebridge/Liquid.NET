@@ -41,5 +41,15 @@ namespace Liquid.NET.Tests.Filters.Strings
             Assert.That(result, Is.EqualTo("Result : 123456"));
         }
 
+        [Test]
+        public void It_Should_Prepend_Nil_A_String()
+        {
+            // Arrange
+            var result = RenderingHelper.RenderTemplate("Result : {{ \"test\" | prepend : x }}");
+
+            // Assert
+            Assert.That(result, Is.EqualTo("Result : test"));
+        }
+
     }
 }

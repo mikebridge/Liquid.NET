@@ -47,7 +47,7 @@ namespace Liquid.NET.Tests.Tags
 
             public StringValue Render(SymbolTableStack symbolTableStack, IList<Option<IExpressionConstant>> args)
             {
-                var argsAsString = String.Join(", ", args.Select(x => x.Value.GetType().Name+":"+ValueCaster.RenderOptionAsString(x)));
+                var argsAsString = String.Join(", ", args.Select(x => x.Value.GetType().Name+":"+ValueCaster.RenderAsString(x)));
                 return new StringValue("I heard " + argsAsString);
             }
         }

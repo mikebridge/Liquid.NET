@@ -44,7 +44,7 @@ namespace Liquid.NET.Filters.Array
 
         private static ArrayValue SortAsArrayOfStrings(ArrayValue val)
         {
-            var result = val.ArrValue.OrderBy(ValueCaster.RenderOptionAsString);
+            var result = val.ArrValue.OrderBy(ValueCaster.RenderAsString);
             return new ArrayValue(result.ToList());
         }
 
@@ -54,7 +54,7 @@ namespace Liquid.NET.Filters.Array
             {
                 return "";
             }
-            return ValueCaster.RenderOptionAsString(FieldAccessor.TryField(x.Value, field));
+            return ValueCaster.RenderAsString(FieldAccessor.TryField(x.Value, field));
         }
     }
 

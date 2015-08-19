@@ -45,20 +45,15 @@ namespace Liquid.NET.Tests.Filters.Array
 
         }
 
-        [Test]
-        [Ignore]
-        public void It_Should_Test_Empty_Conditions()
+        [Test]        
+        public void It_Should_Join_With_Nil()
         {
-            // TODO
-        }
+            // Arrange
+            var result = RenderingHelper.RenderTemplate("{% assign arr = 'a,b,c' | split: ',' %}Result : {{ arr| join }}");
 
-        [Test]
-        [Ignore]
-        public void It_Should_Test_Variables()
-        {
-            // TODO
+            // Assert
+            Assert.That(result, Is.EqualTo("Result : abc"));
         }
-
 
     }
 }

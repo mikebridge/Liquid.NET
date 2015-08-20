@@ -130,7 +130,7 @@ namespace Liquid.NET
             var tagRenderer = CustomTagRendererFactory.Create(tagType);
             String result = "";
             EvalExpressions(customTag.LiquidExpressionTrees,
-                args => result = tagRenderer.Render(_templateContext.SymbolTableStack, args.ToList()).StringVal,
+                args => result = tagRenderer.Render(_templateContext, args.ToList()).StringVal,
                 errors => result = FormatErrors(errors));
             return result;
 

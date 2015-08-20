@@ -9,6 +9,7 @@ namespace Liquid.NET.Tags.Custom
 {
     public interface ICustomTagRenderer
     {
-        StringValue Render(SymbolTableStack symbolTableStack, IList<Option<IExpressionConstant>> args);
+        //StringValue Render(SymbolTableStack symbolTableStack, IList<Option<IExpressionConstant>> args);
+        StringValue Render(ITemplateContext symbolTableStack, IList<Option<IExpressionConstant>> args);
     }
 }

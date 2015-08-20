@@ -17,7 +17,7 @@ namespace Liquid.NET.Constants
 
         public DictionaryValue(IDictionary<String, IExpressionConstant> dictionary)
         {
-            _value = dictionary.ToDictionary(kv => kv.Key, v => v.Value.ToOption());
+            _value = dictionary.ToDictionary(kv => kv.Key, v => v.Value == null? Option<IExpressionConstant>.None() : v.Value.ToOption());
         }
 
         public override object Value

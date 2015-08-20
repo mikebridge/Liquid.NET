@@ -208,12 +208,11 @@ objectproperty:		VARIABLENAME;
 
 filtername:			VARIABLENAME ; 
 
-// TODO: change LABEL... to variable
-
 filterarg:			STRING								# StringFilterArg
 					| NUMBER							# NumberFilterArg
 					| BOOLEAN							# BooleanFilterArg
-					| VARIABLENAME objectvariableindex*		# VariableFilterArg 
+					| variable							# VariableFilterArg 
+					//| VARIABLENAME objectvariableindex*		# VariableFilterArg 
 					;	 
 
 expr:				PARENOPEN expr PARENCLOSE			# GroupedExpr 

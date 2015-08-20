@@ -42,7 +42,9 @@ namespace Liquid.NET.Expressions
         {
             _lastExpression.Data.AddFilterSymbol(filter);
         }
-        public void AddFilterArgToLastExpressionsFilter(IExpressionDescription filterArg)
+
+        //public void AddFilterArgToLastExpressionsFilter(IExpressionDescription filterArg)
+        public void AddFilterArgToLastExpressionsFilter(TreeNode<LiquidExpression> filterArg)        
         {
             _lastExpression.Data.FilterSymbols.Last().AddArg(filterArg);
         }
@@ -51,11 +53,13 @@ namespace Liquid.NET.Expressions
         {
             _lastExpression.Data.FilterSymbols.Last().RawArgs = argstring;
         }
+
         public void AddFilterSymbolToCurrentExpression(FilterSymbol filter)
         {
             _liquidExpressionStack.Peek().Data.AddFilterSymbol(filter);
         }
-        public void AddFilterArgToCurrentExpressionsFilter(IExpressionDescription filterArg)
+        //public void AddFilterArgToCurrentExpressionsFilter(IExpressionDescription filterArg)
+        public void AddFilterArgToCurrentExpressionsFilter(TreeNode<LiquidExpression> filterArg)
         {
             _liquidExpressionStack.Peek().Data.FilterSymbols.Last().AddArg(filterArg);
         }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Liquid.NET.Constants;
 using Liquid.NET.Filters;
@@ -47,6 +48,24 @@ namespace Liquid.NET.Tests.Filters
 
         }
 
+        [Test]
+        public void It_Should_Allow_A_Variable_With_Index()
+        {
+            // Arrange
+            ITemplateContext ctx = new TemplateContext().WithAllFilters();
+            DictionaryValue dict = new DictionaryValue(new Dictionary<String, IExpressionConstant> { { "foo", new NumericValue(33) } });
+            ctx.DefineLocalVariable("bar", dict);
+            //var template = LiquidTemplate.Create("{% assign x = 1 | plus: bar.foo %} 1 + {{ bar.foo }} = {{ x }}");
+            var template = LiquidTemplate.Create("{{ 1 | plus: bar.foo }}");
+
+            // Act
+            String result = template.Render(ctx);
+            Console.WriteLine(result);
+
+            // Assert
+            Assert.That(result, Is.EqualTo("2"));
+
+        }
 
     }
 }

@@ -1423,8 +1423,8 @@ namespace Liquid.NET
         {
             base.EnterVariableObject(context);
 
-            //Console.WriteLine("<><> Entering VariableReference " + context.GetText());
-            //StartCapturingVariable(context.variable());
+            Console.WriteLine("<><> Entering VariableReference " + context.GetText());
+            StartCapturingVariable(context.variable());
             StartCapturingVariable(context.variable());
 //            InitiateVariableWithIndex(
 //                context.LABEL().GetText(),
@@ -1448,7 +1448,10 @@ namespace Liquid.NET
                 var index = objectvariableindexContext.objectproperty().GetText();
                 if (index != null)
                 {
-                    indexingFilter.AddArg(new StringValue(index.TrimStart('.'))); // todo: make the lexing take care of the "."
+                    //indexingFilter.AddArg(new StringValue(index.TrimStart('.'))); // todo: make the lexing take care of the "."
+                    var str = new StringValue(index.TrimStart('.'));
+                    indexingFilter.AddArg(CreateObjectSimpleExpressionNode(str));
+                    //indexingFilter.AddArg(new StringValue(index.TrimStart('.')))
                     return indexingFilter;
                 }
             }
@@ -1459,13 +1462,14 @@ namespace Liquid.NET
                 if (arrayIndex.ARRAYINT() != null)
                 {
                     //Console.WriteLine("=== Array Index is " + arrayIndex.ARRAYINT().GetText());
-                    indexingFilter.AddArg(CreateIntNumericValueFromString(arrayIndex.ARRAYINT().GetText()));
+                    //indexingFilter.AddArg(CreateIntNumericValueFromString(arrayIndex.ARRAYINT().GetText()));
+                    indexingFilter.AddArg(CreateObjectSimpleExpressionNode(CreateIntNumericValueFromString(arrayIndex.ARRAYINT().GetText())));
                     return indexingFilter;
                 }
                 if (arrayIndex.STRING() != null)
                 {
                     //Console.WriteLine("...");                    
-                    indexingFilter.AddArg(new StringValue(StripQuotes(arrayIndex.STRING().GetText())));
+                    indexingFilter.AddArg(CreateObjectSimpleExpressionNode(new StringValue(StripQuotes(arrayIndex.STRING().GetText()))));
                     return indexingFilter;
                 }
                 // TODO: Rewrite this using "variable"
@@ -1499,8 +1503,10 @@ namespace Liquid.NET
                     }
                     // This chain needs to be evaluated --- somehow the parent evaluation needs
                     // to be able to pick up on it....
-                    var refChain = new ObjectReferenceChain(arrayIndexLiquidExpression);
-                    indexingFilter.AddArg(refChain);
+                    //var refChain = new ObjectReferenceChain(arrayIndexLiquidExpression);
+                    // zzz
+                    indexingFilter.AddArg(new TreeNode<LiquidExpression>(arrayIndexLiquidExpression));
+                    //indexingFilter.AddArg(refChain);
                     //arrayIndex.objectvariableindex();
                     
                     return indexingFilter;
@@ -1622,7 +1628,8 @@ namespace Liquid.NET
             base.EnterStringFilterArg(context);
             //Console.WriteLine("Enter STRING FILTERARG " + context.GetText());
             CurrentBuilderContext.LiquidExpressionBuilder.AddFilterArgToLastExpressionsFilter(
-                GenerateStringSymbol(context.GetText()));
+                CreateObjectSimpleExpressionNode(
+                GenerateStringSymbol(context.GetText())));
         }
 
         public override void EnterNumberFilterArg(LiquidParser.NumberFilterArgContext context)
@@ -1635,7 +1642,7 @@ namespace Liquid.NET
                 throw new Exception("Unable to parse number " + context.GetText()); // this shouldn't occur--the parser should catch it.
             }
             CurrentBuilderContext.LiquidExpressionBuilder.AddFilterArgToLastExpressionsFilter(
-                liquidExpressionResult.SuccessValue<NumericValue>());
+                CreateObjectSimpleExpressionNode(liquidExpressionResult.SuccessValue<NumericValue>()));
 
         }
 
@@ -1644,7 +1651,7 @@ namespace Liquid.NET
             base.EnterBooleanFilterArg(context);
             //Console.WriteLine("Enter BOOLEAN FILTERARG " + context.GetText());
             CurrentBuilderContext.LiquidExpressionBuilder.AddFilterArgToLastExpressionsFilter(
-                new BooleanValue(Convert.ToBoolean(context.GetText())));
+                CreateObjectSimpleExpressionNode(new BooleanValue(Convert.ToBoolean(context.GetText()))));
         }
 
         public override void EnterVariableFilterArg(LiquidParser.VariableFilterArgContext context)
@@ -1652,8 +1659,56 @@ namespace Liquid.NET
             base.EnterVariableFilterArg(context);
             //Console.WriteLine("Enter VARIABLE FILTERARG " + context.GetText());
             CurrentBuilderContext.LiquidExpressionBuilder.AddFilterArgToLastExpressionsFilter(
-                new VariableReference(context.GetText()));
+                 CreateObjectSimpleExpressionNode(new VariableReference(context.GetText())));
         }
+
+//        public override void EnterVariableFilterArg(LiquidParser.VariableFilterArgContext context)
+        //{
+//            //Console.WriteLine("INDEX IS LABEL " + arrayIndex.VARIABLENAME());
+//            var indexingFilter = new FilterSymbol("lookup"); // TODO: Should this be in a separate namespace or something?
+//            var arrayIndexLiquidExpression = new LiquidExpression
+//            {
+//                Expression = new VariableReference(context.variable().GetText())
+//            };
+//
+//            // todo: switch tho AddFilterSymbols
+//            foreach (var filter in context.variable().objectvariableindex().Select(AddIndexLookupFilter))
+//            {
+//                arrayIndexLiquidExpression.AddFilterSymbol(filter);
+//            }
+//            // This chain needs to be evaluated --- somehow the parent evaluation needs
+//            // to be able to pick up on it....
+//            var refChain = new ObjectReferenceChain(arrayIndexLiquidExpression);
+//            //CurrentBuilderContext.LiquidExpressionBuilder.AddFilterArgToLastExpressionsFilter(refChain);
+//            indexingFilter.AddArg(refChain);
+//            //arrayIndex.objectvariableindex();
+//            CurrentBuilderContext.LiquidExpressionBuilder.AddFilterArgToLastExpressionsFilter(indexingFilter);
+//            //return indexingFilter;
+//        }
+
+        /*
+        public override void EnterVariableFilterArg(LiquidParser.VariableFilterArgContext context)
+        {
+            base.EnterVariableFilterArg(context);
+            Console.WriteLine("Enter VARIABLE FILTERARG " + context.GetText());
+            TreeNode<LiquidExpression> startExpression = null;
+            
+            StartNewLiquidExpressionTree(x =>
+            {
+                startExpression = x;
+                StartCapturingVariable(context.variable());
+                MarkCurrentExpressionComplete();
+                CurrentBuilderContext.LiquidExpressionBuilder.AddFilterArgToLastExpressionsFilter(x);
+            });
+                //CurrentBuilderContext.LiquidExpressionBuilder.AddFilterArgToLastExpressionsFilter(
+                //new VariableReference(context.GetText())));
+
+//            MarkCurrentExpressionComplete();
+//
+//            CurrentBuilderContext.LiquidExpressionBuilder.AddFilterArgToLastExpressionsFilter(
+//                new VariableReference(context.GetText()));
+        }
+        */
 
         // TODO: Add all the filterarg types.
 

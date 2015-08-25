@@ -196,13 +196,14 @@ object:				STRING									# StringObject
 					;
 
  
-objectvariableindex : ARRAYSTART arrayindex ARRAYEND
+objectvariableindex: ARRAYSTART arrayindex ARRAYEND
 					//| PERIOD (objectproperty | ISEMPTY) 
 					| PERIOD objectproperty
 					;
 
 					// TODO: change LABEL... to variable
-arrayindex:			ARRAYINT | STRING  | VARIABLENAME objectvariableindex*  ;
+//arrayindex:			ARRAYINT | STRING  | VARIABLENAME objectvariableindex*  ;
+arrayindex:			ARRAYINT | STRING  | variable  ;
 
 objectproperty:		VARIABLENAME;
 

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Liquid.NET.Constants;
 using Liquid.NET.Expressions;
-using Liquid.NET.Grammar;
 using Liquid.NET.Symbols;
 using Liquid.NET.Tags;
 using Liquid.NET.Utils;
@@ -78,8 +77,9 @@ namespace Liquid.NET.Tests
 
             // Assert
             var liquidExpressions = FindNodesWithType(ast, typeof(LiquidExpressionTree));
-            Assert.That(liquidExpressions.Count(), Is.EqualTo(2));
 
+            Assert.That(liquidExpressions.Count(), Is.EqualTo(2));
+            Assert.That(generator.GetNonEmptyStackErrors(), Is.Empty);
         }
 
         [Test]
@@ -203,6 +203,30 @@ namespace Liquid.NET.Tests
             //Assert.That(((LiquidExpression)liquidExpressions.Data).FilterSymbols.Count(), Is.EqualTo(1));
 
         }
+
+        [Test]
+        public void It_Should_Parse_An_Indexed_Object_Reference()
+        {
+            // Arrange
+            LiquidASTGenerator generator = new LiquidASTGenerator();
+
+            // Act
+            //LiquidAST ast = generator.Generate("Result : {{ a[12][b[\"test\"][c.d.e[1]]] }}");
+            LiquidAST ast = generator.Generate("Result : {{ a[b[c[d][e]][f][g[h]]] }}");
+
+            // Assert
+
+            var liquidExpressions = FindNodesWithType(ast, typeof(ObjectReferenceChain));
+            
+            Assert.That(liquidExpressions, Is.Not.Null);
+
+            //Console.WriteLine("There are " + ast.RootNode.Children.Count + " Nodes");
+            //Console.WriteLine("It is " + ast.RootNode.Children[0].Data);
+            //Assert.That(liquidExpressions.Count(), Is.EqualTo(1));
+            //Assert.That(generator.GetNonEmptyStackErrors(), Is.Empty);
+            Assert.Fail();
+        }
+
 
 
         public static IEnumerable<TreeNode<IASTNode>> FindNodesWithType(LiquidAST ast, Type type)

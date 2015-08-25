@@ -180,6 +180,7 @@
     <Compile Include="Tags\UnlessBlockTagTests.cs" />
     <Compile Include="TemplateContextTests.cs" />
     <Compile Include="Utils\StrFTimeTests.cs" />
+    <Compile Include="VariableReferenceTreeBuilderTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Liquid.NET\Liquid.NET.csproj">

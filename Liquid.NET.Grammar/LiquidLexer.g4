@@ -130,14 +130,18 @@ ERRORCHAR2 :			. -> type(ERRORCHAR);
 
 mode INARRAYINDEX ;
 
-ARRAYSTART2 :			ARRAYSTART {arraybracketcount++; System.Console.WriteLine("** Encountered nested '[' " +arraybracketcount);} -> type(ARRAYSTART);
-ARRAYEND2a :				{arraybracketcount == 0; }? ARRAYEND {System.Console.WriteLine("** leaving mode " +arraybracketcount);} -> type(ARRAYEND), popMode ;
-ARRAYEND2b :				{arraybracketcount > 0; }? ARRAYEND  { arraybracketcount--; System.Console.WriteLine("* closed nested ']' " +arraybracketcount); } -> type(ARRAYEND);
+// ARRAYSTART2 :			ARRAYSTART {arraybracketcount++; System.Console.WriteLine("** Encountered nested '[' " +arraybracketcount);} -> type(ARRAYSTART);
+ARRAYSTART2 :			ARRAYSTART {arraybracketcount++;} -> type(ARRAYSTART);
+// ARRAYEND2a :				{arraybracketcount == 0; }? ARRAYEND {System.Console.WriteLine("** leaving mode " +arraybracketcount);} -> type(ARRAYEND), popMode ;
+ARRAYEND2a :				{arraybracketcount == 0; }? ARRAYEND -> type(ARRAYEND), popMode ;
+// ARRAYEND2b :				{arraybracketcount > 0; }? ARRAYEND  { arraybracketcount--; System.Console.WriteLine("* closed nested ']' " +arraybracketcount); } -> type(ARRAYEND);
+ARRAYEND2b :				{arraybracketcount > 0; }? ARRAYEND  { arraybracketcount--; } -> type(ARRAYEND);
 ARRAYINT:				'0' | MINUS ? [1-9] [0-9]* ;
 STRING3:				STRING {System.Console.WriteLine("** Lexing a string " +arraybracketcount);}  -> type(STRING);
 //LABEL3:					LABEL -> type(LABEL) ;
 VARIABLENAME3:			LABEL -> type(VARIABLENAME);
 MINUS3:					MINUS -> type(MINUS) ;
+PERIOD3:				PERIOD -> type(PERIOD) ;
 
 // ========= LIQUID TAGS ============
 

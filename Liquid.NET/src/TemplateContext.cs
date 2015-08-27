@@ -181,6 +181,13 @@ namespace Liquid.NET
             return this;
         }
 
+        public ITemplateContext WithDebuggingFilters()
+        {
+            _globalSymbolTable.DefineFilter<TypeOfFilter>("type_of");
+            return this;
+            
+        }
+
         public ITemplateContext WithShopifyFilters()
         {
             _globalSymbolTable.DefineFilter<CamelCaseFilter>("camelcase");
@@ -196,6 +203,7 @@ namespace Liquid.NET
         {
             WithStandardFilters();
             WithShopifyFilters();
+            WithDebuggingFilters();
             //WithJekyllFilters();
             return this;
 

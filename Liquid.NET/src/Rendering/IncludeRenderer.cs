@@ -11,6 +11,8 @@ namespace Liquid.NET.Rendering
 {
     public class IncludeRenderer
     {
+        public static string LOCALREGISTRY_FILE_KEY = "include";
+
         private readonly RenderingVisitor _renderingVisitor;
         private readonly LiquidASTRenderer _astRenderer;
 
@@ -38,7 +40,7 @@ namespace Liquid.NET.Rendering
             }
 
             String snippet = templateContext.FileSystem.Include(templateContext, virtualFileName);
-
+            templateContext.SymbolTableStack.DefineLocalRegistry(LOCALREGISTRY_FILE_KEY, virtualFileName);
             LiquidAST snippetAst;
             try
             {
@@ -116,7 +118,7 @@ namespace Liquid.NET.Rendering
                 }
                 RenderWithLocalScope(templateContext, localBlockScope, snippetAst.RootNode);
             }
-            
+           
                        
         }
 

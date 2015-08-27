@@ -30,6 +30,25 @@ namespace Liquid.NET.Tests.Symbols
         }
 
         [Test]
+        public void It_Should_Retrieve_A_Defined_Local_Registry_Value()
+        {
+            // Arrange
+            const string str = "This is a test.";
+            var templateContext = new TemplateContext();
+            templateContext.DefineLocalRegistryVariable("test", str);
+            var stack = StackHelper.CreateSymbolTableStack(templateContext);
+
+            // Act
+            var result = stack.ReferenceLocalRegistryVariable("test");
+
+            // Assert
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result, Is.EqualTo(str));
+            
+        }
+
+
+        [Test]
         public void It_Should_Retrieve_An_Undefined_Value_When_Missing()
         {
             // Arrange

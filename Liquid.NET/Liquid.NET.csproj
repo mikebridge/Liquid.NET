@@ -121,6 +121,7 @@
     <Compile Include="src\Filters\Array\SizeFilter.cs" />
     <Compile Include="src\Filters\Array\SortFilter.cs" />
     <Compile Include="src\Filters\DateFilter.cs" />
+    <Compile Include="src\Filters\DebugFilter.cs" />
     <Compile Include="src\Filters\DefaultFilter.cs" />
     <Compile Include="src\Filters\FilterChain.cs" />
     <Compile Include="src\Filters\FilterRegistry.cs" />
@@ -163,6 +164,7 @@
     <Compile Include="src\Filters\Strings\UrlParamEscapeFilter.cs" />
     <Compile Include="src\Filters\ToDecimalFilter.cs" />
     <Compile Include="src\Filters\ToIntFilter.cs" />
+    <Compile Include="src\Filters\TypeOfFilter.cs" />
     <Compile Include="src\IFileSystem.cs" />
     <Compile Include="src\ILiquidASTGenerator.cs" />
     <Compile Include="src\ITemplateContext.cs" />

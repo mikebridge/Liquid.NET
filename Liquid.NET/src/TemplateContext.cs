@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-
+using System.Linq.Expressions;
 using Liquid.NET.Constants;
 using Liquid.NET.Filters;
 using Liquid.NET.Filters.Array;
@@ -39,6 +39,13 @@ namespace Liquid.NET
         public ITemplateContext DefineLocalVariable(String name, IExpressionConstant constant)
         {
             _globalSymbolTable.DefineLocalVariable(name, constant);
+            return this;
+        }
+
+
+        public ITemplateContext DefineLocalRegistryVariable(string name, Object obj)
+        {
+            _globalSymbolTable.DefineLocalRegistryVariable(name, obj);
             return this;
         }
 
@@ -171,6 +178,14 @@ namespace Liquid.NET
             return this;
         }
 
+        public ITemplateContext WithDebuggingFilters()
+        {
+            _globalSymbolTable.DefineFilter<TypeOfFilter>("type_of");
+            _globalSymbolTable.DefineFilter<DebugFilter>("debug");
+            return this;
+            
+        }
+
         public ITemplateContext WithShopifyFilters()
         {
             _globalSymbolTable.DefineFilter<CamelCaseFilter>("camelcase");
@@ -186,6 +201,7 @@ namespace Liquid.NET
         {
             WithStandardFilters();
             WithShopifyFilters();
+            WithDebuggingFilters();
             //WithJekyllFilters();
             return this;
 
@@ -200,6 +216,5 @@ namespace Liquid.NET
         }
 
 
-      
     }
 }

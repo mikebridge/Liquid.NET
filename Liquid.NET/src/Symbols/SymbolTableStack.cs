@@ -43,6 +43,19 @@ namespace Liquid.NET.Symbols
             return LiquidExpressionResult.Success(new None<IExpressionConstant>());
         }
 
+
+        public Object ReferenceLocalRegistryVariable(String reference, int skiplevels = 0)
+        {
+            for (int i = _symbolTables.Count() - 1 - skiplevels; i >= 0; i--)
+            {
+                if (_symbolTables[i].HasLocalRegistryVariableReference(reference))
+                {
+                    return _symbolTables[i].ReferenceLocalRegistryVariable(reference);
+                }
+            }
+            return LiquidExpressionResult.Success(new None<IExpressionConstant>());
+        }
+
         public void FindVariable(String reference, 
             Action<SymbolTable, Option<IExpressionConstant>> ifFoundAction, 
             Action ifNotFoundAction)
@@ -74,6 +87,11 @@ namespace Liquid.NET.Symbols
         {
             //Console.WriteLine("Adding " + reference + " to current scope");
             _symbolTables.Last().DefineLocalVariable(reference, obj);
+        }
+
+        public void DefineLocalRegistry(string reference, Object obj)
+        {
+            _symbolTables.Last().DefineLocalRegistryVariable(reference, obj);
         }
 
         public void DefineGlobal(string key, IExpressionConstant obj)
@@ -132,16 +150,6 @@ namespace Liquid.NET.Symbols
             return null;
         }
 
-        //        public void DefineCustomTag<T>(string name)
-
-        //            where T: ICustomTagRenderer
-
-        //        {
-
-        //            _symbolTables.Last().DefineCustomTag<T>(name);
-
-        //        }
-
         public void DefineMacro(string name, MacroBlockTag macro)
         {
             _symbolTables.Last().DefineMacro(name, macro);
@@ -159,5 +167,6 @@ namespace Liquid.NET.Symbols
             }
             return null;
         }
+
     }
 }

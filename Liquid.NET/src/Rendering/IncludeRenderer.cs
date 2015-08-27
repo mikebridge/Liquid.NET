@@ -38,7 +38,7 @@ namespace Liquid.NET.Rendering
             }
 
             String snippet = templateContext.FileSystem.Include(templateContext, virtualFileName);
-
+            templateContext.SymbolTableStack.DefineLocalRegistry("include", virtualFileName);
             LiquidAST snippetAst;
             try
             {
@@ -116,7 +116,7 @@ namespace Liquid.NET.Rendering
                 }
                 RenderWithLocalScope(templateContext, localBlockScope, snippetAst.RootNode);
             }
-            
+           
                        
         }
 

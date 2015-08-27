@@ -89,6 +89,7 @@
     <Compile Include="Filters\Array\SizeFilterTests.cs" />
     <Compile Include="Filters\Array\SortFilterTests.cs" />
     <Compile Include="Filters\DateFilterTests.cs" />
+    <Compile Include="Filters\DebugFilterTests.cs" />
     <Compile Include="Filters\DefaultFilterTests.cs" />
     <Compile Include="Filters\Html\ImgTagFilterTests.cs" />
     <Compile Include="Filters\Html\ScriptTagFilterTests.cs" />

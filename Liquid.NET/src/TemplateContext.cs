@@ -191,6 +191,7 @@ namespace Liquid.NET
         public ITemplateContext WithDebuggingFilters()
         {
             _globalSymbolTable.DefineFilter<TypeOfFilter>("type_of");
+            _globalSymbolTable.DefineFilter<DebugFilter>("debug");
             return this;
             
         }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 using Liquid.NET.Constants;
 using Liquid.NET.Filters;
+using Liquid.NET.Rendering;
 using Liquid.NET.Tags;
 using Liquid.NET.Tags.Custom;
 using Liquid.NET.Utils;
@@ -53,13 +54,38 @@ namespace Liquid.NET.Symbols
 
         public void DefineLocalVariable(String key, IExpressionConstant obj)
         {
+
             if (_variableDictionary.ContainsKey(key))
             {
                 _variableDictionary[key] = obj;
+                SaveIncludeWhereReDefined(obj);
             }
             else
             {
                 _variableDictionary.Add(key, obj);
+                SaveIncludeWhereDefined(obj);
+            }
+        }
+
+        private void SaveIncludeWhereReDefined(IExpressionConstant obj)
+        {
+            if (this.HasLocalRegistryVariableReference(IncludeRenderer.LOCALREGISTRY_FILE_KEY))
+            {
+                if (!obj.MetaData.ContainsKey("reassigned"))
+                {
+                    obj.MetaData.Add("reassigned", this.ReferenceLocalRegistryVariable(IncludeRenderer.LOCALREGISTRY_FILE_KEY));
+                }
+            }
+        }
+
+        private void SaveIncludeWhereDefined(IExpressionConstant obj)
+        {
+            if (this.HasLocalRegistryVariableReference(IncludeRenderer.LOCALREGISTRY_FILE_KEY))
+            {
+                if (!obj.MetaData.ContainsKey("assigned"))
+                {
+                    obj.MetaData.Add("assigned", this.ReferenceLocalRegistryVariable(IncludeRenderer.LOCALREGISTRY_FILE_KEY));
+                }
             }
         }
 

@@ -235,16 +235,7 @@ namespace Liquid.NET
                         .WhenNone(() => _templateContext.SymbolTableStack.DefineGlobal(assignTag.VarName, null)))
                     .WhenError(RenderError);
             }
-//                result =
-//                )
-//            if (result.HasValue)
-//            {
-//                _templateContext.SymbolTableStack.DefineGlobal(assignTag.VarName, result.Value);
-//            }
-//            else
-//            {
-//                _templateContext.SymbolTableStack.DefineGlobal(assignTag.VarName, new NilValue());
-//            }
+
         }
 
         public void Visit(CaptureBlockTag captureBlockTag)

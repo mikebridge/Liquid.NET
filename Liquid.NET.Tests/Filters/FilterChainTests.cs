@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Management.Instrumentation;
 using Liquid.NET.Constants;
 using Liquid.NET.Filters;
 using Liquid.NET.Filters.Math;
@@ -49,6 +50,22 @@ namespace Liquid.NET.Tests.Filters
         }
 
         [Test]
+        public void It_Should_Allow_An_Int_Variable()
+        {
+            // Arrange
+            ITemplateContext ctx = new TemplateContext().WithAllFilters();
+            ctx.DefineLocalVariable("bar", new NumericValue(3) );
+            var template = LiquidTemplate.Create("{{ 1 | plus: bar }}");
+
+            // Act
+            String result = template.Render(ctx);
+            Console.WriteLine(result);
+
+            // Assert
+            Assert.That(result, Is.EqualTo("4"));
+        }
+
+        [Test]
         public void It_Should_Allow_A_Variable_With_Index()
         {
             // Arrange
@@ -64,8 +81,82 @@ namespace Liquid.NET.Tests.Filters
 
             // Assert
             Assert.That(result, Is.EqualTo("2"));
+        }
+
+        [Test]
+        public void It_Should_Allow_A_Variable_With_Int_Index()
+        {
+            // Arrange
+            ITemplateContext ctx = new TemplateContext().WithAllFilters();
+            ArrayValue arr = new ArrayValue(new List<IExpressionConstant> { new NumericValue(33) });
+            ctx.DefineLocalVariable("bar", arr);
+            var template = LiquidTemplate.Create("{{ 1 | plus: bar[1] }}");
+
+            // Act
+            String result = template.Render(ctx);
+            Console.WriteLine(result);
+
+            // Assert
+            Assert.That(result, Is.EqualTo("34"));
+        }
+
+
+        [Test]
+        public void It_Should_Allow_A_Variable()
+        {
+            // Arrange
+            ITemplateContext ctx = new TemplateContext().WithAllFilters();            
+            ctx.DefineLocalVariable("a", new StringValue("HELLO"));
+            //var template = LiquidTemplate.Create("{% assign x = 1 | plus: bar.foo %} 1 + {{ bar.foo }} = {{ x }}");
+            var template = LiquidTemplate.Create("{{ a }} WORLD");
+
+            // Act
+            String result = template.Render(ctx);
+            Console.WriteLine(result);
+
+            // Assert
+            Assert.That(result, Is.EqualTo("HELLO WORLD"));
 
         }
+
+        [Test]
+        public void It_Should_Lookup_An_Array_With_Int_Index()
+        {
+            // Arrange
+            ITemplateContext ctx = new TemplateContext().WithAllFilters();
+            ctx.DefineLocalVariable("a", new ArrayValue(new List<IExpressionConstant> {new StringValue("HELLO")}));
+            //var template = LiquidTemplate.Create("{% assign x = 1 | plus: bar.foo %} 1 + {{ bar.foo }} = {{ x }}");
+            var template = LiquidTemplate.Create("{{ a[0] }} WORLD");
+
+            // Act
+            String result = template.Render(ctx);
+            Console.WriteLine(result);
+
+            // Assert
+            Assert.That(result, Is.EqualTo("HELLO WORLD"));
+
+        }
+
+        [Test]
+        public void It_Should_Lookup_An_Array_In_A_Dictionary()
+        {
+            // Arrange
+            ITemplateContext ctx = new TemplateContext().WithAllFilters();
+            var arr = new ArrayValue(new List<IExpressionConstant> {new StringValue("HELLO")});
+            ctx.DefineLocalVariable("a", new DictionaryValue(new Dictionary<String, IExpressionConstant> {{ "b", arr }}));
+            //var template = LiquidTemplate.Create("{% assign x = 1 | plus: bar.foo %} 1 + {{ bar.foo }} = {{ x }}");
+            var template = LiquidTemplate.Create("{{ a.b[0] }} WORLD");
+
+            // Act
+            String result = template.Render(ctx);
+            Console.WriteLine(result);
+
+            // Assert
+            Assert.That(result, Is.EqualTo("HELLO WORLD"));
+
+        }
+
+
 
     }
 }

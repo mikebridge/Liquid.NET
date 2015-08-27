@@ -1099,7 +1099,7 @@ namespace Liquid.NET
         /// </summary>
         private void MarkCurrentExpressionComplete()
         {
-            //Console.WriteLine("Current expression complete!");
+            Console.WriteLine("!MarkCurrentExpressionComplete!");
             CurrentBuilderContext.LiquidExpressionBuilder.EndLiquidExpression();
         }
 
@@ -1334,7 +1334,7 @@ namespace Liquid.NET
         /// </summary>
         private void AddExpressionToCurrentExpressionBuilder(IExpressionDescription symbol)
         {
-            //Console.WriteLine("AddExpressionToCurrentExpressionBuilder "+symbol);
+            Console.WriteLine("AddExpressionToCurrentExpressionBuilder "+symbol);
             CurrentBuilderContext.LiquidExpressionBuilder.StartLiquidExpression(symbol);
         }
 
@@ -1406,88 +1406,88 @@ namespace Liquid.NET
         {
             return str.Substring(1, str.Length - 2);
         }
-        //override Ge
 
 
-        // TODO: clean this up
-        private static FilterSymbol AddIndexLookupFilter(LiquidParser.ObjectvariableindexContext objectvariableindexContext)
-        {
-            Console.WriteLine("Working on index filter.");
-            var indexingFilter = new FilterSymbol("lookup"); // TODO: Should this be in a separate namespace or something?
 
-            if (objectvariableindexContext.objectproperty() != null)
-            {
-                var index = objectvariableindexContext.objectproperty().GetText();
-                if (index != null)
-                {
-                    //indexingFilter.AddArg(new StringValue(index.TrimStart('.'))); // todo: make the lexing take care of the "."
-                    var str = new StringValue(index.TrimStart('.'));
-                    indexingFilter.AddArg(CreateObjectSimpleExpressionNode(str));
-                    //indexingFilter.AddArg(new StringValue(index.TrimStart('.')))
-                    return indexingFilter;
-                }
-            }
-            
-            var arrayIndex = objectvariableindexContext.arrayindex();
-            if (arrayIndex != null)
-            {
-                if (arrayIndex.ARRAYINT() != null)
-                {
-                    //Console.WriteLine("=== Array Index is " + arrayIndex.ARRAYINT().GetText());
-                    //indexingFilter.AddArg(CreateIntNumericValueFromString(arrayIndex.ARRAYINT().GetText()));
-                    indexingFilter.AddArg(CreateObjectSimpleExpressionNode(CreateIntNumericValueFromString(arrayIndex.ARRAYINT().GetText())));
-                    return indexingFilter;
-                }
-                if (arrayIndex.STRING() != null)
-                {
-                    //Console.WriteLine("...");                    
-                    indexingFilter.AddArg(CreateObjectSimpleExpressionNode(new StringValue(StripQuotes(arrayIndex.STRING().GetText()))));
-                    return indexingFilter;
-                }
-                // TODO: Rewrite this using "variable"
-
-//                if (arrayIndex.variable() != null)
+//        // TODO: clean this up
+//        private static FilterSymbol AddIndexLookupFilter(LiquidParser.ObjectvariableindexContext objectvariableindexContext)
+//        {
+//            Console.WriteLine("Working on index filter.");
+//            var indexingFilter = new FilterSymbol("lookup"); // TODO: Should this be in a separate namespace or something?
+//
+//            if (objectvariableindexContext.objectproperty() != null)
+//            {
+//                var index = objectvariableindexContext.objectproperty().GetText();
+//                if (index != null)
 //                {
-//                    StartCapturingVariable(arrayIndex.variable());
-//
-//                    var expression = CurrentBuilderContext.LiquidExpressionBuilder.ConstructedLiquidExpressionTree;
-//                    var refChain = new ObjectReferenceChain(expression.Data); // TODO: Check if this is right?
-//                    indexingFilter.AddArg(refChain);
-//                    //arrayIndex.objectvariableindex();
-//
-//                    return indexingFilter;
-//
-//                }
-//                if (arrayIndex.VARIABLENAME() != null)
-//                {
-//                    //Console.WriteLine("INDEX IS LABEL " + arrayIndex.VARIABLENAME());
-//
-//                    // maybe this shoud be a wrapper instead of a chain
-//                    var arrayIndexLiquidExpression = new LiquidExpression
-//                    {
-//                        Expression = new VariableReference(arrayIndex.VARIABLENAME().GetText())
-//                    };
-//
-//                    // todo: switch tho AddFilterSymbols
-//                    foreach (var filter in arrayIndex.objectvariableindex().Select(AddIndexLookupFilter))
-//                    { 
-//                        arrayIndexLiquidExpression.AddFilterSymbol(filter);
-//                    }
-//                    // This chain needs to be evaluated --- somehow the parent evaluation needs
-//                    // to be able to pick up on it....
-//                    //var refChain = new ObjectReferenceChain(arrayIndexLiquidExpression);
-//                    // zzz
-//                    indexingFilter.AddArg(new TreeNode<LiquidExpression>(arrayIndexLiquidExpression));
-//                    //indexingFilter.AddArg(refChain);
-//                    //arrayIndex.objectvariableindex();
-//                    
+//                    //indexingFilter.AddArg(new StringValue(index.TrimStart('.'))); // todo: make the lexing take care of the "."
+//                    var str = new StringValue(index.TrimStart('.'));
+//                    indexingFilter.AddArg(CreateObjectSimpleExpressionNode(str));
+//                    //indexingFilter.AddArg(new StringValue(index.TrimStart('.')))
 //                    return indexingFilter;
 //                }
-
-            }
-
-            throw new Exception("There is a problem in the parser: the indexing is incorrect.");
-        }
+//            }
+//            
+//            var arrayIndex = objectvariableindexContext.arrayindex();
+//            if (arrayIndex != null)
+//            {
+//                if (arrayIndex.ARRAYINT() != null)
+//                {
+//                    //Console.WriteLine("=== Array Index is " + arrayIndex.ARRAYINT().GetText());
+//                    //indexingFilter.AddArg(CreateIntNumericValueFromString(arrayIndex.ARRAYINT().GetText()));
+//                    indexingFilter.AddArg(CreateObjectSimpleExpressionNode(CreateIntNumericValueFromString(arrayIndex.ARRAYINT().GetText())));
+//                    return indexingFilter;
+//                }
+//                if (arrayIndex.STRING() != null)
+//                {
+//                    //Console.WriteLine("...");                    
+//                    indexingFilter.AddArg(CreateObjectSimpleExpressionNode(new StringValue(StripQuotes(arrayIndex.STRING().GetText()))));
+//                    return indexingFilter;
+//                }
+//                // TODO: Rewrite this using "variable"
+//
+////                if (arrayIndex.variable() != null)
+////                {
+////                    StartCapturingVariable(arrayIndex.variable());
+////
+////                    var expression = CurrentBuilderContext.LiquidExpressionBuilder.ConstructedLiquidExpressionTree;
+////                    var refChain = new ObjectReferenceChain(expression.Data); // TODO: Check if this is right?
+////                    indexingFilter.AddArg(refChain);
+////                    //arrayIndex.objectvariableindex();
+////
+////                    return indexingFilter;
+////
+////                }
+////                if (arrayIndex.VARIABLENAME() != null)
+////                {
+////                    //Console.WriteLine("INDEX IS LABEL " + arrayIndex.VARIABLENAME());
+////
+////                    // maybe this shoud be a wrapper instead of a chain
+////                    var arrayIndexLiquidExpression = new LiquidExpression
+////                    {
+////                        Expression = new VariableReference(arrayIndex.VARIABLENAME().GetText())
+////                    };
+////
+////                    // todo: switch tho AddFilterSymbols
+////                    foreach (var filter in arrayIndex.objectvariableindex().Select(AddIndexLookupFilter))
+////                    { 
+////                        arrayIndexLiquidExpression.AddFilterSymbol(filter);
+////                    }
+////                    // This chain needs to be evaluated --- somehow the parent evaluation needs
+////                    // to be able to pick up on it....
+////                    //var refChain = new ObjectReferenceChain(arrayIndexLiquidExpression);
+////                    // zzz
+////                    indexingFilter.AddArg(new TreeNode<LiquidExpression>(arrayIndexLiquidExpression));
+////                    //indexingFilter.AddArg(refChain);
+////                    //arrayIndex.objectvariableindex();
+////                    
+////                    return indexingFilter;
+////                }
+//
+//            }
+//
+//            throw new Exception("There is a problem in the parser: the indexing is incorrect.");
+//        }
 
         private static NumericValue CreateIntNumericValueFromString(string intstring)
         {
@@ -1496,7 +1496,7 @@ namespace Liquid.NET
 
         public override void EnterNumberObject(LiquidParser.NumberObjectContext context)
         {
-            //Console.WriteLine("CREATING NUMBER OBJECT  >" + context.GetText() + "<");
+            Console.WriteLine("CREATING NUMBER OBJECT  >" + context.GetText() + "<");
             base.EnterNumberObject(context);
             //ValueCaster.ConvertToM
             var liquidExpressionResult = NumericValue.Parse(context.GetText());
@@ -1534,18 +1534,36 @@ namespace Liquid.NET
         }
 
         /// <summary>
-        /// Enter the {{ ... }} filter, and delete the "{{" and the "}}" tokens.
+        /// Enter the {{ ... }} filter
         /// </summary>
         /// <param name="context"></param>
         public override void EnterOutputmarkup(LiquidParser.OutputmarkupContext context)
         {
             Console.WriteLine("->-ENTERING OUTPUT MARKUP ");
-            base.EnterOutputmarkup(context);            
+            base.EnterOutputmarkup(context);
+            StartNewLiquidExpressionTree(result =>
+            {
+                Console.WriteLine("Adding Output Markup Tree Node--- should this be a filter chain?");
+                Console.WriteLine(result);                
+                CurrentAstNode.AddChild(CreateTreeNode<IASTNode>(new LiquidExpressionTree(result)));
+
+            });
+
+
             //_liquidAst.AddChild();
-            _tokenStreamRewriter.Delete(context.Start); // Delete the opening // TODO: I don't think these are necessary now that we're not using the token stream
-            _tokenStreamRewriter.Delete(context.Stop); // and closing braces
-            StartNewLiquidExpressionTree(x => CurrentAstNode.AddChild(CreateTreeNode<IASTNode>(
-                new LiquidExpressionTree(x))));
+            //_tokenStreamRewriter.Delete(context.Start); // Delete the opening // TODO: I don't think these are necessary now that we're not using the token stream
+            //_tokenStreamRewriter.Delete(context.Stop); // and closing braces
+
+            // The tree is captured into a "LiquidExpressionTree".  
+            //StartCapturingVariable(null);
+            //AddExpressionToCurrentExpressionBuilder(new LiquidExpressionTree()); 
+//
+//            StartNewLiquidExpressionTree(x =>
+//            {
+//                Console.WriteLine("Creating a new expression tree in the ast");
+//                CurrentAstNode.AddChild(CreateTreeNode<IASTNode>(new LiquidExpressionTree(x)));
+//                //AddExpressionToCurrentExpressionBuilder(x);??
+//            });
 
         }
 
@@ -1553,14 +1571,6 @@ namespace Liquid.NET
         {
             Console.WriteLine("-<-EXITING OUTPUT dMARKUP ");
             base.ExitOutputmarkup(context);
-            //CurrentBuilderContext.IfThenElseBlockTag.IfElseClauses.Last().LiquidExpression =
-            
-
-            // TODO: the parser can create a composite expression here, but the output markup only ever sends
-            // a simple object expression in.  I think _currentLiquidExpression.Expression should be a tree
-            // anyway, rather than just assuming that the first expression (i.e. we're taking ".Data" of the top
-            // node) is the only one.
-
             FinishLiquidExpressionTree();
         } 
 
@@ -1572,7 +1582,7 @@ namespace Liquid.NET
         public override void EnterFiltername(LiquidParser.FilternameContext context)
         {
             base.EnterFiltername(context);           
-            //Console.WriteLine("CREATING FILTER " + context.GetText());
+            Console.WriteLine("CREATING FILTER " + context.GetText());
 
             //context.
             //_currentFilterSymbol = new FilterSymbol(context.GetText());
@@ -1719,7 +1729,7 @@ namespace Liquid.NET
                         // Create a new variable and put it on the stack.
             // The caller is responsible for popping it off the stack and attaching it 
             // wherever it's supposed to go.
-
+            //AddExpressionToCurrentExpressionBuilder(new VariableReference("ABC"));
             Console.WriteLine("LISTENING FOR VARIABLE CREATION (TODO)");
             //var varname = variableContext.VARIABLENAME().GetText();
             //Console.WriteLine("START Capturing variable " + varname);
@@ -1748,8 +1758,14 @@ namespace Liquid.NET
             base.EnterVariableObject(context);
 
             Console.WriteLine("<><> ENTER VariableObject " + context.GetText());
-            CurrentBuilderContext.VarReferenceTreeBuilder.Push(new VariableReferenceTreeBuilder());
-
+            var variableReferenceTreeBuilder = new VariableReferenceTreeBuilder();
+            CurrentBuilderContext.VarReferenceTreeBuilder.Push(variableReferenceTreeBuilder);
+            variableReferenceTreeBuilder.VariableReferenceTreeCompleteEvent +=
+                x =>
+                {
+                    AddExpressionToCurrentExpressionBuilder(x);
+                    MarkCurrentExpressionComplete();
+                };
             //CurrentBuilderContext.VariableReferenceStack.Push(new VariableReferenceTree());
             //StartCapturingVariable(context.variable());
             //StartCapturingVariable(context.variable());
@@ -1763,7 +1779,9 @@ namespace Liquid.NET
             Console.WriteLine("<><> EXIT VariableObject  " + context.GetText());
             //CurrentBuilderContext.VariableReferenceStack.Pop();
             base.ExitVariableObject(context);
+
             CurrentBuilderContext.VarReferenceTreeBuilder.Peek().NotifyListenersOfConstructedVariable();
+            
             CurrentBuilderContext.VarReferenceTreeBuilder.Pop();
             //MarkCurrentExpressionComplete();
         }
@@ -1833,8 +1851,10 @@ namespace Liquid.NET
             }
             if (context.STRING() != null)
             {
-                String arrayIndex = context.STRING().GetText();
+                String arrayIndex = StripQuotes(context.STRING().GetText());
                 Console.WriteLine("     -> ** ARRAY STRING =" + arrayIndex);
+                CurrentBuilderContext.VarReferenceTreeBuilder.Peek().StartVariable();
+                CurrentBuilderContext.VarReferenceTreeBuilder.Peek().AddStringIndex(arrayIndex);
             }
             if (context.variable() != null)
             {
@@ -1851,6 +1871,19 @@ namespace Liquid.NET
 
         }
 
+        public override void EnterObjectproperty(LiquidParser.ObjectpropertyContext context)
+        {
+            Console.WriteLine(" -> START Object Property " + context.VARIABLENAME().GetText());
+            base.EnterObjectproperty(context);
+            // TODO: Make sure syntax like a.b[0] still works.
+            if (context.VARIABLENAME() != null)
+            {
+                String arrayIndex = context.VARIABLENAME().GetText();
+                Console.WriteLine("     -> ** OBJECT REFERENCE =" + arrayIndex);
+                CurrentBuilderContext.VarReferenceTreeBuilder.Peek().StartVariable();
+                CurrentBuilderContext.VarReferenceTreeBuilder.Peek().AddStringIndex(context.VARIABLENAME().GetText());
+            }       
+        }
 
         #endregion
 
@@ -2073,7 +2106,8 @@ namespace Liquid.NET
                 OnVariableReferenceTreeCompleteEventHandler handler = VariableReferenceTreeCompleteEvent;
                 if (handler != null)
                 {
-                    handler(this, variableReferenceTree);
+                    Console.WriteLine("-_-_ Notifying variable complete");
+                    handler(variableReferenceTree);
                 }
                 else
                 {
@@ -2089,6 +2123,6 @@ namespace Liquid.NET
         }
     }
 
-    public delegate void OnVariableReferenceTreeCompleteEventHandler(object sender, VariableReferenceTree args);
+    public delegate void OnVariableReferenceTreeCompleteEventHandler(VariableReferenceTree args);
 
 }

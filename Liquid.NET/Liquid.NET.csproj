@@ -22,7 +22,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -71,6 +71,7 @@
     <Compile Include="src\Constants\BooleanValue.cs" />
     <Compile Include="src\Constants\ConstantFactory.cs" />
     <Compile Include="src\Constants\DateValue.cs" />
+    <Compile Include="src\Constants\IndexDereferencer.cs" />
     <Compile Include="src\Constants\DictionaryValue.cs" />
     <Compile Include="src\Constants\EasyOptionComparer.cs" />
     <Compile Include="src\Constants\EasyValueComparer.cs" />

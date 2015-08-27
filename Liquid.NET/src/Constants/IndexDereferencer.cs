@@ -1,38 +1,37 @@
 ﻿using System;
+using System.CodeDom;
+using System.Collections.Generic;
 using System.Linq;
-using Liquid.NET.Constants;
+using System.Runtime.CompilerServices;
+using System.Text;
+using System.Threading.Tasks;
 using Liquid.NET.Utils;
 
-namespace Liquid.NET.Filters
+namespace Liquid.NET.Constants
 {
-
-    public class LookupFilter : FilterExpression<ExpressionConstant, IExpressionConstant>
+    public class IndexDereferencer
     {
-        private readonly ExpressionConstant _propertyName;
-
-        public LookupFilter(ExpressionConstant propertyName)
+        /// <summary>
+        /// Look up the index in the value.  This works for dictionaries, arrays and strings.
+        /// </summary>
+        /// <param name="ctx"></param>
+        /// <param name="value"></param>
+        /// <param name="indexProperty"></param>
+        /// <returns></returns>
+        public LiquidExpressionResult Lookup(
+            ITemplateContext ctx, 
+            IExpressionConstant value,
+            IExpressionConstant indexProperty)
         {
-            _propertyName = propertyName;
+            Console.WriteLine("LOOKUP=> VALUE: " + value);
+            Console.WriteLine("      => INDEX: " + indexProperty);
+            return DoLookup(ctx, (dynamic) value, indexProperty);
         }
 
-        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, IExpressionConstant liquidExpression)
-        {
-            //return base.ApplyTo(liquidExpression);
-            //Console.WriteLine("  ()() TRIED TO DEREFERENCE  " + _propertyName.Value.ToString());
-            return LiquidExpressionResult.Error("Unable to dereference " + liquidExpression.Value + " with " + _propertyName.Value + ": expected Array or Dictionary.");
-
-
-
-            //return liquidExpression;
-
-            //return new Undefined(_propertyName.Value.ToString());
-        }
-
-
-        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, ArrayValue arrayValue)
+        private LiquidExpressionResult DoLookup(ITemplateContext ctx, ArrayValue arrayValue, IExpressionConstant indexProperty)
         {
 
-            String propertyNameString = ValueCaster.RenderAsString((IExpressionConstant)_propertyName);
+            String propertyNameString = ValueCaster.RenderAsString(indexProperty);
             int index;
             if (propertyNameString.ToLower().Equals("first"))
             {
@@ -48,7 +47,7 @@ namespace Liquid.NET.Filters
             }
             else
             {
-                var maybeIndexResult = ValueCaster.Cast<IExpressionConstant, NumericValue>(_propertyName);
+                var maybeIndexResult = ValueCaster.Cast<IExpressionConstant, NumericValue>(indexProperty);
                 if (maybeIndexResult.IsError || !maybeIndexResult.SuccessResult.HasValue)
                 {
                     return LiquidExpressionResult.Error("invalid array index: " + propertyNameString);
@@ -64,27 +63,27 @@ namespace Liquid.NET.Filters
                 //return LiquidExpressionResult.Error("array is empty: " + propertyNameString);
                 return LiquidExpressionResult.Success(new None<IExpressionConstant>()); // not an error in Ruby liquid.
             }
-            var result = arrayValue.ValueAt(index); 
+            var result = arrayValue.ValueAt(index);
             return LiquidExpressionResult.Success(result);
         }
 
-        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, DictionaryValue dictionaryValue)
+        private LiquidExpressionResult DoLookup(ITemplateContext ctx, DictionaryValue dictionaryValue, IExpressionConstant indexProperty)
         {
 
-            String propertyNameString = ValueCaster.RenderAsString((IExpressionConstant)_propertyName);
+            String propertyNameString = ValueCaster.RenderAsString(indexProperty);
             if (propertyNameString.ToLower().Equals("size"))
             {
                 return LiquidExpressionResult.Success(new NumericValue(dictionaryValue.DictValue.Keys.Count()));
             }
 
-            return LiquidExpressionResult.Success(dictionaryValue.ValueAt(_propertyName.Value.ToString()));
+            return LiquidExpressionResult.Success(dictionaryValue.ValueAt(indexProperty.Value.ToString()));
         }
 
         // TODO: this is inefficient and ugly and duplicates much of ArrayValue
-        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, StringValue strValue)
+        private LiquidExpressionResult DoLookup(ITemplateContext ctx, StringValue strValue, IExpressionConstant indexProperty)
         {
             var strValues = strValue.StringVal.ToCharArray().Select(ch => new StringValue(ch.ToString()).ToOption()).ToList();
-            String propertyNameString = ValueCaster.RenderAsString((IExpressionConstant)_propertyName);
+            String propertyNameString = ValueCaster.RenderAsString(indexProperty);
             int index;
             if (propertyNameString.ToLower().Equals("first"))
             {
@@ -100,7 +99,7 @@ namespace Liquid.NET.Filters
             }
             else
             {
-                var maybeIndexResult = ValueCaster.Cast<IExpressionConstant, NumericValue>(_propertyName);
+                var maybeIndexResult = ValueCaster.Cast<IExpressionConstant, NumericValue>(indexProperty);
                 if (maybeIndexResult.IsError || !maybeIndexResult.SuccessResult.HasValue)
                 {
                     return LiquidExpressionResult.Error("invalid array index: " + propertyNameString);
@@ -119,7 +118,6 @@ namespace Liquid.NET.Filters
             return LiquidExpressionResult.Success(ArrayIndexer.ValueAt(strValues, index));
 
         }
-
 
     }
 }

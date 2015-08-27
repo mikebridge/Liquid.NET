@@ -31,7 +31,7 @@ namespace Liquid.NET
         public TemplateContext()
         {            
             _globalSymbolTable = new SymbolTable();
-            _globalSymbolTable.DefineFilter<LookupFilter>("lookup"); // TODO: make this global somehow.
+            //_globalSymbolTable.DefineFilter<LookupFilter>("lookup"); // TODO: make this global somehow.
             _symbolTablestack.Push(_globalSymbolTable);            
         }        
 
@@ -77,16 +77,6 @@ namespace Liquid.NET
             }
             return this;
         }
-
-//        public int GetOrAddCounter(String key, int val)
-//        {
-//            return _counters.GetOrAdd(key, val);;
-//        }
-//
-//        public bool TryUpdateCounter(String key, int newVal, int comparisonValue)
-//        {
-//            return _counters.TryUpdate(key, newVal, comparisonValue); ;
-//        }
 
         public IFileSystem FileSystem
         {

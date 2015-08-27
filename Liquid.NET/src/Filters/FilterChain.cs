@@ -1,10 +1,7 @@
 ﻿using System;
-using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices.ComTypes;
 using Liquid.NET.Constants;
-using Liquid.NET.Expressions;
 using Liquid.NET.Utils;
 
 namespace Liquid.NET.Filters
@@ -31,19 +28,11 @@ namespace Liquid.NET.Filters
             // create the casting filter which will cast the incoming object to the input type of filter #1
             
             Func<IExpressionConstant, LiquidExpressionResult> castFn = 
-                objExpr => objExpr!=null? CreateCastFilter(objExpr.GetType(), expressions[0].SourceType).Apply(ctx, objExpr) : LiquidExpressionResult.Success(new None<IExpressionConstant>());
-            //Func<Option<IExpressionConstant>, LiquidExpressionResult> castFn = 
-                //objExpr => CreateCastFilter(objExpr.GetType(), expressions[0].SourceType).Apply(objExpr);
-
-            // put the casting filter in between the object and the chain
-//            return objExpression => objExpression.Bind(x => castFn(objExpression))
-//                                                 .Bind(CreateChain(expressions));      
-            // TODO: Figure out how to do this.  It should call ApplyNil() or something.
+                objExpr => objExpr!=null ? 
+                    CreateCastFilter(objExpr.GetType(), expressions[0].SourceType).Apply(ctx, objExpr) : 
+                    LiquidExpressionResult.Success(new None<IExpressionConstant>());
+     
             return optionExpression => (castFn(optionExpression.HasValue ? optionExpression.Value : null)).Bind(CreateChain(ctx, expressions));
-            //return optionExpression => optionExpression.HasValue ? castFn(optionExpression.Value) : LiquidExpressionResult.Success(new None<IExpressionConstant>()).Bind(CreateChain(expressions));
-
-            //return objExpression => objExpression.Bind(x => castFn(objExpression))
-            //    .Bind(CreateChain(expressions));    
 
         }
 
@@ -73,54 +62,11 @@ namespace Liquid.NET.Filters
                 {
                     return current;
                 }
-                LiquidExpressionResult result;
-                if (current.SuccessResult.HasValue)
-                {
-
-                    result = filter.Apply(ctx, current.SuccessResult.Value);
-                }
-                else
-                {
-                    result = filter.ApplyToNil(ctx);
-                }
-                return result;
-//                if (result.IsSuccess)
-//                {
-//                    return result.SuccessResult;
-//                }
-//                else
-//                {
-//                    //return new LiquidExpressionResult(result.ErrorResult));
-//                    //return current;                    
-//                    //return null;
-//                    //return result.ErrorResult;
-//                    return null;
-//                }
+                return current.SuccessResult.HasValue ? 
+                    filter.Apply(ctx, current.SuccessResult.Value) : 
+                    filter.ApplyToNil(ctx);
                 
             });
-                //LiquidExpressionResult.Error("Error");
-                // current.Bind(expression.Apply));
-                //return current.Bind(expression.Apply));
-                //return current.Bind(expression.Apply)
-//                if (current.HasValue)
-//                {
-//                    return expression.Apply(current.Value)
-//                    //var result=expression.Apply(current.Value);
-//                    //return result.Bind(result.IsSuccess ? x => expression.Apply(x) : x => result.ErrorResult);
-//                    //return current.Bind(result.IsSuccess ? result.SuccessResult : 
-//                }
-//                else
-//                {
-//                    var result=expression.ApplyToNil();
-//                    return result.IsSuccess ? result.SuccessResult :                     
-//                }
-
-            //throw new ApplicationException("Need to figure out how to redo this.");
-            //return exprConstant => filterExpressions.Aggregate(exprConstant, (current, expression) => current.Bind(expression.Apply));
-//            return exprConstant => filterExpressions.Aggregate(exprConstant, (current, expression) => 
-//                current.HasValue ? 
-//                    current.Bind(x => expression.Apply(x)) : 
-//                    current.Bind(x => expression.ApplyNil()));
         }
 
         /// <summary>

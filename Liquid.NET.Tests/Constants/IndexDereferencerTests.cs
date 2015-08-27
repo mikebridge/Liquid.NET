@@ -3,17 +3,13 @@ using System.Collections.Generic;
 
 using Liquid.NET.Constants;
 using Liquid.NET.Tests.Filters.Array;
-
 using NUnit.Framework;
 
-namespace Liquid.NET.Tests.Filters
+namespace Liquid.NET.Tests.Constants
 {
     [TestFixture]
-    [Ignore("TO DELETE when replaced with IndexDereferencer")]
-    public class LookupFilterTests
+    public class IndexDereferencerTests
     {
-        private static String LOOKUP = "lookup";
-
         [Test]
         [TestCase("3", "false")]
         [TestCase("4", "")]
@@ -30,19 +26,19 @@ namespace Liquid.NET.Tests.Filters
             TemplateContext ctx = new TemplateContext();
             var arrayValue = DataFixtures.CreateArrayValue();
             ctx.DefineLocalVariable("myarray", arrayValue);
-            String tmpl = "{{ myarray | " + LOOKUP + ": "+index+" }}";
+            String tmpl = "{{ myarray["+index+"] }}";
 
             // Act
             var result = RenderingHelper.RenderTemplate(tmpl, ctx);
 
             // Assert
             //var expected = ValueCaster.RenderAsString(arrayValue.ArrValue[3]);
-            Assert.That(result, Is.EqualTo(expected));          
+            Assert.That(result, Is.EqualTo(expected));
         }
 
         [Test]
         [TestCase("mydict.field1", "Property 1")]
-        [TestCase("mydict | lookup: \"field1\"", "Property 1")]
+        //[TestCase("mydict | lookup: \"field1\"", "Property 1")]
         [TestCase("mydict[\"field1\"]", "Property 1")]
         [TestCase("mydict[\"qwefqwefwef\"]", "")]
         public void It_Should_Look_Up_DictionaryValues(String liquid, String expected)
@@ -50,14 +46,15 @@ namespace Liquid.NET.Tests.Filters
             // Arrange
             TemplateContext ctx = new TemplateContext();
             var dictValue = DataFixtures.CreateDictionary(1, "Property 1", "prop2");
+
             ctx.DefineLocalVariable("mydict", dictValue);
-            String tmpl = "{{ "+liquid+" }}";
+            String tmpl = "{{ " + liquid + " }}";
 
             // Act
             var result = RenderingHelper.RenderTemplate(tmpl, ctx);
-
+            Console.WriteLine(result);
             // Assert
-            Assert.That(result, Is.EqualTo(expected));          
+            Assert.That(result, Is.EqualTo(expected));
         }
 
         [Test]
@@ -67,7 +64,7 @@ namespace Liquid.NET.Tests.Filters
         [TestCase("{% assign str = \"\" %}{{str[0]}}", "")]
         public void It_Should_Look_Up_StringValues(String input, String expected)
         {
-           
+
             // Act
             var result = RenderingHelper.RenderTemplate(input);
 
@@ -87,13 +84,13 @@ namespace Liquid.NET.Tests.Filters
             TemplateContext ctx = new TemplateContext();
             var arrayValue = DataFixtures.CreateArrayValue();
             ctx.DefineLocalVariable("myarray", arrayValue);
-            String tmpl = "{{ myarray."+property+" }}";
+            String tmpl = "{{ myarray." + property + " }}";
 
             // Act
             var result = RenderingHelper.RenderTemplate(tmpl, ctx);
 
             // Assert          
-            Assert.That(result, Is.EqualTo(expected));          
+            Assert.That(result, Is.EqualTo(expected));
         }
 
         [Test]
@@ -126,5 +123,6 @@ namespace Liquid.NET.Tests.Filters
             return new ArrayValue(objlist);
 
         }
+
     }
 }

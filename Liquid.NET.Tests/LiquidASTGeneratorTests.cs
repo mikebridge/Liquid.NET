@@ -28,8 +28,45 @@ namespace Liquid.NET.Tests
             Console.WriteLine("There are " + ast.RootNode.Children.Count+" Nodes");
             Console.WriteLine("It is " + ast.RootNode.Children[0].Data);
             Assert.That(liquidExpressions.Count(), Is.EqualTo(1));
+        }
+
+        [Test]
+        public void It_Should_Parse_An_Object_Expression_With_A_Variable()
+        {
+            // Arrange
+            LiquidASTGenerator generator = new LiquidASTGenerator();
+
+            // Act
+            LiquidAST ast = generator.Generate("Result : {{ a }}");
+
+            // Assert
+
+            var liquidExpressions = FindNodesWithType(ast, typeof(LiquidExpressionTree));
+            Console.WriteLine("There are " + ast.RootNode.Children.Count + " Nodes");
+            Assert.That(liquidExpressions.Count(), Is.EqualTo(1));
 
         }
+
+
+        [Test]
+        public void It_Should_Parse_An_Object_Expression_With_An_Propertied_Variable()
+        {
+            // Arrange
+            LiquidASTGenerator generator = new LiquidASTGenerator();
+
+            // Act
+            LiquidAST ast = generator.Generate("Result : {{ a.b }}");
+
+            // Assert
+
+            var liquidExpressions = FindNodesWithType(ast, typeof(LiquidExpressionTree));
+            Console.WriteLine("There are " + ast.RootNode.Children.Count + " Nodes");
+            Assert.That(liquidExpressions.Count(), Is.EqualTo(1));
+
+        }
+
+
+
         [Test]
         public void It_Should_Find_A_Filter()
         {

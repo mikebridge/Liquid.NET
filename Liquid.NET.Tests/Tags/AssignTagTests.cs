@@ -27,6 +27,21 @@ namespace Liquid.NET.Tests.Tags
         }
 
         [Test]
+        public void It_Should_Store_A_Boolean()
+        {
+            // Arrange
+            ITemplateContext ctx = new TemplateContext().WithDebuggingFilters();
+            var template = LiquidTemplate.Create("{% assign foo = false %}{{ foo | type_of}}");
+
+            // Act
+            String result = template.Render(ctx);
+
+            // Assert
+            Assert.That(result, Is.EqualTo("bool"));
+
+        }
+
+        [Test]
         public void It_Should_Assign_Null()
         {
             // Arrange

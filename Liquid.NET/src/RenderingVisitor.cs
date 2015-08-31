@@ -2,7 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-
+using System.Web.UI;
 using Liquid.NET.Constants;
 using Liquid.NET.Expressions;
 using Liquid.NET.Rendering;
@@ -172,6 +172,7 @@ namespace Liquid.NET
             if (cycleTag.GroupNameExpressionTree != null)
             {
                 LiquidError error = null;
+                // figure out the group name if any, otherwise use null.
                 LiquidExpressionEvaluator.Eval(cycleTag.GroupNameExpressionTree, _templateContext)
                     .WhenSuccess(x => groupName = x.HasValue ? ValueCaster.RenderAsString(x.Value) : null)
                     .WhenError(x => error = x);
@@ -188,7 +189,6 @@ namespace Liquid.NET
         /// <summary>
         /// Side effect: state is managed in the _counters dictionary.
         /// </summary>
-        /// <param name="cycleTag"></param>
         /// <returns></returns>
         private String GetNextCycleText(String groupName, CycleTag cycleTag)
         {
@@ -197,7 +197,22 @@ namespace Liquid.NET
             //var groupNameAsString = groupName== null ? "" : ValueCaster.RenderAsString(groupName);
             //Console.WriteLine("Evaluating " + groupName);
             //var key = "cycle_" + groupNameAsString + "_" + String.Join("|", cycleTag.CycleList.Select(x => x.Value.ToString()));
-            var key = "cycle_" + groupName + "_" + String.Join("|", cycleTag.CycleList.Select(x => x.Data.Expression.ToString()));
+
+            // Create a like dictionary key entry to keep track of this declaration.  THis takes the variable
+            // names (not the eval-ed variables) or literals and concatenates them together.
+            var key = "cycle_" + groupName + "_" + String.Join("|", cycleTag.CycleList.Select(x =>
+            {
+                var varresult = "";
+                varresult = x.Data.Expression.ToString();
+                return varresult;
+            }));
+            
+            
+//            var key = "cycle_" + (groupName ?? "NULL") + "_" + String.Join("|", cycleTag.CycleList.Select(x =>
+//            {
+//                x.
+//                return cycleResult;
+//            }));
 
             while (true)
             {
@@ -212,8 +227,9 @@ namespace Liquid.NET
             }
 
             String result = "";
-            LiquidExpressionEvaluator.Eval(cycleTag.ElementAt(currentIndex), _templateContext)
-                .WhenSuccess(x => result = ValueCaster.RenderAsString(LiquidExpressionEvaluator.Eval(cycleTag.ElementAt(currentIndex), _templateContext).SuccessResult.Value))
+            var currentElement = cycleTag.ElementAt(currentIndex);
+            LiquidExpressionEvaluator.Eval(currentElement, _templateContext)
+                .WhenSuccess(x => result = ValueCaster.RenderAsString(LiquidExpressionEvaluator.Eval(currentElement, _templateContext).SuccessResult.Value))
                 .WhenError(err => result = FormatErrors(new List<LiquidError> {err}));
 
             return result;

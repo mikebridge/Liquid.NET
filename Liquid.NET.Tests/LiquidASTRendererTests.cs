@@ -523,10 +523,11 @@ namespace Liquid.NET.Tests
 
             // Act
             String result = new LiquidASTRenderer().Render(templateContext, ast);
+
             // Act
 
             // Assert
-            Assert.That(result, Is.StringContaining("Unable to dereference"));
+            Assert.That(result, Is.StringContaining("cannot apply an index to a numeric."));
 
         }
 
@@ -566,13 +567,6 @@ namespace Liquid.NET.Tests
                 endfor
               %}";
 
-//            const string tmpl = @"{%
-//  for post in posts %}{%
-//    if post.title %}{{
-//      post.title }}{%
-//    endif %}{%
-//  endfor
-//%}";
             var ast = _generator.Generate(tmpl);
 
             // Act

@@ -21,13 +21,6 @@ namespace Liquid.NET.Constants
             _end = end;
         }
 
-        /// <summary>
-        /// TODO: what is the point of this again?
-        /// </summary>
-        /// <param name="symbolTableStack"></param>
-        /// <param name="expressions"></param>
-        /// <returns></returns>
-
         public override object Value
         {
             get { throw new NotImplementedException(); }
@@ -78,68 +71,6 @@ namespace Liquid.NET.Constants
         {
             return GetEnumerator();
         }
-        /*
-        private readonly IExpressionConstant _start;
-        private readonly IExpressionConstant _end;
-
-        // TODO: this should be a little more useful;
-//        public GeneratorValue(IExpressionConstant start, IExpressionConstant end)
-//        {
-//            _start = start;
-//            _end = end;
-//        }
-
-        public void Accept(IExpressionDescriptionVisitor expressionDescriptionVisitor)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override IExpressionConstant Eval(SymbolTableStack symbolTableStack, IEnumerable<IExpressionConstant> expressions)
-        {
-            // I think this needs two values...?
-            return this;
-            //throw new NotImplementedException("NEED TO CREATE A LIST BETWEEN THE TWO ARGS");
-            
-        }
-
-        public bool HasError
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        public string ErrorMessage
-        {
-            get { throw new NotImplementedException(); }
-            set { throw new NotImplementedException(); }
-        }
-
-        public bool HasWarning
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        public string WarningMessage
-        {
-            get { throw new NotImplementedException(); }
-            set { throw new NotImplementedException(); }
-        }
-
-        public override object Value
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        public override bool IsTrue
-        {
-            get { return true; }
-        }
-
-        public IEnumerator GetEnumerator()
-        {
-            throw new NotImplementedException();
-        }
-         * */
-
 
     }
 }

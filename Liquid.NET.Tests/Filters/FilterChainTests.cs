@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Management.Instrumentation;
@@ -72,25 +73,7 @@ namespace Liquid.NET.Tests.Filters
             ITemplateContext ctx = new TemplateContext().WithAllFilters();
             DictionaryValue dict = new DictionaryValue(new Dictionary<String, IExpressionConstant> { { "foo", new NumericValue(33) } });
             ctx.DefineLocalVariable("bar", dict);
-            //var template = LiquidTemplate.Create("{% assign x = 1 | plus: bar.foo %} 1 + {{ bar.foo }} = {{ x }}");
-            var template = LiquidTemplate.Create("{{ 1 | plus: bar.foo }}");
-
-            // Act
-            String result = template.Render(ctx);
-            Console.WriteLine(result);
-
-            // Assert
-            Assert.That(result, Is.EqualTo("2"));
-        }
-
-        [Test]
-        public void It_Should_Allow_A_Variable_With_Int_Index()
-        {
-            // Arrange
-            ITemplateContext ctx = new TemplateContext().WithAllFilters();
-            ArrayValue arr = new ArrayValue(new List<IExpressionConstant> { new NumericValue(33) });
-            ctx.DefineLocalVariable("bar", arr);
-            var template = LiquidTemplate.Create("{{ 1 | plus: bar[1] }}");
+            var template = LiquidTemplate.Create("{{ 1 | plus: bar.foo}}");
 
             // Act
             String result = template.Render(ctx);
@@ -100,6 +83,46 @@ namespace Liquid.NET.Tests.Filters
             Assert.That(result, Is.EqualTo("34"));
         }
 
+        [Test]
+        public void It_Should_Allow_A_Variable_With_Int_Index()
+        {
+            // Arrange
+            ITemplateContext ctx =
+                new TemplateContext().WithAllFilters();
+            ArrayValue arr = new ArrayValue(new List<IExpressionConstant> { new NumericValue(33) });
+            ctx.DefineLocalVariable("bar", arr);
+            var template = LiquidTemplate.Create("{{ 1 | plus: bar[0]  }}");
+
+            // Act
+            String result = template.Render(ctx);
+            Console.WriteLine(result);
+
+            // Assert
+            Assert.That(result, Is.EqualTo("34"));
+        }
+
+        [Test]
+        public void It_Should_Parse_Two_Filter_Arguments()
+        {
+            // Arrange
+            DictionaryValue dict = new DictionaryValue(new Dictionary<String, IExpressionConstant> { { "foo", new NumericValue(33)}, {"bar", new NumericValue(34) } });
+
+            ITemplateContext ctx =
+                new TemplateContext().WithAllFilters()
+                    .WithFilter<FilterFactoryTests.MockStringToStringFilter>("mockfilter")
+                    .DefineLocalVariable("bar", dict)
+                    .DefineLocalVariable("foo", dict);
+            ArrayValue arr = new ArrayValue(new List<IExpressionConstant> { new NumericValue(33) });
+            ctx.DefineLocalVariable("bar", arr);
+            var template = LiquidTemplate.Create("{{ 1 | mockfilter: bar.foo, foo.bar  }}");
+
+            // Act
+            String result = template.Render(ctx);
+            Console.WriteLine(result);
+
+            // Assert
+            Assert.That(result, Is.EqualTo("1 33 34"));
+        }
 
         [Test]
         public void It_Should_Allow_A_Variable()

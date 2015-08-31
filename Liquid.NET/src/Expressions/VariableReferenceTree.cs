@@ -24,8 +24,6 @@ namespace Liquid.NET.Expressions
 
         public LiquidExpressionResult Eval(ITemplateContext templateContext, IEnumerable<Option<IExpressionConstant>> childresults)
         {
-            Console.WriteLine("TODO: IMPLEMENT EVAL");
-            //return LiquidExpressionResult.Success(chil);
             return EvalExpression(templateContext, (dynamic) this, childresults);
             
         }
@@ -64,11 +62,13 @@ namespace Liquid.NET.Expressions
             }
             if (!valueResult.SuccessResult.HasValue)
             {
-                return LiquidExpressionResult.Error("ERROR: there is no value");
+                return LiquidExpressionResult.Success(new None<IExpressionConstant>());
+                //return LiquidExpressionResult.Error("ERROR: there is no value");
             }
             if (!indexResult.SuccessResult.HasValue)
             {
-                return LiquidExpressionResult.Error("ERROR: the index for "+valueResult.SuccessResult.Value+" has no value");
+                return LiquidExpressionResult.Success(new None<IExpressionConstant>());
+                //return LiquidExpressionResult.Error("ERROR: the index for "+valueResult.SuccessResult.Value+" has no value");
             }
             return new IndexDereferencer().Lookup(templateContext, valueResult.SuccessResult.Value, indexResult.SuccessResult.Value);
         }

@@ -130,19 +130,11 @@ namespace Liquid.NET.Tests.Filters
 
             public override LiquidExpressionResult Apply(ITemplateContext ctx, StringValue liquidStringExpression)
             {
-                throw new NotImplementedException();
+                return LiquidExpressionResult.Success(new StringValue(
+                    (liquidStringExpression == null ? "NULL" : liquidStringExpression.StringVal) +" " + 
+                    (StringArg1 == null ? "NULL" : StringArg1.StringVal) + " " +
+                    (StringArg2 == null ? "NULL" : StringArg2.StringVal)));
             }
-        }
-
-        private static FilterFactory CreateFilterFactory(FilterRegistry registry =null)
-        {
-            if (registry == null)
-            {
-                registry = new FilterRegistry();
-                registry.Register<UpCaseFilter>("upcase");
-                registry.Register<RemoveFilter>("remove");
-            }
-            return new FilterFactory(registry);
         }
 
 

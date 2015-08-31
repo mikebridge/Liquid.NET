@@ -95,7 +95,6 @@
     <Compile Include="Filters\Html\ImgTagFilterTests.cs" />
     <Compile Include="Filters\Html\ScriptTagFilterTests.cs" />
     <Compile Include="Filters\Html\StyleSheetTagFilterTests.cs" />
-    <Compile Include="Filters\LookupFilterTests.cs" />
     <Compile Include="Filters\Math\CeilFilterTests.cs" />
     <Compile Include="Filters\Math\DividedByFilterTests.cs" />
     <Compile Include="Filters\Math\FloorFilterTests.cs" />

@@ -79,6 +79,16 @@ namespace Liquid.NET.Expressions
 
         public IEnumerable<IExpressionConstant> Eval(ITemplateContext templateContext)
         {
+            if (_startExpression == null)
+            {
+                // this shouldn't happen
+                throw new Exception("The Generator start expression is null");
+            }
+            if (_endExpression == null)
+            {
+                // this shouldn't happen
+                throw new Exception("The Generator end expression is null");
+            }
             var startValue = ValueAsNumeric(_startExpression, templateContext);
             var endValue = ValueAsNumeric(_endExpression, templateContext);
             //Console.WriteLine("*** Generating sequence from "+ startValue.IntValue+ " to " +endValue.IntValue);

@@ -347,6 +347,7 @@ namespace Liquid.NET.Tests.Tags
         [Test]
         [TestCase("(dict.start .. dict.end)")]
         [TestCase("(dict.start..5)")]
+        [TestCase("(1..dict.end)")]
         public void It_Should_Iterate_Through_A_Generator_From_A_Dictionary(String generator)
         {
             // Arrange

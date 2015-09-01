@@ -71,7 +71,7 @@ namespace Liquid.NET.Symbols
         {
             if (this.HasLocalRegistryVariableReference(IncludeRenderer.LOCALREGISTRY_FILE_KEY))
             {
-                if (!obj.MetaData.ContainsKey("reassigned"))
+                if (obj != null && obj.MetaData!= null && !obj.MetaData.ContainsKey("reassigned"))
                 {
                     obj.MetaData.Add("reassigned", this.ReferenceLocalRegistryVariable(IncludeRenderer.LOCALREGISTRY_FILE_KEY));
                 }
@@ -82,7 +82,7 @@ namespace Liquid.NET.Symbols
         {
             if (this.HasLocalRegistryVariableReference(IncludeRenderer.LOCALREGISTRY_FILE_KEY))
             {
-                if (!obj.MetaData.ContainsKey("assigned"))
+                if (obj != null && obj.MetaData != null && !obj.MetaData.ContainsKey("assigned"))
                 {
                     obj.MetaData.Add("assigned", this.ReferenceLocalRegistryVariable(IncludeRenderer.LOCALREGISTRY_FILE_KEY));
                 }

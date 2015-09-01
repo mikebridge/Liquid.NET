@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Liquid.NET.Expressions;
+using Liquid.NET.Utils;
 
 namespace Liquid.NET.Symbols
 {
@@ -11,14 +12,15 @@ namespace Liquid.NET.Symbols
 
         public String RawArgs { get; set; }
 
-        public readonly List<IExpressionDescription> Args = new List<IExpressionDescription>();
+        //public readonly List<IExpressionDescription> Args = new List<IExpressionDescription>();
+        public readonly IList<TreeNode<LiquidExpression>> Args = new List<TreeNode<LiquidExpression>>();
 
         public FilterSymbol(String name)
         {
             Name = name;
         }
 
-        public void AddArg(IExpressionDescription obj)
+        public void AddArg(TreeNode<LiquidExpression> obj)
         {
             Args.Add(obj);
         }

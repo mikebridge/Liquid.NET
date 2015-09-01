@@ -21,7 +21,7 @@ namespace Liquid.NET.Expressions
 
         public void StartLiquidExpression(IExpressionDescription expressionDescription)
         {
-            //Console.WriteLine("LiquidExpressionBuilder >>> PUSH");
+            Console.WriteLine("LiquidExpressionBuilder >>> PUSH");
             LiquidExpression liquidExpression = new LiquidExpression { Expression = expressionDescription };
             var child = new TreeNode<LiquidExpression>(liquidExpression);
           
@@ -42,7 +42,8 @@ namespace Liquid.NET.Expressions
         {
             _lastExpression.Data.AddFilterSymbol(filter);
         }
-        public void AddFilterArgToLastExpressionsFilter(IExpressionDescription filterArg)
+
+        public void AddFilterArgToLastExpressionsFilter(TreeNode<LiquidExpression> filterArg)        
         {
             _lastExpression.Data.FilterSymbols.Last().AddArg(filterArg);
         }
@@ -51,11 +52,13 @@ namespace Liquid.NET.Expressions
         {
             _lastExpression.Data.FilterSymbols.Last().RawArgs = argstring;
         }
+
         public void AddFilterSymbolToCurrentExpression(FilterSymbol filter)
         {
             _liquidExpressionStack.Peek().Data.AddFilterSymbol(filter);
         }
-        public void AddFilterArgToCurrentExpressionsFilter(IExpressionDescription filterArg)
+
+        public void AddFilterArgToCurrentExpressionsFilter(TreeNode<LiquidExpression> filterArg)
         {
             _liquidExpressionStack.Peek().Data.FilterSymbols.Last().AddArg(filterArg);
         }
@@ -68,9 +71,9 @@ namespace Liquid.NET.Expressions
 
         public void EndLiquidExpression()
         {
-            //Console.WriteLine("LiquidExpressionBuilder >>> POP");
+            Console.WriteLine("LiquidExpressionBuilder >>> POP");
             _lastExpression = _liquidExpressionStack.Pop();
-            //Console.WriteLine("invoking end event...");
+            Console.WriteLine("invoking end event...");
             InvokeExpressionCompleteEvent(_lastExpression);
         }
 

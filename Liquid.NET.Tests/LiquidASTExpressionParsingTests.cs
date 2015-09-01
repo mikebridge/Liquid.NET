@@ -65,7 +65,7 @@ namespace Liquid.NET.Tests
             var predicateTree = ((IfThenElseBlockTag)ifThenSymbolNode.Data).IfElseClauses[0].LiquidExpressionTree;
 
             Assert.That(predicateTree.Data.Expression, Is.TypeOf<EqualsExpression>());
-            Assert.That(predicateTree[0].Data.Expression, Is.TypeOf<VariableReference>());
+            Assert.That(predicateTree[0].Data.Expression, Is.TypeOf<VariableReferenceTree>());
             Assert.That(predicateTree[1].Data.Expression, Is.TypeOf<StringValue>());
             //Assert.That(predicateTree[0].Data, Is.TypeOf<VariableReference>());
             //Assert.That(predicateTree[1].Data, Is.TypeOf<String>());
@@ -156,7 +156,7 @@ namespace Liquid.NET.Tests
             var ifThenElseSymbol = ((IfThenElseBlockTag)ifThenElseNode.Data);
 
             // Assert
-            Assert.That(ifThenElseSymbol.IfElseClauses[0].LiquidExpressionTree.Data.Expression, Is.TypeOf<VariableReference>());
+            Assert.That(ifThenElseSymbol.IfElseClauses[0].LiquidExpressionTree.Data.Expression, Is.TypeOf<VariableReferenceTree>());
 
         }
 
@@ -164,7 +164,7 @@ namespace Liquid.NET.Tests
         public void It_Should_Add_An_Int_Indexed_Array_Reference_In_An_Object()
         {
             // Act
-            var ast = _generator.Generate("Result : {{ myvar[0] }}");
+            var ast = _generator.Generate("Result : {{ myvar[3] }}");
 
             // Assert
             var liquidExpressionNode = LiquidASTGeneratorTests.FindNodesWithType(ast, typeof(LiquidExpressionTree)).FirstOrDefault();
@@ -174,8 +174,13 @@ namespace Liquid.NET.Tests
 
             // Assert
             Assert.That(liquidExpression.ExpressionTree.Data.Expression, Is.Not.Null);
-            Assert.That(liquidExpression.ExpressionTree.Data.Expression, Is.TypeOf<VariableReference>());
-            Assert.That(liquidExpression.ExpressionTree.Data.FilterSymbols[0].Name, Is.EqualTo("lookup"));
+            Assert.That(liquidExpression.ExpressionTree.Data.Expression, Is.TypeOf<VariableReferenceTree>());
+            VariableReferenceTree varRefTree = (VariableReferenceTree)liquidExpression.ExpressionTree.Data.Expression;
+            Assert.That(varRefTree.IndexExpression, Is.TypeOf<VariableReferenceTree>());
+            VariableReferenceTree indexVarRefTree = (VariableReferenceTree)varRefTree.IndexExpression;
+            Assert.That(indexVarRefTree.Value, Is.TypeOf<NumericValue>());
+            Assert.That(((NumericValue) indexVarRefTree.Value).IntValue, Is.EqualTo(3));
+
         }
 
         [Test]
@@ -192,8 +197,11 @@ namespace Liquid.NET.Tests
 
             // Assert
             Assert.That(liquidExpression.ExpressionTree.Data.Expression, Is.Not.Null);
-            Assert.That(liquidExpression.ExpressionTree.Data.Expression, Is.TypeOf<VariableReference>());
-            Assert.That(liquidExpression.ExpressionTree.Data.FilterSymbols[0].Args[0], Is.TypeOf<StringValue>());
+            Assert.That(liquidExpression.ExpressionTree.Data.Expression, Is.TypeOf<VariableReferenceTree>());
+            VariableReferenceTree varRefTree = (VariableReferenceTree) liquidExpression.ExpressionTree.Data.Expression;
+            Assert.That(varRefTree.IndexExpression, Is.TypeOf<VariableReferenceTree>());
+            VariableReferenceTree indexVarRefTree = (VariableReferenceTree)varRefTree.IndexExpression;
+            Assert.That(indexVarRefTree.Value, Is.TypeOf<StringValue>());
 
         }
 

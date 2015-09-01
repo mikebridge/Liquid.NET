@@ -27,16 +27,5 @@ namespace Liquid.NET.Tests.Symbols
 
         }
 
-        [Test]
-        public void It_Should_Initialize_The_Lookup_Filter()
-        {
-            // Act
-            var result = new TemplateContext().SymbolTableStack;
-
-            // Assert
-            Assert.That(result.HasFilter("lookup"));
-
-        }
-
     }
 }

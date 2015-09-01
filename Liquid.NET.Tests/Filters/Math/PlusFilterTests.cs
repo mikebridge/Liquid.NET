@@ -26,6 +26,8 @@ namespace Liquid.NET.Tests.Filters.Math
             Assert.That(result, Is.EqualTo("Result : 23"));
         }
 
+
+
         [Test]
         public void It_Should_Add_To_Null()
         {

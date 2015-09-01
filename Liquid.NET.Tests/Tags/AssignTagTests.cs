@@ -104,6 +104,17 @@ namespace Liquid.NET.Tests.Tags
         }
 
 
+        [Test]
+        public void It_Should_Keep_Accuracy_In_A_Filter()
+        {
+            // Arrange
+            var result = RenderingHelper.RenderTemplate("Result : {% assign x = 1 | plus: 12.0 %}{{ x }}");
+
+            // Assert
+            Assert.That(result, Is.EqualTo("Result : 13.0"));
+        }
+
+
         private ArrayValue CreateArrayValues()
         {
             var list = new List<IExpressionConstant>

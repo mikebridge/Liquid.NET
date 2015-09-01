@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 using Liquid.NET.Constants;
 using Liquid.NET.Tests.Helpers;
 using NUnit.Framework;
@@ -68,7 +66,7 @@ namespace Liquid.NET.Tests.Filters
             Console.WriteLine(result);
 
             // Assert
-            Assert.That(result, Is.StringContaining("{ \"assigned\" : \"test\""));
+            //Assert.That(result, Is.StringContaining("{ \"assigned\" : \"test\""));
             Assert.That(result, Is.StringContaining("{ \"reassigned\" : \"test2\""));
 
         }

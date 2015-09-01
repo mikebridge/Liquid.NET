@@ -63,6 +63,7 @@
     <Compile Include="Constants\EasyValueComparerTests.cs" />
     <Compile Include="Constants\ExpressionConstantTests.cs" />
     <Compile Include="Constants\GeneratorValueTests.cs" />
+    <Compile Include="Constants\IndexDereferencerTests.cs" />
     <Compile Include="Constants\NumericValueTests.cs" />
     <Compile Include="Constants\ReflectorTests.cs" />
     <Compile Include="Constants\StringValueTests.cs" />
@@ -94,7 +95,6 @@
     <Compile Include="Filters\Html\ImgTagFilterTests.cs" />
     <Compile Include="Filters\Html\ScriptTagFilterTests.cs" />
     <Compile Include="Filters\Html\StyleSheetTagFilterTests.cs" />
-    <Compile Include="Filters\LookupFilterTests.cs" />
     <Compile Include="Filters\Math\CeilFilterTests.cs" />
     <Compile Include="Filters\Math\DividedByFilterTests.cs" />
     <Compile Include="Filters\Math\FloorFilterTests.cs" />
@@ -182,6 +182,7 @@
     <Compile Include="Tags\UnlessBlockTagTests.cs" />
     <Compile Include="TemplateContextTests.cs" />
     <Compile Include="Utils\StrFTimeTests.cs" />
+    <Compile Include="VariableReferenceTreeBuilderTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Liquid.NET\Liquid.NET.csproj">

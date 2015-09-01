@@ -24,7 +24,8 @@ namespace Liquid.NET.Filters.Math
 
         public override LiquidExpressionResult ApplyToNil(ITemplateContext ctx)
         {
-            return MathHelper.GetReturnValue(-_operand.DecimalValue, new NumericValue(0), _operand);
+            var dec = _operand == null ? 0m : _operand.DecimalValue;
+            return MathHelper.GetReturnValue(- dec, new NumericValue(0), _operand);
         }
 
     }

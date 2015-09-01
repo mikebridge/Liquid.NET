@@ -68,17 +68,43 @@ namespace Liquid.NET.Expressions
 
     public class GeneratorCreator : IIterableCreator
     {
-        private readonly TreeNode<LiquidExpression> _startExpression;
-        private readonly TreeNode<LiquidExpression> _endExpression;
+        private TreeNode<LiquidExpression> _startExpression;
+        private TreeNode<LiquidExpression> _endExpression;
 
-        public GeneratorCreator(TreeNode<LiquidExpression> start, TreeNode<LiquidExpression> end)
+        public GeneratorCreator()
         {
-            _startExpression = start;
-            _endExpression = end;
+            
+        }
+//        public GeneratorCreator(TreeNode<LiquidExpression> start, TreeNode<LiquidExpression> end)
+//        {
+//            _startExpression = start;
+//            _endExpression = end;
+//        }
+
+        public TreeNode<LiquidExpression> StartExpression
+        {
+            get { return _startExpression; }
+            set { _startExpression = value; }
+        }
+
+        public TreeNode<LiquidExpression> EndExpression
+        {
+            get { return _endExpression; }
+            set { _endExpression = value; }
         }
 
         public IEnumerable<IExpressionConstant> Eval(ITemplateContext templateContext)
         {
+            if (_startExpression == null)
+            {
+                // this shouldn't happen
+                throw new Exception("The Generator start expression is null");
+            }
+            if (_endExpression == null)
+            {
+                // this shouldn't happen
+                throw new Exception("The Generator end expression is null");
+            }
             var startValue = ValueAsNumeric(_startExpression, templateContext);
             var endValue = ValueAsNumeric(_endExpression, templateContext);
             //Console.WriteLine("*** Generating sequence from "+ startValue.IntValue+ " to " +endValue.IntValue);

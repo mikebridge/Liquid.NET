@@ -55,6 +55,21 @@ namespace Liquid.NET.Tests.Tags
 
             // Assert
             Assert.That(result, Is.EqualTo("Result : TI SI EURT"));
+               
+        }
+
+        [Test]
+        public void It_Should_Parse_A_Custom_BlockTag_Along_With_A_Custom_Tag() 
+        {
+            // Act
+            var templateContext = new TemplateContext()
+                .WithAllFilters()
+                .WithCustomTagBlockRenderer<WordReverserBlockTag>("echoargs")
+                .WithCustomTagRenderer<CustomTagTests.EchoArgsTagRenderer>("echoargs2");
+            var result = RenderingHelper.RenderTemplate("Result : {% echoargs2 \"Test\" %}{% echoargs \"hello\" 123 true %}{% if true %}IT IS TRUE{% endif %}{% endechoargs %}", templateContext);
+
+            // Assert
+            Assert.That(result, Is.EqualTo("Result : TI SI EURT"));
 
         }
 

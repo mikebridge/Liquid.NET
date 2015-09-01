@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Policy;
 using Liquid.NET.Constants;
 using Liquid.NET.Tests.Ruby;
 using NUnit.Framework;
@@ -124,8 +123,25 @@ namespace Liquid.NET.Tests.Tags
             Assert.That(result, Is.EqualTo("Result : "));
         }
 
+        [Test]
+        public void It_Should_Allow_Variables_In_Args()
+        {
+            // Arrange
+            const string templateString = "Result : {%for i in array limit: x offset: y %}{{ i }}{%endfor%}";
+            TemplateContext ctx = new TemplateContext();
+            ctx.DefineLocalVariable("array", 
+                new ArrayValue(new List<int>{1,2,3,4,5,6,7,8,9}.Select(x => (IExpressionConstant) new NumericValue(2)).ToList())
+                );
+            ctx.DefineLocalVariable("x", new NumericValue(2));
+            ctx.DefineLocalVariable("y", new NumericValue(2));
+            var template = LiquidTemplate.Create(templateString);
 
+            // Act
+            String result = template.Render(ctx);
 
+            // Assert
+            Assert.That(result, Is.EqualTo("Result : 34"));
+        }
         [Test]
         public void It_Should_Not_Let_Local_Variable_Outside_Scope()
         {

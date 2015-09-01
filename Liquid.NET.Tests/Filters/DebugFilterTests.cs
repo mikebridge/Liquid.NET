@@ -66,7 +66,7 @@ namespace Liquid.NET.Tests.Filters
             Console.WriteLine(result);
 
             // Assert
-            Assert.That(result, Is.StringContaining("{ \"assigned\" : \"test\""));
+            //Assert.That(result, Is.StringContaining("{ \"assigned\" : \"test\""));
             Assert.That(result, Is.StringContaining("{ \"reassigned\" : \"test2\""));
 
         }

@@ -314,10 +314,7 @@ namespace Liquid.NET
         public override void ExitFor_tag(LiquidParser.For_tagContext forContext)
         {
             //Console.WriteLine("@@@ EXITING FOR TAG *" + forContext.GetText() + "*");
-            // TODO: I thik we need to pop the ForBlockstack in currentbuildercontext
-
-
-
+            
             base.ExitFor_tag(forContext);
             _astNodeStack.Pop(); // stop capturing the block inside the for tag.
 
@@ -346,11 +343,19 @@ namespace Liquid.NET
                 }
                 else if (context.for_param_limit().variable() != null)
                 {
-                    StartNewLiquidExpressionTree(x => forBlock.Limit = x);
+                    Console.WriteLine("Start Parsing for.limit Variable...");
+                    // Performing without an explicit "CLOSE"
+                    //LiquidExpression expr = new LiquidExpression();  // create the holding expression
+                    StartCapturingVariable(
+                        context.for_param_limit().variable(),
+                        x => forBlock.Limit = new TreeNode<LiquidExpression>(new LiquidExpression {Expression = x}));
+
+
+                    //StartNewLiquidExpressionTree(x => forBlock.Limit = x);
                     //zzz
-                    StartCapturingVariable(context.for_param_limit().variable());
+                    //StartCapturingVariable(context.for_param_limit().variable());
                     
-                    MarkCurrentExpressionComplete();
+                    //MarkCurrentExpressionComplete();
                 }
                 //forBlock.Limit = CreateIntNumericValueFromString(context.for_param_limit().NUMBER().ToString());
             }
@@ -363,11 +368,19 @@ namespace Liquid.NET
                 }
                 else if (context.for_param_offset().variable() != null)
                 {
-                    StartNewLiquidExpressionTree(x => forBlock.Offset = x);
-                    StartCapturingVariable(context.for_param_offset().variable());
-                    MarkCurrentExpressionComplete();
+                    StartCapturingVariable(
+                        context.for_param_offset().variable(),
+                        x => forBlock.Offset = new TreeNode<LiquidExpression>(new LiquidExpression { Expression = x }));
+                    //StartNewLiquidExpressionTree(x => forBlock.Offset = x);
+                    //StartCapturingVariable(context.for_param_offset().variable());
+                    //MarkCurrentExpressionComplete();
                 }
             }
+        }
+
+        public override void ExitFor_params(LiquidParser.For_paramsContext context)
+        {
+            base.ExitFor_params(context);
         }
 
         /// <summary>
@@ -388,14 +401,16 @@ namespace Liquid.NET
             else if (context.variable() != null)
             {
 
-                StartNewLiquidExpressionTree(result =>
-                {
-                    Console.WriteLine("   --- Setting ExpRESSION TREE TO " + result);
-                    forBlock.IterableCreator = new ArrayValueCreator(result);
-                    
-                });
-                StartCapturingVariable(context.variable()); // marked complete in ExitFor_iterable.
-      
+//                StartNewLiquidExpressionTree(result =>
+//                {
+//                    Console.WriteLine("   --- Setting ExpRESSION TREE TO " + result);
+//                    forBlock.IterableCreator = new ArrayValueCreator(result);
+//                    
+//                });
+                //StartCapturingVariable(context.variable()); // marked complete in ExitFor_iterable.
+                StartCapturingVariable(
+                    context.variable(),
+                    x => forBlock.IterableCreator = new ArrayValueCreator(new TreeNode<LiquidExpression>(new LiquidExpression { Expression = x })));
                 
             }
             else if (context.generator() != null)
@@ -618,6 +633,7 @@ namespace Liquid.NET
         {
             base.EnterCycle_tag(context);
             var cycleList = new List<TreeNode<LiquidExpression>>();
+            Stack<Action> varsToCapture = new Stack<Action>();
             foreach (var obj in context.cycle_value())
             {
                 if (obj.BOOLEAN() != null)
@@ -635,15 +651,26 @@ namespace Liquid.NET
                 }
                 if (obj.variable() != null)
                 {
-                    StartNewLiquidExpressionTree(x => cycleList.Add(x));
-                    StartCapturingVariable(obj.variable());  // marked complete in ExitCycle_tag
-                    //MarkCurrentExpressionComplete();
+                    Console.WriteLine("Start Parsing CycleTag.cycle_list Variable...");
+                    // Performing without an explicit "CLOSE"
+                    LiquidExpression expr = new LiquidExpression();  // create the holding expression
+                    cycleList.Add(new TreeNode<LiquidExpression>(expr)); // add the (currently empty) expression to the list of vals
+                    var obj1 = obj; // avoid weird closure issue
+                    varsToCapture.Push(() => // push onto a stack, later to be eval-ed in reverse order.
+                        StartCapturingVariable(
+                            obj1.variable(),
+                            x => expr.Expression = x));
                 }
                 if (obj.NULL() != null)
                 {
                     throw new Exception("Null not implemented yet");
                     //cycleList.Add(CreateObjectSimpleExpressionNode());
                 }   
+            }
+            while (varsToCapture.Count > 0) // eval the queued variable captures.
+            {
+                var fn = varsToCapture.Pop();
+                fn();
             }
             var cycleTag = new CycleTag
             {                     
@@ -664,6 +691,7 @@ namespace Liquid.NET
                 }
                 if (context.cycle_group().variable() != null)
                 {
+                    Console.WriteLine("Start Parsing CycleTag.cycle_group Variable...");
                     StartNewLiquidExpressionTree(x => cycleTag.GroupNameExpressionTree = x);
                     StartCapturingVariable(context.cycle_group().variable()); // marked complete in ExitCycle_Tag
                     
@@ -675,20 +703,20 @@ namespace Liquid.NET
 
         public override void ExitCycle_tag(LiquidParser.Cycle_tagContext context)
         {
-            base.ExitCycle_tag(context);
-            foreach (var obj in context.cycle_value())
-            {
-                if (obj.variable() != null)
-                {
-                    StopCapturingVariable(obj.variable());
-                }
-            }
-
-            if (context.cycle_group() != null  && context.cycle_group().variable() != null)
-            {                
-                // MarkCurrentExpressionComplete();
-                StopCapturingVariable(context.cycle_group().variable());
-            }
+//            base.ExitCycle_tag(context);
+//            foreach (var obj in context.cycle_value())
+//            {
+//                if (obj.variable() != null)
+//                {
+//                    StopCapturingVariable(obj.variable());
+//                }
+//            }
+//
+//            if (context.cycle_group() != null  && context.cycle_group().variable() != null)
+//            {                
+//                // MarkCurrentExpressionComplete();
+//                StopCapturingVariable(context.cycle_group().variable());
+//            }
         }
       
 
@@ -1411,21 +1439,17 @@ namespace Liquid.NET
         public override void EnterComparisonExpr(LiquidParser.ComparisonExprContext comparisonContext)
         {
             base.EnterComparisonExpr(comparisonContext);
-            //Console.WriteLine(" === creating COMPARISON expression >" + comparisonContext.GetText() + "<");
 
             if (comparisonContext.EQ() != null)
             {
-                //Console.WriteLine(" +++ EQUALS");
                 AddExpressionToCurrentExpressionBuilder(new EqualsExpression());
             }
             else if (comparisonContext.GT() != null)
             {
-                //Console.WriteLine(" +++ GT");
                 AddExpressionToCurrentExpressionBuilder(new GreaterThanExpression());
             }
             else if (comparisonContext.LT() != null)
             {
-                //Console.WriteLine(" +++ LT");
                 AddExpressionToCurrentExpressionBuilder(new LessThanExpression());
             }
             else if (comparisonContext.LTE() != null)
@@ -1438,7 +1462,6 @@ namespace Liquid.NET
             } 
             else if (comparisonContext.NEQ() != null)
             {
-                //Console.WriteLine(" +++ NOT");
                 AddExpressionToCurrentExpressionBuilder(new NotEqualsExpression());
             }
             else
@@ -1786,7 +1809,8 @@ namespace Liquid.NET
         public override void ExitVariableFilterArg(LiquidParser.VariableFilterArgContext context)
         {
             base.ExitVariableFilterArg(context);
-            CurrentBuilderContext.VarReferenceTreeBuilder.Peek().NotifyListenersOfConstructedVariable();
+            //CurrentBuilderContext.VarReferenceTreeBuilder.Peek().NotifyListenersOfConstructedVariable();
+            CurrentBuilderContext.VarReferenceTreeBuilder.Peek().EndVariable();
             CurrentBuilderContext.VarReferenceTreeBuilder.Pop();
         }
 
@@ -1818,18 +1842,18 @@ namespace Liquid.NET
         }
 
         #region Variables
+
         /// <summary>
         /// Start capturing the tree of variable references and indices, transforming them as Antlr descends the
         /// tree into a tree of LiquidExpressions.  Each LiquidExpression is a VariableReference + a potential set of filters
         /// to index it.  (The indices may contain nested LiquidExpressions, hence the tree).
-        /// 
-        /// The result will be at CurrentBuilderContext.LiquidExpressionBuilder.ConstructedLiquidExpressionTree.
         /// </summary>
-        /// <param name="variableContext"></param>
-        private void StartCapturingVariable(LiquidParser.VariableContext variableContext)
+        private void StartCapturingVariable(
+            LiquidParser.VariableContext variableContext, 
+            Action<IExpressionDescription> onComplete = null)
         {
             // Create a new variable and put it on the stack.
-            Console.WriteLine("StartCapturingVariable: LISTENING FOR VARIABLE CREATION "+variableContext.GetText());
+            Console.WriteLine(" ===> StartCapturingVariable: LISTENING FOR VARIABLE CREATION "+variableContext.GetText());
 
             var variableReferenceTreeBuilder = new VariableReferenceTreeBuilder();
             CurrentBuilderContext.VarReferenceTreeBuilder.Push(variableReferenceTreeBuilder);
@@ -1837,16 +1861,24 @@ namespace Liquid.NET
                 x =>
                 {
                     Console.WriteLine("VariableReferenceTree is Complete: "+variableContext.GetText());
-                    AddExpressionToCurrentExpressionBuilder(x);
-                    MarkCurrentExpressionComplete();
+                    //AddExpressionToCurrentExpressionBuilder(x);
+                    //MarkCurrentExpressionComplete();
+                    if (onComplete != null)
+                    {
+                        Console.WriteLine("OoO Calling OnCOmplete");
+                        onComplete(x);
+                    }
+                    CurrentBuilderContext.VarReferenceTreeBuilder.Pop();
                 };
         }
 
+        [Obsolete("Just use StartCapturingVariable with a callback")]
         private void StopCapturingVariable(LiquidParser.VariableContext variableContext)
         {
-            Console.WriteLine("StopCapturingVariable: LISTENING FOR VARIABLE CREATION " + variableContext.GetText());
-            CurrentBuilderContext.VarReferenceTreeBuilder.Peek().NotifyListenersOfConstructedVariable();
-            CurrentBuilderContext.VarReferenceTreeBuilder.Pop();
+            Console.WriteLine(" ===> StopCapturingVariable: STOP CAPTURING VARIABLE " + variableContext.GetText());
+            //CurrentBuilderContext.VarReferenceTreeBuilder.Peek().NotifyListenersOfConstructedVariable();
+            //CurrentBuilderContext.VarReferenceTreeBuilder.Peek().EndVariable();
+            //CurrentBuilderContext.VarReferenceTreeBuilder.Pop();
 
         }
 
@@ -1871,8 +1903,8 @@ namespace Liquid.NET
             //CurrentBuilderContext.VariableReferenceStack.Pop();
             base.ExitVariableObject(context);
 
-            CurrentBuilderContext.VarReferenceTreeBuilder.Peek().NotifyListenersOfConstructedVariable();
-            
+            //CurrentBuilderContext.VarReferenceTreeBuilder.Peek().NotifyListenersOfConstructedVariable();
+            //CurrentBuilderContext.VarReferenceTreeBuilder.Peek().EndVariable();
             CurrentBuilderContext.VarReferenceTreeBuilder.Pop();
             //MarkCurrentExpressionComplete();
         }
@@ -2109,6 +2141,7 @@ namespace Liquid.NET
             public void EndVariable()
             {
                 Console.WriteLine("# VariableReferenceTreeBuilder.EndVariable()");
+                InvokeVariableReferenceTreeCompleteEvent(Result);
             }
 
             /// <summary>
@@ -2193,24 +2226,18 @@ namespace Liquid.NET
                 get { return _root; }
             }
 
-            public void InvokeVariableReferenceTreeCompleteEvent(VariableReferenceTree variableReferenceTree)
+            private void InvokeVariableReferenceTreeCompleteEvent(VariableReferenceTree variableReferenceTree)
             {
                 OnVariableReferenceTreeCompleteEventHandler handler = VariableReferenceTreeCompleteEvent;
                 if (handler != null)
                 {
-                    Console.WriteLine("-_-_ Notifying variable complete");
+                    Console.WriteLine("-_-_ InvokeVariableReferenceTreeCompleteEvent: Notifying variable complete");
                     handler(variableReferenceTree);
                 }
                 else
                 {
                     Console.WriteLine("*** WARNING: No one to notify about variable.");
                 }
-            }
-
-
-            public void NotifyListenersOfConstructedVariable()
-            {
-                InvokeVariableReferenceTreeCompleteEvent(this.Result);
             }
         }
     }

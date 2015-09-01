@@ -122,6 +122,26 @@ namespace Liquid.NET.Tests.Tags
         }
 
         [Test]
+        public void It_Should_Allow_A_Var_In_Cycle_Group()
+        {
+            TemplateContext ctx = new TemplateContext();
+            ctx.DefineLocalVariable("var1", new StringValue("ONE"));
+            ctx.DefineLocalVariable("var2", new ArrayValue(new List<IExpressionConstant> { new StringValue("TWO") }));
+            ctx.DefineLocalVariable("var3", new BooleanValue(false));
+            ctx.DefineLocalVariable("var4", new NumericValue(9));
+
+            var template = LiquidTemplate.Create("Result : {% for item in (1..4) %}{% cycle var1: \"ONE\", var2[0], var3, var4 %}{% endfor %}");
+
+            // Act
+            String result = template.Render(ctx);
+
+            // Assert
+            Assert.That(result.TrimEnd(), Is.EqualTo("Result : ONETWOfalse9"));
+
+        }
+
+
+        [Test]
         [TestCase(@"{%cycle var1: ""one"", ""two"" %} {%cycle var2: ""one"", ""two"" %} {%cycle var1: ""one"", ""two"" %} {%cycle var2: ""one"", ""two"" %} {%cycle var1: ""one"", ""two"" %} {%cycle var2: ""one"", ""two"" %}", @"{""var1"":1,""var2"":2}", @"one one two two one one")]
         [TestCase(@"{%cycle 1,2%} {%cycle 1,2%} {%cycle 1,2%} {%cycle 1,2,3%} {%cycle 1,2,3%} {%cycle 1,2,3%} {%cycle 1,2,3%}", @"{}", @"1 2 1 1 2 3 1")]
         [TestCase(@"{%cycle 1: ""one"", ""two"" %} {%cycle 2: ""one"", ""two"" %} {%cycle 1: ""one"", ""two"" %} {%cycle 2: ""one"", ""two"" %} {%cycle 1: ""one"", ""two"" %} {%cycle 2: ""one"", ""two"" %}", @"{}", @"one one two two one one")]

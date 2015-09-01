@@ -105,15 +105,15 @@ namespace Liquid.NET.Tests.Filters
         public void It_Should_Parse_Two_Filter_Arguments()
         {
             // Arrange
-            DictionaryValue dict = new DictionaryValue(new Dictionary<String, IExpressionConstant> { { "foo", new NumericValue(33)}, {"bar", new NumericValue(34) } });
+            DictionaryValue dict = new DictionaryValue(new Dictionary<String, IExpressionConstant> { { "foo", new NumericValue(22)}, {"bar", new NumericValue(23) } });
 
             ITemplateContext ctx =
                 new TemplateContext().WithAllFilters()
                     .WithFilter<FilterFactoryTests.MockStringToStringFilter>("mockfilter")
                     .DefineLocalVariable("bar", dict)
                     .DefineLocalVariable("foo", dict);
-            ArrayValue arr = new ArrayValue(new List<IExpressionConstant> { new NumericValue(33) });
-            ctx.DefineLocalVariable("bar", arr);
+            //ArrayValue arr = new ArrayValue(new List<IExpressionConstant> { new NumericValue(33) });
+            //ctx.DefineLocalVariable("bar", arr);
             var template = LiquidTemplate.Create("{{ 1 | mockfilter: bar.foo, foo.bar  }}");
 
             // Act
@@ -121,8 +121,34 @@ namespace Liquid.NET.Tests.Filters
             Console.WriteLine(result);
 
             // Assert
-            Assert.That(result, Is.EqualTo("1 33 34"));
+            Assert.That(result, Is.EqualTo("1 22 23"));
         }
+
+        [Test]
+        [TestCase("{{ 1 | mockfilter: bar.foo, 'X' }}", "1 22 X")]
+        [TestCase("{{ 1 | mockfilter: 'X', bar.foo }}", "1 X 22")]
+        public void It_Should_Parse_A_Variable_And_A_Value(String liquid, String expected)
+        {
+            // Arrange
+            DictionaryValue dict = new DictionaryValue(new Dictionary<String, IExpressionConstant> { { "foo", new NumericValue(22) }, { "bar", new NumericValue(23) } });
+
+            ITemplateContext ctx =
+                new TemplateContext().WithAllFilters()
+                    .WithFilter<FilterFactoryTests.MockStringToStringFilter>("mockfilter")
+                    .DefineLocalVariable("bar", dict)
+                    .DefineLocalVariable("foo", dict);
+            //ArrayValue arr = new ArrayValue(new List<IExpressionConstant> { new NumericValue(33) });
+            //ctx.DefineLocalVariable("bar", arr);
+            var template = LiquidTemplate.Create(liquid);
+
+            // Act
+            String result = template.Render(ctx);
+            Console.WriteLine(result);
+
+            // Assert
+            Assert.That(result, Is.EqualTo(expected));
+        }
+
 
         [Test]
         public void It_Should_Allow_A_Variable()

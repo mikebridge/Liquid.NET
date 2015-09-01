@@ -130,7 +130,7 @@ namespace Liquid.NET.Tests.Tags
             const string templateString = "Result : {%for i in array limit: x offset: y %}{{ i }}{%endfor%}";
             TemplateContext ctx = new TemplateContext();
             ctx.DefineLocalVariable("array", 
-                new ArrayValue(new List<int>{1,2,3,4,5,6,7,8,9}.Select(x => (IExpressionConstant) new NumericValue(2)).ToList())
+                new ArrayValue(new List<int>{1,2,3,4,5,6,7,8,9}.Select(x => (IExpressionConstant) new NumericValue(x)).ToList())
                 );
             ctx.DefineLocalVariable("x", new NumericValue(2));
             ctx.DefineLocalVariable("y", new NumericValue(2));
@@ -142,6 +142,7 @@ namespace Liquid.NET.Tests.Tags
             // Assert
             Assert.That(result, Is.EqualTo("Result : 34"));
         }
+
         [Test]
         public void It_Should_Not_Let_Local_Variable_Outside_Scope()
         {

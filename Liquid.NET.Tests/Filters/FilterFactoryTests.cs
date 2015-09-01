@@ -122,9 +122,9 @@ namespace Liquid.NET.Tests.Filters
 
             public String MESSAGE = "The object was {0}, parm1 was {1} and parm2 was {2}.";
 
-            public MockStringToStringFilter(StringValue stringLiteral, StringValue stringLiteral2)
+            public MockStringToStringFilter(StringValue stringLiteral1, StringValue stringLiteral2)
             {
-                StringArg1 = stringLiteral;
+                StringArg1 = stringLiteral1;
                 StringArg2 = stringLiteral2;
             }
 

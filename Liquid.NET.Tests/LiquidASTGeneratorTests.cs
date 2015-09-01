@@ -262,6 +262,7 @@ namespace Liquid.NET.Tests
             //Assert.That(liquidExpressions.Count(), Is.EqualTo(1));
             //Assert.That(generator.GetNonEmptyStackErrors(), Is.Empty);
             Assert.That(liquidExpressions.Count(), Is.EqualTo(1));
+            //String result = VariableReferenceTreeBuilderTests.VariableReferenceTreePrinter.Print(liquidExpressions);
         }
 
 

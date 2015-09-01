@@ -1595,11 +1595,11 @@ namespace Liquid.NET
         /// <param name="context"></param>
         public override void EnterOutputmarkup(LiquidParser.OutputmarkupContext context)
         {
-            Console.WriteLine("->-ENTERING OUTPUT MARKUP ");
+            Console.WriteLine("->-ENTERING OUTPUT MARKUP "+context.GetText());
             base.EnterOutputmarkup(context);
             StartNewLiquidExpressionTree(result =>
             {
-                Console.WriteLine("Adding Output Markup Tree Node");
+                Console.WriteLine("Adding Output Markup Tree Node "+context.GetText());
                 Console.WriteLine(result);                
                 CurrentAstNode.AddChild(CreateTreeNode<IASTNode>(new LiquidExpressionTree(result)));
 
@@ -1793,34 +1793,36 @@ namespace Liquid.NET
             base.EnterVariableObject(context);
             Console.WriteLine("<><> ENTER VariableObject " + context.GetText());
 
-//            StartCapturingVariable(
-//                context.variable(),
-//                x => forBlock.Limit = new TreeNode<LiquidExpression>(new LiquidExpression { Expression = x }));
-
-//            StartCapturingVariable(
-//                context.variable(),
-//                x =>
-//                {
-//                    AddExpressionToCurrentExpressionBuilder(x);
-//                    //AddExpressionToCurrentExpressionBuilder(x);
-//                    //MarkCurrentExpressionComplete();
-//                });
-
             var variableReferenceTreeBuilder = new VariableReferenceTreeBuilder();
             CurrentBuilderContext.VarReferenceTreeBuilder.Push(variableReferenceTreeBuilder);
-            variableReferenceTreeBuilder.VariableReferenceTreeCompleteEvent +=
+            StartCapturingVariable(
+                context.variable(),
                 x =>
                 {
                     AddExpressionToCurrentExpressionBuilder(x);
                     MarkCurrentExpressionComplete();
-                };
+                });
+
+            // OK
+//            var variableReferenceTreeBuilder = new VariableReferenceTreeBuilder();
+//            CurrentBuilderContext.VarReferenceTreeBuilder.Push(variableReferenceTreeBuilder);
+//            variableReferenceTreeBuilder.VariableReferenceTreeCompleteEvent +=
+//                x =>
+//                {
+//                    AddExpressionToCurrentExpressionBuilder(x);
+//                    MarkCurrentExpressionComplete();
+//                };
+            // END OK
         }
 
         public override void ExitVariableObject(LiquidParser.VariableObjectContext context)
         {
-//            Console.WriteLine("<><> EXIT VariableObject  " + context.GetText());
+            Console.WriteLine("<><> EXIT VariableObject  " + context.GetText());
 //            base.ExitVariableObject(context);
+
             CurrentBuilderContext.VarReferenceTreeBuilder.Pop();
+
+            // OK CurrentBuilderContext.VarReferenceTreeBuilder.Pop();
 
         }
 

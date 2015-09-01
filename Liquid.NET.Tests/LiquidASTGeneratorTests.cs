@@ -242,14 +242,17 @@ namespace Liquid.NET.Tests
         }
 
         [Test]
-        public void It_Should_Parse_An_Indexed_Object_Reference()
+        [TestCase("{{ a[b[c[d][e]][f][g[h]]] }}")]
+        [TestCase("{{ a[b][c] }}")]
+        [TestCase("{{ a[b] }}")]
+        public void It_Should_Parse_An_Indexed_Object_Reference(String tmpl)
         {
             // Arrange
             LiquidASTGenerator generator = new LiquidASTGenerator();
 
             // Act
             //LiquidAST ast = generator.Generate("Result : {{ a[12][b[\"test\"][c.d.e[1]]] }}");
-            LiquidAST ast = generator.Generate("Result : {{ a[b[c[d][e]][f][g[h]]] }}");
+            LiquidAST ast = generator.Generate("Result : "+ tmpl);
 
             // Assert
 

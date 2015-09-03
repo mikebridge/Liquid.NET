@@ -67,11 +67,11 @@ namespace Liquid.NET.Tests.Ruby
             //var val = obj.Value;
             if (obj.Type.Equals(JTokenType.Integer)) 
             {
-                return new NumericValue(obj.ToObject<int>());
+                return NumericValue.Create(obj.ToObject<int>());
             } 
             else if (obj.Type.Equals(JTokenType.Float))
             {
-                return new NumericValue(obj.ToObject<decimal>());
+                return NumericValue.Create(obj.ToObject<decimal>());
             }
             else if (obj.Type.Equals(JTokenType.String))
             {

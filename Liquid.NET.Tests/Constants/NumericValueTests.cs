@@ -14,7 +14,7 @@ namespace Liquid.NET.Tests.Constants
         public void It_Should_Evaluate_To_Itself()
         {
             // Arrange
-            var number = new NumericValue(123m);
+            var number = NumericValue.Create(123m);
 
             // Act
             var result = number.Eval(new TemplateContext(), new List<Option<IExpressionConstant>>()).SuccessValue<NumericValue>();
@@ -35,7 +35,7 @@ namespace Liquid.NET.Tests.Constants
         public void It_Should_Round_A_Decimal_To_Nearest_Int(decimal input, int expected)
         {
             // Arrange
-            var number = new NumericValue(input);
+            var number = NumericValue.Create(input);
 
             // Assert
             Assert.That(number.IntValue, Is.EqualTo(expected));
@@ -70,10 +70,10 @@ namespace Liquid.NET.Tests.Constants
         {
 
             // Assert
-            Assert.That(new NumericValue(123.0m).IsInt, Is.False);
+            Assert.That(NumericValue.Create(123.0m).IsInt, Is.False);
 
             // Assert
-            Assert.That( new NumericValue(123).IsInt, Is.True);
+            Assert.That( NumericValue.Create(123).IsInt, Is.True);
 
 
         }

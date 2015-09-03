@@ -87,7 +87,7 @@ namespace Liquid.NET.Tests.Expressions
             IList<IExpressionConstant> objlist = new List<IExpressionConstant>
             {
                 new StringValue("1"), 
-                new NumericValue(2), 
+                NumericValue.Create(2), 
                 new StringValue("Three"),
                 new BooleanValue(true)
             };
@@ -101,7 +101,7 @@ namespace Liquid.NET.Tests.Expressions
                 new Dictionary<string, IExpressionConstant>
                 {
                     {"one",  new StringValue("1")},
-                    {"two", new NumericValue(2)},
+                    {"two", NumericValue.Create(2)},
                     {"three", new StringValue("Three")},
                     {"four", new BooleanValue(true)}
 

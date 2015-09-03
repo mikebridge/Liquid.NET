@@ -90,7 +90,7 @@ namespace Liquid.NET.Tests.Tags
             ctx.DefineLocalVariable("var1", new StringValue("ONE"));
             ctx.DefineLocalVariable("var2", new StringValue("TWO"));
             ctx.DefineLocalVariable("var3", new BooleanValue(false));
-            ctx.DefineLocalVariable("var4", new NumericValue(9));
+            ctx.DefineLocalVariable("var4", NumericValue.Create(9));
 
             var template = LiquidTemplate.Create("Result : {% for item in (1..4) %}{% cycle var1, var2, var3, var4 %}{% endfor %}");
 
@@ -109,7 +109,7 @@ namespace Liquid.NET.Tests.Tags
             ctx.DefineLocalVariable("var1", new StringValue("ONE"));
             ctx.DefineLocalVariable("var2", new ArrayValue(new List<IExpressionConstant> {new StringValue("TWO")}));
             ctx.DefineLocalVariable("var3", new BooleanValue(false));
-            ctx.DefineLocalVariable("var4", new NumericValue(9));
+            ctx.DefineLocalVariable("var4", NumericValue.Create(9));
 
             var template = LiquidTemplate.Create("Result : {% for item in (1..4) %}{% cycle \"ONE\", var2[0], var3, var4 %}{% endfor %}");
 
@@ -128,7 +128,7 @@ namespace Liquid.NET.Tests.Tags
             ctx.DefineLocalVariable("var1", new StringValue("ONE"));
             ctx.DefineLocalVariable("var2", new ArrayValue(new List<IExpressionConstant> { new StringValue("TWO") }));
             ctx.DefineLocalVariable("var3", new BooleanValue(false));
-            ctx.DefineLocalVariable("var4", new NumericValue(9));
+            ctx.DefineLocalVariable("var4", NumericValue.Create(9));
 
             var template = LiquidTemplate.Create("Result : {% for item in (1..4) %}{% cycle var1: \"ONE\", var2[0], var3, var4 %}{% endfor %}");
 
@@ -171,8 +171,8 @@ namespace Liquid.NET.Tests.Tags
             var list = new List<IExpressionConstant>
             {
                 new StringValue("a string"),
-                new NumericValue(123),
-                new NumericValue(456m),
+                NumericValue.Create(123),
+                NumericValue.Create(456m),
                 new BooleanValue(false)
             };
             return new ArrayValue(list);

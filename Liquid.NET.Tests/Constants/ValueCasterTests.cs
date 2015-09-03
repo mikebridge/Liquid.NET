@@ -16,7 +16,7 @@ namespace Liquid.NET.Tests.Constants
         public void It_Should_Cast_A_Number_To_A_String()
         {
             // Arrange
-            var num = new NumericValue(123.45m);
+            var num = NumericValue.Create(123.45m);
 
             // Act
             var stringliteral = ValueCaster.Cast<NumericValue, StringValue>(num)
@@ -32,7 +32,7 @@ namespace Liquid.NET.Tests.Constants
         public void It_Can_Cast_With_Generics()
         {
             // Arrange
-            var num = new NumericValue(123.45m);
+            var num = NumericValue.Create(123.45m);
 
             // Act
             var stringliteral = ValueCaster.Cast<NumericValue, StringValue>(num)
@@ -48,7 +48,7 @@ namespace Liquid.NET.Tests.Constants
         public void It_Can_Cast_With_Generics_Via_Reflection()
         {
             // Arrange
-            var num = new NumericValue(123.45m);
+            var num = NumericValue.Create(123.45m);
 
             // Act
             MethodInfo method = typeof(ValueCaster).GetMethod("Cast");
@@ -97,7 +97,7 @@ namespace Liquid.NET.Tests.Constants
         public void It_Should_Return_The_Same_Object_If_Src_And_Dest_Are_The_Same()
         {
             // Arrange
-            var original = new ArrayValue(new List<IExpressionConstant>{new NumericValue(123.4m), new NumericValue(5)});
+            var original = new ArrayValue(new List<IExpressionConstant>{NumericValue.Create(123.4m), NumericValue.Create(5)});
 
             // Act
             var result = ValueCaster.Cast<ArrayValue, ArrayValue>(original).SuccessValue<ArrayValue>();
@@ -110,7 +110,7 @@ namespace Liquid.NET.Tests.Constants
         public void It_Should_Return_The_Same_Object_If_Dest_Is_An_ExpressionConstant()
         {
             // Arrange
-            var original = new ArrayValue(new List<IExpressionConstant> { new NumericValue(123.4m), new NumericValue(5) });
+            var original = new ArrayValue(new List<IExpressionConstant> { NumericValue.Create(123.4m), NumericValue.Create(5) });
 
             // Act
             var result = ValueCaster.Cast<ArrayValue, ExpressionConstant>(original).SuccessValue<ArrayValue>();

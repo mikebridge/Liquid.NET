@@ -29,7 +29,7 @@ namespace Liquid.NET.Filters.Strings
             }
             if (_length == null)
             {
-                _length = new NumericValue(15);
+                _length = NumericValue.Create(15);
             }
             var words = s.Split(new [] {' ', '\t'}, StringSplitOptions.RemoveEmptyEntries);
             if (words.Length <= _length.IntValue)

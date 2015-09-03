@@ -1,12 +1,55 @@
 ﻿using System;
-
+using System.Dynamic;
+using System.Numerics;
 using Liquid.NET.Expressions;
 using Liquid.NET.Utils;
 
 namespace Liquid.NET.Constants
 {
-    public class NumericValue: ExpressionConstant
+    internal class NumericValue<T> : NumericValue
     {
+        private readonly T _value;
+
+        internal NumericValue(T value)
+        {
+            _value = value;
+        }
+    }
+
+    public abstract class NumericValue: ExpressionConstant
+    {
+        public static NumericValue Create(int val)
+        {
+            return new NumericValue<int>(val);
+        }
+
+        public static NumericValue Create(long val)
+        {
+            return new NumericValue<long>(val);
+        }
+
+        public static NumericValue Create(BigInteger val)
+        {
+            return new NumericValue<BigInteger>(val);
+        }
+
+        public static NumericValue Create(decimal val)
+        {
+            return new NumericValue<decimal>(val);
+        }
+//
+//        protected NumericValue(int val)
+//        {
+//            _val = val;
+//            IsInt = true;
+//        }
+//
+//        protected NumericValue(decimal val)
+//        {
+//            _val = val;
+//            IsInt = false;
+//        }
+
         private readonly Decimal _val;
 
         public override Object Value { get { return _val; } }
@@ -37,17 +80,6 @@ namespace Liquid.NET.Constants
             }
         }
 
-        public NumericValue(decimal val)
-        {
-            _val = val;
-            IsInt = false;
-        }
-
-        public NumericValue(int val)
-        {
-            _val = val;
-            IsInt = true;
-        }
         public override bool IsTrue
         {
             get { return _val != 0; }

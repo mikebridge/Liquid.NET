@@ -17,7 +17,7 @@ namespace Liquid.NET.Tests.Constants
         public void It_Should_Generate_Some_Values(int start, int end, int[] expected )
         {
             // Arrange
-            var generatorValue = new GeneratorValue(new NumericValue(start), new NumericValue(end));
+            var generatorValue = new GeneratorValue(NumericValue.Create(start), NumericValue.Create(end));
 
             // Act
             var result = generatorValue.AsEnumerable();
@@ -31,7 +31,7 @@ namespace Liquid.NET.Tests.Constants
         public void It_Should_Generate_Some_Values_Descending()
         {
             // Arrange
-            var generatorValue = new GeneratorValue(new NumericValue(5), new NumericValue(2));
+            var generatorValue = new GeneratorValue(NumericValue.Create(5), NumericValue.Create(2));
 
             // Act
             var result = generatorValue.AsEnumerable();
@@ -45,7 +45,7 @@ namespace Liquid.NET.Tests.Constants
         public void It_Should_Determine_The_Length_Of_a_Generator()
         {
             // Arrange
-            var generatorValue = new GeneratorValue(new NumericValue(2), new NumericValue(5));
+            var generatorValue = new GeneratorValue(NumericValue.Create(2), NumericValue.Create(5));
 
             // Assert
             Assert.That(generatorValue.Length, Is.EqualTo(4));
@@ -56,7 +56,7 @@ namespace Liquid.NET.Tests.Constants
         public void It_Should_Determine_The_Length_Of_a_Descending_Generator()
         {
             // Arrange
-            var generatorValue = new GeneratorValue(new NumericValue(5), new NumericValue(2));
+            var generatorValue = new GeneratorValue(NumericValue.Create(5), NumericValue.Create(2));
             
             // Assert
             Assert.That(generatorValue.Length, Is.EqualTo(4));

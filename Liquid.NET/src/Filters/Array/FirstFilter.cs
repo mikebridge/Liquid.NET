@@ -14,7 +14,7 @@ namespace Liquid.NET.Filters.Array
 
         public FirstFilter()
         {
-            _positionFilter = new PositionFilter(new NumericValue(0));
+            _positionFilter = new PositionFilter(NumericValue.Create(0));
         }
 
         public override LiquidExpressionResult Apply(ITemplateContext ctx, ExpressionConstant liquidConstantExpression)

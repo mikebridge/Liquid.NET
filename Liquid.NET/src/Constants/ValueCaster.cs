@@ -39,7 +39,7 @@ namespace Liquid.NET.Constants
             var destType = typeof(TDest);
             if (destType == typeof(NumericValue))
             {
-                return LiquidExpressionResult.Success(new Some<IExpressionConstant>(new NumericValue(0)));
+                return LiquidExpressionResult.Success(new Some<IExpressionConstant>(NumericValue.Create(0)));
             }
             if (destType == typeof(StringValue))
             {
@@ -66,7 +66,7 @@ namespace Liquid.NET.Constants
 
                 return LiquidExpressionResult.Success(new StringValue(strResult));
             }
-            return LiquidExpressionResult.Success(new NumericValue(0)); // Liquid seems to convert unknowns to numeric.
+            return LiquidExpressionResult.Success(NumericValue.Create(0)); // Liquid seems to convert unknowns to numeric.
             //return ConstantFactory.CreateError<TDest>("Can't convert from numeric to " + destType);
         }
 
@@ -218,26 +218,26 @@ namespace Liquid.NET.Constants
                     var stringVal = str.StringVal;
                     if (stringVal == null)
                     {
-                        return LiquidExpressionResult.Success(new NumericValue(0));  // liquid to_numeric seems to convert these to 0.
+                        return LiquidExpressionResult.Success(NumericValue.Create(0));  // liquid to_numeric seems to convert these to 0.
                     }
                     if (stringVal.Contains("."))
                     {
                         var val = decimal.Parse(stringVal);
 
-                        return LiquidExpressionResult.Success(new NumericValue(val));
+                        return LiquidExpressionResult.Success(NumericValue.Create(val));
                     }
                     else
                     {
                         try
                         {
                             var val = int.Parse(stringVal);
-                            return LiquidExpressionResult.Success(new NumericValue(val));
+                            return LiquidExpressionResult.Success(NumericValue.Create(val));
                         }
                         catch (OverflowException oex)
                         {
                             var val = decimal.Parse(stringVal);
 
-                            return LiquidExpressionResult.Success(new NumericValue(val));
+                            return LiquidExpressionResult.Success(NumericValue.Create(val));
                         }
                     }
                    
@@ -246,7 +246,7 @@ namespace Liquid.NET.Constants
                 catch
                 {
                     // https://github.com/Shopify/liquid/blob/master/lib/liquid/standardfilters.rb
-                    return LiquidExpressionResult.Success(new NumericValue(0));  // liquid to_numeric seems to convert these to 0.
+                    return LiquidExpressionResult.Success(NumericValue.Create(0));  // liquid to_numeric seems to convert these to 0.
                 }
             }
 
@@ -272,7 +272,7 @@ namespace Liquid.NET.Constants
             }
             if (destType == typeof (NumericValue))
             {
-                return LiquidExpressionResult.Success(new NumericValue(0));
+                return LiquidExpressionResult.Success(NumericValue.Create(0));
             }
             return LiquidExpressionResult.Error("Can't convert from " + source.GetType() + " to " + destType);
 

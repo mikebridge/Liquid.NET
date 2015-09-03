@@ -17,7 +17,7 @@ namespace Liquid.NET.Tests.Filters.Strings
         {
             // Arrange
             TemplateContext ctx = new TemplateContext();
-            ctx.DefineLocalVariable("input", new NumericValue(input));
+            ctx.DefineLocalVariable("input", NumericValue.Create(input));
             var result = RenderingHelper.RenderTemplate("Result : {{ input | pluralize: 'thing', 'things' }}", ctx);
 
             // Assert
@@ -33,7 +33,7 @@ namespace Liquid.NET.Tests.Filters.Strings
         {
             // Arrange
             TemplateContext ctx = new TemplateContext();
-            ctx.DefineLocalVariable("input", new NumericValue(input));
+            ctx.DefineLocalVariable("input", NumericValue.Create(input));
             var result = RenderingHelper.RenderTemplate("Result : {{ input | pluralize: 'thing', 'things' }}", ctx);
 
             // Assert

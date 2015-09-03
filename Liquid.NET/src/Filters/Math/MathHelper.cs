@@ -17,11 +17,11 @@ namespace Liquid.NET.Filters.Math
             {
                 //var int32 = Convert.ToInt32(val);
                 var int32 = (int)System.Math.Floor(result); // ruby liquid seems to round down.
-                return LiquidExpressionResult.Success(new NumericValue(int32));
+                return LiquidExpressionResult.Success(NumericValue.Create(int32));
             }
             else
             {
-                return LiquidExpressionResult.Success(new NumericValue(result));
+                return LiquidExpressionResult.Success(NumericValue.Create(result));
             }
         }
     }

@@ -9,12 +9,12 @@ namespace Liquid.NET.Filters.Math
         public override LiquidExpressionResult Apply(ITemplateContext ctx, NumericValue val)
         {
             var floor = (int) System.Math.Floor(val.DecimalValue);
-            return LiquidExpressionResult.Success(new NumericValue(floor));
+            return LiquidExpressionResult.Success(NumericValue.Create(floor));
         }
 
         public override LiquidExpressionResult ApplyToNil(ITemplateContext ctx)
         {
-            return LiquidExpressionResult.Success(new NumericValue(0));
+            return LiquidExpressionResult.Success(NumericValue.Create(0));
         }
     }
 }

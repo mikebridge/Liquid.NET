@@ -19,8 +19,8 @@ namespace Liquid.NET.Tests.Filters.Array
             IList<IExpressionConstant> objlist = new List<IExpressionConstant>
             {
                 new StringValue("a string"), 
-                new NumericValue(123), 
-                new NumericValue(456m),
+                NumericValue.Create(123), 
+                NumericValue.Create(456m),
                 new BooleanValue(false)
             };
             ArrayValue arrayValue = new ArrayValue(objlist);
@@ -56,8 +56,8 @@ namespace Liquid.NET.Tests.Filters.Array
             var dict = new Dictionary<String, IExpressionConstant>
             {
                 {"string1", new StringValue("a string")},
-                {"string2", new NumericValue(123)},
-                {"string3", new NumericValue(456m)}
+                {"string2", NumericValue.Create(123)},
+                {"string3", NumericValue.Create(456m)}
             };
             DictionaryValue dictValue = new DictionaryValue(dict);
             SizeFilter sizeFilter = new SizeFilter();
@@ -134,7 +134,7 @@ namespace Liquid.NET.Tests.Filters.Array
         public void A_Generator_Value_Should_Return_The_Size()
         {
             // Arrange
-            var strVal = new GeneratorValue(new NumericValue(3), new NumericValue(10));
+            var strVal = new GeneratorValue(NumericValue.Create(3), NumericValue.Create(10));
             var filter = new SizeFilter();
 
             // Act

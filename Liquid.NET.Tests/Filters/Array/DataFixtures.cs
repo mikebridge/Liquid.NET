@@ -9,7 +9,7 @@ namespace Liquid.NET.Tests.Filters.Array
         {
             return new DictionaryValue(new Dictionary<string, IExpressionConstant>
             {
-                {"id", new NumericValue(id)},
+                {"id", NumericValue.Create(id)},
                 {"field1", new StringValue(field1)},
                 {"field2", new StringValue(field2)},
 
@@ -21,8 +21,8 @@ namespace Liquid.NET.Tests.Filters.Array
             IList<IExpressionConstant> objlist = new List<IExpressionConstant>
             {
                 new StringValue("a string"), 
-                new NumericValue(123), 
-                new NumericValue(456m),
+                NumericValue.Create(123), 
+                NumericValue.Create(456m),
                 new BooleanValue(false)
             };
            return new ArrayValue(objlist);

@@ -19,12 +19,12 @@ namespace Liquid.NET.Filters.Math
         public override LiquidExpressionResult Apply(ITemplateContext ctx, NumericValue val)
         {            
             var round = System.Math.Round(val.DecimalValue, decimalPlaces, MidpointRounding.AwayFromZero);
-            return LiquidExpressionResult.Success(decimalPlaces == 0 ? new NumericValue((int) round) : new NumericValue(round));
+            return LiquidExpressionResult.Success(decimalPlaces == 0 ? NumericValue.Create((int) round) : NumericValue.Create(round));
         }
 
         public override LiquidExpressionResult ApplyToNil(ITemplateContext ctx)
         {
-            return Apply(ctx, new NumericValue(0));
+            return Apply(ctx, NumericValue.Create(0));
         }
     }
 }

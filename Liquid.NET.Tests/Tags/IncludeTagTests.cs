@@ -136,10 +136,10 @@ namespace Liquid.NET.Tests.Tags
         {
             var list = new List<IExpressionConstant>
             {
-                new NumericValue(1),
-                new NumericValue(2),
-                new NumericValue(3),
-                new NumericValue(4)
+                NumericValue.Create(1),
+                NumericValue.Create(2),
+                NumericValue.Create(3),
+                NumericValue.Create(4)
             };
             return new ArrayValue(list);
         }

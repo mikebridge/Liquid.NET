@@ -75,7 +75,7 @@ namespace Liquid.NET.Tests.Filters.Array
             var mapFilter = new MapFilter(new StringValue("field1"));
             IList<IExpressionConstant> objlist = new List<IExpressionConstant>
             {
-                new NumericValue(123),
+                NumericValue.Create(123),
                 new StringValue("Test")
             };
             // Act

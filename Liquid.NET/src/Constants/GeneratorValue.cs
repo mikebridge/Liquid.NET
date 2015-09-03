@@ -64,7 +64,7 @@ namespace Liquid.NET.Constants
         {
             var length = end - start + 1;
             return Enumerable.Range(start, length)
-                .Select(x => new NumericValue(x));
+                .Select(x => NumericValue.Create(x));
         }
 
         IEnumerator IEnumerable.GetEnumerator()

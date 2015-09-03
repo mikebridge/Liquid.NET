@@ -101,7 +101,7 @@ namespace Liquid.NET.Filters
                         // TODO: This is a test
                         if (argType == typeof (NumericValue))
                         {
-                            result.Add(new NumericValue(0));
+                            result.Add(NumericValue.Create(0));
                         }
                         else
                         {

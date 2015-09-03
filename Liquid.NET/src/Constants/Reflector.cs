@@ -77,7 +77,7 @@ namespace Liquid.NET.Constants
             if (type == typeof(int) || type == typeof(decimal))
             {
                 // TODO: long, etc.
-                return new Some<IExpressionConstant>(new NumericValue((decimal)obj));
+                return new Some<IExpressionConstant>(NumericValue.Create((decimal)obj));
             }
             if (type == typeof (bool))
             {

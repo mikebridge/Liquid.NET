@@ -18,29 +18,29 @@ namespace Liquid.NET.Filters
             {
                 if (liquidExpression == null || liquidExpression.Value == null)
                 {
-                    return new NumericValue(default(decimal));
+                    return NumericValue.Create(default(decimal));
                 }
                 var dec = liquidExpression as NumericValue;
                 if (dec != null)
                 {
-                    return new NumericValue(Convert.ToDecimal(dec.DecimalValue));
+                    return NumericValue.Create(Convert.ToDecimal(dec.DecimalValue));
                 }
                 var str = liquidExpression as StringValue;
                 if (str != null)
                 {
-                    return new NumericValue(Convert.ToDecimal(str.StringVal));
+                    return NumericValue.Create(Convert.ToDecimal(str.StringVal));
                 }
                 var bool1 = liquidExpression as BooleanValue;
                 if (bool1 != null)
                 {
-                    return bool1.BoolValue ? new NumericValue(1) : new NumericValue(0);
+                    return bool1.BoolValue ? NumericValue.Create(1) : NumericValue.Create(0);
                 }
             }
             catch (Exception)
             {
                 //warningMessage = "unable to convert to a number";
             }
-            var result = new NumericValue(default(decimal));
+            var result = NumericValue.Create(default(decimal));
 //            if (warningMessage != null)
 //            {
 //                result.WarningMessage = warningMessage;

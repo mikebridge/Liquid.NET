@@ -6,20 +6,20 @@ namespace Liquid.NET.Filters.Math
 {
     public class RoundFilter : FilterExpression<NumericValue, NumericValue>
     {
-        readonly int decimalPlaces = 0;
+        readonly int _decimalPlaces = 0;
 
         public RoundFilter(NumericValue val)
         {
-            if (val != null && /*!val.IsUndefined && */ val.IntValue > 0)
+            if (val != null && val.IntValue > 0)
             {
-                decimalPlaces = val.IntValue;
+                _decimalPlaces = val.IntValue;
             }
         }
 
         public override LiquidExpressionResult Apply(ITemplateContext ctx, NumericValue val)
         {            
-            var round = System.Math.Round(val.DecimalValue, decimalPlaces, MidpointRounding.AwayFromZero);
-            return LiquidExpressionResult.Success(decimalPlaces == 0 ? NumericValue.Create((int) round) : NumericValue.Create(round));
+            var round = System.Math.Round(val.DecimalValue, _decimalPlaces, MidpointRounding.AwayFromZero);
+            return LiquidExpressionResult.Success(_decimalPlaces == 0 ? NumericValue.Create((int) round) : NumericValue.Create(round));
         }
 
         public override LiquidExpressionResult ApplyToNil(ITemplateContext ctx)

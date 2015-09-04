@@ -178,7 +178,7 @@ namespace Liquid.NET.Tests
             VariableReferenceTree varRefTree = (VariableReferenceTree)liquidExpression.ExpressionTree.Data.Expression;
             Assert.That(varRefTree.IndexExpression, Is.TypeOf<VariableReferenceTree>());
             VariableReferenceTree indexVarRefTree = (VariableReferenceTree)varRefTree.IndexExpression;
-            Assert.That(indexVarRefTree.Value, Is.TypeOf<NumericValue>());
+            Assert.That(indexVarRefTree.Value, Is.AssignableTo<NumericValue>());
             Assert.That(((NumericValue) indexVarRefTree.Value).IntValue, Is.EqualTo(3));
 
         }

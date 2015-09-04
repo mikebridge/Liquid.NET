@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
+using System.Numerics;
 using Liquid.NET.Filters;
 using Liquid.NET.Utils;
 
@@ -59,9 +59,10 @@ namespace Liquid.NET.Constants
 
             if (destType == typeof (StringValue))
             {
-                var strResult = num.IsInt ? 
-                    num.IntValue.ToString():
-                    num.DecimalValue.ToString("0.0###");
+                var strResult = num.ToString();
+//                var strResult = num.IsInt ? 
+//                    num.BigIntValue.ToString():
+//                    num.DecimalValue.ToString("0.0###");
                     //num.DecimalValue.ToString("G29");
 
                 return LiquidExpressionResult.Success(new StringValue(strResult));
@@ -286,6 +287,11 @@ namespace Liquid.NET.Constants
         public static int ConvertToInt(decimal val)
         {
             return (int) Math.Round(val, MidpointRounding.AwayFromZero);
+        }
+
+        public static BigInteger ConvertToBigInt(decimal val)
+        {
+            return new BigInteger(Math.Round(val, MidpointRounding.AwayFromZero));
         }
 
         // Not sure where to put these yet

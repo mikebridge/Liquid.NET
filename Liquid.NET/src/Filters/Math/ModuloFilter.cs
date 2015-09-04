@@ -25,12 +25,12 @@ namespace Liquid.NET.Filters.Math
                 return LiquidExpressionResult.Error("Liquid error: divided by 0");
             }
             var val = (int) (numericValue.DecimalValue % _operand.DecimalValue);
-            return LiquidExpressionResult.Success(new NumericValue(val));
+            return LiquidExpressionResult.Success(NumericValue.Create(val));
         }
 
         public override LiquidExpressionResult ApplyToNil(ITemplateContext ctx)
         {
-            return LiquidExpressionResult.Success(new NumericValue(0));
+            return LiquidExpressionResult.Success(NumericValue.Create(0));
         }
     }
 }

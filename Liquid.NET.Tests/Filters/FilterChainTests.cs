@@ -21,7 +21,7 @@ namespace Liquid.NET.Tests.Filters
             var filters = new List<IFilterExpression>
             {
                 new UpCaseFilter(),
-                new PlusFilter(new NumericValue(123)),
+                new PlusFilter(NumericValue.Create(123)),
             };
 
             // Act
@@ -55,7 +55,7 @@ namespace Liquid.NET.Tests.Filters
         {
             // Arrange
             ITemplateContext ctx = new TemplateContext().WithAllFilters();
-            ctx.DefineLocalVariable("bar", new NumericValue(3) );
+            ctx.DefineLocalVariable("bar", NumericValue.Create(3) );
             var template = LiquidTemplate.Create("{{ 1 | plus: bar }}");
 
             // Act
@@ -71,7 +71,7 @@ namespace Liquid.NET.Tests.Filters
         {
             // Arrange
             ITemplateContext ctx = new TemplateContext().WithAllFilters();
-            DictionaryValue dict = new DictionaryValue(new Dictionary<String, IExpressionConstant> { { "foo", new NumericValue(33) } });
+            DictionaryValue dict = new DictionaryValue(new Dictionary<String, IExpressionConstant> { { "foo", NumericValue.Create(33) } });
             ctx.DefineLocalVariable("bar", dict);
             var template = LiquidTemplate.Create("{{ 1 | plus: bar.foo}}");
 
@@ -89,7 +89,7 @@ namespace Liquid.NET.Tests.Filters
             // Arrange
             ITemplateContext ctx =
                 new TemplateContext().WithAllFilters();
-            ArrayValue arr = new ArrayValue(new List<IExpressionConstant> { new NumericValue(33) });
+            ArrayValue arr = new ArrayValue(new List<IExpressionConstant> { NumericValue.Create(33) });
             ctx.DefineLocalVariable("bar", arr);
             var template = LiquidTemplate.Create("{{ 1 | plus: bar[0]  }}");
 
@@ -105,7 +105,7 @@ namespace Liquid.NET.Tests.Filters
         public void It_Should_Parse_Two_Filter_Arguments()
         {
             // Arrange
-            DictionaryValue dict = new DictionaryValue(new Dictionary<String, IExpressionConstant> { { "foo", new NumericValue(22)}, {"bar", new NumericValue(23) } });
+            DictionaryValue dict = new DictionaryValue(new Dictionary<String, IExpressionConstant> { { "foo", NumericValue.Create(22)}, {"bar", NumericValue.Create(23) } });
 
             ITemplateContext ctx =
                 new TemplateContext().WithAllFilters()
@@ -130,7 +130,7 @@ namespace Liquid.NET.Tests.Filters
         public void It_Should_Parse_A_Variable_And_A_Value(String liquid, String expected)
         {
             // Arrange
-            DictionaryValue dict = new DictionaryValue(new Dictionary<String, IExpressionConstant> { { "foo", new NumericValue(22) }, { "bar", new NumericValue(23) } });
+            DictionaryValue dict = new DictionaryValue(new Dictionary<String, IExpressionConstant> { { "foo", NumericValue.Create(22) }, { "bar", NumericValue.Create(23) } });
 
             ITemplateContext ctx =
                 new TemplateContext().WithAllFilters()

@@ -2,11 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Antlr4.Runtime.Dfa;
-using Liquid.NET.Expressions;
-using Liquid.NET.Symbols;
 
 namespace Liquid.NET.Constants
 {
@@ -64,7 +59,7 @@ namespace Liquid.NET.Constants
         {
             var length = end - start + 1;
             return Enumerable.Range(start, length)
-                .Select(x => new NumericValue(x));
+                .Select(x => NumericValue.Create(x));
         }
 
         IEnumerator IEnumerable.GetEnumerator()

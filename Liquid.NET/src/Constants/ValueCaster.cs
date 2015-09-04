@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
+using System.Numerics;
 using Liquid.NET.Filters;
 using Liquid.NET.Utils;
 
@@ -39,7 +39,7 @@ namespace Liquid.NET.Constants
             var destType = typeof(TDest);
             if (destType == typeof(NumericValue))
             {
-                return LiquidExpressionResult.Success(new Some<IExpressionConstant>(new NumericValue(0)));
+                return LiquidExpressionResult.Success(new Some<IExpressionConstant>(NumericValue.Create(0)));
             }
             if (destType == typeof(StringValue))
             {
@@ -59,14 +59,15 @@ namespace Liquid.NET.Constants
 
             if (destType == typeof (StringValue))
             {
-                var strResult = num.IsInt ? 
-                    num.IntValue.ToString():
-                    num.DecimalValue.ToString("0.0###");
+                var strResult = num.ToString();
+//                var strResult = num.IsInt ? 
+//                    num.BigIntValue.ToString():
+//                    num.DecimalValue.ToString("0.0###");
                     //num.DecimalValue.ToString("G29");
 
                 return LiquidExpressionResult.Success(new StringValue(strResult));
             }
-            return LiquidExpressionResult.Success(new NumericValue(0)); // Liquid seems to convert unknowns to numeric.
+            return LiquidExpressionResult.Success(NumericValue.Create(0)); // Liquid seems to convert unknowns to numeric.
             //return ConstantFactory.CreateError<TDest>("Can't convert from numeric to " + destType);
         }
 
@@ -108,16 +109,13 @@ namespace Liquid.NET.Constants
 
             if (destType == typeof(StringValue))
             {
-                //Console.WriteLine("Converting dict to string");
-//                foreach (var key in dictionaryValue.DictValue.Keys)
-//                {
-//                    Console.WriteLine("KEY " + key + "=" + dictionaryValue.DictValue[key]);
-//                }
 
-                var result= new StringValue(
-                    dictionaryValue.DictValue
+                var result = new StringValue("{ " + 
+                    String.Join(", ", dictionaryValue.DictValue
                         .Keys
-                        .Aggregate("", (current, key) => current + FormatKvPair(key, dictionaryValue.DictValue[key])));
+                        .Select(key => FormatKvPair(key, dictionaryValue.DictValue[key]))
+                        ) + " }"
+                        );
                 return LiquidExpressionResult.Success(result);
             }
             // So, according to https://github.com/Shopify/liquid/wiki/Liquid-for-Designers, a hash value will be iterated
@@ -168,7 +166,7 @@ namespace Liquid.NET.Constants
         {
             Type wrappedType = GetWrappedType(expressionConstant);
             String exprConstantAsString = RenderAsString(expressionConstant);
-            return "{ " + Quote(typeof(StringValue), key) + " : " + Quote(wrappedType, exprConstantAsString) + " }";
+            return Quote(typeof(StringValue), key) + " : " + Quote(wrappedType, exprConstantAsString);
         }
 
         private static Type GetWrappedType<T>(Option<T> expressionConstant)
@@ -192,13 +190,16 @@ namespace Liquid.NET.Constants
             {
                 return "null";
             }
-            if (origType.IsAssignableFrom(typeof(NumericValue)) || origType.IsAssignableFrom(typeof(BooleanValue)))
+//            if (typeof(NumericValue).IsAssignableFrom(origType) || typeof(BooleanValue).IsAssignableFrom(origType) ||
+//                if (typeof(ArrayValue).IsAssignableFrom(origType) || typeof(DictionaryValue).IsAssignableFrom(origType))
+//            {
+            if (typeof(StringValue).IsAssignableFrom(origType)) 
             {
-                return str;
+                return "\"" + str + "\"";
             }
             else
             {
-                return "\"" + str + "\"";
+                return str;                
             }
         }
 
@@ -218,26 +219,26 @@ namespace Liquid.NET.Constants
                     var stringVal = str.StringVal;
                     if (stringVal == null)
                     {
-                        return LiquidExpressionResult.Success(new NumericValue(0));  // liquid to_numeric seems to convert these to 0.
+                        return LiquidExpressionResult.Success(NumericValue.Create(0));  // liquid to_numeric seems to convert these to 0.
                     }
                     if (stringVal.Contains("."))
                     {
                         var val = decimal.Parse(stringVal);
 
-                        return LiquidExpressionResult.Success(new NumericValue(val));
+                        return LiquidExpressionResult.Success(NumericValue.Create(val));
                     }
                     else
                     {
                         try
                         {
                             var val = int.Parse(stringVal);
-                            return LiquidExpressionResult.Success(new NumericValue(val));
+                            return LiquidExpressionResult.Success(NumericValue.Create(val));
                         }
                         catch (OverflowException oex)
                         {
                             var val = decimal.Parse(stringVal);
 
-                            return LiquidExpressionResult.Success(new NumericValue(val));
+                            return LiquidExpressionResult.Success(NumericValue.Create(val));
                         }
                     }
                    
@@ -246,7 +247,7 @@ namespace Liquid.NET.Constants
                 catch
                 {
                     // https://github.com/Shopify/liquid/blob/master/lib/liquid/standardfilters.rb
-                    return LiquidExpressionResult.Success(new NumericValue(0));  // liquid to_numeric seems to convert these to 0.
+                    return LiquidExpressionResult.Success(NumericValue.Create(0));  // liquid to_numeric seems to convert these to 0.
                 }
             }
 
@@ -272,7 +273,7 @@ namespace Liquid.NET.Constants
             }
             if (destType == typeof (NumericValue))
             {
-                return LiquidExpressionResult.Success(new NumericValue(0));
+                return LiquidExpressionResult.Success(NumericValue.Create(0));
             }
             return LiquidExpressionResult.Error("Can't convert from " + source.GetType() + " to " + destType);
 
@@ -286,6 +287,11 @@ namespace Liquid.NET.Constants
         public static int ConvertToInt(decimal val)
         {
             return (int) Math.Round(val, MidpointRounding.AwayFromZero);
+        }
+
+        public static BigInteger ConvertToBigInt(decimal val)
+        {
+            return new BigInteger(Math.Round(val, MidpointRounding.AwayFromZero));
         }
 
         // Not sure where to put these yet

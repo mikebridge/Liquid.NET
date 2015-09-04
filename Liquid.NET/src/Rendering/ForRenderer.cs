@@ -51,8 +51,8 @@ namespace Liquid.NET.Rendering
 
         private void IterateBlock(ForBlockTag forBlockTag, ITemplateContext templateContext, List<IExpressionConstant> iterable)
         {
-            var offset = new NumericValue(0);
-            var  limit = new NumericValue(50);
+            var offset = NumericValue.Create(0);
+            var  limit = NumericValue.Create(50);
             if (forBlockTag.Offset != null)
             {
                 var result = LiquidExpressionEvaluator.Eval(forBlockTag.Offset, templateContext);
@@ -107,12 +107,12 @@ namespace Liquid.NET.Rendering
             {               
                 {"parentloop", FindParentLoop(stack)}, // see: https://github.com/Shopify/liquid/pull/520
                 {"first", new BooleanValue(iter == 0)},
-                {"index", new NumericValue(iter + 1 )},
-                {"index0", new NumericValue(iter)},
-                {"rindex", new NumericValue(length - iter )},
-                {"rindex0", new NumericValue(length - iter - 1)},
+                {"index", NumericValue.Create(iter + 1)},
+                {"index0", NumericValue.Create(iter)},
+                {"rindex", NumericValue.Create(length - iter)},
+                {"rindex0", NumericValue.Create(length - iter - 1)},
                 {"last", new BooleanValue(length - iter - 1 == 0)},
-                {"length", new NumericValue(length) },
+                {"length", NumericValue.Create(length) },
                 {"name", new StringValue(name) }
             });
 

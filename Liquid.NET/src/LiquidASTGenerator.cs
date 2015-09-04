@@ -1552,7 +1552,7 @@ namespace Liquid.NET
 
         private static NumericValue CreateIntNumericValueFromString(string intstring)
         {
-            return new NumericValue(Convert.ToInt32(intstring));
+            return NumericValue.Create(Convert.ToInt32(intstring));
         }
 
         public override void EnterNumberObject(LiquidParser.NumberObjectContext context)
@@ -2127,7 +2127,7 @@ namespace Liquid.NET
             public void AddIntIndex(int index)
             {
                 Console.WriteLine("# VariableReferenceTreeBuilder.AddIntIndex(" + index+ ")");
-                _current.Value = new NumericValue(index);
+                _current.Value = NumericValue.Create(index);
             }
 
             public void AddStringIndex(String index)

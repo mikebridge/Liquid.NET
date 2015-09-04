@@ -39,7 +39,7 @@ namespace Liquid.NET.Filters.Strings
 
         public override LiquidExpressionResult ApplyToNil(ITemplateContext ctx)
         {
-            return ApplyTo(ctx, new NumericValue(0));
+            return ApplyTo(ctx, NumericValue.Create(0));
         }
     }
 }

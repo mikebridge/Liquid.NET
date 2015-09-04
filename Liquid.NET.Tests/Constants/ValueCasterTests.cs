@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Reflection;
 
 using Liquid.NET.Constants;
@@ -16,7 +17,7 @@ namespace Liquid.NET.Tests.Constants
         public void It_Should_Cast_A_Number_To_A_String()
         {
             // Arrange
-            var num = new NumericValue(123.45m);
+            var num = NumericValue.Create(123.45m);
 
             // Act
             var stringliteral = ValueCaster.Cast<NumericValue, StringValue>(num)
@@ -32,7 +33,7 @@ namespace Liquid.NET.Tests.Constants
         public void It_Can_Cast_With_Generics()
         {
             // Arrange
-            var num = new NumericValue(123.45m);
+            var num = NumericValue.Create(123.45m);
 
             // Act
             var stringliteral = ValueCaster.Cast<NumericValue, StringValue>(num)
@@ -48,7 +49,7 @@ namespace Liquid.NET.Tests.Constants
         public void It_Can_Cast_With_Generics_Via_Reflection()
         {
             // Arrange
-            var num = new NumericValue(123.45m);
+            var num = NumericValue.Create(123.45m);
 
             // Act
             MethodInfo method = typeof(ValueCaster).GetMethod("Cast");
@@ -97,7 +98,7 @@ namespace Liquid.NET.Tests.Constants
         public void It_Should_Return_The_Same_Object_If_Src_And_Dest_Are_The_Same()
         {
             // Arrange
-            var original = new ArrayValue(new List<IExpressionConstant>{new NumericValue(123.4m), new NumericValue(5)});
+            var original = new ArrayValue(new List<IExpressionConstant>{NumericValue.Create(123.4m), NumericValue.Create(5)});
 
             // Act
             var result = ValueCaster.Cast<ArrayValue, ArrayValue>(original).SuccessValue<ArrayValue>();
@@ -110,7 +111,7 @@ namespace Liquid.NET.Tests.Constants
         public void It_Should_Return_The_Same_Object_If_Dest_Is_An_ExpressionConstant()
         {
             // Arrange
-            var original = new ArrayValue(new List<IExpressionConstant> { new NumericValue(123.4m), new NumericValue(5) });
+            var original = new ArrayValue(new List<IExpressionConstant> { NumericValue.Create(123.4m), NumericValue.Create(5) });
 
             // Act
             var result = ValueCaster.Cast<ArrayValue, ExpressionConstant>(original).SuccessValue<ArrayValue>();
@@ -254,6 +255,59 @@ namespace Liquid.NET.Tests.Constants
             // Assert
 
             Assert.That(result.ArrValue.Count, Is.EqualTo(4));
+
+        }
+
+
+        [Test]
+        public void It_Should_Not_Quote_Numerics_In_Json_Dict()
+        {
+            // Arrange
+            var dictValue = new DictionaryValue(
+                new Dictionary<string, IExpressionConstant>
+                {
+                    {"one", NumericValue.Create(1)},
+                    {"two", NumericValue.Create(2L)},
+                    {"three", NumericValue.Create(3m)},
+                    {"four", NumericValue.Create(new BigInteger(4))}
+
+                });
+
+            // Act
+            ITemplateContext ctx = new TemplateContext().DefineLocalVariable("dict1", dictValue);
+
+            // Act
+            var result = RenderingHelper.RenderTemplate("Result : {{ dict1 }}", ctx);
+
+            // Assert
+            Assert.That(result, Is.EqualTo("Result : { \"one\" : 1, \"two\" : 2, \"three\" : 3.0, \"four\" : 4 }"));
+
+        }
+
+        [Test]
+        public void It_Should_Recursively_Render_Dictionaries_in_Json()
+        {
+            // Arrange     
+            var subDictValue = new DictionaryValue(
+                new Dictionary<string, IExpressionConstant>
+                {
+                    {"abc", new StringValue("def")}
+                });
+            var dictValue = new DictionaryValue(
+                new Dictionary<string, IExpressionConstant>
+                {
+                    {"one", NumericValue.Create(1)},
+                    {"two", subDictValue},
+                });
+
+            // Act
+            ITemplateContext ctx = new TemplateContext().DefineLocalVariable("dict1", dictValue);
+
+            // Act
+            var result = RenderingHelper.RenderTemplate("Result : {{ dict1 }}", ctx);
+
+            // Assert
+            Assert.That(result, Is.EqualTo("Result : { \"one\" : 1, \"two\" : { \"abc\" : \"def\" } }"));
 
         }
 

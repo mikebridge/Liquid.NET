@@ -53,7 +53,7 @@ namespace Liquid.NET.Constants
             }
             else if (propertyNameString.ToLower().Equals("size"))
             {
-                return LiquidExpressionResult.Success(new NumericValue(arrayValue.ArrValue.Count));
+                return LiquidExpressionResult.Success(NumericValue.Create(arrayValue.ArrValue.Count));
             }
             else
             {
@@ -83,7 +83,7 @@ namespace Liquid.NET.Constants
             String propertyNameString = ValueCaster.RenderAsString(indexProperty);
             if (propertyNameString.ToLower().Equals("size"))
             {
-                return LiquidExpressionResult.Success(new NumericValue(dictionaryValue.DictValue.Keys.Count()));
+                return LiquidExpressionResult.Success(NumericValue.Create(dictionaryValue.DictValue.Keys.Count()));
             }
 
             return LiquidExpressionResult.Success(dictionaryValue.ValueAt(indexProperty.Value.ToString()));
@@ -105,7 +105,7 @@ namespace Liquid.NET.Constants
             }
             else if (propertyNameString.ToLower().Equals("size"))
             {
-                return LiquidExpressionResult.Success(new NumericValue(strValues.Count));
+                return LiquidExpressionResult.Success(NumericValue.Create(strValues.Count));
             }
             else
             {

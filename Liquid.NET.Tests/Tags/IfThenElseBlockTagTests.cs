@@ -164,8 +164,8 @@ namespace Liquid.NET.Tests.Tags
             var ctx = new TemplateContext();
             var payments = new List<IExpressionConstant>
             {
-                new NumericValue(12.34m),
-                new NumericValue(33.45m),
+                NumericValue.Create(12.34m),
+                NumericValue.Create(33.45m),
             };
 
             var dict = new Dictionary<String, IExpressionConstant>

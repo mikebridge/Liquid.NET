@@ -16,8 +16,8 @@ namespace Liquid.NET.Tests.Constants
             var dict = new Dictionary<String, IExpressionConstant>
             {
                 {"string1", new StringValue("a string")},
-                {"string2", new NumericValue(123)},
-                {"string3", new NumericValue(456m)}
+                {"string2", NumericValue.Create(123)},
+                {"string3", NumericValue.Create(456m)}
             };
             DictionaryValue dictValue = new DictionaryValue(dict);
 

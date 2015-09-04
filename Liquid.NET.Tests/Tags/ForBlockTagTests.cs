@@ -130,10 +130,10 @@ namespace Liquid.NET.Tests.Tags
             const string templateString = "Result : {%for i in array limit: x offset: y %}{{ i }}{%endfor%}";
             TemplateContext ctx = new TemplateContext();
             ctx.DefineLocalVariable("array", 
-                new ArrayValue(new List<int>{1,2,3,4,5,6,7,8,9}.Select(x => (IExpressionConstant) new NumericValue(x)).ToList())
+                new ArrayValue(new List<int>{1,2,3,4,5,6,7,8,9}.Select(x => (IExpressionConstant) NumericValue.Create(x)).ToList())
                 );
-            ctx.DefineLocalVariable("x", new NumericValue(2));
-            ctx.DefineLocalVariable("y", new NumericValue(2));
+            ctx.DefineLocalVariable("x", NumericValue.Create(2));
+            ctx.DefineLocalVariable("y", NumericValue.Create(2));
             var template = LiquidTemplate.Create(templateString);
 
             // Act
@@ -169,7 +169,7 @@ namespace Liquid.NET.Tests.Tags
                                         + "{% endfor %}"
                                         + "</tr>{% endfor %}";
             TemplateContext ctx = new TemplateContext();
-            var numericValues = Enumerable.Range(0, 3).Select(x => (IExpressionConstant) new NumericValue(x)).ToList();
+            var numericValues = Enumerable.Range(0, 3).Select(x => (IExpressionConstant) NumericValue.Create(x)).ToList();
             var array2 = new ArrayValue(numericValues);
             //var array1 = Enumerable.Range(0, 3).Select(x => new ArrayValue(array2);
             var array1 = new ArrayValue(new List<IExpressionConstant> { array2, array2, array2 });
@@ -242,7 +242,7 @@ namespace Liquid.NET.Tests.Tags
         {
             // Arrange
             TemplateContext ctx = new TemplateContext();
-            ctx.DefineLocalVariable("array", new ArrayValue(new List<IExpressionConstant> { new NumericValue(10), new NumericValue(13) }));
+            ctx.DefineLocalVariable("array", new ArrayValue(new List<IExpressionConstant> { NumericValue.Create(10), NumericValue.Create(13) }));
 
             var template = LiquidTemplate.Create("Result : {% for item in (array[0]..array[1]) %}{{ item }}{% endfor %}");
 
@@ -261,7 +261,7 @@ namespace Liquid.NET.Tests.Tags
         {
             // Arrange
             TemplateContext ctx = new TemplateContext();
-            ctx.DefineLocalVariable("array", new ArrayValue(new List<IExpressionConstant> { new NumericValue(5), new NumericValue(3) }));
+            ctx.DefineLocalVariable("array", new ArrayValue(new List<IExpressionConstant> { NumericValue.Create(5), NumericValue.Create(3) }));
 
             var template = LiquidTemplate.Create("Result : {% for item in (array[0]..array[1]) %}{{ item }}{% endfor %}");
 
@@ -297,8 +297,8 @@ namespace Liquid.NET.Tests.Tags
         {
             // Arrange
             TemplateContext ctx = new TemplateContext();
-            ctx.DefineLocalVariable("limit", new NumericValue(3));
-            ctx.DefineLocalVariable("offset", new NumericValue(1));
+            ctx.DefineLocalVariable("limit", NumericValue.Create(3));
+            ctx.DefineLocalVariable("offset", NumericValue.Create(1));
             var template = LiquidTemplate.Create("Result : {% for wef in \"Hello\" limit:limit offset:offset %}<li>{{ for }}</li>{% endfor %}");
 
             // Act
@@ -372,8 +372,8 @@ namespace Liquid.NET.Tests.Tags
             ctx.DefineLocalVariable("dict", new DictionaryValue(
                 new Dictionary<string, IExpressionConstant>
                 {
-                    {"start", new NumericValue(1)},
-                    {"end", new NumericValue(5)}
+                    {"start", NumericValue.Create(1)},
+                    {"end", NumericValue.Create(5)}
                 }));
             var template = LiquidTemplate.Create("Result : {% for item in " + generator + " %}{{ item }}{% endfor %}");
 
@@ -499,8 +499,8 @@ namespace Liquid.NET.Tests.Tags
             var list = new List<IExpressionConstant>
             {
                 new StringValue("a string"),
-                new NumericValue(123),
-                new NumericValue(456m),
+                NumericValue.Create(123),
+                NumericValue.Create(456m),
                 new BooleanValue(false)
             };
             return new ArrayValue(list);

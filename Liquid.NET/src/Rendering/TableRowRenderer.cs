@@ -21,9 +21,9 @@ namespace Liquid.NET.Rendering
         }
         public void Render(TableRowBlockTag tableRowBlockTag, ITemplateContext templateContext, Func<String, String> appender)
         {
-            var offset = new NumericValue(0);
-            var  limit = new NumericValue(50);
-            var cols = new NumericValue(5); // TODO: What is the default? https://github.com/Shopify/liquid/blob/master/lib/liquid/tags/table_row.rb
+            var offset = NumericValue.Create(0);
+            var  limit = NumericValue.Create(50);
+            var cols = NumericValue.Create(5); // TODO: What is the default? https://github.com/Shopify/liquid/blob/master/lib/liquid/tags/table_row.rb
             if (tableRowBlockTag.Offset != null)
             {
                 var result = LiquidExpressionEvaluator.Eval(tableRowBlockTag.Offset, templateContext);
@@ -129,18 +129,18 @@ namespace Liquid.NET.Rendering
             return new DictionaryValue(new Dictionary<String, Option<IExpressionConstant>>
             {               
                 {"first", new BooleanValue(iter == 0)},
-                {"index", new NumericValue(iter + 1 )},
-                {"col" , new NumericValue(col + 1)},
-                {"row" , new NumericValue(row + 1)},
-                {"row0" , new NumericValue(row)},
-                {"col0" , new NumericValue(col)},
+                {"index", NumericValue.Create(iter + 1)},
+                {"col" , NumericValue.Create(col + 1)},
+                {"row" , NumericValue.Create(row + 1)},
+                {"row0" , NumericValue.Create(row)},
+                {"col0" , NumericValue.Create(col)},
                 {"col_first" , new BooleanValue(col == 0)},
                 {"col_last" , new BooleanValue(col == maxcol)},
-                {"index0", new NumericValue(iter)},
-                {"rindex", new NumericValue(length - iter )},
-                {"rindex0", new NumericValue(length - iter - 1)},
+                {"index0", NumericValue.Create(iter)},
+                {"rindex", NumericValue.Create(length - iter)},
+                {"rindex0", NumericValue.Create(length - iter - 1)},
                 {"last", new BooleanValue(length - iter - 1 == 0)},
-                {"length", new NumericValue(length) },
+                {"length", NumericValue.Create(length) },
                 {"name", new StringValue(name) }
             });
 

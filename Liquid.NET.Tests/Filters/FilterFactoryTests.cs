@@ -64,7 +64,7 @@ namespace Liquid.NET.Tests.Filters
         public void It_Should_Cast_Numeric_Args_To_A_String()
         {
             // Arrange
-            var filter = FilterFactory.InstantiateFilter<MockStringToStringFilter>("mockfilter", new List<Option<IExpressionConstant>>() { new NumericValue(123) });
+            var filter = FilterFactory.InstantiateFilter<MockStringToStringFilter>("mockfilter", new List<Option<IExpressionConstant>>() { NumericValue.Create(123) });
 
             // Act
 

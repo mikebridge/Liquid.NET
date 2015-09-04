@@ -67,8 +67,8 @@ namespace Liquid.NET.Tests.Expressions
             IList<IExpressionConstant> objlist = new List<IExpressionConstant>
             {
                 new StringValue("a string"),
-                new NumericValue(123),
-                new NumericValue(456m),
+                NumericValue.Create(123),
+                NumericValue.Create(456m),
                 new BooleanValue(false)
             };
             return new ArrayValue(objlist);

@@ -29,7 +29,7 @@ namespace Liquid.NET.Filters.Array
             {
                 return LiquidExpressionResult.Error("Array is nil");
             }
-            var positionFilter = new PositionFilter(new NumericValue(liquidArrayExpression.ArrValue.Count - 1));
+            var positionFilter = new PositionFilter(NumericValue.Create(liquidArrayExpression.ArrValue.Count - 1));
             return positionFilter.ApplyTo(ctx, liquidArrayExpression);
         }
 
@@ -39,7 +39,7 @@ namespace Liquid.NET.Filters.Array
             {
                 return LiquidExpressionResult.Error("String is nil");
             }
-            var positionFilter = new PositionFilter(new NumericValue(liquidStringExpression.StringVal.Length - 1));
+            var positionFilter = new PositionFilter(NumericValue.Create(liquidStringExpression.StringVal.Length - 1));
             return positionFilter.ApplyTo(ctx, liquidStringExpression);
         }
     }

@@ -34,9 +34,9 @@ namespace Liquid.NET.Tests.Filters.Strings
             IList<IExpressionConstant> objlist = new List<IExpressionConstant>
             {
                 new StringValue("123"), 
-                new NumericValue(456m),
-                new NumericValue(123), 
-                new NumericValue(123), 
+                NumericValue.Create(456m),
+                NumericValue.Create(123), 
+                NumericValue.Create(123), 
                 new BooleanValue(false)
             };
             ArrayValue arrayValue = new ArrayValue(objlist);

@@ -14,7 +14,7 @@ namespace Liquid.NET.Filters
     {
         public override LiquidExpressionResult Apply(ITemplateContext ctx, ExpressionConstant liquidExpression)
         {
-            return LiquidExpressionResult.Success(new NumericValue(ToDecimalFilter.ConvertToDecimal(liquidExpression).IntValue));
+            return LiquidExpressionResult.Success(NumericValue.Create(ToDecimalFilter.ConvertToDecimal(liquidExpression).IntValue));
         }
     }
 }

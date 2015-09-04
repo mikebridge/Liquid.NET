@@ -16,8 +16,8 @@ namespace Liquid.NET.Tests.Constants
         public void NumericValues_Should_Equal(decimal decvar1, decimal decvar2, bool expected)
         {
             // Arrange
-            var var1 = new NumericValue(decvar1);
-            var var2 = new NumericValue(decvar2);
+            var var1 = NumericValue.Create(decvar1);
+            var var2 = NumericValue.Create(decvar2);
 
             // Assert
             Assert.That(var1.Equals(var2), Is.EqualTo(expected));
@@ -28,7 +28,7 @@ namespace Liquid.NET.Tests.Constants
         public void NumericValues_Should_Not_Equal_Null()
         {
             // Arrange
-            var var1 = new NumericValue(1);            
+            var var1 = NumericValue.Create(1);            
 
             // Assert
             Assert.That(var1.Equals(null), Is.EqualTo(false));
@@ -39,7 +39,7 @@ namespace Liquid.NET.Tests.Constants
         public void ToString_Should_Render_As_String()
         {
             // Arrange
-            var var1 = new NumericValue(1);
+            var var1 = NumericValue.Create(1);
 
             // Assert
             Assert.That(var1.ToString(), Is.EqualTo("1"));

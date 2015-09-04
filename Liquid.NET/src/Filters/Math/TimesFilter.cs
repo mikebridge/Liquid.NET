@@ -28,7 +28,7 @@ namespace Liquid.NET.Filters.Math
 
         public override LiquidExpressionResult ApplyToNil(ITemplateContext ctx)
         {
-            return LiquidExpressionResult.Success(new NumericValue(0)); 
+            return LiquidExpressionResult.Success(NumericValue.Create(0)); 
         }
     }
 }

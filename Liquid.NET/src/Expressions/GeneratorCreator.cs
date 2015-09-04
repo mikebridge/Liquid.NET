@@ -118,13 +118,13 @@ namespace Liquid.NET.Expressions
             var liquidExpressionResult = LiquidExpressionEvaluator.Eval(expr, templateContext);
             if (liquidExpressionResult.IsError)
             {
-                return new NumericValue(0);
+                return NumericValue.Create(0);
             }
             var valueAsNumeric = ValueCaster.Cast<IExpressionConstant, NumericValue>(liquidExpressionResult.SuccessResult.Value);
 
             return liquidExpressionResult.IsSuccess && liquidExpressionResult.SuccessResult.HasValue ? 
                 valueAsNumeric.SuccessValue<NumericValue>()
-                : new NumericValue(0);
+                : NumericValue.Create(0);
         }
     }
 }

@@ -109,16 +109,13 @@ namespace Liquid.NET.Constants
 
             if (destType == typeof(StringValue))
             {
-                //Console.WriteLine("Converting dict to string");
-//                foreach (var key in dictionaryValue.DictValue.Keys)
-//                {
-//                    Console.WriteLine("KEY " + key + "=" + dictionaryValue.DictValue[key]);
-//                }
 
-                var result= new StringValue(
-                    dictionaryValue.DictValue
+                var result = new StringValue("{ " + 
+                    String.Join(", ", dictionaryValue.DictValue
                         .Keys
-                        .Aggregate("", (current, key) => current + FormatKvPair(key, dictionaryValue.DictValue[key])));
+                        .Select(key => FormatKvPair(key, dictionaryValue.DictValue[key]))
+                        ) + " }"
+                        );
                 return LiquidExpressionResult.Success(result);
             }
             // So, according to https://github.com/Shopify/liquid/wiki/Liquid-for-Designers, a hash value will be iterated
@@ -169,7 +166,7 @@ namespace Liquid.NET.Constants
         {
             Type wrappedType = GetWrappedType(expressionConstant);
             String exprConstantAsString = RenderAsString(expressionConstant);
-            return "{ " + Quote(typeof(StringValue), key) + " : " + Quote(wrappedType, exprConstantAsString) + " }";
+            return Quote(typeof(StringValue), key) + " : " + Quote(wrappedType, exprConstantAsString);
         }
 
         private static Type GetWrappedType<T>(Option<T> expressionConstant)
@@ -193,7 +190,7 @@ namespace Liquid.NET.Constants
             {
                 return "null";
             }
-            if (origType.IsAssignableFrom(typeof(NumericValue)) || origType.IsAssignableFrom(typeof(BooleanValue)))
+            if (typeof(NumericValue).IsAssignableFrom(origType) || typeof(BooleanValue).IsAssignableFrom(origType))
             {
                 return str;
             }

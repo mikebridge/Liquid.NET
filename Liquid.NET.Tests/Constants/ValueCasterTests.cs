@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Reflection;
 
 using Liquid.NET.Constants;
@@ -256,6 +257,34 @@ namespace Liquid.NET.Tests.Constants
             Assert.That(result.ArrValue.Count, Is.EqualTo(4));
 
         }
+
+
+        [Test]
+        public void It_Should_Not_Quote_Numerics_In_Json_Dict()
+        {
+            // Arrange
+            var dictValue = new DictionaryValue(
+                new Dictionary<string, IExpressionConstant>
+                {
+                    {"one", NumericValue.Create(1)},
+                    {"two", NumericValue.Create(2L)},
+                    {"three", NumericValue.Create(3m)},
+                    {"four", NumericValue.Create(new BigInteger(4))}
+
+                });
+
+            // Act
+            ITemplateContext ctx = new TemplateContext().DefineLocalVariable("dict1", dictValue);
+
+            // Act
+            var result = RenderingHelper.RenderTemplate("Result : {{ dict1 }}", ctx);
+
+            // Assert
+            Assert.That(result, Is.EqualTo("Result : { \"one\" : 1, \"two\" : 2, \"three\" : 3.0, \"four\" : 4 }"));
+
+        }
+
+
 
 
     }

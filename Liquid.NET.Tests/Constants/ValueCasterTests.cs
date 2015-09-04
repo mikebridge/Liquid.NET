@@ -284,7 +284,32 @@ namespace Liquid.NET.Tests.Constants
 
         }
 
+        [Test]
+        public void It_Should_Recursively_Render_Dictionaries_in_Json()
+        {
+            // Arrange     
+            var subDictValue = new DictionaryValue(
+                new Dictionary<string, IExpressionConstant>
+                {
+                    {"abc", new StringValue("def")}
+                });
+            var dictValue = new DictionaryValue(
+                new Dictionary<string, IExpressionConstant>
+                {
+                    {"one", NumericValue.Create(1)},
+                    {"two", subDictValue},
+                });
 
+            // Act
+            ITemplateContext ctx = new TemplateContext().DefineLocalVariable("dict1", dictValue);
+
+            // Act
+            var result = RenderingHelper.RenderTemplate("Result : {{ dict1 }}", ctx);
+
+            // Assert
+            Assert.That(result, Is.EqualTo("Result : { \"one\" : 1, \"two\" : { \"abc\" : \"def\" } }"));
+
+        }
 
 
     }

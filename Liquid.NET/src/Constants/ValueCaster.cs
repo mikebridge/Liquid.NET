@@ -190,13 +190,16 @@ namespace Liquid.NET.Constants
             {
                 return "null";
             }
-            if (typeof(NumericValue).IsAssignableFrom(origType) || typeof(BooleanValue).IsAssignableFrom(origType))
+//            if (typeof(NumericValue).IsAssignableFrom(origType) || typeof(BooleanValue).IsAssignableFrom(origType) ||
+//                if (typeof(ArrayValue).IsAssignableFrom(origType) || typeof(DictionaryValue).IsAssignableFrom(origType))
+//            {
+            if (typeof(StringValue).IsAssignableFrom(origType)) 
             {
-                return str;
+                return "\"" + str + "\"";
             }
             else
             {
-                return "\"" + str + "\"";
+                return str;                
             }
         }
 

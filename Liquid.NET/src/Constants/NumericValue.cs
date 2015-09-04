@@ -26,12 +26,8 @@ namespace Liquid.NET.Constants
         /// <summary>
         /// Is the value an int/long/BigInteger
         /// </summary>
-        public override bool IsInt
-        {
-            get;
-            protected set;
-        }
-    
+        public override bool IsInt { get; protected set; }
+
 
         public override bool IsTrue
         {
@@ -41,29 +37,24 @@ namespace Liquid.NET.Constants
 
         public override int IntValue
         {
-            get
-            {
-                return ToInt((dynamic) _value); // ValueCaster.ConvertToInt(_value);
+            get { return ToInt((dynamic) _value); // ValueCaster.ConvertToInt(_value);
             }
         }
 
         public override BigInteger BigIntValue
         {
-            get
-            {
-                return ToBigInt((dynamic)_value); // ValueCaster.ConvertToInt(_value);
+            get { return ToBigInt((dynamic) _value); // ValueCaster.ConvertToInt(_value);
             }
         }
 
         public override decimal DecimalValue
         {
-            get
-            {
-                return (decimal) (dynamic) Value; // TODO: This may overflow.
+            get { return (decimal) (dynamic) Value; // TODO: This may overflow.
             }
         }
 
         #region ToBigInt
+
         private static BigInteger ToBigInt(int value)
         {
             return new BigInteger(value);
@@ -83,9 +74,11 @@ namespace Liquid.NET.Constants
         {
             return ValueCaster.ConvertToBigInt(value);
         }
+
         #endregion
 
         #region ToInt
+
         private static int ToInt(int value)
         {
             return value;
@@ -93,7 +86,7 @@ namespace Liquid.NET.Constants
 
         public static int ToInt(BigInteger value)
         {
-            return (int)value;
+            return (int) value;
         }
 
         public static int ToInt(long value)
@@ -105,12 +98,14 @@ namespace Liquid.NET.Constants
         {
             return ValueCaster.ConvertToInt(value);
         }
+
         #endregion
 
         #region ToString
+
         public override string ToString()
         {
-            return ToString((dynamic)this.Value);
+            return ToString((dynamic) this.Value);
         }
 
         private String ToString(int obj)
@@ -132,8 +127,16 @@ namespace Liquid.NET.Constants
         {
             return obj.ToString("0.0###");
         }
+
         #endregion
- 
+
+        public override bool Equals(object obj)
+        {
+            var nv = obj as NumericValue;
+            return nv == null 
+                ? false
+                : (dynamic)nv.DecimalValue == (dynamic)DecimalValue; // uses dynamic to unbox object, may overflow.
+        }
     }
 
     public abstract class NumericValue: ExpressionConstant
@@ -197,7 +200,7 @@ namespace Liquid.NET.Constants
             catch
             {
                 // This shouldn't actually fail...
-                //var errorSymbol = new NumericValue(0) {ErrorMessage = "Unable to convert '" + str + "' to a number."};
+                //var errorSymbol = NumericValue.Create(0) {ErrorMessage = "Unable to convert '" + str + "' to a number."};
                 //return errorSymbol;
                 return LiquidExpressionResult.Error("Unable to convert '" + str + "' to a number.");
             }
@@ -217,7 +220,7 @@ namespace Liquid.NET.Constants
 
 //        public static NumericValue CreateError(string message)
 //        {
-//            var result = new NumericValue(0);
+//            var result = NumericValue.Create(0);
 //            result.ErrorMessage = message;
 //            return result;
 //        }

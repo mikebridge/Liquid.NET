@@ -156,6 +156,24 @@ namespace Liquid.NET.Tests.Constants
             Assert.That(NumericValue.Create(new BigInteger(123456789)).BigIntValue, Is.EqualTo(new BigInteger(123456789)));
         }
 
+        [Test]
+        public void An_Bigint_Should_Equal_A_Decimal()
+        {
+            Assert.That(NumericValue.Create(new BigInteger(123)), Is.EqualTo(NumericValue.Create(123m)));
+        }
+
+        [Test]
+        public void An_Int_Should_Equal_A_Decimal()
+        {
+            Assert.That(NumericValue.Create(123), Is.EqualTo(NumericValue.Create(123m)));
+        }
+
+        [Test]
+        public void An_Int_Should_Equal_A_BigInt()
+        {
+            Assert.That(NumericValue.Create(new BigInteger(123)), Is.EqualTo(NumericValue.Create(123)));
+        }
+
 
     }
 }

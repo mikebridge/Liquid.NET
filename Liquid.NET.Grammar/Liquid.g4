@@ -53,8 +53,8 @@ raw_tag:			RAW;
 
 // TODO: Clean up this semantic predicate so it gives a decent error.
 //custom_blocktag:	TAGSTART custom_block_start_tag customtagblock_expr* TAGEND custom_blocktag_block TAGSTART custom_block_end_tag { _localctx.custom_block_end_tag().GetText().Equals("end" + _localctx.custom_block_start_tag().GetText()) }?  TAGEND ;
-//custom_blocktag:	TAGSTART custom_block_start_tag customtagblock_expr* TAGEND custom_blocktag_block TAGSTART custom_block_end_tag TAGEND { _localctx.custom_block_end_tag().GetText().Equals("end" + _localctx.custom_block_start_tag().GetText()) }?;
-custom_blocktag:	TAGSTART custom_block_start_tag customtagblock_expr* TAGEND custom_blocktag_block TAGSTART custom_block_end_tag TAGEND;
+custom_blocktag:	TAGSTART custom_block_start_tag customtagblock_expr* TAGEND custom_blocktag_block TAGSTART custom_block_end_tag TAGEND { _localctx.custom_block_end_tag().GetText().Equals("end" + _localctx.custom_block_start_tag().GetText()) }?;
+//custom_blocktag:	TAGSTART custom_block_start_tag customtagblock_expr* TAGEND custom_blocktag_block TAGSTART custom_block_end_tag TAGEND;
 //					| TAGSTART custom_block_start_tag customtagblock_expr* TAGEND custom_blocktag_block TAGSTART LABEL TAGEND {NotifyErrorListeners("Liquid error: end tag does not match start tag '" + _localctx.custom_block_start_tag().GetText() + "'");} ;
 
 custom_block_start_tag:		VARIABLENAME;

@@ -32,9 +32,45 @@ namespace Liquid.NET.Filters
         public String Name {get; set;}
 
 
-        public virtual LiquidExpressionResult Apply(ITemplateContext ctx, TSource option)
+        public virtual LiquidExpressionResult Apply(ITemplateContext ctx, TSource expr)
         {
-            return ApplyTo(ctx, (dynamic)option);
+            //return ApplyTo(ctx, (dynamic)expr);
+            var str = expr as StringValue;
+            if (str!=null)
+            {
+                return ApplyTo(ctx, str);
+            }
+            var num = expr as NumericValue;
+            if (num != null)
+            {
+                return ApplyTo(ctx, num);
+            }
+            var boo = expr as BooleanValue;
+            if (boo != null)
+            {
+                return ApplyTo(ctx, boo);
+            }
+            var dict = expr as DictionaryValue;
+            if (dict != null)
+            {
+                return ApplyTo(ctx, dict);
+            }
+            var arr = expr as ArrayValue;
+            if (arr != null)
+            {
+                return ApplyTo(ctx, arr);
+            }
+            var date = expr as DateValue;
+            if (date != null)
+            {
+                return ApplyTo(ctx, date);
+            }
+            var gen = expr as GeneratorValue;
+            if (gen != null)
+            {
+                return ApplyTo(ctx, gen);
+            }
+            return ApplyTo(ctx, expr);
         }
 
         public LiquidExpressionResult Apply(ITemplateContext ctx, IExpressionConstant liquidExpression)

@@ -24,7 +24,10 @@ namespace Liquid.NET.Tests.Filters
             var result = RenderingHelper.RenderTemplate("Result : {{ mydate | debug }}", ctx);
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : { \"metadata\" : \"{ \"hello\" : \"test\" }\" }{ \"value\" : \"2015-03-30 11:01:12 pm\" }{ \"type\" : \"date\" }"));
+            Assert.That(result, Is.StringContaining("\"metadata\" : { \"hello\" : \"test\" }"));
+            Assert.That(result, Is.StringContaining("\"value\" : \"2015-03-30 11:01:12 pm\""));
+            Assert.That(result, Is.StringContaining("\"type\" : \"date"));
+            Assert.That(result, Is.EqualTo("Result : { \"metadata\" : { \"hello\" : \"test\" }, \"value\" : \"2015-03-30 11:01:12 pm\", \"type\" : \"date\" }"));
 
         }
 

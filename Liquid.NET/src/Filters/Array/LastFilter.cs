@@ -12,9 +12,19 @@ namespace Liquid.NET.Filters.Array
         /// <returns></returns>
         public override LiquidExpressionResult Apply(ITemplateContext ctx, ExpressionConstant liquidExpression)
         {
-            return ApplyTo(ctx, (dynamic)liquidExpression);
+            //return ApplyTo(ctx, (dynamic)liquidExpression);
+            var arr = liquidExpression as ArrayValue;
+            if (arr != null)
+            {
+                return ApplyTo(ctx, arr);
+            }
 
-
+            var str = liquidExpression as StringValue;
+            if (str != null)
+            {
+                return ApplyTo(ctx, str);
+            }
+            return ApplyTo(ctx, liquidExpression);
         }
 
         public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, IExpressionConstant liquidExpression)

@@ -24,17 +24,17 @@ namespace Liquid.NET.Expressions
 
         public LiquidExpressionResult Eval(ITemplateContext templateContext, IEnumerable<Option<IExpressionConstant>> childresults)
         {
-            return EvalExpression(templateContext, (dynamic) this, childresults);
-            
+            //return EvalExpression(templateContext, (dynamic) this, childresults);
+            return EvalExpression(templateContext, this, childresults);
         }
 
-        private LiquidExpressionResult EvalExpression(
-            ITemplateContext templateContext, 
-            IExpressionDescription o, 
-            IEnumerable<Option<IExpressionConstant>> childresults)
-        {
-            return o.Eval(templateContext, childresults);
-        }
+//        private LiquidExpressionResult EvalExpression(
+//            ITemplateContext templateContext, 
+//            IExpressionDescription o, 
+//            IEnumerable<Option<IExpressionConstant>> childresults)
+//        {
+//            return o.Eval(templateContext, childresults);
+//        }
 
         private LiquidExpressionResult EvalExpression(
             ITemplateContext templateContext, 

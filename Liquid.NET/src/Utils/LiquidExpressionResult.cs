@@ -46,7 +46,8 @@ namespace Liquid.NET.Utils
         public Option<T> SuccessOption<T>()
             where T : IExpressionConstant
         {
-            return (Option<T>) ((dynamic) Right);
+            //return (Option<T>) ((dynamic) Right);
+            return (Option<T>)((object)Right);
         }
 
         public LiquidError ErrorResult

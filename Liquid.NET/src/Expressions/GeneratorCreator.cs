@@ -120,11 +120,22 @@ namespace Liquid.NET.Expressions
             {
                 return NumericValue.Create(0);
             }
-            var valueAsNumeric = ValueCaster.Cast<IExpressionConstant, NumericValue>(liquidExpressionResult.SuccessResult.Value);
+            var valueAsNumeric = liquidExpressionResult.SuccessResult.Value as NumericValue;
 
-            return liquidExpressionResult.IsSuccess && liquidExpressionResult.SuccessResult.HasValue ? 
-                valueAsNumeric.SuccessValue<NumericValue>()
-                : NumericValue.Create(0);
+            if (valueAsNumeric == null)
+            {
+                var castedValue =
+                    ValueCaster.Cast<IExpressionConstant, NumericValue>(liquidExpressionResult.SuccessResult.Value);
+
+                return liquidExpressionResult.IsSuccess && liquidExpressionResult.SuccessResult.HasValue
+                    ? castedValue.SuccessValue<NumericValue>()
+                    : NumericValue.Create(0);
+            }
+            else
+            {
+                return valueAsNumeric;
+            }
+
         }
     }
 }

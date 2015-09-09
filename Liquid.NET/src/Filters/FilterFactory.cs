@@ -81,7 +81,7 @@ namespace Liquid.NET.Filters
                         //Console.WriteLine("COMPARING " + filterList[i].Value.GetType() + " TO " + argType);
                         if (argType == typeof (ExpressionConstant) || argType == typeof (IExpressionConstant)) // most generic type
                         {
-                            Console.WriteLine("Skipping ExpressionConstant...");
+                            //Console.WriteLine("Skipping ExpressionConstant...");
                             result.Add(filterList[i].Value);
                             continue;
                         }
@@ -90,7 +90,7 @@ namespace Liquid.NET.Filters
                         ).WhenError(
                             prm =>
                             {
-                                Console.WriteLine("THIS IS NULL");
+                                //Console.WriteLine("THIS IS NULL");
                                 result.Add(null);// This shouldnt' be hit
                             }
                         );

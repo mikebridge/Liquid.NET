@@ -93,11 +93,9 @@
     <Compile Include="src\Expressions\IsPresentExpression.cs" />
     <Compile Include="src\Expressions\IsBlankExpression.cs" />
     <Compile Include="src\Expressions\NotEqualsExpression.cs" />
-    <Compile Include="src\Expressions\IsNullExpression.cs" />
     <Compile Include="src\Expressions\IsEmptyExpression.cs" />
     <Compile Include="src\Expressions\AndExpression.cs" />
     <Compile Include="src\Expressions\EqualsExpression.cs" />
-    <Compile Include="src\Expressions\ExpressionBuilder.cs" />
     <Compile Include="src\Expressions\ExpressionDescription.cs" />
     <Compile Include="src\Expressions\GeneratorCreator.cs" />
     <Compile Include="src\Expressions\ComparisonExpressions.cs" />
@@ -107,7 +105,6 @@
     <Compile Include="src\Expressions\IExpressionDescriptionVisitor.cs" />
     <Compile Include="src\Expressions\NotExpression.cs" />
     <Compile Include="src\Expressions\LiquidExpressionTreeBuilder.cs" />
-    <Compile Include="src\Expressions\ObjectReferenceChain.cs" />
     <Compile Include="src\Expressions\OrExpression.cs" />
     <Compile Include="src\Expressions\TernaryExpression.cs" />
     <Compile Include="src\Expressions\UnaryExpression.cs" />

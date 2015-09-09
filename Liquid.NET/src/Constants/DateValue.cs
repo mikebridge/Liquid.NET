@@ -35,6 +35,9 @@ namespace Liquid.NET.Constants
 
         public DateTime? DateTimeValue { get { return _val; } }
 
-
+        public override string ToString()
+        {
+            return Value.ToString().ToLower();
+        }
     }
 }

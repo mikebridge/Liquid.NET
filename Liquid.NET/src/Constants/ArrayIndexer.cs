@@ -16,7 +16,7 @@ namespace Liquid.NET.Constants
             }
             key = WrapMod(key, array.Count);
             
-            Console.WriteLine("KEY IS "+ key);
+            //Console.WriteLine("KEY IS "+ key);
             return array[key];
         }
 

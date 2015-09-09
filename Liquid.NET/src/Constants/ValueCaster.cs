@@ -20,15 +20,48 @@ namespace Liquid.NET.Constants
             if (src is TDest)
             {
                 //var result = (TDest) ((dynamic) src);                
-                IExpressionConstant success = (TDest)((dynamic)src);
-                return LiquidExpressionResult.Success( new Some<IExpressionConstant>(success) );
+                //IExpressionConstant success = (TDest)((dynamic)src);
+                IExpressionConstant success = (TDest) (object) src;
+                return LiquidExpressionResult.Success(new Some<IExpressionConstant>(success));
             }
             if (typeof (TDest) == typeof (StringValue))
             {
                 //Console.WriteLine(src);
-                return  LiquidExpressionResult.Success(new StringValue(src.ToString()));
-           }
-            return Convert<TDest>((dynamic)src);
+                return LiquidExpressionResult.Success(new StringValue(src.ToString()));
+            }
+            //return Convert<TDest>((dynamic)src);
+            var str = src as StringValue;
+            if (str != null)
+            {
+                return Convert<TDest>(str);
+            }
+            var num = src as NumericValue;
+            if (num != null)
+            {
+                return Convert<TDest>(num);
+            }
+            var boo = src as BooleanValue;
+            if (boo != null)
+            {
+                return Convert<TDest>(boo);
+            }
+            var dict = src as DictionaryValue;
+            if (dict != null)
+            {
+                return Convert<TDest>(dict);
+            }
+            var arr = src as ArrayValue;
+            if (arr != null)
+            {
+                return Convert<TDest>(arr);
+            }
+            var date = src as DateValue;
+            if (date != null)
+            {
+                return Convert<TDest>(date);
+            }
+            return Convert<TDest>(src);
+           
         }
 
         /// <summary>

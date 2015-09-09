@@ -16,10 +16,26 @@ namespace Liquid.NET.Constants
             {
                 return false; // this appears to be the case in liquid?
             }
-            return CheckIsEmpty((dynamic)val);
+            //return CheckIsEmpty((dynamic)val);
+            var str = val as StringValue;
+            if (str != null)
+            {
+                return CheckIsEmpty(str);
+            }
+            var arr = val as ArrayValue;
+            if (arr != null)
+            {
+                return CheckIsEmpty(arr);
+            }
+            var dict = val as DictionaryValue;
+            if (dict != null)
+            {
+                return CheckIsEmpty(dict);
+            }
+            return CheckIsEmpty(val);
         }
 
-        private static bool CheckIsEmpty(IExpressionConstant val)
+        private static bool CheckIsEmpty(IExpressionConstant _)
         {
             return false; // the only conditions will have been caught by IsEmpty
         }
@@ -51,7 +67,23 @@ namespace Liquid.NET.Constants
             {
                 return true; // regardless of what shopify liquid + activesupport do
             }
-            return CheckIsBlank((dynamic)val);
+            //return CheckIsBlank((dynamic)val);
+            var str = val as StringValue;
+            if (str != null)
+            {
+                return CheckIsBlank(str);
+            }
+            var arr = val as ArrayValue;
+            if (arr != null)
+            {
+                return CheckIsBlank(arr);
+            }
+            var dict = val as DictionaryValue;
+            if (dict != null)
+            {
+                return CheckIsBlank(dict);
+            }
+            return CheckIsBlank(val);
         }
 
         private static bool CheckIsBlank(IExpressionConstant _)

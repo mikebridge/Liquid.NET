@@ -50,34 +50,30 @@ namespace Liquid.NET.Filters
         }
         public virtual LiquidExpressionResult ApplyTo(ITemplateContext ctx, NumericValue val)
         {
-            //throw new Exception("Need to figure out how to do this part");
             return ApplyTo(ctx,  (IExpressionConstant)val);
         }
+
         public virtual LiquidExpressionResult ApplyTo(ITemplateContext ctx, StringValue val)
         {
-            //throw new Exception("Need to figure out how to do this part");
             return ApplyTo(ctx, (IExpressionConstant)val);
         }
+
         public virtual LiquidExpressionResult ApplyTo(ITemplateContext ctx, DictionaryValue val)
         {
-            //throw new Exception("Need to figure out how to do this part");
             return ApplyTo(ctx, (IExpressionConstant)val);
         }
         public virtual LiquidExpressionResult ApplyTo(ITemplateContext ctx, ArrayValue val)
         {
-            //throw new Exception("Need to figure out how to do this part");
             return ApplyTo(ctx, (IExpressionConstant)val);
         }
 
         public virtual LiquidExpressionResult ApplyTo(ITemplateContext ctx, BooleanValue val)
         {
-            //throw new Exception("Need to figure out how to do this part");
             return ApplyTo(ctx, (IExpressionConstant)val);
         }
 
         public virtual LiquidExpressionResult ApplyTo(ITemplateContext ctx, DateValue val)
         {
-            //throw new Exception("Need to figure out how to do this part");
             return ApplyTo(ctx, (IExpressionConstant)val);
         }
 

@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
+
 using Liquid.NET.Constants;
 using Liquid.NET.Tests.Helpers;
 using NUnit.Framework;
@@ -44,7 +42,8 @@ namespace Liquid.NET.Tests
             var end = DateTime.Now;
             TimeSpan timeDiff = end - start;
             Console.WriteLine("ELAPSED: " + timeDiff.TotalMilliseconds);
-            Assert.Fail("Not Implemented Yet");
+            Assert.That(timeDiff.Milliseconds < 500);
+            //Assert.Fail("Not Implemented Yet");
 
         }
 

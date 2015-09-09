@@ -28,7 +28,23 @@ namespace Liquid.NET.Expressions
                 return LiquidExpressionResult.Success(new BooleanValue(false));
             }
 
-            return Contains((dynamic) exprList[0].Value, exprList[1].Value);
+            //return Contains((dynamic) exprList[0].Value, exprList[1].Value);
+            var arr = exprList[0].Value as ArrayValue;
+            if (arr != null)
+            {
+                return Contains(arr, exprList[1].Value);
+            }
+            var dict = exprList[0].Value as DictionaryValue;
+            if (dict != null)
+            {
+                return Contains(dict, exprList[1].Value);
+            }
+            var str = exprList[0].Value as StringValue;
+            if (str != null)
+            {
+                return Contains(str, exprList[1].Value);
+            }
+            return Contains(exprList[0].Value, exprList[1].Value);
         }
 
         private LiquidExpressionResult Contains(IExpressionConstant expr, IExpressionConstant expressionConstant)

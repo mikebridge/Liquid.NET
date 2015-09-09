@@ -57,5 +57,17 @@ namespace Liquid.NET.Constants
         {
             return ArrValue.GetEnumerator();
         }
+
+        public override string ToString()
+        {
+
+            // The JSON way:
+            //var strs = arrayValue.ArrValue.Select(x => Quote(GetWrappedType(x), RenderAsString(x)));
+            //return "[ " + String.Join(", ", strs) + " ]"; 
+
+            // The Concatenated way:
+            var strs = ArrValue.Select(x => x.Value.ToString());
+            return String.Join("", strs); 
+        }
     }
 }

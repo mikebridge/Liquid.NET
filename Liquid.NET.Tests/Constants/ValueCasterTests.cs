@@ -85,8 +85,8 @@ namespace Liquid.NET.Tests.Constants
             var num = new ArrayValue(new List<IExpressionConstant> { new StringValue("a"), new StringValue("b"), new StringValue("c") });
 
             // Act
-            var stringliteral = ValueCaster.Cast<ArrayValue, StringValue>(num)
-                .SuccessValue<StringValue>()
+            var result1 = ValueCaster.Cast<ArrayValue, StringValue>(num);
+            var stringliteral = result1.SuccessValue<StringValue>()
                 .StringVal;
 
             // Assert
@@ -311,6 +311,33 @@ namespace Liquid.NET.Tests.Constants
 
         }
 
+        [Test]
+        public void It_Should_Render_A_Null_In_A_Dictionary()
+        {
+            // Arrange     
+            var subDictValue = new DictionaryValue(
+                new Dictionary<string, IExpressionConstant>
+                {
+                    {"abc", new StringValue("def")},
+                    {"ghi", null}
+                });
+            var dictValue = new DictionaryValue(
+                new Dictionary<string, IExpressionConstant>
+                {
+                    {"one", null},
+                    {"two", subDictValue},
+                });
+
+            // Act
+            ITemplateContext ctx = new TemplateContext().DefineLocalVariable("dict1", dictValue);
+
+            // Act
+            var result = RenderingHelper.RenderTemplate("Result : {{ dict1 }}", ctx);
+
+            // Assert
+            Assert.That(result, Is.EqualTo("Result : { \"one\" : null, \"two\" : { \"abc\" : \"def\", \"ghi\" : null } }"));
+
+        }
 
     }
 }

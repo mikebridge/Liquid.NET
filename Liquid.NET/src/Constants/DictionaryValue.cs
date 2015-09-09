@@ -48,5 +48,57 @@ namespace Liquid.NET.Constants
             //Console.WriteLine("IS " + result);
             return result;
         }
+
+        public override string ToString()
+        {
+            return "{ " +
+                   String.Join(", ", DictValue
+                       .Keys
+                       .Select(key => FormatKvPair(key, DictValue[key]))
+                       ) + " }";
+        }
+
+
+        private static String FormatKvPair(string key, Option<IExpressionConstant> expressionConstant)
+        {
+            Type wrappedType = GetWrappedType(expressionConstant);
+            String exprConstantAsString = expressionConstant.HasValue? expressionConstant.Value.ToString() : "null";
+            return Quote(typeof(StringValue), key) + " : " + Quote(wrappedType, exprConstantAsString);
+        }
+
+        private static Type GetWrappedType<T>(Option<T> expressionConstant)
+            where T : IExpressionConstant
+        {
+            if (expressionConstant.HasValue)
+            {
+                var nestedType = expressionConstant.Value.GetType();
+                //Console.WriteLine("NEsted type " + nestedType);
+                return nestedType;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public static String Quote(Type origType, String str)
+        {
+            if (origType == null)
+            {
+                return "null";
+            }
+            //            if (typeof(NumericValue).IsAssignableFrom(origType) || typeof(BooleanValue).IsAssignableFrom(origType) ||
+            //                if (typeof(ArrayValue).IsAssignableFrom(origType) || typeof(DictionaryValue).IsAssignableFrom(origType))
+            //            {
+            if (typeof(StringValue).IsAssignableFrom(origType))
+            {
+                return "\"" + str + "\"";
+            }
+            else
+            {
+                return str;
+            }
+        }
+
     }
 }

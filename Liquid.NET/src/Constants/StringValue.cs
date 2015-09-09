@@ -54,5 +54,10 @@ namespace Liquid.NET.Constants
             }
             return StringVal.ToCharArray().GetEnumerator();
         }
+
+        public override string ToString()
+        {
+            return StringVal;
+        }
     }
 }

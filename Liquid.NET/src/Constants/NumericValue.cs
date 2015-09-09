@@ -6,6 +6,11 @@ using Liquid.NET.Utils;
 
 namespace Liquid.NET.Constants
 {
+    /// <summary>
+    /// Todo: implement this as either separate classes, or else as one class
+    /// on top of e.g. BigDecimal.  The dynamic casting seems to slow things down.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     internal class NumericValue<T> : NumericValue
     {
         private readonly T _value;

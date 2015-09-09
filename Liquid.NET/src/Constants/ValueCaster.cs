@@ -23,7 +23,11 @@ namespace Liquid.NET.Constants
                 IExpressionConstant success = (TDest)((dynamic)src);
                 return LiquidExpressionResult.Success( new Some<IExpressionConstant>(success) );
             }
-
+            if (typeof (TDest) == typeof (StringValue))
+            {
+                //Console.WriteLine(src);
+                return  LiquidExpressionResult.Success(new StringValue(src.ToString()));
+           }
             return Convert<TDest>((dynamic)src);
         }
 
@@ -57,18 +61,8 @@ namespace Liquid.NET.Constants
                 return LiquidExpressionResult.Success(num);
             }
 
-            if (destType == typeof (StringValue))
-            {
-                var strResult = num.ToString();
-//                var strResult = num.IsInt ? 
-//                    num.BigIntValue.ToString():
-//                    num.DecimalValue.ToString("0.0###");
-                    //num.DecimalValue.ToString("G29");
-
-                return LiquidExpressionResult.Success(new StringValue(strResult));
-            }
             return LiquidExpressionResult.Success(NumericValue.Create(0)); // Liquid seems to convert unknowns to numeric.
-            //return ConstantFactory.CreateError<TDest>("Can't convert from numeric to " + destType);
+           
         }
 
         private static LiquidExpressionResult Convert<TDest>(BooleanValue boolean)
@@ -80,23 +74,15 @@ namespace Liquid.NET.Constants
                 return LiquidExpressionResult.Success(boolean);
             }
 
-            if (destType == typeof (StringValue))
-            {
-                return LiquidExpressionResult.Success(new StringValue(boolean.Value.ToString().ToLower()));
-            }
             return LiquidExpressionResult.Error("Can't convert from boolean to " + destType);
-            //return ConstantFactory.CreateError<TDest>("Can't convert from boolean to " + destType);
-
+       
         }
 
         private static LiquidExpressionResult Convert<TDest>(DateValue date)
              where TDest : IExpressionConstant
         {
             var destType = typeof(TDest);
-            if (destType == typeof(StringValue))
-            {
-                return LiquidExpressionResult.Success(new StringValue(date.Value.ToString().ToLower()));
-            }
+
             return LiquidExpressionResult.Error("Can't convert from date to " + destType);
 
         }
@@ -104,20 +90,8 @@ namespace Liquid.NET.Constants
         private static LiquidExpressionResult Convert<TDest>(DictionaryValue dictionaryValue)
            where TDest : IExpressionConstant
         {
-            //Console.WriteLine("Rendering dictionary");
             var destType = typeof(TDest);
 
-            if (destType == typeof(StringValue))
-            {
-
-                var result = new StringValue("{ " + 
-                    String.Join(", ", dictionaryValue.DictValue
-                        .Keys
-                        .Select(key => FormatKvPair(key, dictionaryValue.DictValue[key]))
-                        ) + " }"
-                        );
-                return LiquidExpressionResult.Success(result);
-            }
             // So, according to https://github.com/Shopify/liquid/wiki/Liquid-for-Designers, a hash value will be iterated
             // as an array with two indices.
             if (destType == typeof (ArrayValue))
@@ -139,69 +113,11 @@ namespace Liquid.NET.Constants
             //Console.WriteLine("Rendering array");
             var destType = typeof(TDest);
 
-            if (destType == typeof(StringValue))
-            {
-                //Console.WriteLine("Converting array to string");
-
-                return LiquidExpressionResult.Success(new StringValue(FormatArray(arrayValue)));
-            }
             // TODO: Should this return the default value for whatever TDest is requested?
             return LiquidExpressionResult.Error("Can't convert from an ArrayValue to " + destType);
         }
 
-        private static string FormatArray(ArrayValue arrayValue)
-        {
-            // The JSON way:
-            //var strs = arrayValue.ArrValue.Select(x => Quote(GetWrappedType(x), RenderAsString(x)));
-            //return "[ " + String.Join(", ", strs) + " ]"; 
-
-            // The Concatenated way:
-            var strs = arrayValue.ArrValue.Select(RenderAsString);
-            return String.Join("", strs); 
-
-        }
-
-
-        private static String FormatKvPair(string key, Option<IExpressionConstant> expressionConstant)
-        {
-            Type wrappedType = GetWrappedType(expressionConstant);
-            String exprConstantAsString = RenderAsString(expressionConstant);
-            return Quote(typeof(StringValue), key) + " : " + Quote(wrappedType, exprConstantAsString);
-        }
-
-        private static Type GetWrappedType<T>(Option<T> expressionConstant)
-            where T:IExpressionConstant
-        {
-            if (expressionConstant.HasValue)
-            {
-                var nestedType = expressionConstant.Value.GetType();
-                //Console.WriteLine("NEsted type " + nestedType);
-                return nestedType;
-            }
-            else
-            {
-                return null;
-            }
-        }
-
-        private static String Quote(Type origType, String str)
-        {
-            if (origType == null)
-            {
-                return "null";
-            }
-//            if (typeof(NumericValue).IsAssignableFrom(origType) || typeof(BooleanValue).IsAssignableFrom(origType) ||
-//                if (typeof(ArrayValue).IsAssignableFrom(origType) || typeof(DictionaryValue).IsAssignableFrom(origType))
-//            {
-            if (typeof(StringValue).IsAssignableFrom(origType)) 
-            {
-                return "\"" + str + "\"";
-            }
-            else
-            {
-                return str;                
-            }
-        }
+        
 
         private static LiquidExpressionResult Convert<TDest>(StringValue str)
             where TDest : IExpressionConstant
@@ -355,14 +271,14 @@ namespace Liquid.NET.Constants
             {
                 return "";
             }
-
-            var stringResult = Cast<IExpressionConstant, StringValue>(val);
-
-            if (stringResult.IsError)
-            {
-                return "";
-            }
-            return stringResult.SuccessResult.HasValue ? ((StringValue)stringResult.SuccessResult.Value).StringVal : "";
+            return val.ToString();
+//            var stringResult = Cast<IExpressionConstant, StringValue>(val);
+//
+//            if (stringResult.IsError)
+//            {
+//                return "";
+//            }
+//            return stringResult.SuccessResult.HasValue ? ((StringValue)stringResult.SuccessResult.Value).StringVal : "";
         }
 
     }

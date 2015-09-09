@@ -23,8 +23,8 @@ namespace Liquid.NET.Constants
             IExpressionConstant value,
             IExpressionConstant indexProperty)
         {
-            Console.WriteLine("LOOKUP=> VALUE: " + value);
-            Console.WriteLine("      => INDEX: " + indexProperty);
+            //Console.WriteLine("LOOKUP=> VALUE: " + value);
+            //Console.WriteLine("      => INDEX: " + indexProperty);
             if (value == null)
             {
                 LiquidExpressionResult.Error("ERROR : cannot apply an index to a nil value.");

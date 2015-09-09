@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 using Liquid.NET.Constants;
+using Liquid.NET.Expressions;
 using Liquid.NET.Symbols;
 using Liquid.NET.Tags.Custom;
 using Liquid.NET.Utils;
@@ -73,6 +74,22 @@ namespace Liquid.NET.Tests.Tags
 
         }
 
+
+        [Test]
+        public void It_Should_Create_A_For_Like_Loop()
+        {
+            // Act
+            var templateContext = new TemplateContext()
+                .WithAllFilters()
+                .DefineLocalVariable("array", new ArrayValue(new List<IExpressionConstant>{NumericValue.Create(10),NumericValue.Create(11)} ))
+                .WithCustomTagBlockRenderer<ForLikeBlockTag>("forcustom");
+            var result = RenderingHelper.RenderTemplate("Result : {% forcustom \"item\" array %}{{item}}{% endforcustom %}", templateContext);
+
+            // Assert
+            Assert.That(result, Is.EqualTo("Result : START CUSTOM FOR LOOP1011END CUSTOM FOR LOOP"));
+
+        }
+
         /// <summary>
         /// Reverse each word
         /// </summary>
@@ -80,7 +97,7 @@ namespace Liquid.NET.Tests.Tags
         {
 
             public StringValue Render(
-                    ITemplateContext templatecontext, 
+                    ITemplateContext templatecontext,
                     TreeNode<IASTNode> liquidBlock,
                     IList<Option<IExpressionConstant>> args)
             {
@@ -88,9 +105,9 @@ namespace Liquid.NET.Tests.Tags
 
                 var result = EvalLiquidBlock(templatecontext, liquidBlock);
 
-                var words = result.Split(new []{' '}, StringSplitOptions.RemoveEmptyEntries);
-                
-                return new StringValue(String.Join(" ", 
+                var words = result.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+                return new StringValue(String.Join(" ",
                     words.Select(x => new String(x.Reverse().ToArray()))));
 
             }
@@ -106,5 +123,61 @@ namespace Liquid.NET.Tests.Tags
         }
 
 
+        /// <summary>
+        /// Reverse each word
+        /// </summary>
+        public class ForLikeBlockTag : ICustomBlockTagRenderer
+        {
+
+            public StringValue Render(
+                    ITemplateContext templateContext,
+                    TreeNode<IASTNode> liquidBlock,
+                    IList<Option<IExpressionConstant>> args)
+            {
+                // TODO: Should the scope be created in the iterator?
+                var localBlockScope = new SymbolTable();
+                templateContext.SymbolTableStack.Push(localBlockScope);
+                StringValue result = new StringValue("");
+                try
+                {
+                    // normally you would need to verify that arg0 and arg1 exists and are the correct value types.
+                    String varname = args[0].Value.ToString();
+
+                    var iterableFactory = new ArrayValueCreator(
+                        new TreeNode<LiquidExpression>(
+                            new LiquidExpression { Expression = args[1].Value }));
+
+                    var iterable = iterableFactory.Eval(templateContext).ToList();
+
+                    result = IterateBlock(varname, templateContext, iterable, liquidBlock);
+                }
+                finally
+                {
+                    templateContext.SymbolTableStack.Pop();
+                }
+                return new StringValue("START CUSTOM FOR LOOP" + result.StringVal + "END CUSTOM FOR LOOP");
+
+            }
+
+            private StringValue IterateBlock(
+                String varname,
+                ITemplateContext templateContext,
+                List<IExpressionConstant> iterable,
+                TreeNode<IASTNode> liquidBlock)
+            {
+                // TODO: this creates a new renderer, but probably
+                // it should reuse the current one...?
+                var astRenderer = new LiquidASTRenderer();
+                var subRenderer = new RenderingVisitor(astRenderer, templateContext);
+                foreach (var item in iterable)
+                {
+                    templateContext.SymbolTableStack.Define(varname, item);
+                    astRenderer.StartVisiting(subRenderer, liquidBlock);
+                }
+                // you would also process the errors if any in subRenderer
+                return new StringValue(subRenderer.Text);
+            }
+
+        }
     }
 }

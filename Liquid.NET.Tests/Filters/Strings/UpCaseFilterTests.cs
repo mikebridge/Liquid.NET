@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using NUnit.Framework;
 
 namespace Liquid.NET.Tests.Filters.Strings
@@ -20,5 +16,29 @@ namespace Liquid.NET.Tests.Filters.Strings
             Assert.That(result, Is.EqualTo("Result : TEST"));
 
         }
+
+        [Test]
+        public void It_Should_Not_Fail_For_Nil()
+        {
+            // Arrange
+            var result = RenderingHelper.RenderTemplate("Result : {{  nil | upcase }}");
+
+            // Assert
+            Assert.That(result, Is.EqualTo("Result : "));
+
+        }
+
+        [Test]
+        public void It_Should_Not_Fail_For_Numerics()
+        {
+            // Arrange
+            var result = RenderingHelper.RenderTemplate("Result : {{ 1 | upcase }}");
+
+            // Assert
+            Assert.That(result, Is.EqualTo("Result : 1"));
+
+        }
+
+
     }
 }

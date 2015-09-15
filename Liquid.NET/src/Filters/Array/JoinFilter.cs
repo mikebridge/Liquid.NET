@@ -6,7 +6,7 @@ using Liquid.NET.Utils;
 
 namespace Liquid.NET.Filters.Array
 {
-    public class JoinFilter : FilterExpression<ExpressionConstant, StringValue>
+    public class JoinFilter : FilterExpression<IExpressionConstant, StringValue>
     {
         private readonly StringValue _separator;
 
@@ -19,9 +19,8 @@ namespace Liquid.NET.Filters.Array
         {
             String separator = _separator == null ? "" : _separator.StringVal;
 
-            var vals = liquidArrayExpression
-                .ArrValue
-                .Select(ValueCaster.RenderAsString);
+            var vals = liquidArrayExpression.ArrValue;
+                //.Select(x => x.ToString());
 
             return LiquidExpressionResult.Success(new StringValue(String.Join(separator, vals)));
         }

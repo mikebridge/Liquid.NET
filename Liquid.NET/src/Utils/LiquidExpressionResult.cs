@@ -70,11 +70,10 @@ namespace Liquid.NET.Utils
             return new LiquidExpressionResult(success);
         }
 
-//        public static LiquidExpressionResult Success(IExpressionConstant success)
-//        {
-//            return Success(new Some<IExpressionConstant>(success));
-//        }
-
+        public static LiquidExpressionResult Success(String successString)
+        {
+            return Success(new StringValue(successString));
+        }
 
     }
 

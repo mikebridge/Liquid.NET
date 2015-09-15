@@ -4,11 +4,11 @@ using Liquid.NET.Utils;
 
 namespace Liquid.NET.Filters.Strings
 {
-    public class UpCaseFilter : FilterExpression<IExpressionConstant, StringValue>
+    public class UpCaseFilter : FilterExpression<StringValue, StringValue>
     {
-        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, IExpressionConstant liquidExpression) 
+        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, StringValue liquidExpression) 
         {
-            return LiquidExpressionResult.Success(StringUtils.Eval(liquidExpression, x => x.ToUpper()));
+            return LiquidExpressionResult.Success(liquidExpression.ToString().ToUpper());
         }
     }
 }

@@ -352,7 +352,6 @@ namespace Liquid.NET
 
 
                     //StartNewLiquidExpressionTree(x => forBlock.Limit = x);
-                    //zzz
                     //StartCapturingVariable(context.for_param_limit().variable());
                     
                     //MarkCurrentExpressionComplete();
@@ -1537,7 +1536,6 @@ namespace Liquid.NET
 ////                    // This chain needs to be evaluated --- somehow the parent evaluation needs
 ////                    // to be able to pick up on it....
 ////                    //var refChain = new ObjectReferenceChain(arrayIndexLiquidExpression);
-////                    // zzz
 ////                    indexingFilter.AddArg(new TreeNode<LiquidExpression>(arrayIndexLiquidExpression));
 ////                    //indexingFilter.AddArg(refChain);
 ////                    //arrayIndex.objectvariableindex();
@@ -1733,8 +1731,6 @@ namespace Liquid.NET
             // This removes extra whitespace---which may not be what we want...?
             // May need to figure out how to put the whitespace in the hidden stream for this only.
             String normalizedArgs = String.Join(" ", originalTokens.Select(x => x.Text));
-            //Console.WriteLine("Saving raw args " + normalizedArgs);
-            //zzz
 
             CurrentBuilderContext.LiquidExpressionBuilder.SetRawArgsForLastExpressionsFilter(normalizedArgs);
         }

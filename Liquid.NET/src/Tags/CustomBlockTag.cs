@@ -10,6 +10,14 @@ namespace Liquid.NET.Tags
 {
     public class CustomBlockTag : IASTNode
     {
+        public static CustomBlockTag CreateFromCustomTag(CustomTag tag, TreeNode<IASTNode> liquidBlock)
+        {
+           return new CustomBlockTag(tag.TagName)
+            {
+                LiquidExpressionTrees = tag.LiquidExpressionTrees,
+                LiquidBlock = liquidBlock
+            };
+        }
 
         public String TagName { get; private set; }
 

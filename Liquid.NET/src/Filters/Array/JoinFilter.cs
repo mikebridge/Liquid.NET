@@ -19,7 +19,8 @@ namespace Liquid.NET.Filters.Array
         {
             String separator = _separator == null ? "" : _separator.StringVal;
 
-            var vals = liquidArrayExpression.ArrValue;
+            var vals = liquidArrayExpression.ArrValue
+                .Select(ValueCaster.RenderAsString);
                 //.Select(x => x.ToString());
 
             return LiquidExpressionResult.Success(new StringValue(String.Join(separator, vals)));

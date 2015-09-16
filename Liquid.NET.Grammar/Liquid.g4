@@ -41,8 +41,10 @@ tag:				raw_tag
 					| continue_tag
 					| macro_tag
 					| ifchanged_tag
-					| custom_blocktag  //{System.String.Equals("end" + custom_block_start_tag().GetText(), custom_block_end_tag().GetText())}?
-					| custom_tag
+					//| custom_blocktag  //{System.String.Equals("end" + custom_block_start_tag().GetText(), custom_block_end_tag().GetText())}?
+					//| custom_tag
+					| custom_tag_start
+					| custom_tag_end
 					;
 
 // text wrapped in a raw tag
@@ -53,20 +55,22 @@ raw_tag:			RAW;
 
 // TODO: Clean up this semantic predicate so it gives a decent error.
 //custom_blocktag:	TAGSTART custom_block_start_tag customtagblock_expr* TAGEND custom_blocktag_block TAGSTART custom_block_end_tag { _localctx.custom_block_end_tag().GetText().Equals("end" + _localctx.custom_block_start_tag().GetText()) }?  TAGEND ;
-custom_blocktag:	TAGSTART custom_block_start_tag customtagblock_expr* TAGEND custom_blocktag_block TAGSTART custom_block_end_tag TAGEND { _localctx.custom_block_end_tag().GetText().Equals("end" + _localctx.custom_block_start_tag().GetText()) }?;
 //custom_blocktag:	TAGSTART custom_block_start_tag customtagblock_expr* TAGEND custom_blocktag_block TAGSTART custom_block_end_tag TAGEND;
 //					| TAGSTART custom_block_start_tag customtagblock_expr* TAGEND custom_blocktag_block TAGSTART LABEL TAGEND {NotifyErrorListeners("Liquid error: end tag does not match start tag '" + _localctx.custom_block_start_tag().GetText() + "'");} ;
 
-custom_block_start_tag:		VARIABLENAME;
-custom_block_end_tag:		ENDLABEL;
 
-customtagblock_expr:		outputexpression;
+//custom_blocktag:	TAGSTART custom_block_start_tag customtagblock_expr* TAGEND custom_blocktag_block TAGSTART custom_block_end_tag TAGEND { _localctx.custom_block_end_tag().GetText().Equals("end" + _localctx.custom_block_start_tag().GetText()) }?;
+//custom_block_start_tag:		VARIABLENAME;
+//custom_block_end_tag:		ENDLABEL;
+//customtagblock_expr:		outputexpression;
+//custom_blocktag_block: block* ;
+//custom_tag:			TAGSTART tagname customtag_expr* TAGEND ;	
+//customtag_expr:		outputexpression;
 
-custom_blocktag_block: block* ;
-
-custom_tag:			TAGSTART tagname customtag_expr* TAGEND ;	
-
+custom_tag_start:	TAGSTART VARIABLENAME customtag_expr* TAGEND ;
 customtag_expr:		outputexpression;
+custom_tag_end:		TAGSTART ENDLABEL TAGEND ;
+
 
 break_tag:			TAGSTART BREAK_TAG TAGEND ;
 

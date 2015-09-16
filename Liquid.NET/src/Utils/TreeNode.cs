@@ -34,6 +34,14 @@ namespace Liquid.NET.Utils
             }
         }
 
+        public void RemoveChildren(IEnumerable<TreeNode<T>> children)
+        {
+            foreach (var child in children)
+            {
+                Children.Remove(child);
+            }
+        }
+
         public static IEnumerable<TreeNode<T>> FindWhere(
          IEnumerable<TreeNode<T>> nodes,
          Func<T, bool> predicate)

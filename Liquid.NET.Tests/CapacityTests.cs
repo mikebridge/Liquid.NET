@@ -36,7 +36,7 @@ namespace Liquid.NET.Tests
 
             var result = RenderingHelper.RenderTemplate(template, ctx);
 
-            Console.WriteLine(result);
+            //Console.WriteLine(result);
 
             // Assert
             var end = DateTime.Now;

@@ -17,13 +17,24 @@ namespace Liquid.NET.Tests.Tags
         [Test]
         public void It_Should_Parse_A_Custom_BlockTag()
         {
-            // Act
-            var templateContext = new TemplateContext().WithAllFilters().WithCustomTagBlockRenderer<WordReverserBlockTag>("echoargs");
-            var result = RenderingHelper.RenderTemplate("Result : {% echoargs \"hello\" 123 true %}echo{% endechoargs %}", templateContext);
+            try
+            {
+                // Act
+                var templateContext =
+                    new TemplateContext().WithAllFilters().WithCustomTagBlockRenderer<WordReverserBlockTag>("echoargs");
 
-            // Assert
-            Assert.That(result, Is.EqualTo("Result : ohce"));
+                var result =
+                    RenderingHelper.RenderTemplate("Result : {% echoargs \"hello\" 123 true %}echo{% endechoargs %}",
+                        templateContext);
+                Console.WriteLine(result);
 
+                // Assert
+                Assert.That(result, Is.EqualTo("Result : ohce"));
+            }
+            catch (LiquidRendererException ex)
+            {
+                Assert.Fail(String.Join(",", ex.LiquidErrors.Select(x => x.Message)));
+            }
         }
 
         [Test]

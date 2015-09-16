@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Liquid.NET.Constants;
 using Liquid.NET.Filters.Array;
 using NUnit.Framework;
@@ -24,6 +25,7 @@ namespace Liquid.NET.Tests.Filters.Array
 
             // Act
             var result = filter.Apply(new TemplateContext(), arrayValue).SuccessValue<StringValue>();
+            Console.WriteLine(result);
 
             // Assert
             Assert.That(result.StringVal, Is.EqualTo("a string, 123, 456.0, false"));

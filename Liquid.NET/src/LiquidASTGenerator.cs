@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
-using System.Web.UI.WebControls;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Tree;
 
@@ -746,12 +744,15 @@ namespace Liquid.NET
 
         public override void EnterCustom_tag_start(LiquidParser.Custom_tag_startContext context)
         {
-            Console.WriteLine("++ START OF OPENING CUSTOM TAG: " + context.VARIABLENAME());
+            // custom tags are interpreted as CustomTags (not CustomTagBlocks) until we 
+            // encounter an end tag.  at that point, the AST is rewritten to reflect this.
+
+            //Console.WriteLine("++ START OF OPENING CUSTOM TAG: " + context.VARIABLENAME());
             base.EnterCustom_tag_start(context);
             var customTag = new CustomTag(context.VARIABLENAME().GetText());
             var newNode = AddNodeToAST(customTag);
             //CurrentBuilderContext.CustomTagStack.Push(customTag);
-            Console.WriteLine("THe PARENT AST node (which needs to be stored in case of reparenting) is " + CurrentAstNode.Data);
+            //Console.WriteLine("THe PARENT AST node (which needs to be stored in case of reparenting) is " + CurrentAstNode.Data);
             var tuple = new Tuple<CustomTag, TreeNode<IASTNode>>(customTag, newNode);
             _customTagStackAndParent.Push(tuple);
         }
@@ -759,7 +760,7 @@ namespace Liquid.NET
          public override void EnterCustomtag_expr(LiquidParser.Customtag_exprContext context)
         {
             base.EnterCustomtag_expr(context);
-            Console.WriteLine("EXPR IS "+context.outputexpression().GetText());
+            //Console.WriteLine("EXPR IS "+context.outputexpression().GetText());
             
             StartNewLiquidExpressionTree(result =>
             {
@@ -770,24 +771,28 @@ namespace Liquid.NET
             
         }
 
-        public override void ExitCustom_tag_start(LiquidParser.Custom_tag_startContext context)
-        {
-            Console.WriteLine("++ END OF OPENING CUSTOM TAG: " + context.VARIABLENAME());
-            base.ExitCustom_tag_start(context);
-            //_astNodeStack.Pop();
-        }
+//        public override void ExitCustom_tag_start(LiquidParser.Custom_tag_startContext context)
+//        {
+//            //Console.WriteLine("++ END OF OPENING CUSTOM TAG: " + context.VARIABLENAME());
+//            base.ExitCustom_tag_start(context);
+//            //_astNodeStack.Pop();
+//        }
 
         public override void EnterCustom_tag_end(LiquidParser.Custom_tag_endContext context)
          {
-             Console.WriteLine("-- START OF CLOSING CUSTOM TAG: " + context.ENDLABEL());
+             //Console.WriteLine("-- START OF CLOSING CUSTOM TAG: " + context.ENDLABEL());
              base.EnterCustom_tag_end(context);
             //CurrentBuilderContext.CustomTagStack.Pop();
          }
 
         public override void ExitCustom_tag_end(LiquidParser.Custom_tag_endContext context)
         {
-            Console.WriteLine("NEED TO Restructure TREE HERE");
-            Console.WriteLine("-- END OF CLOSING CUSTOM TAG: " + context.ENDLABEL());
+            // find the CustomTag that this endtag closes, replace it with a CustomBlockTag,
+            // then place all the liquid blocks that were siblings in between the start tag and here
+            // into the new CustomBlockTag
+
+           // Console.WriteLine("NEED TO Restructure TREE HERE");
+            //Console.WriteLine("-- END OF CLOSING CUSTOM TAG: " + context.ENDLABEL());
             while(true)
             {
                 //if (CurrentBuilderContext.CustomTagStack.Count > 0)
@@ -797,130 +802,48 @@ namespace Liquid.NET
                     var maybeOpeningTagTuple = _customTagStackAndParent.Pop();
                     var customTagOpen = maybeOpeningTagTuple.Item1;
                     var astForCustomOpeningTag = maybeOpeningTagTuple.Item2;
-                    Console.WriteLine("CHECKING TAG " + customTagOpen.TagName);
+                    //Console.WriteLine("CHECKING TAG " + customTagOpen.TagName);
                     if (("end" + customTagOpen.TagName).ToLower().Equals(context.ENDLABEL().GetText().ToLower()))
                     {
-                        Console.WriteLine("FOUND OPENING TAG " + customTagOpen.TagName);
-                        Console.WriteLine("TODO: promote all sibling blocks between the start and end so they become the child of " + customTagOpen.TagName);
-                        Console.WriteLine("PARENT IS " + astForCustomOpeningTag);
-                        bool inSibling = false;
-                        foreach (var child in astForCustomOpeningTag.Parent.Children)
-                        {
-                            if (inSibling)
-                            {
-                                Console.WriteLine("Found Sibling "+child.Data);
-                                Console.WriteLine("TODO: APPEND THIS TO Custom Tag liquid Block!!");
-                            }
-                            else if (child.Data == customTagOpen)
-                            {
-                                Console.WriteLine("Found original custom tag" + child.Data);
-                                inSibling = true;
-                            } 
-                        }
+                        //Console.WriteLine("FOUND OPENING TAG " + customTagOpen.TagName);
+                        //Console.WriteLine("TODO: promote all sibling blocks between the start and end so they become the child of " + customTagOpen.TagName);
+                        //Console.WriteLine("PARENT IS " + astForCustomOpeningTag);
+                        //bool inSibling = false;
+                        //var childrenToRemoveFromParent()
+                        // find the content block and all its siblings up to here.
+                        var childrenToReplace = astForCustomOpeningTag.Parent.Children
+                            .SkipWhile(child => child.Data != customTagOpen)
+                            .ToList(); // this captures the CustomTag, which needs to be replaced, as well as the children, which need to be attached to the new block.
+                        astForCustomOpeningTag.Parent.RemoveChildren(childrenToReplace); // remove these from the parent block
+                        var childBlock = new TreeNode<IASTNode>(new RootDocumentNode()); // create a new block
+                        childBlock.AddChildren(childrenToReplace.Skip(1)); // and add everything except the customtag
+                        IASTNode customTagBlock = CustomBlockTag.CreateFromCustomTag(customTagOpen, childBlock); // recreate customtag as a customtagblock
+                        astForCustomOpeningTag.Parent.AddChild(CreateTreeNode(customTagBlock)); // re-add the block to the parent.
+                       
                         break;
                     }
                     else
                     {
-                        Console.WriteLine("Not a match");
+                        //Console.WriteLine("Not a match");
                     }
                 }
                 else
-                {
-                    // TODO: make this report the error correctly.
-                    throw new Exception("No opening tag for "+context.ENDLABEL());
+                {                  
+                    throw new LiquidParserException(new List<LiquidError>  {                       
+                        new LiquidError
+                        {
+                            Line = context.Start.Line,
+                            CharPositionInLine = context.Start.Column,
+                            Message = "There was no opening tag for the ending tag '" + context.ENDLABEL()+"'"
+                        }
+                    });
+
                 }
             }
 
             base.ExitCustom_tag_end(context);
-            //CurrentBuilderContext.CustomTagStack.Pop();
 
         }
-
-//        public override void EnterCustom_tag(LiquidParser.Custom_tagContext customContext)
-//        {
-//            base.EnterCustom_tag(customContext);
-//
-//            //Console.WriteLine("I see CUSTOM TAG " + customContext.tagname().GetText());
-//            var customTag = new CustomTag(customContext.tagname().GetText());
-//            AddNodeToAST(customTag);
-//
-//            CurrentBuilderContext.CustomTagStack.Push(customTag);
-//            //_astNodeStack.Push(customBlock.LiquidBlock); // capture the block
-//        }
-//
-//        public override void ExitCustom_tag(LiquidParser.Custom_tagContext context)
-//        {
-//            base.ExitCustom_tag(context);
-//            CurrentBuilderContext.CustomTagStack.Pop();
-//        }
-//
-//        public override void EnterCustom_blocktag(LiquidParser.Custom_blocktagContext customBlockContext)
-//        {
-//
-//            base.EnterCustom_blocktag(customBlockContext);
-////            if (customBlockContext.exception != null)
-////            {
-////                Console.WriteLine("There is an exception!!" + customBlockContext.exception.Message);
-////            }
-////            Console.WriteLine("I see CUSTOM BLOCK TAG " + customBlockContext);
-//            var customTag = new CustomBlockTag(customBlockContext.custom_block_start_tag().GetText());
-//            //var customTag = new CustomBlockTag(customBlockContext.LABEL().GetText());
-//            AddNodeToAST(customTag);
-//
-//            // TODO: Check that these match!
-//            //Console.WriteLine("START LABEL IS " + customBlockContext.custom_block_start_tag());
-//            //Console.WriteLine("END LABEL IS " + customBlockContext.custom_block_end_tag());
-//                        
-//            CurrentBuilderContext.CustomBlockTagStack.Push(customTag);
-//            //_astNodeStack.Push(customBlock.LiquidBlock); // capture the block
-//        }
-//
-//        public override void ExitCustom_blocktag(LiquidParser.Custom_blocktagContext context)
-//        {
-//            base.ExitCustom_blocktag(context);
-//            CurrentBuilderContext.CustomBlockTagStack.Pop();
-//        }
-//
-//        public override void EnterCustomtagblock_expr(LiquidParser.Customtagblock_exprContext context)
-//        {
-//            base.EnterCustomtagblock_expr(context);
-//            context.outputexpression();
-//            var y= context.children.Select(x => x.GetText());
-//            //Console.WriteLine("BLOCK EXPR IS " + context.outputexpression().GetText());
-//
-//            StartNewLiquidExpressionTree(result =>
-//            {
-//                CurrentBuilderContext.CustomBlockTagStack.Peek().LiquidExpressionTrees.Add(result);
-//            });
-//        }
-//
-//        public override void EnterCustom_blocktag_block(LiquidParser.Custom_blocktag_blockContext customBlockTagBlockContext)
-//        {
-//            base.EnterCustom_blocktag_block(customBlockTagBlockContext);
-//            //Console.WriteLine("EXPR IS " + context.);
-//
-//            // ZZZ if we don't know when a tag ends from the syntax analysis,
-//            // this block may end pu as 
-//            //_astNodeStack.Push(CurrentBuilderContext.CustomBlockTagStack.Peek().LiquidBlock);
-//        }
-//
-//        public override void ExitCustom_blocktag_block(LiquidParser.Custom_blocktag_blockContext context)
-//        {
-//            base.ExitCustom_blocktag_block(context);
-//            //_astNodeStack.Pop();
-//        }
-//
-//        public override void EnterCustomtag_expr(LiquidParser.Customtag_exprContext context)
-//        {
-//            base.EnterCustomtag_expr(context);
-//            //Console.WriteLine("EXPR IS "+context.outputexpression().GetText());
-//            
-//            StartNewLiquidExpressionTree(result =>
-//            {
-//                //Console.WriteLine("Setting ExpRESSION TREE TO " + result);
-//                CurrentBuilderContext.CustomTagStack.Peek().LiquidExpressionTrees.Add(result);
-//            });
-//        }
 
         #endregion
 
@@ -1493,7 +1416,7 @@ namespace Liquid.NET
         /// </summary>
         private void AddExpressionToCurrentExpressionBuilder(IExpressionDescription symbol)
         {
-            Console.WriteLine("AddExpressionToCurrentExpressionBuilder "+symbol);
+            //Console.WriteLine("AddExpressionToCurrentExpressionBuilder "+symbol);
             CurrentBuilderContext.LiquidExpressionBuilder.StartLiquidExpression(symbol);
         }
 
@@ -1510,7 +1433,7 @@ namespace Liquid.NET
 
         public override void EnterBlock(LiquidParser.BlockContext blockContext)
         {
-            Console.WriteLine(">>> ENTERING BLOCK *" + blockContext.GetText() + "*");
+            //Console.WriteLine(">>> ENTERING BLOCK *" + blockContext.GetText() + "*");
             _blockBuilderContextStack.Push(new BlockBuilderContext());
             base.EnterBlock(blockContext);
 
@@ -1518,7 +1441,7 @@ namespace Liquid.NET
 
         public override void ExitBlock(LiquidParser.BlockContext blockContext)
         {
-            Console.WriteLine(">>> EXITING BLOCK *" + blockContext.GetText() + "*");
+            //Console.WriteLine(">>> EXITING BLOCK *" + blockContext.GetText() + "*");
             _blockBuilderContextStack.Pop();
             base.ExitBlock(blockContext);
 
@@ -1529,7 +1452,7 @@ namespace Liquid.NET
         public override void EnterStringObject(LiquidParser.StringObjectContext context)
         {
             base.EnterStringObject(context);
-            Console.WriteLine("ENTERING SRTRING OBJECT " + context.GetText());
+            //Console.WriteLine("ENTERING SRTRING OBJECT " + context.GetText());
             AddExpressionToCurrentExpressionBuilder(GenerateStringSymbol(context.GetText()));
         }
 
@@ -1996,7 +1919,7 @@ namespace Liquid.NET
             CurrentAstNode.AddChild(newNode);
             return newNode;
         }
-
+       
         private class BlockBuilderContext
         {
             //public readonly Stack<CustomTag> CustomTagStack = new Stack<CustomTag>();

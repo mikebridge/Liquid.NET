@@ -38,7 +38,6 @@ namespace Liquid.NET.Tests.Tags
         }
 
         [Test]
-        // TODO: FIgure out how to make this return a proper error....
         public void It_Should_Not_Parse_A_Custom_BlockTag_With_No_End()
         {
             // Act
@@ -53,7 +52,7 @@ namespace Liquid.NET.Tests.Tags
             {
                 var allErrors = String.Join(",", ex.LiquidErrors.Select(x => x.ToString()));
                 Console.WriteLine(allErrors);
-                Assert.That(allErrors, Is.StringContaining("rule custom_blocktag failed predicate"));
+                Assert.That(allErrors, Is.StringContaining("There was no opening tag for the ending tag 'endsomethingelse'"));
             }
         }
 
@@ -71,6 +70,18 @@ namespace Liquid.NET.Tests.Tags
         }
 
         [Test]
+        public void It_Should_Parse_Very_Nested_Tags()
+        {
+            // Act
+            var templateContext = new TemplateContext().WithAllFilters().WithCustomTagBlockRenderer<WordReverserBlockTag>("reverse");
+            var result = RenderingHelper.RenderTemplate("Result : {% reverse %}{% if true %}TRUE{% endif %}{% reverse %}DEF{% reverse %}ABC{% endreverse %}{% endreverse %}{% endreverse %}", templateContext);
+
+            // Assert
+            Assert.That(result, Is.EqualTo("Result : DEFCBAEURT"));
+
+        }
+
+        [Test]
         public void It_Should_Parse_A_Custom_BlockTag_Along_With_A_Custom_Tag() 
         {
             // Act
@@ -81,7 +92,7 @@ namespace Liquid.NET.Tests.Tags
             var result = RenderingHelper.RenderTemplate("Result : {% echoargs2 \"Test\" %}{% echoargs \"hello\" 123 true %}{% if true %}IT IS TRUE{% endif %}{% endechoargs %}", templateContext);
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : TI SI EURT"));
+            Assert.That(result, Is.EqualTo("Result : I heard string:TestTI SI EURT"));
 
         }
 

@@ -353,7 +353,6 @@ namespace Liquid.NET
 
 
                     //StartNewLiquidExpressionTree(x => forBlock.Limit = x);
-                    //zzz
                     //StartCapturingVariable(context.for_param_limit().variable());
                     
                     //MarkCurrentExpressionComplete();
@@ -1494,6 +1493,7 @@ namespace Liquid.NET
 
 
 
+
         private static NumericValue CreateIntNumericValueFromString(string intstring)
         {
             return NumericValue.Create(Convert.ToInt32(intstring));
@@ -1677,8 +1677,6 @@ namespace Liquid.NET
             // This removes extra whitespace---which may not be what we want...?
             // May need to figure out how to put the whitespace in the hidden stream for this only.
             String normalizedArgs = String.Join(" ", originalTokens.Select(x => x.Text));
-            //Console.WriteLine("Saving raw args " + normalizedArgs);
-            //zzz
 
             CurrentBuilderContext.LiquidExpressionBuilder.SetRawArgsForLastExpressionsFilter(normalizedArgs);
         }

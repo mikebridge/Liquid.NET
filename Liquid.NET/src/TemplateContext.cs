@@ -27,6 +27,12 @@ namespace Liquid.NET
         private readonly IDictionary<String, Object> _registers = new ConcurrentDictionary<String, Object>();
         public IDictionary<string, object> Registers { get { return _registers;} }
         private IFileSystem _fileSystem;
+        private readonly LiquidOptions _options = new LiquidOptions();
+
+        public LiquidOptions Options
+        {
+            get { return _options; }
+        }
 
         public TemplateContext()
         {            
@@ -202,6 +208,7 @@ namespace Liquid.NET
             WithStandardFilters();
             WithShopifyFilters();
             WithDebuggingFilters();
+            WithNoForLimit();
             //WithJekyllFilters();
             return this;
 
@@ -216,5 +223,18 @@ namespace Liquid.NET
         }
 
 
+        public ITemplateContext WithNoForLimit()
+        {
+            _options.NoForLimit = true;
+            return this;
+        }
+
     }
+
+    public class LiquidOptions
+    {
+        public bool NoForLimit { get; internal set; }
+
+    }
+
 }

@@ -19,9 +19,11 @@ namespace Liquid.NET
         ITemplateContext WithFileSystem(IFileSystem fileSystem);
         ITemplateContext WithRegisters(IDictionary<String, Object> kv);
         ITemplateContext WithLocalVariables(IDictionary<String, IExpressionConstant> kv);
+        ITemplateContext WithNoForLimit();
 
         IFileSystem FileSystem { get; }
         IDictionary<String, Object> Registers { get; }
         SymbolTableStack SymbolTableStack { get; }
+        LiquidOptions Options { get; }
     }
 }

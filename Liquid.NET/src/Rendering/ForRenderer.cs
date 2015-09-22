@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection.Emit;
 using Liquid.NET.Constants;
 using Liquid.NET.Symbols;
 using Liquid.NET.Tags;
@@ -52,7 +51,11 @@ namespace Liquid.NET.Rendering
         private void IterateBlock(ForBlockTag forBlockTag, ITemplateContext templateContext, List<IExpressionConstant> iterable)
         {
             var offset = NumericValue.Create(0);
-            var  limit = NumericValue.Create(50);
+            NumericValue limit = null;
+            if (!templateContext.Options.NoForLimit)
+            {
+                limit = NumericValue.Create(50); // see: https://docs.shopify.com/themes/liquid-documentation/tags/iteration-tags#for             
+            }
             if (forBlockTag.Offset != null)
             {
                 var result = LiquidExpressionEvaluator.Eval(forBlockTag.Offset, templateContext);
@@ -70,7 +73,13 @@ namespace Liquid.NET.Rendering
                 }
             }
 
-            int length = iterable.Skip(offset.IntValue).Take(limit.IntValue).Count();
+            var subset = iterable.Skip(offset.IntValue);
+            if (limit != null)
+            {
+                subset = subset.Take(limit.IntValue);
+            }
+            var subsetList = subset.ToList();
+            var length = subsetList.Count();
             if (length <= 0) 
             {
                 _astRenderer.StartVisiting(_renderingVisitor, forBlockTag.ElseBlock);
@@ -78,7 +87,8 @@ namespace Liquid.NET.Rendering
             }
 
             int iter = 0;
-            foreach (var item in iterable.Skip(offset.IntValue).Take(limit.IntValue))
+            //foreach (var item in iterable.Skip(offset.IntValue).Take(limit.IntValue))
+            foreach (var item in subsetList)
             {
                 String typename = item == null ? "null" : item.LiquidTypeName;
                 templateContext.SymbolTableStack.Define("forloop", CreateForLoopDescriptor(

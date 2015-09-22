@@ -480,6 +480,27 @@ namespace Liquid.NET.Tests.Tags
             Assert.That(result, Is.EqualTo(expected));
         }
 
+        [Test]
+        public void It_Should_Remove_The_Upper_For_Limit()
+        {
+            // Arrange
+            const string templateString = "Result : {% for item in array%}<li>{{ item }}</li>{% endfor %}";
+            ITemplateContext ctx = new TemplateContext()
+                .WithNoForLimit();
+            var list = new ArrayValue(
+                Enumerable.Range(1, 100)
+                .Select(NumericValue.Create)
+                .Cast<IExpressionConstant>().ToList());
+            ctx.DefineLocalVariable("array", list);
+            var template = LiquidTemplate.Create(templateString);
+
+            // Act
+            String result = template.Render(ctx);
+
+            // Assert
+            Assert.That(result, Is.StringContaining("<li>100</li>"));
+        }
+
         private static string GetForLoop(string txt)
         {
             return @"Result : {%assign coll = ""1,2,3,4"" | split: ','%}"

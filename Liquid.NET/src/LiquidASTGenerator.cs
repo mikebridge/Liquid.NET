@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Antlr4.Runtime;
+using Antlr4.Runtime.Atn;
 using Antlr4.Runtime.Tree;
 
 using Liquid.NET.Constants;
@@ -69,10 +70,12 @@ namespace Liquid.NET
             
             var parser = new LiquidParser(_tokenStream);
 
-            parser.RemoveErrorListeners();
+            // START DEBUG
+            //parser.RemoveErrorListeners();
+            //parser.AddErrorListener(new DiagnosticErrorListener());
+            //parser.Interpreter.PredictionMode = PredictionMode.LlExactAmbigDetection;           
+            // END DEBUG 
 
-           
-            
             parser.AddErrorListener(liquidErrorListener);
             new ParseTreeWalker().Walk(this, parser.init());
 

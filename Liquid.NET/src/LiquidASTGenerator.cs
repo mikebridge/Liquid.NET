@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Antlr4.Runtime;
+using Antlr4.Runtime.Atn;
 using Antlr4.Runtime.Tree;
 
 using Liquid.NET.Constants;
@@ -58,24 +59,40 @@ namespace Liquid.NET
             _astNodeStack.Push(liquidAst.RootNode);
             var stringReader = new StringReader(template);
 
-            var liquidErrorListener = new LiquidErrorListener();
-            liquidErrorListener.ParsingErrorEventHandler += ParsingErrorEventHandler;
-            liquidErrorListener.ParsingErrorEventHandler += ErrorHandler;
-            
             var liquidLexer = new LiquidLexer(new AntlrInputStream(stringReader));
 
             _tokenStream = new CommonTokenStream(liquidLexer);
             _tokenStreamRewriter = new TokenStreamRewriter(_tokenStream);
             
             var parser = new LiquidParser(_tokenStream);
+        
+            // This is a two-stage parse SSL-first to prevent the slowness of the
+            // adaptive prediction, see:
+            // https://github.com/antlr/antlr4/issues/192#issuecomment-15238595
+            // https://theantlrguy.atlassian.net/wiki/pages/viewpage.action?pageId=1900591
+            // http://www.antlr.org/papers/allstar-techreport.pdf (section 3.2)
+            var defaultErrorStrategy = parser.ErrorHandler;
+            try
+            {
+                parser.ErrorHandler = new BailErrorStrategy();
+                parser.Interpreter.PredictionMode = PredictionMode.Sll;
+                parser.AddErrorListener(CreateLiquidErrorListener());
+                new ParseTreeWalker().Walk(this, parser.init());
+            }
+            catch
+            {
+                parser.Reset();
+                parser.ErrorHandler = defaultErrorStrategy;
+                parser.Interpreter.PredictionMode = PredictionMode.Ll;
+                parser.AddErrorListener(CreateLiquidErrorListener());
+                new ParseTreeWalker().Walk(this, parser.init());
+            }
 
-            parser.RemoveErrorListeners();
-
-           
-            
-            parser.AddErrorListener(liquidErrorListener);
-            new ParseTreeWalker().Walk(this, parser.init());
-
+            // START DEBUG
+            //parser.RemoveErrorListeners();
+            //parser.AddErrorListener(new DiagnosticErrorListener());
+            //parser.Interpreter.PredictionMode = PredictionMode.LlExactAmbigDetection;           
+            // END DEBUG 
             
             if (LiquidErrors.Any())
             {
@@ -83,6 +100,14 @@ namespace Liquid.NET
             }
 
             return liquidAst;
+        }
+
+        private LiquidErrorListener CreateLiquidErrorListener()
+        {
+            var liquidErrorListener = new LiquidErrorListener();
+            liquidErrorListener.ParsingErrorEventHandler += ParsingErrorEventHandler;
+            liquidErrorListener.ParsingErrorEventHandler += ErrorHandler;
+            return liquidErrorListener;
         }
 
         /// <summary>

@@ -47,6 +47,45 @@ namespace Liquid.NET.Tests
 
         }
 
+        [Test]
+        // https://github.com/antlr/antlr4/issues/192#issuecomment-15238595
+        public void It_Should_Not_Bog_On_Raw_Text_With_Adaptive_Prediction()
+        {
+            // Arrange
+
+            DateTime start = DateTime.Now;
+            Console.WriteLine("STARTING...");
+            int iterations = 100;
+
+            String template = "<html><body>\r\n";
+            for (int i = 0; i < iterations; i++)
+            {
+                template += "{% for x in (1..10) %} Test {{ x }}{% endfor %}";
+                for (int j = 0; j < 100; j++)
+                {
+                    template += " Raw text "+j;
+                }
+            }
+            template += "</body>\r\n</html>";
+            ITemplateContext ctx = new TemplateContext()
+                .WithAllFilters();
+
+            // Act
+
+            var result = RenderingHelper.RenderTemplate(template, ctx);
+
+            Console.WriteLine(result);
+
+            // Assert
+            var end = DateTime.Now;
+            TimeSpan timeDiff = end - start;
+            Console.WriteLine("ELAPSED: " + timeDiff.TotalMilliseconds);
+            Assert.That(timeDiff.Milliseconds < 1000);
+            //Assert.Fail("Not Implemented Yet");
+
+        }
+
+
         private string CreateInclude(int i)
         {
             return "{% for i in (1..10) %}{{ array[i] }}{% endfor %}";

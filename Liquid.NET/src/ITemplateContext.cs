@@ -20,6 +20,7 @@ namespace Liquid.NET
         ITemplateContext WithRegisters(IDictionary<String, Object> kv);
         ITemplateContext WithLocalVariables(IDictionary<String, IExpressionConstant> kv);
         ITemplateContext WithNoForLimit();
+        ITemplateContext WithASTGenerator(Func<string, LiquidAST> astGeneratorFunc);
 
         IFileSystem FileSystem { get; }
         IDictionary<String, Object> Registers { get; }
@@ -27,5 +28,6 @@ namespace Liquid.NET
         LiquidOptions Options { get; }
 
         Func<string, LiquidAST> ASTGenerator { get; }
+        
     }
 }

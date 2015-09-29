@@ -127,6 +127,28 @@ namespace Liquid.NET.Tests.Tags
 
         }
 
+        [Test]
+        public void It_Should_Use_Contexts_Caching_Strategy()
+        {
+            // Arrange
+            bool called=false;
+            var ctx = CreateContext(new Dictionary<String, String>
+            {
+                { "test", "Colour: {{ colour }}, Width: {{ width }}" }
+            });
+            var defaultAstGenerator = ctx.ASTGenerator;
+            ctx.WithASTGenerator(str => { called = true; return defaultAstGenerator(str); });
+
+            const String tmpl = "{% include 'test' colour: 'Green', width: 10 %}";
+
+            // Act
+            RenderingHelper.RenderTemplate(tmpl, ctx);
+
+            // Assert
+            Assert.That(called, Is.True);
+
+        }
+
         private static ITemplateContext CreateContext(Dictionary<String, String> dict) 
         {
             return new TemplateContext().WithFileSystem(new TestFileSystem(dict));

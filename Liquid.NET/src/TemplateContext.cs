@@ -28,10 +28,16 @@ namespace Liquid.NET
         public IDictionary<string, object> Registers { get { return _registers;} }
         private IFileSystem _fileSystem;
         private readonly LiquidOptions _options = new LiquidOptions();
+        private Func<string, LiquidAST> _astGeneratorFunc;
 
         public LiquidOptions Options
         {
             get { return _options; }
+        }
+
+        public Func<string, LiquidAST> ASTGenerator
+        {
+            get { return _astGeneratorFunc; }
         }
 
         public TemplateContext()
@@ -39,6 +45,7 @@ namespace Liquid.NET
             _globalSymbolTable = new SymbolTable();
             //_globalSymbolTable.DefineFilter<LookupFilter>("lookup"); // TODO: make this global somehow.
             _symbolTablestack.Push(_globalSymbolTable);            
+            _astGeneratorFunc = snippet => new CachingLiquidASTGenerator(new LiquidASTGenerator()).Generate(snippet);
         }        
 
 
@@ -222,6 +229,22 @@ namespace Liquid.NET
             return this;
         }
 
+        /// <summary>
+        /// Override the default transform text into a LiquidAST object.
+        /// 
+        /// Currently only applies to Includes, but TODO it should apply to all AST generation.
+        /// </summary>
+        /// <param name="astGeneratorFunc"></param>
+        /// <returns></returns>
+        public ITemplateContext WithASTGenerator(Func<String, LiquidAST> astGeneratorFunc)
+        {
+            if (astGeneratorFunc == null)
+            {
+                throw new ArgumentNullException("astGeneratorFunc");
+            }
+            _astGeneratorFunc = astGeneratorFunc;
+            return this;
+        }
 
         public ITemplateContext WithNoForLimit()
         {

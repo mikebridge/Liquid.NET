@@ -1,4 +1,5 @@
 ﻿using System;
+
 using NUnit.Framework;
 
 namespace Liquid.NET.Tests

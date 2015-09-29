@@ -84,7 +84,8 @@ namespace Liquid.NET
                 parser.Reset();
                 parser.ErrorHandler = defaultErrorStrategy;
                 parser.Interpreter.PredictionMode = PredictionMode.Ll;
-                parser.AddErrorListener(CreateLiquidErrorListener());
+                // the error listener is still listening from the try block...
+                //parser.AddErrorListener(CreateLiquidErrorListener());
                 new ParseTreeWalker().Walk(this, parser.init());
             }
 

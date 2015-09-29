@@ -25,6 +25,7 @@ namespace Liquid.NET
 
         public static LiquidTemplate Create(String template)
         {
+            // TODO: hook to the LiquidAST cache
             var liquidAst = new LiquidASTGenerator().Generate(template);
             return new LiquidTemplate(liquidAst);
         }

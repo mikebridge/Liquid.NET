@@ -44,7 +44,8 @@ namespace Liquid.NET.Rendering
             LiquidAST snippetAst;
             try
             {
-                snippetAst = GenerateSnippetAst(snippet);
+                //snippetAst = GenerateSnippetAst(snippet);
+                snippetAst = templateContext.ASTGenerator(snippet);
             }
             catch (LiquidParserException ex)
             {
@@ -122,7 +123,7 @@ namespace Liquid.NET.Rendering
                        
         }
 
-        private static LiquidAST GenerateSnippetAst(string snippet)
+        public static LiquidAST GenerateSnippetAst(string snippet)
         {
             return new CachingLiquidASTGenerator(new LiquidASTGenerator()).Generate(snippet);
             //return new LiquidASTGenerator().Generate(snippet);

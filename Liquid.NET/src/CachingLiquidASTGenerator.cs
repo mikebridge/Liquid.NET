@@ -13,10 +13,11 @@ namespace Liquid.NET
     public class CachingLiquidASTGenerator : ILiquidASTGenerator
     {
         private readonly ILiquidASTGenerator _generator;
-        private TimeSpan _slidingExpiration = TimeSpan.FromMinutes(5);
+        private readonly TimeSpan _slidingExpiration;
 
-        public CachingLiquidASTGenerator(ILiquidASTGenerator generator)
+        public CachingLiquidASTGenerator(ILiquidASTGenerator generator, int slidingExpirationSeconds = 300)
         {
+             _slidingExpiration = TimeSpan.FromSeconds(slidingExpirationSeconds);
             _generator = generator;
         }
 

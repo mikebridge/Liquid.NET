@@ -25,5 +25,7 @@ namespace Liquid.NET
         IDictionary<String, Object> Registers { get; }
         SymbolTableStack SymbolTableStack { get; }
         LiquidOptions Options { get; }
+
+        Func<string, LiquidAST> ASTGenerator { get; }
     }
 }

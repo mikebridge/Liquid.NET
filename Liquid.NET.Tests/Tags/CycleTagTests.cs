@@ -46,6 +46,32 @@ namespace Liquid.NET.Tests.Tags
 
         }
 
+        [Test]
+        public void It_Should_Assign_A_Cycle_To_A_Capture()
+        {
+            // Arrange
+            TemplateContext ctx = new TemplateContext();
+            ctx.DefineLocalVariable("array", CreateArrayValues());
+
+            var template = LiquidTemplate.Create("Result : {% for item in array %}{% capture thecycle %}{% cycle 'odd', 'even' %}{% endcapture %}{{ thecycle }} {% endfor %}");
+
+            // Act
+            try
+            {
+                String result = template.Render(ctx);
+                Console.WriteLine(result);
+
+                // Assert
+                Assert.That(result.TrimEnd(), Is.EqualTo("Result : odd even odd even "));
+            }
+            catch (LiquidRendererException  ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw;
+            }
+            
+        }
+
         /// <summary>
         /// Test of group behaviour described at 
         /// https://docs.shopify.com/themes/liquid-documentation/tags/iteration-tags#cycle

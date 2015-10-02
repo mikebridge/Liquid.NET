@@ -187,7 +187,6 @@
     <Compile Include="src\Rendering\TableRowRenderer.cs" />
     <Compile Include="src\Symbols\ErrorNode.cs" />
     <Compile Include="src\Symbols\FilterSymbol.cs" />
-    <Compile Include="src\LiquidASTRenderer.cs" />
     <Compile Include="src\LiquidTemplate.cs" />
     <Compile Include="src\Symbols\IASTNode.cs" />
     <Compile Include="src\Symbols\LiquidExpression.cs" />

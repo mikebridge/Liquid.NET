@@ -14,12 +14,10 @@ namespace Liquid.NET.Rendering
         public static string LOCALREGISTRY_FILE_KEY = "include";
 
         private readonly RenderingVisitor _renderingVisitor;
-        private readonly LiquidASTRenderer _astRenderer;
 
-        public IncludeRenderer(RenderingVisitor renderingVisitor, LiquidASTRenderer astRenderer)
+        public IncludeRenderer(RenderingVisitor renderingVisitor)
         {
             _renderingVisitor = renderingVisitor;
-            _astRenderer = astRenderer;
         }
 
         public void Render(IncludeTag includeTag, ITemplateContext templateContext)
@@ -132,7 +130,7 @@ namespace Liquid.NET.Rendering
         private void RenderWithLocalScope(ITemplateContext templateContext, SymbolTable localBlockScope, TreeNode<IASTNode> rootNode)
         {
             templateContext.SymbolTableStack.Push(localBlockScope);
-            _astRenderer.StartVisiting(_renderingVisitor, rootNode);
+            _renderingVisitor.StartWalking(rootNode);
             templateContext.SymbolTableStack.Pop();
         }
 

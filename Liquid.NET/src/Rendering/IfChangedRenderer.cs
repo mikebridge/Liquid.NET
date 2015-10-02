@@ -10,12 +10,10 @@ namespace Liquid.NET.Rendering
     {
         private readonly ConcurrentDictionary<String, String> _ifChangedCache = new ConcurrentDictionary<String, String>(); 
         private readonly RenderingVisitor _renderingVisitor;
-        private readonly LiquidASTRenderer _astRenderer;
 
-        public IfChangedRenderer(RenderingVisitor renderingVisitor, LiquidASTRenderer astRenderer)
+        public IfChangedRenderer(RenderingVisitor renderingVisitor)
         {
             _renderingVisitor = renderingVisitor;
-            _astRenderer = astRenderer;
         }
 
         public String Next(string identifier, TreeNode<IASTNode> liquidBlock)
@@ -38,7 +36,7 @@ namespace Liquid.NET.Rendering
             String hiddenText = "";
 
             _renderingVisitor.PushTextAccumulator(str => hiddenText += str);
-            _astRenderer.StartVisiting(_renderingVisitor, liquidBlock);
+            _renderingVisitor.StartWalking(liquidBlock);
             _renderingVisitor.PopTextAccumulator();
 
             return hiddenText;

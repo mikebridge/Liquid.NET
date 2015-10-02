@@ -126,11 +126,15 @@ namespace Liquid.NET.Tests.Tags
             {
                 var result = EvalLiquidBlock(renderingVisitor, liquidBlock);
 
-                var words = result.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                return Reverse(result);
+            }
+
+            private static StringValue Reverse(string result)
+            {
+                var words = result.Split(new[] {' '}, StringSplitOptions.RemoveEmptyEntries);
 
                 return new StringValue(String.Join(" ",
                     words.Select(x => new String(x.Reverse().ToArray()))));
-
             }
 
             private static String EvalLiquidBlock(RenderingVisitor renderingVisitor, TreeNode<IASTNode> liquidBlock)
@@ -138,8 +142,7 @@ namespace Liquid.NET.Tests.Tags
                 String result = "";
                 Action<String> accumulator = str => result += str;
                 renderingVisitor.PushTextAccumulator(accumulator);
-                var evaluator = new LiquidASTRenderer();
-                evaluator.StartVisiting(renderingVisitor, liquidBlock);
+                renderingVisitor.StartWalking(liquidBlock);
                 renderingVisitor.PopTextAccumulator();
                 return result;
             }
@@ -192,12 +195,11 @@ namespace Liquid.NET.Tests.Tags
                 TreeNode<IASTNode> liquidBlock)
             {
                 String result = "";
-                var astRenderer = new LiquidASTRenderer();
                 renderingVisitor.PushTextAccumulator(str => result += str);
                 foreach (var item in iterable)
                 {
                     templateContext.SymbolTableStack.Define(varname, item);
-                    astRenderer.StartVisiting(renderingVisitor, liquidBlock);
+                    renderingVisitor.StartWalking(liquidBlock);
                 }
                 renderingVisitor.PopTextAccumulator();
                 return new StringValue(result);

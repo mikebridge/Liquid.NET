@@ -18,7 +18,6 @@ namespace Liquid.NET.Rendering
             ITemplateContext templateContext, 
             IList<Option<IExpressionConstant>> args)
         {
-            var evaluator = new LiquidASTRenderer();
             var macroScope = new SymbolTable();
 
             var i = 0;
@@ -36,7 +35,7 @@ namespace Liquid.NET.Rendering
             String hiddenText = "";
 
             renderingVisitor.PushTextAccumulator(str => hiddenText += str);
-            evaluator.StartVisiting(renderingVisitor, macroBlocktag.LiquidBlock);
+            renderingVisitor.StartWalking(macroBlocktag.LiquidBlock);
             renderingVisitor.PopTextAccumulator();
 
             templateContext.SymbolTableStack.Pop();

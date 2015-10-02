@@ -15,7 +15,7 @@ namespace Liquid.NET.Tests
             String result = "";
             const string blocktext = "HELLO";
             var ctx = new TemplateContext();
-            var renderingVisitor = new RenderingVisitor(new LiquidASTRenderer(), ctx, str => result += str);
+            var renderingVisitor = new RenderingVisitor(ctx, str => result += str);
             var rawTextNode = new RawBlockTag(blocktext);
 
             // Act

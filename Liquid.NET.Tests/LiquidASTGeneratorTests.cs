@@ -203,6 +203,12 @@ namespace Liquid.NET.Tests
 
         }
 
+        public static void StartVisiting(IASTVisitor visitor, TreeNode<IASTNode> rootNode)
+        {
+            rootNode.Data.Accept(visitor);
+            rootNode.Children.ForEach(child => StartVisiting(visitor, child));
+        }
+
         [Test]
         public void It_Should_Group_Expressions_In_Parens()
         {
@@ -213,8 +219,9 @@ namespace Liquid.NET.Tests
             LiquidAST ast = generator.Generate("Result : {% if true and (false or false) %}FALSE{% endif %}");
 
             var visitor= new DebuggingVisitor();
-            var evaluator = new LiquidASTRenderer();
-            evaluator.StartVisiting(visitor,ast.RootNode);
+
+            StartVisiting(visitor,ast.RootNode);
+             
             // Assert
             var tagExpressions = FindNodesWithType(ast, typeof(IfThenElseBlockTag)).ToList();
             var ifThenElseTag = (IfThenElseBlockTag) tagExpressions[0].Data;

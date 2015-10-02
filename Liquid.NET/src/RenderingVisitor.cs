@@ -21,7 +21,6 @@ namespace Liquid.NET
     {
         //private String _result = "";
         
-        private readonly LiquidASTRenderer _astRenderer;
         private readonly ITemplateContext _templateContext;
         private readonly ConcurrentDictionary<String, int> _counters = new ConcurrentDictionary<string, int>();
         public readonly IList<LiquidError> Errors = new List<LiquidError>();
@@ -33,11 +32,9 @@ namespace Liquid.NET
 
         //public RenderingVisitor(LiquidASTRenderer astRenderer, SymbolTableStack symbolTableStack)
         public RenderingVisitor(
-            LiquidASTRenderer astRenderer, 
             ITemplateContext templateContext,
             Action<String> accumulator)
         {
-            _astRenderer = astRenderer;
             _templateContext = templateContext;
             _accumulators.Push(accumulator);
         }
@@ -249,12 +246,8 @@ namespace Liquid.NET
             String capturedText = "";
             //var hiddenVisitor = new RenderingVisitor(_astRenderer, _templateContext, str => capturedText += str);
             PushTextAccumulator(str => capturedText += str);
-            _astRenderer.StartVisiting(this, captureBlockTag.RootContentNode);            
+            StartWalking(captureBlockTag.RootContentNode);            
             _templateContext.SymbolTableStack.DefineGlobal(captureBlockTag.VarName, new StringValue(capturedText) );
-//            foreach (var error in hiddenVisitor.Errors)
-//            {
-//                Errors.Add(error);
-//            }
             PopTextAccumulator();
         }
 
@@ -306,14 +299,14 @@ namespace Liquid.NET
         public void Visit(IncludeTag includeTag)
         {
 
-            var includeRenderer = new IncludeRenderer(this, _astRenderer);
+            var includeRenderer = new IncludeRenderer(this);
             includeRenderer.Render(includeTag, _templateContext);
  
         }
 
         public void Visit(ForBlockTag forBlockTag)
         {
-            new ForRenderer(this, _astRenderer).Render(forBlockTag, _templateContext);
+            new ForRenderer(this).Render(forBlockTag, _templateContext);
         }
 
         public void Visit(IfThenElseBlockTag ifThenElseBlockTag)
@@ -328,7 +321,7 @@ namespace Liquid.NET
                                 });
             if (match != null)
             {
-                _astRenderer.StartVisiting(this, match.LiquidBlock); // then render the contents
+                StartWalking(match.LiquidBlock); // then render the contents
             }
         }
 
@@ -357,11 +350,11 @@ namespace Liquid.NET
 
             if (match != null)
             {
-                _astRenderer.StartVisiting(this, match.LiquidBlock); // then eval + render the HTML
+                StartWalking(match.LiquidBlock); // then eval + render the HTML
             }
             else if (caseWhenElseBlockTag.HasElseClause)
             {
-                _astRenderer.StartVisiting(this, caseWhenElseBlockTag.ElseClause.LiquidBlock);
+                StartWalking(caseWhenElseBlockTag.ElseClause.LiquidBlock);
             }
         }
 
@@ -390,7 +383,7 @@ namespace Liquid.NET
             // This maintains state, so there's only one.
             if (_isChangedRenderer == null)
             {
-                _isChangedRenderer = new IfChangedRenderer(this, _astRenderer);
+                _isChangedRenderer = new IfChangedRenderer(this);
             }
             AppendTextToCurrentAccumulator(_isChangedRenderer.Next(ifChangedBlockTag.UniqueId, ifChangedBlockTag.LiquidBlock));
 
@@ -398,7 +391,7 @@ namespace Liquid.NET
 
         public void Visit(TableRowBlockTag tableRowBlockTag)
         {
-            new TableRowRenderer(this, _astRenderer)
+            new TableRowRenderer(this)
                 .Render(tableRowBlockTag, _templateContext, AppendTextToCurrentAccumulator);
         }
 
@@ -464,9 +457,19 @@ namespace Liquid.NET
             }
 
         }
+
+        public void StartWalking(TreeNode<IASTNode> rootNode)
+        {
+            rootNode.Data.Accept(this);
+            rootNode.Children.ForEach(StartWalking);
+        }
+
     }
 
     public class ContinueException : Exception { }
 
     public class BreakException : Exception { }
+
+
+
 }

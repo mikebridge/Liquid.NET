@@ -10,22 +10,29 @@ namespace Liquid.NET
     {
 
         private readonly LiquidAST _liquidAst;
-        private readonly LiquidASTRenderer _liquidEvaluator;
 
         public LiquidTemplate(LiquidAST liquidAst)
         {           
             _liquidAst = liquidAst;
-            _liquidEvaluator = new LiquidASTRenderer();
         }
 
         public String Render(ITemplateContext ctx)
         {
-            return _liquidEvaluator.Render(ctx, _liquidAst);
+            var result = "";
+
+            var renderingVisitor = new RenderingVisitor(ctx, str => result += str);
+            renderingVisitor.StartWalking(_liquidAst.RootNode);
+
+            if (renderingVisitor.HasErrors)
+            {
+                throw new LiquidRendererException(renderingVisitor.Errors);
+            }
+
+            return result;
         }
 
         public static LiquidTemplate Create(String template)
         {
-            // TODO: hook to the LiquidAST cache
             var liquidAst = new LiquidASTGenerator().Generate(template);
             return new LiquidTemplate(liquidAst);
         }

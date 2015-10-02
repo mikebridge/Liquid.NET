@@ -12,13 +12,12 @@ namespace Liquid.NET.Rendering
     public class TableRowRenderer
     {
         private readonly RenderingVisitor _renderingVisitor;
-        private readonly LiquidASTRenderer _astRenderer;
 
-        public TableRowRenderer(RenderingVisitor renderingVisitor, LiquidASTRenderer astRenderer)
+        public TableRowRenderer(RenderingVisitor renderingVisitor)
         {
             _renderingVisitor = renderingVisitor;
-            _astRenderer = astRenderer;
         }
+
         public void Render(TableRowBlockTag tableRowBlockTag, ITemplateContext templateContext, Action<String> appender)
         {
             var offset = NumericValue.Create(0);
@@ -98,7 +97,7 @@ namespace Liquid.NET.Rendering
                         }
                     }
                     appender("<td class=\"col" + colFromOne + @""">");
-                    _astRenderer.StartVisiting(_renderingVisitor, tableRowBlockTag.LiquidBlock);
+                    _renderingVisitor.StartWalking(tableRowBlockTag.LiquidBlock);
                     appender(@"</td>");
                     currentcol++;
 

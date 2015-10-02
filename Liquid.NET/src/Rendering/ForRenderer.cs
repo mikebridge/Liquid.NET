@@ -11,12 +11,10 @@ namespace Liquid.NET.Rendering
     public class ForRenderer
     {
         private readonly RenderingVisitor _renderingVisitor;
-        private readonly LiquidASTRenderer _astRenderer;
 
-        public ForRenderer(RenderingVisitor renderingVisitor, LiquidASTRenderer astRenderer)
+        public ForRenderer(RenderingVisitor renderingVisitor)
         {
             _renderingVisitor = renderingVisitor;
-            _astRenderer = astRenderer;
         }
 
         /// <summary>
@@ -82,7 +80,7 @@ namespace Liquid.NET.Rendering
             var length = subsetList.Count();
             if (length <= 0) 
             {
-                _astRenderer.StartVisiting(_renderingVisitor, forBlockTag.ElseBlock);
+                _renderingVisitor.StartWalking(forBlockTag.ElseBlock);
                 return;
             }
 
@@ -97,7 +95,7 @@ namespace Liquid.NET.Rendering
 
                 try
                 {
-                    _astRenderer.StartVisiting(_renderingVisitor, forBlockTag.LiquidBlock);
+                    _renderingVisitor.StartWalking(forBlockTag.LiquidBlock);
                 }
                 catch (ContinueException)
                 {

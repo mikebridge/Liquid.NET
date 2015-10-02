@@ -371,17 +371,10 @@ namespace Liquid.NET
                 else if (context.for_param_limit().variable() != null)
                 {
                     //Console.WriteLine("Start Parsing for.limit Variable...");
-                    // Performing without an explicit "CLOSE"
-                    //LiquidExpression expr = new LiquidExpression();  // create the holding expression
                     StartCapturingVariable(
                         context.for_param_limit().variable(),
                         x => forBlock.Limit = new TreeNode<LiquidExpression>(new LiquidExpression {Expression = x}));
 
-
-                    //StartNewLiquidExpressionTree(x => forBlock.Limit = x);
-                    //StartCapturingVariable(context.for_param_limit().variable());
-                    
-                    //MarkCurrentExpressionComplete();
                 }
                 //forBlock.Limit = CreateIntNumericValueFromString(context.for_param_limit().NUMBER().ToString());
             }

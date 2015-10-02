@@ -142,6 +142,7 @@ for_params: 		PARAM_REVERSED | for_param_offset | for_param_limit ; // todo: lim
 
 for_param_offset:	PARAM_OFFSET COLON (variable | NUMBER) ;
 
+//for_param_limit:	PARAM_LIMIT COLON (variable | NUMBER)  ;
 for_param_limit:	PARAM_LIMIT COLON (variable | NUMBER)  ;
 
 for_label:			VARIABLENAME ;

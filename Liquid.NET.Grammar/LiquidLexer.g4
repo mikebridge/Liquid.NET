@@ -130,16 +130,11 @@ ERRORCHAR2 :			. -> type(ERRORCHAR);
 
 mode INARRAYINDEX ;
 
-// ARRAYSTART2 :			ARRAYSTART {arraybracketcount++; System.Console.WriteLine("** Encountered nested '[' " +arraybracketcount);} -> type(ARRAYSTART);
 ARRAYSTART2 :			ARRAYSTART {arraybracketcount++;} -> type(ARRAYSTART);
-// ARRAYEND2a :				{arraybracketcount == 0; }? ARRAYEND {System.Console.WriteLine("** leaving mode " +arraybracketcount);} -> type(ARRAYEND), popMode ;
 ARRAYEND2a :				{arraybracketcount == 0; }? ARRAYEND -> type(ARRAYEND), popMode ;
-// ARRAYEND2b :				{arraybracketcount > 0; }? ARRAYEND  { arraybracketcount--; System.Console.WriteLine("* closed nested ']' " +arraybracketcount); } -> type(ARRAYEND);
 ARRAYEND2b :				{arraybracketcount > 0; }? ARRAYEND  { arraybracketcount--; } -> type(ARRAYEND);
 ARRAYINT:				'0' | MINUS ? [1-9] [0-9]* ;
-//STRING3:				STRING {System.Console.WriteLine("** Lexing a string " +arraybracketcount);}  -> type(STRING);
 STRING3:				STRING -> type(STRING);
-//LABEL3:					LABEL -> type(LABEL) ;
 VARIABLENAME3:			LABEL -> type(VARIABLENAME);
 MINUS3:					MINUS -> type(MINUS) ;
 PERIOD3:				PERIOD -> type(PERIOD) ;
@@ -149,8 +144,6 @@ PERIOD3:				PERIOD -> type(PERIOD) ;
 mode INLIQUIDTAG ;
 
 TAGEND :				('-%}' | '%}')			-> popMode ;
-
-//TOKEN:					VARIABLENAME;
 
 INCLUDE_TAG :			'include' ;
 WITH:					'with' ;
@@ -228,8 +221,8 @@ COLON2 :				COLON -> type(COLON);
 PERIOD2 :				PERIOD -> type(PERIOD) ;
 STRING2:				STRING -> type(STRING);
 
-VARIABLENAME2:			(LABEL | KEYWORDS) -> type(VARIABLENAME);
-//LABEL2:					LABEL -> type(LABEL);
+//LABEL1:					LABEL -> type(LABEL);
+VARIABLENAME2:			(LABEL | KEYWORDS | PARAM_LIMIT) -> type(VARIABLENAME);
 
 GENERATORRANGE1:		GENERATORRANGE -> type(GENERATORRANGE) ;
 

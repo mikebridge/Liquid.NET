@@ -292,7 +292,7 @@ namespace Liquid.NET.Tests.Tags
         }
 
         [Test]
-        [Ignore("Can't do this yet")]
+        //[Ignore("Can't do this yet")]
         public void It_Can_Use_Reserved_Words()
         {
             // Arrange

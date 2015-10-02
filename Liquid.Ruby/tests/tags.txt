@@ -6,3 +6,4 @@
 #
 {% if null != empty %}NOT EMPTY{% else %}EMPTY{% endif %}
 #
+{% assign myarray = "1,2,3,4" |split: "," %}{% for item in myarray %}{% capture thecycle %}{% cycle 'odd', 'even' %}{% endcapture %}{{ thecycle }}{% endfor %}

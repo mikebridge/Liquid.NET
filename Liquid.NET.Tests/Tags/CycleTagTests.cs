@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 
 using Liquid.NET.Constants;
@@ -45,6 +44,7 @@ namespace Liquid.NET.Tests.Tags
             Assert.That(result.TrimEnd(), Is.EqualTo("Result : ITEM:odd ITEM:even ITEM:odd ITEM:even"));
 
         }
+
 
         /// <summary>
         /// Test of group behaviour described at 

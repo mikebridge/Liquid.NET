@@ -119,13 +119,12 @@ namespace Liquid.NET.Tests.Tags
         {
 
             public StringValue Render(
+                    RenderingVisitor renderingVisitor,
                     ITemplateContext templatecontext,
                     TreeNode<IASTNode> liquidBlock,
                     IList<Option<IExpressionConstant>> args)
             {
-                //var argsAsString = String.Join(", ", args.Select(x => x.GetType().Name + ":" + ValueCaster.RenderAsString(x)));
-
-                var result = EvalLiquidBlock(templatecontext, liquidBlock);
+                var result = EvalLiquidBlock(renderingVisitor, liquidBlock);
 
                 var words = result.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
@@ -134,12 +133,15 @@ namespace Liquid.NET.Tests.Tags
 
             }
 
-            private static String EvalLiquidBlock(ITemplateContext templateContext, TreeNode<IASTNode> liquidBlock)
+            private static String EvalLiquidBlock(RenderingVisitor renderingVisitor, TreeNode<IASTNode> liquidBlock)
             {
+                String result = "";
+                Action<String> accumulator = str => result += str;
+                renderingVisitor.PushTextAccumulator(accumulator);
                 var evaluator = new LiquidASTRenderer();
-                var subRenderer = new RenderingVisitor(evaluator, templateContext);
-                evaluator.StartVisiting(subRenderer, liquidBlock);
-                return subRenderer.Text;
+                evaluator.StartVisiting(renderingVisitor, liquidBlock);
+                renderingVisitor.PopTextAccumulator();
+                return result;
             }
 
         }
@@ -152,14 +154,15 @@ namespace Liquid.NET.Tests.Tags
         {
 
             public StringValue Render(
-                    ITemplateContext templateContext,
-                    TreeNode<IASTNode> liquidBlock,
-                    IList<Option<IExpressionConstant>> args)
+                RenderingVisitor renderingVisitor,
+                ITemplateContext templateContext,
+                TreeNode<IASTNode> liquidBlock,
+                IList<Option<IExpressionConstant>> args)
             {
-                // TODO: Should the scope be created in the iterator?
                 var localBlockScope = new SymbolTable();
                 templateContext.SymbolTableStack.Push(localBlockScope);
-                StringValue result = new StringValue("");
+                StringValue result;
+
                 try
                 {
                     // normally you would need to verify that arg0 and arg1 exists and are the correct value types.
@@ -171,7 +174,7 @@ namespace Liquid.NET.Tests.Tags
 
                     var iterable = iterableFactory.Eval(templateContext).ToList();
 
-                    result = IterateBlock(varname, templateContext, iterable, liquidBlock);
+                    result = IterateBlock(renderingVisitor, varname, templateContext, iterable, liquidBlock);
                 }
                 finally
                 {
@@ -182,22 +185,22 @@ namespace Liquid.NET.Tests.Tags
             }
 
             private StringValue IterateBlock(
+                RenderingVisitor renderingVisitor,
                 String varname,
                 ITemplateContext templateContext,
                 List<IExpressionConstant> iterable,
                 TreeNode<IASTNode> liquidBlock)
             {
-                // TODO: this creates a new renderer, but probably
-                // it should reuse the current one...?
+                String result = "";
                 var astRenderer = new LiquidASTRenderer();
-                var subRenderer = new RenderingVisitor(astRenderer, templateContext);
+                renderingVisitor.PushTextAccumulator(str => result += str);
                 foreach (var item in iterable)
                 {
                     templateContext.SymbolTableStack.Define(varname, item);
-                    astRenderer.StartVisiting(subRenderer, liquidBlock);
+                    astRenderer.StartVisiting(renderingVisitor, liquidBlock);
                 }
-                // you would also process the errors if any in subRenderer
-                return new StringValue(subRenderer.Text);
+                renderingVisitor.PopTextAccumulator();
+                return new StringValue(result);
             }
 
         }

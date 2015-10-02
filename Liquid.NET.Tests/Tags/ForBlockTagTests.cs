@@ -327,6 +327,26 @@ namespace Liquid.NET.Tests.Tags
             Assert.That(result.Trim(), Is.EqualTo(@"val-string-1-1-0-1-0-true-true-test string"));
         }
 
+        [Test]
+        public void It_Should_Allow_Logic_on_For_Loop()
+        {
+
+            // Arrange
+            String input = @"{% assign array = ""1,2,3,4"" | split : "","" %}{%for val in array%}{% if forloop.index | modulo: 2 == 0 %}even{% else %}odd{%endif%}{%endfor%}";
+            ITemplateContext ctx = new TemplateContext().WithAllFilters();
+
+            //ctx.DefineLocalVariable("string", new StringValue("test"));
+            var template = LiquidTemplate.Create(input);
+
+            // Act
+            String result = template.Render(ctx);
+            Console.WriteLine(result);
+            // Assert
+            Assert.That(result.Trim(), Is.EqualTo(@"oddevenoddeven"));
+        }
+
+
+
         /// <summary>
         /// forloop.length      # => length of the entire for loop
         /// forloop.index       # => index of the current iteration

@@ -21,10 +21,13 @@ using NUnit.Framework;
 namespace Liquid.NET.Tests.Ruby
 {
     [TestFixture]
-    [Ignore("")]
     public class TagTests {
 
         [Test]
+        [TestCase(@"{% if "" "" != empty %}NOT EMPTY{% else %}EMPTY{% endif %}", @"", @"NOT EMPTY")]
+        [TestCase(@"{% if "" "" != empty %}NOT EMPTY{% else %}EMPTY{% endif %}", @"", @"NOT EMPTY")]
+        //[TestCase(@"{% if null != empty %}NOT EMPTY{% else %}EMPTY{% endif %}", @"", @"NOT EMPTY")]
+        [TestCase(@"{% assign myarray = ""1,2,3,4"" |split: "","" %}{% for item in myarray %}{% capture thecycle %}{% cycle 'odd', 'even' %}{% endcapture %}{{ thecycle }}{% endfor %}", @"", @"oddevenoddeven")]
         public void It_Should_Match_Ruby_Output(String input, String assigns, String expected) {
 
             // Arrange

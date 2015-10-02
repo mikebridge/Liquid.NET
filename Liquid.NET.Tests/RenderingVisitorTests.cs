@@ -1,4 +1,5 @@
-﻿using Liquid.NET.Tags;
+﻿using System;
+using Liquid.NET.Tags;
 using Liquid.NET.Tests.Helpers;
 using NUnit.Framework;
 
@@ -11,23 +12,18 @@ namespace Liquid.NET.Tests
         public void It_Should_Render_A_Raw_Text_Node()
         {
             // Arrange
+            String result = "";
             const string blocktext = "HELLO";
-            var renderingVisitor = CreateRenderingVisitor();
+            var ctx = new TemplateContext();
+            var renderingVisitor = new RenderingVisitor(new LiquidASTRenderer(), ctx, str => result += str);
             var rawTextNode = new RawBlockTag(blocktext);
 
             // Act
             renderingVisitor.Visit(rawTextNode);
 
             // Assert
-            Assert.That(renderingVisitor.Text, Is.EqualTo(blocktext));
+            Assert.That(result, Is.EqualTo(blocktext));
 
-        }
-
-
-        private static RenderingVisitor CreateRenderingVisitor()
-        {
-            var ctx = new TemplateContext();
-            return new RenderingVisitor(new LiquidASTRenderer(), ctx);
         }
     }
 }

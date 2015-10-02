@@ -20,6 +20,7 @@ namespace Liquid.NET.Tags.Custom
     {
 
         StringValue Render(
+                    RenderingVisitor renderingVisitor,
                     ITemplateContext templateContext,
                     TreeNode<IASTNode> liquidBlock,
                     IList<Option<IExpressionConstant>> args);

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
+using Liquid.NET.Constants;
+
 using NUnit.Framework;
 
 namespace Liquid.NET.Tests.Tags
@@ -23,6 +23,44 @@ namespace Liquid.NET.Tests.Tags
             // Assert
             Assert.That(result, Is.EqualTo("Captured: Result: TEST"));
 
+        }
+
+        [Test]
+        public void It_Should_Assign_A_Cycle_To_A_Capture()
+        {
+            // Arrange
+            TemplateContext ctx = new TemplateContext();
+            ctx.DefineLocalVariable("array", CreateArrayValues());
+
+            var template = LiquidTemplate.Create("Result : {% for item in array %}{% capture thecycle %}{% cycle 'odd', 'even' %}{% endcapture %}{{ thecycle }} {% endfor %}");
+
+            // Act
+            try
+            {
+                String result = template.Render(ctx);
+                Console.WriteLine(result);
+
+                // Assert
+                Assert.That(result.TrimEnd(), Is.EqualTo("Result : odd even odd even"));
+            }
+            catch (LiquidRendererException ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw;
+            }
+
+        }
+
+        private ArrayValue CreateArrayValues()
+        {
+            var list = new List<IExpressionConstant>
+            {
+                new StringValue("a string"),
+                NumericValue.Create(123),
+                NumericValue.Create(456m),
+                new BooleanValue(false)
+            };
+            return new ArrayValue(list);
         }
 
     }

@@ -38,14 +38,19 @@ namespace Liquid.NET
             _templateContext = templateContext;
         }
 
-        public String Text
+        private void AppendTextToResult(String str)
+        {
+            _result += str;
+        }
+
+        public String TextX
         {
             get { return _result; }
         }
 
         public void Visit(RawBlockTag rawBlockTag)
         {
-            _result += rawBlockTag.Value;
+            AppendTextToResult(rawBlockTag.Value);
         }
 
 
@@ -60,7 +65,7 @@ namespace Liquid.NET
             var tagType = _templateContext.SymbolTableStack.LookupCustomTagRendererType(customTag.TagName);
             if (tagType != null)
             {
-                _result += RenderCustomTag(customTag, tagType);
+                AppendTextToResult(RenderCustomTag(customTag, tagType));
                 return;
             }
 
@@ -77,7 +82,7 @@ namespace Liquid.NET
                     RenderErrors(evalResults);
                     return;
                 }
-                _result += RenderMacro(macroDescription, evalResults.Select(x => x.SuccessResult));
+                AppendTextToResult(RenderMacro(macroDescription, evalResults.Select(x => x.SuccessResult)));
                 return;
             }
             //_result += " ERROR: There is no macro or tag named "+  customTag.TagName+ " ";
@@ -87,11 +92,11 @@ namespace Liquid.NET
 
         private void RenderError(LiquidError liquidError)
         {
-            _result += FormatErrors(new List<LiquidError>{liquidError});
+            AppendTextToResult(FormatErrors(new List<LiquidError>{liquidError}));
         }
         private void RenderErrors(IEnumerable<LiquidError> liquidErrors)
         {
-            _result += FormatErrors(liquidErrors);
+            AppendTextToResult(FormatErrors(liquidErrors));
         }
 
         private String FormatErrors(IEnumerable<LiquidError> liquidErrors)
@@ -159,8 +164,8 @@ namespace Liquid.NET
             }
 
             EvalExpressions(customBlockTag.LiquidExpressionTrees,
-               args => _result += tagRenderer.Render(_templateContext, customBlockTag.LiquidBlock, args.ToList()).StringVal,
-               errors => _result += FormatErrors(errors));
+               args => AppendTextToResult(tagRenderer.Render(_templateContext, customBlockTag.LiquidBlock, args.ToList()).StringVal),
+               errors => AppendTextToResult(FormatErrors(errors)));
             //IEnumerable<IExpressionConstant> args =
             //    customBlockTag.LiquidExpressionTrees.Select(x => LiquidExpressionEvaluator.Eval(x, _templateContext.SymbolTableStack));
             //_result += tagRenderer.Render(_templateContext.SymbolTableStack, customBlockTag.LiquidBlock, args.ToList()).StringVal;
@@ -183,7 +188,7 @@ namespace Liquid.NET
                 } 
 
             }
-            _result += GetNextCycleText(groupName, cycleTag);
+            AppendTextToResult(GetNextCycleText(groupName, cycleTag));
         }
 
         /// <summary>
@@ -285,7 +290,7 @@ namespace Liquid.NET
 
             }
 
-            _result += currentIndex;
+            AppendTextToResult(currentIndex.ToString());
         }
 
         /// <summary>
@@ -307,7 +312,7 @@ namespace Liquid.NET
                 }
             }
 
-            _result += currentIndex;
+            AppendTextToResult(currentIndex.ToString());
         }
 
         public void Visit(IncludeTag includeTag)
@@ -405,7 +410,7 @@ namespace Liquid.NET
         public void Visit(ErrorNode errorNode)
         {
             //Console.WriteLine("TODO: Render error : " + errorNode.ToString());
-            _result += errorNode.LiquidError.ToString();
+            AppendTextToResult(errorNode.LiquidError.ToString());
         }
 
         public void Visit(IfChangedBlockTag ifChangedBlockTag)
@@ -415,14 +420,14 @@ namespace Liquid.NET
             {
                 _isChangedRenderer = new IfChangedRenderer(this, _astRenderer, _templateContext);
             }
-            _result += _isChangedRenderer.Next(ifChangedBlockTag.UniqueId, ifChangedBlockTag.LiquidBlock, _astRenderer);
+            AppendTextToResult(_isChangedRenderer.Next(ifChangedBlockTag.UniqueId, ifChangedBlockTag.LiquidBlock, _astRenderer));
 
         }
 
         public void Visit(TableRowBlockTag tableRowBlockTag)
         {
             new TableRowRenderer(this, _astRenderer)
-                .Render(tableRowBlockTag, _templateContext, str => _result += str);
+                .Render(tableRowBlockTag, _templateContext, AppendTextToResult);
         }
 
         public void Visit(RootDocumentNode rootDocumentNode)
@@ -437,7 +442,7 @@ namespace Liquid.NET
 
         public void Visit(StringValue stringValue)
         {          
-            _result += Render(stringValue); 
+           AppendTextToResult(Render(stringValue)); 
         }
 
         /// <summary>
@@ -448,8 +453,8 @@ namespace Liquid.NET
         {
             //Console.WriteLine("Visiting Object Expression ");
             var liquidResult = LiquidExpressionEvaluator.Eval(liquidExpression, new List<Option<IExpressionConstant>>(), _templateContext)
-                .WhenSuccess(x => x.WhenSome(some => _result += Render(x.Value))
-                                   .WhenNone(() => _result += ""))
+                .WhenSuccess(x => x.WhenSome(some => AppendTextToResult(Render(x.Value)))
+                                   .WhenNone(() => AppendTextToResult("")))
                  .WhenError(RenderError);
 //            if (liquidResult.HasValue)
 //            {
@@ -464,22 +469,13 @@ namespace Liquid.NET
 
         public void Visit(LiquidExpressionTree liquidExpressionTree)
         {
-            //Console.WriteLine("Visiting Object Expression Tree ");
-
             var constResult = LiquidExpressionEvaluator.Eval(liquidExpressionTree, _templateContext)
-                .WhenSuccess(success => success.WhenSome(x => _result += Render(x)))
+                .WhenSuccess(success => success.WhenSome(x => AppendTextToResult(Render(x))))
                 .WhenError(RenderError);
         }
 
         public String Render(IExpressionConstant result)
         {
-            //Console.WriteLine("Rendering IExpressionConstant " + result.Value);
-
-//            if (result.HasError)
-//            {
-//                return result.ErrorMessage;
-//            }
-
             return ValueCaster.RenderAsString(result);
         }
 

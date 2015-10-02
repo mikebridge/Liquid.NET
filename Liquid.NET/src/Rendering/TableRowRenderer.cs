@@ -19,7 +19,7 @@ namespace Liquid.NET.Rendering
             _renderingVisitor = renderingVisitor;
             _astRenderer = astRenderer;
         }
-        public void Render(TableRowBlockTag tableRowBlockTag, ITemplateContext templateContext, Func<String, String> appender)
+        public void Render(TableRowBlockTag tableRowBlockTag, ITemplateContext templateContext, Action<String> appender)
         {
             var offset = NumericValue.Create(0);
             var  limit = NumericValue.Create(50);

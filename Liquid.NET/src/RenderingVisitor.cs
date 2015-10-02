@@ -2,7 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web.UI;
+
 using Liquid.NET.Constants;
 using Liquid.NET.Expressions;
 using Liquid.NET.Rendering;
@@ -19,38 +19,52 @@ namespace Liquid.NET
     /// </summary>
     public class RenderingVisitor : IASTVisitor
     {
-        private String _result = "";
+        //private String _result = "";
         
         private readonly LiquidASTRenderer _astRenderer;
         private readonly ITemplateContext _templateContext;
-        //private readonly SymbolTableStack _templateContext.SymbolTableStack;
         private readonly ConcurrentDictionary<String, int> _counters = new ConcurrentDictionary<string, int>();
-
         public readonly IList<LiquidError> Errors = new List<LiquidError>();
         private IfChangedRenderer _isChangedRenderer;
 
         public bool HasErrors { get { return Errors.Any();  } }
 
+        private readonly Stack<Action<String>> _accumulators = new Stack<Action<string>>();
+
         //public RenderingVisitor(LiquidASTRenderer astRenderer, SymbolTableStack symbolTableStack)
-        public RenderingVisitor(LiquidASTRenderer astRenderer, ITemplateContext templateContext)
+        public RenderingVisitor(
+            LiquidASTRenderer astRenderer, 
+            ITemplateContext templateContext,
+            Action<String> accumulator)
         {
             _astRenderer = astRenderer;
             _templateContext = templateContext;
+            _accumulators.Push(accumulator);
         }
 
-        private void AppendTextToResult(String str)
+        public void PushTextAccumulator(Action<String> accumulator)
         {
-            _result += str;
+            _accumulators.Push(accumulator);
         }
 
-        public String TextX
+        public void PopTextAccumulator()
         {
-            get { return _result; }
+            _accumulators.Pop();
+        }
+
+        private void AppendTextToCurrentAccumulator(String str)
+        {
+            var action = _accumulators.Peek();
+            if (action == null)
+            {
+                throw new ApplicationException("Need to call PushTextAppender to capture text.");
+            }
+            action(str);
         }
 
         public void Visit(RawBlockTag rawBlockTag)
         {
-            AppendTextToResult(rawBlockTag.Value);
+            AppendTextToCurrentAccumulator(rawBlockTag.Value);
         }
 
 
@@ -65,7 +79,7 @@ namespace Liquid.NET
             var tagType = _templateContext.SymbolTableStack.LookupCustomTagRendererType(customTag.TagName);
             if (tagType != null)
             {
-                AppendTextToResult(RenderCustomTag(customTag, tagType));
+                AppendTextToCurrentAccumulator(RenderCustomTag(customTag, tagType));
                 return;
             }
 
@@ -82,7 +96,7 @@ namespace Liquid.NET
                     RenderErrors(evalResults);
                     return;
                 }
-                AppendTextToResult(RenderMacro(macroDescription, evalResults.Select(x => x.SuccessResult)));
+                AppendTextToCurrentAccumulator(RenderMacro(macroDescription, evalResults.Select(x => x.SuccessResult)));
                 return;
             }
             //_result += " ERROR: There is no macro or tag named "+  customTag.TagName+ " ";
@@ -92,11 +106,11 @@ namespace Liquid.NET
 
         private void RenderError(LiquidError liquidError)
         {
-            AppendTextToResult(FormatErrors(new List<LiquidError>{liquidError}));
+            AppendTextToCurrentAccumulator(FormatErrors(new List<LiquidError>{liquidError}));
         }
         private void RenderErrors(IEnumerable<LiquidError> liquidErrors)
         {
-            AppendTextToResult(FormatErrors(liquidErrors));
+            AppendTextToCurrentAccumulator(FormatErrors(liquidErrors));
         }
 
         private String FormatErrors(IEnumerable<LiquidError> liquidErrors)
@@ -113,20 +127,19 @@ namespace Liquid.NET
 
         private void AddError(String message, IASTNode node)
         { 
-            // TODO: pass the tag info in...
             Errors.Add(new LiquidError{Message = message});
         }
 
         private string RenderMacro(MacroBlockTag macroBlockTag, IEnumerable<Option<IExpressionConstant>> args)
         {
             var macroRenderer = new MacroRenderer();
-            //var hiddenRenderer = new RenderingVisitor(_a)
-            IList<LiquidError> macroErrors = new List<LiquidError>();
-            var macro = ValueCaster.RenderAsString((IExpressionConstant) macroRenderer.Render(macroBlockTag, _templateContext, args.ToList(), macroErrors));
-            foreach (var error in macroErrors)
-            {
-                Errors.Add(error);
-            }
+            //IList<LiquidError> macroErrors = new List<LiquidError>();
+            //var macro = ValueCaster.RenderAsString((IExpressionConstant) macroRenderer.Render(macroBlockTag, _templateContext, args.ToList(), macroErrors));
+            var macro = ValueCaster.RenderAsString((IExpressionConstant)macroRenderer.Render(this, macroBlockTag, _templateContext, args.ToList()));
+            //foreach (var error in macroErrors)
+            //{
+                //Errors.Add(error);
+            //}
             return macro;
         }
 
@@ -139,16 +152,7 @@ namespace Liquid.NET
                 errors => result = FormatErrors(errors));
             return result;
 
-//            var evaledArgs = customTag.LiquidExpressionTrees.Select(x => LiquidExpressionEvaluator.Eval(x, _templateContext.SymbolTableStack)).ToList();
-//            if (evaledArgs.Any(x => x.IsError))
-//            {
-//                return FormatErrors(evaledArgs.Where(x => x.IsError).Select(x => x.ErrorResult));
-//            }
-//            else
-//            {
-//                return tagRenderer.Render(_templateContext.SymbolTableStack, evaledArgs.Select(x => x.SuccessResult).ToList()).StringVal;
-//            }
-        }
+       }
 
 
     
@@ -164,11 +168,9 @@ namespace Liquid.NET
             }
 
             EvalExpressions(customBlockTag.LiquidExpressionTrees,
-               args => AppendTextToResult(tagRenderer.Render(_templateContext, customBlockTag.LiquidBlock, args.ToList()).StringVal),
-               errors => AppendTextToResult(FormatErrors(errors)));
-            //IEnumerable<IExpressionConstant> args =
-            //    customBlockTag.LiquidExpressionTrees.Select(x => LiquidExpressionEvaluator.Eval(x, _templateContext.SymbolTableStack));
-            //_result += tagRenderer.Render(_templateContext.SymbolTableStack, customBlockTag.LiquidBlock, args.ToList()).StringVal;
+               args => AppendTextToCurrentAccumulator(tagRenderer.Render(this, _templateContext, customBlockTag.LiquidBlock, args.ToList()).StringVal),
+               errors => AppendTextToCurrentAccumulator(FormatErrors(errors)));
+
         }
 
         public void Visit(CycleTag cycleTag)
@@ -188,7 +190,7 @@ namespace Liquid.NET
                 } 
 
             }
-            AppendTextToResult(GetNextCycleText(groupName, cycleTag));
+            AppendTextToCurrentAccumulator(GetNextCycleText(groupName, cycleTag));
         }
 
         /// <summary>
@@ -198,26 +200,11 @@ namespace Liquid.NET
         private String GetNextCycleText(String groupName, CycleTag cycleTag)
         {
 
-            int currentIndex = 0;
-            //var groupNameAsString = groupName== null ? "" : ValueCaster.RenderAsString(groupName);
-            //Console.WriteLine("Evaluating " + groupName);
-            //var key = "cycle_" + groupNameAsString + "_" + String.Join("|", cycleTag.CycleList.Select(x => x.Value.ToString()));
-
+            int currentIndex;
             // Create a like dictionary key entry to keep track of this declaration.  THis takes the variable
             // names (not the eval-ed variables) or literals and concatenates them together.
-            var key = "cycle_" + groupName + "_" + String.Join("|", cycleTag.CycleList.Select(x =>
-            {
-                var varresult = "";
-                varresult = x.Data.Expression.ToString();
-                return varresult;
-            }));
+            var key = "cycle_" + groupName + "_" + String.Join("|", cycleTag.CycleList.Select(x => x.Data.Expression.ToString()));
             
-            
-//            var key = "cycle_" + (groupName ?? "NULL") + "_" + String.Join("|", cycleTag.CycleList.Select(x =>
-//            {
-//                x.
-//                return cycleResult;
-//            }));
 
             while (true)
             {
@@ -238,8 +225,6 @@ namespace Liquid.NET
                 .WhenError(err => result = FormatErrors(new List<LiquidError> {err}));
 
             return result;
-            //return ValueCaster.RenderAsString(LiquidExpressionEvaluator.Eval(cycleTag.ElementAt(currentIndex), _templateContext.SymbolTableStack));
-            //return cycleTag.ElementAt(currentIndex).Value.ToString();
 
         }
 
@@ -261,13 +246,16 @@ namespace Liquid.NET
 
         public void Visit(CaptureBlockTag captureBlockTag)
         {
-            var hiddenVisitor = new RenderingVisitor(_astRenderer, _templateContext);
-            _astRenderer.StartVisiting(hiddenVisitor, captureBlockTag.RootContentNode);            
-            _templateContext.SymbolTableStack.DefineGlobal(captureBlockTag.VarName, new StringValue(hiddenVisitor.Text) );
-            foreach (var error in hiddenVisitor.Errors)
-            {
-                Errors.Add(error);
-            }
+            String capturedText = "";
+            //var hiddenVisitor = new RenderingVisitor(_astRenderer, _templateContext, str => capturedText += str);
+            PushTextAccumulator(str => capturedText += str);
+            _astRenderer.StartVisiting(this, captureBlockTag.RootContentNode);            
+            _templateContext.SymbolTableStack.DefineGlobal(captureBlockTag.VarName, new StringValue(capturedText) );
+//            foreach (var error in hiddenVisitor.Errors)
+//            {
+//                Errors.Add(error);
+//            }
+            PopTextAccumulator();
         }
 
         /// <summary>
@@ -290,7 +278,7 @@ namespace Liquid.NET
 
             }
 
-            AppendTextToResult(currentIndex.ToString());
+            AppendTextToCurrentAccumulator(currentIndex.ToString());
         }
 
         /// <summary>
@@ -312,7 +300,7 @@ namespace Liquid.NET
                 }
             }
 
-            AppendTextToResult(currentIndex.ToString());
+            AppendTextToCurrentAccumulator(currentIndex.ToString());
         }
 
         public void Visit(IncludeTag includeTag)
@@ -322,20 +310,6 @@ namespace Liquid.NET
             includeRenderer.Render(includeTag, _templateContext);
  
         }
-
-
-
-//        private void AlterNumericvalue(string key, int defaultValue, Func<NumericValue, NumericValue> newValueFunc)
-//        {
-//            _templateContext.SymbolTableStack.FindVariable(key,
-//                (st, foundExpression) =>
-//                {
-//                    var numref = foundExpression as NumericValue;
-//                    st.DefineVariable(key,
-//                        numref != null ? newValueFunc(numref) : new NumericValue(defaultValue));
-//                },
-//                () => _templateContext.SymbolTableStack.Define(key, new NumericValue(defaultValue)));
-//        }
 
         public void Visit(ForBlockTag forBlockTag)
         {
@@ -374,9 +348,8 @@ namespace Liquid.NET
                         // Take the valueToMatch "Case" expression result value
                         // and check if it's equal to the expr.GroupNameExpressionTree expression.
                         // THe "EasyValueComparer" is supposed to match stuff fairly liberally,
-                        // though it doesn't cast values---TODO: probably it should.
-                        //new EasyValueComparer().Equals(valueToMatch,
-                        //    LiquidExpressionEvaluator.Eval(expr.LiquidExpressionTree, _templateContext.SymbolTableStack)));
+                        // though it doesn't cast values---probably it should.
+
                         expr.LiquidExpressionTree.Any(val =>
                             new EasyOptionComparer().Equals(valueToMatchResult.SuccessResult,
                                         LiquidExpressionEvaluator.Eval(val, _templateContext).SuccessResult)));
@@ -409,8 +382,7 @@ namespace Liquid.NET
 
         public void Visit(ErrorNode errorNode)
         {
-            //Console.WriteLine("TODO: Render error : " + errorNode.ToString());
-            AppendTextToResult(errorNode.LiquidError.ToString());
+            AppendTextToCurrentAccumulator(errorNode.LiquidError.ToString());
         }
 
         public void Visit(IfChangedBlockTag ifChangedBlockTag)
@@ -418,16 +390,16 @@ namespace Liquid.NET
             // This maintains state, so there's only one.
             if (_isChangedRenderer == null)
             {
-                _isChangedRenderer = new IfChangedRenderer(this, _astRenderer, _templateContext);
+                _isChangedRenderer = new IfChangedRenderer(this, _astRenderer);
             }
-            AppendTextToResult(_isChangedRenderer.Next(ifChangedBlockTag.UniqueId, ifChangedBlockTag.LiquidBlock, _astRenderer));
+            AppendTextToCurrentAccumulator(_isChangedRenderer.Next(ifChangedBlockTag.UniqueId, ifChangedBlockTag.LiquidBlock));
 
         }
 
         public void Visit(TableRowBlockTag tableRowBlockTag)
         {
             new TableRowRenderer(this, _astRenderer)
-                .Render(tableRowBlockTag, _templateContext, AppendTextToResult);
+                .Render(tableRowBlockTag, _templateContext, AppendTextToCurrentAccumulator);
         }
 
         public void Visit(RootDocumentNode rootDocumentNode)
@@ -442,7 +414,7 @@ namespace Liquid.NET
 
         public void Visit(StringValue stringValue)
         {          
-           AppendTextToResult(Render(stringValue)); 
+           AppendTextToCurrentAccumulator(Render(stringValue)); 
         }
 
         /// <summary>
@@ -452,25 +424,16 @@ namespace Liquid.NET
         public void Visit(LiquidExpression liquidExpression)
         {
             //Console.WriteLine("Visiting Object Expression ");
-            var liquidResult = LiquidExpressionEvaluator.Eval(liquidExpression, new List<Option<IExpressionConstant>>(), _templateContext)
-                .WhenSuccess(x => x.WhenSome(some => AppendTextToResult(Render(x.Value)))
-                                   .WhenNone(() => AppendTextToResult("")))
-                 .WhenError(RenderError);
-//            if (liquidResult.HasValue)
-//            {
-//                _result += Render(liquidResult.Value);
-//            }
-//            else
-//            {
-//                _result += Render(new NilValue());
-//            }
-
+            LiquidExpressionEvaluator.Eval(liquidExpression, new List<Option<IExpressionConstant>>(), _templateContext)
+                .WhenSuccess(x => x.WhenSome(some => AppendTextToCurrentAccumulator(Render(x.Value)))
+                                   .WhenNone(() => AppendTextToCurrentAccumulator("")))
+                .WhenError(RenderError);
         }
 
         public void Visit(LiquidExpressionTree liquidExpressionTree)
         {
-            var constResult = LiquidExpressionEvaluator.Eval(liquidExpressionTree, _templateContext)
-                .WhenSuccess(success => success.WhenSome(x => AppendTextToResult(Render(x))))
+            LiquidExpressionEvaluator.Eval(liquidExpressionTree, _templateContext)
+                .WhenSuccess(success => success.WhenSome(x => AppendTextToCurrentAccumulator(Render(x))))
                 .WhenError(RenderError);
         }
 

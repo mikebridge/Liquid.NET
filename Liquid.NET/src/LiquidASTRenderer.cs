@@ -10,13 +10,14 @@ namespace Liquid.NET
 
         public string Render(ITemplateContext ctx, LiquidAST liquidAst)
         {
-            var renderingVisitor = new RenderingVisitor(this, ctx);
+            String result = "";
+            var renderingVisitor = new RenderingVisitor(this, ctx, str => result+=str);
             StartVisiting(renderingVisitor, liquidAst.RootNode);
             if (renderingVisitor.HasErrors)
             {
                 throw new LiquidRendererException(renderingVisitor.Errors);
             }
-            return renderingVisitor.Text;
+            return result;
         }
         
         public void StartVisiting(IASTVisitor visitor, TreeNode<IASTNode> rootNode)

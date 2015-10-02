@@ -1,5 +1,6 @@
 ﻿using System;
-
+using System.Collections.Generic;
+using Liquid.NET.Constants;
 using NUnit.Framework;
 
 namespace Liquid.NET.Tests.Tags
@@ -66,6 +67,45 @@ namespace Liquid.NET.Tests.Tags
             // Assert
             Assert.That(result, Is.EqualTo("Result : You said hello."));
 
+        }
+
+        /// test that state is maintained
+        [Test]
+        public void It_Should_Assign_A_Cycle_To_Within_A_Macro()
+        {
+            // Arrange
+            TemplateContext ctx = new TemplateContext();
+            ctx.DefineLocalVariable("array", CreateArrayValues());
+
+            var template = LiquidTemplate.Create("Result : {% macro thecycle %}{% cycle 'odd', 'even' %}{% endmacro %}{% for item in array %}{% thecycle %}{% endfor %}");
+
+            // Act
+            try
+            {
+                String result = template.Render(ctx);
+                Console.WriteLine(result);
+
+                // Assert
+                Assert.That(result.TrimEnd(), Is.EqualTo("Result : oddevenoddeven"));
+            }
+            catch (LiquidRendererException ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw;
+            }
+
+        }
+
+        private ArrayValue CreateArrayValues()
+        {
+            var list = new List<IExpressionConstant>
+            {
+                new StringValue("a string"),
+                NumericValue.Create(123),
+                NumericValue.Create(456m),
+                new BooleanValue(false)
+            };
+            return new ArrayValue(list);
         }
 
     }

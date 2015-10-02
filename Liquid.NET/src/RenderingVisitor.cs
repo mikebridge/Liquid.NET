@@ -32,11 +32,10 @@ namespace Liquid.NET
 
         //public RenderingVisitor(LiquidASTRenderer astRenderer, SymbolTableStack symbolTableStack)
         public RenderingVisitor(
-            ITemplateContext templateContext,
-            Action<String> accumulator)
+            ITemplateContext templateContext)
         {
             _templateContext = templateContext;
-            _accumulators.Push(accumulator);
+            //_accumulators.Push(accumulator);
         }
 
         public void PushTextAccumulator(Action<String> accumulator)
@@ -51,11 +50,12 @@ namespace Liquid.NET
 
         private void AppendTextToCurrentAccumulator(String str)
         {
-            var action = _accumulators.Peek();
-            if (action == null)
+            if (!_accumulators.Any())
             {
-                throw new ApplicationException("Need to call PushTextAppender to capture text.");
+                throw new InvalidOperationException("Need to call PushTextAppender to capture text.");
             }
+            var action = _accumulators.Peek();
+
             action(str);
         }
 
@@ -460,8 +460,19 @@ namespace Liquid.NET
 
         public void StartWalking(TreeNode<IASTNode> rootNode)
         {
+            if (!_accumulators.Any())
+            {
+                throw new InvalidOperationException("There is no current accumulator.");
+            }
             rootNode.Data.Accept(this);
             rootNode.Children.ForEach(StartWalking);
+        }
+
+        public void StartWalking(TreeNode<IASTNode> rootNode, Action<String> accumulator)
+        {
+            PushTextAccumulator(accumulator);
+            StartWalking(rootNode);
+            PopTextAccumulator();
         }
 
     }

@@ -20,8 +20,8 @@ namespace Liquid.NET
         {
             var result = "";
 
-            var renderingVisitor = new RenderingVisitor(ctx, str => result += str);
-            renderingVisitor.StartWalking(_liquidAst.RootNode);
+            var renderingVisitor = new RenderingVisitor(ctx);
+            renderingVisitor.StartWalking(_liquidAst.RootNode, str => result += str);
 
             if (renderingVisitor.HasErrors)
             {

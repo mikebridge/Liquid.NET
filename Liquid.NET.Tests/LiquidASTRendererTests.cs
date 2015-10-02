@@ -524,11 +524,9 @@ namespace Liquid.NET.Tests
 
         private static string Render(ITemplateContext templateContext, LiquidAST liquidAst)
         {
-            //return new LiquidASTRenderer().Render(templateContext, ast);
-
             String result = "";
-            var renderingVisitor = new RenderingVisitor(templateContext, str => result += str);
-            renderingVisitor.StartWalking(liquidAst.RootNode);
+            var renderingVisitor = new RenderingVisitor(templateContext);
+            renderingVisitor.StartWalking(liquidAst.RootNode, str => result += str);
             if (renderingVisitor.HasErrors)
             {
                 throw new LiquidRendererException(renderingVisitor.Errors);

@@ -183,7 +183,7 @@ namespace Liquid.NET.Constants
                             var val = int.Parse(stringVal);
                             return LiquidExpressionResult.Success(NumericValue.Create(val));
                         }
-                        catch (OverflowException oex)
+                        catch (OverflowException)
                         {
                             var val = decimal.Parse(stringVal);
 

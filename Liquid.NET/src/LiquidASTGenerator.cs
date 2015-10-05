@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Atn;
+using Antlr4.Runtime.Misc;
 using Antlr4.Runtime.Tree;
 
 using Liquid.NET.Constants;
@@ -28,8 +29,6 @@ namespace Liquid.NET
 
     public class LiquidASTGenerator : LiquidBaseListener, ILiquidASTGenerator
     {
-        // TODO: WHen done it shoudl check if all the stacks are reset.
-
         public event OnParsingErrorEventHandler ParsingErrorEventHandler;
 
         private BufferedTokenStream _tokenStream;
@@ -117,7 +116,7 @@ namespace Liquid.NET
         /// <returns></returns>
         public IList<String> GetNonEmptyStackErrors()
         {
-            return this.CurrentBuilderContext.VerifyStacksEmpty();
+            return CurrentBuilderContext.VerifyStacksEmpty();
         }
 
         public override void EnterTag(LiquidParser.TagContext tagContext)
@@ -779,6 +778,13 @@ namespace Liquid.NET
             //CurrentBuilderContext.CustomTagStack.Push(customTag);
             //Console.WriteLine("THe PARENT AST node (which needs to be stored in case of reparenting) is " + CurrentAstNode.Data);
             var tuple = new Tuple<CustomTag, TreeNode<IASTNode>>(customTag, newNode);
+            //var tokenIndices = context.SourceInterval;
+            var start = context.start.StartIndex;
+            var stop = context.stop.StopIndex;
+
+            customTag.RawText = context.Start.InputStream.GetText(new Interval(start, stop));
+
+            //int line = firstToken.getLine();
             _customTagStackAndParent.Push(tuple);
         }
 

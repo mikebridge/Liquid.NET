@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 using Liquid.NET.Symbols;
 using Liquid.NET.Utils;
 
@@ -15,7 +13,8 @@ namespace Liquid.NET.Tags
            return new CustomBlockTag(tag.TagName)
             {
                 LiquidExpressionTrees = tag.LiquidExpressionTrees,
-                LiquidBlock = liquidBlock
+                LiquidBlock = liquidBlock,
+                RawText = tag.RawText
             };
         }
 
@@ -35,6 +34,8 @@ namespace Liquid.NET.Tags
         public IList<TreeNode<LiquidExpression>> LiquidExpressionTrees { get; private set; }
 
         public TreeNode<IASTNode> LiquidBlock = new TreeNode<IASTNode>(new RootDocumentNode());
+
+        public String RawText { get; set; }
 
     }
 }

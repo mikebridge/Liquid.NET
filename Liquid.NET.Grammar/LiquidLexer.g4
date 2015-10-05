@@ -12,13 +12,12 @@ fragment COMMENTSTART:	TAGSTART [ \t]* 'comment' [ \t]* TAGEND ;
 fragment COMMENTEND:	TAGSTART [ \t]* 'endcomment' [ \t]* TAGEND ;
 
 RAW :					RAWSTART RAWBLOCK RAWEND ;
-fragment RAWBLOCK:				( RAW | . )*?;
+fragment RAWBLOCK:		( RAW | . )*?;
 fragment RAWSTART:		TAGSTART [ \t]* 'raw' [ \t]* TAGEND ;
 fragment RAWEND:		TAGSTART [ \t]* 'endraw' [ \t]* TAGEND ;
 
 TAGSTART :				'{%'	-> pushMode(INLIQUIDTAG) ;
 OUTPUTMKUPSTART :		'{{'			-> pushMode(INLIQUIDFILTER) ;
-//TEXT :					.+? ;
 
 TEXT :					.+? ;
 
@@ -123,6 +122,8 @@ ARRAYEND1 :				']' -> type(ARRAYEND);
 
 COMMA :					',' ;
 COLON :					':' ;
+
+//TEXT3:				(TEXT | KEYWORDS)+ -> type(TEXT);
 
 WS :					[ \t\r\n]+ -> skip ;
 
@@ -232,6 +233,9 @@ VARIABLENAME2:			(LABEL | KEYWORDS) -> type(VARIABLENAME);
 //LABEL2:					LABEL -> type(LABEL);
 
 GENERATORRANGE1:		GENERATORRANGE -> type(GENERATORRANGE) ;
+
+//TEXT3:				(TEXT | KEYWORDS)+ -> type(TEXT);
+//TEXT3:					TEXT -> type(TEXT);
 
 END:					'end' ;
 

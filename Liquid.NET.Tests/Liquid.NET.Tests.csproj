@@ -168,6 +168,8 @@
     <Compile Include="Tags\CaptureBlockTagTests.cs" />
     <Compile Include="Tags\CaseWhenElseBlockTagTests.cs" />
     <Compile Include="Tags\CustomBlockTagTests.cs" />
+    <Compile Include="Tags\CustomSyntaxBlockTagTests.cs" />
+    <Compile Include="Tags\CustomTagGrammarTests.cs" />
     <Compile Include="Tags\CustomTagTests.cs" />
     <Compile Include="Tags\IfChangedBlockTagTests.cs" />
     <Compile Include="Tags\IncludeTagTests.cs" />

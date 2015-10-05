@@ -17,15 +17,15 @@ init:				block*;
 
 block:				outputmarkup | tag | rawtext ;
 
-rawtext:			TEXT+ ;
+//rawtext:			(TEXT+ | KEYWORDS) ;
+//rawtext:			(TEXT+ | KEYWORDS)+;
+rawtext:			TEXT+;
 
 				
 	
 // {% Parse tags %}
 
 tag:				raw_tag
-//					| custom_blocktag  //{System.String.Equals("end" + custom_block_start_tag().GetText(), custom_block_end_tag().GetText())}?
-//					| custom_tag
 					| if_tag
 					| for_tag
 					| cycle_tag
@@ -41,8 +41,6 @@ tag:				raw_tag
 					| continue_tag
 					| macro_tag
 					| ifchanged_tag
-					//| custom_blocktag  //{System.String.Equals("end" + custom_block_start_tag().GetText(), custom_block_end_tag().GetText())}?
-					//| custom_tag
 					| custom_tag_start
 					| custom_tag_end
 					;
@@ -67,7 +65,7 @@ raw_tag:			RAW;
 //custom_tag:			TAGSTART tagname customtag_expr* TAGEND ;	
 //customtag_expr:		outputexpression;
 
-custom_tag_start:	TAGSTART VARIABLENAME customtag_expr* TAGEND ;
+custom_tag_start:	TAGSTART VARIABLENAME (customtag_expr* | rawtext) TAGEND ;
 customtag_expr:		outputexpression;
 custom_tag_end:		TAGSTART ENDLABEL TAGEND ;
 
@@ -138,7 +136,7 @@ for_else:			TAGSTART ELSE_TAG TAGEND block* ;
 
 for_block:			block* ;
 
-for_params: 		PARAM_REVERSED | for_param_offset | for_param_limit ; // todo: limit to one of each?
+for_params: 		PARAM_REVERSED | for_param_offset | for_param_limit ;
 
 for_param_offset:	PARAM_OFFSET COLON (variable | NUMBER) ;
 
@@ -165,8 +163,6 @@ variable:			VARIABLENAME objectvariableindex* ;
 generator:			PARENOPEN generator_index GENERATORRANGE generator_index PARENCLOSE ;
 
 generator_index:	NUMBER | variable;
-
-//comment_tag:		TAGSTART COMMENT_TAG TAGEND rawtext TAGSTART ENDCOMMENT_TAG TAGEND ;
 
 increment_tag:		TAGSTART INCREMENT_TAG VARIABLENAME TAGEND ;
 
@@ -208,8 +204,6 @@ objectvariableindex: ARRAYSTART arrayindex ARRAYEND
 					| PERIOD objectproperty
 					;
 
-					// TODO: change LABEL... to variable
-//arrayindex:			ARRAYINT | STRING  | VARIABLENAME objectvariableindex*  ;
 arrayindex:			ARRAYINT | STRING  | variable  ;
 
 objectproperty:		VARIABLENAME;

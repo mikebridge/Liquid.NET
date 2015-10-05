@@ -82,7 +82,6 @@
     <Compile Include="src\Constants\GeneratorValue.cs" />
     <Compile Include="src\Constants\IExpressionConstant.cs" />
     <Compile Include="src\Constants\IIndexable.cs" />
-    <Compile Include="src\Constants\NilValue.cs" />
     <Compile Include="src\Constants\NumericValue.cs" />
     <Compile Include="src\Constants\FilterArgumentAttribute.cs" />
     <Compile Include="src\Constants\Reflector.cs" />
@@ -202,6 +201,7 @@
     <Compile Include="src\Tags\CommentBlockTag.cs" />
     <Compile Include="src\Tags\ContinueTag.cs" />
     <Compile Include="src\Tags\CustomBlockTag.cs" />
+    <Compile Include="src\Tags\CustomSyntaxBlockTag.cs" />
     <Compile Include="src\Tags\CustomTag.cs" />
     <Compile Include="src\Tags\Custom\CustomTagRendererFactory.cs" />
     <Compile Include="src\Tags\Custom\CustomBlockTagRendererFactory.cs" />

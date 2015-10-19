@@ -21,10 +21,24 @@ namespace Liquid.NET.Tests.Filters
         }
 
         [Test]
-        [TestCase("\"\"", "")]
+        public void It_Should_Return_Default_If_Empty_String()
+        {
+            // Arrange
+            TemplateContext ctx = new TemplateContext();
+
+            // Act
+            var result = RenderingHelper.RenderTemplate("Result : {{ \"\" | default: \"Hello\" }}", ctx);
+
+            // Assert
+            Assert.That(result, Is.EqualTo("Result : Hello"));
+
+        }
+
+        [Test]
+        [TestCase("\"  \"", "  ")]
         [TestCase("\"Test\"", "Test")]
         [TestCase("0", "0")]
-        public void It_Should_Not_Return_Default_If_Not_Null(String input, String expected)
+        public void It_Should_Not_Return_Default_If_Not_Null_And_Not_Empty(String input, String expected)
         {
             // Arrange
             TemplateContext ctx = new TemplateContext();

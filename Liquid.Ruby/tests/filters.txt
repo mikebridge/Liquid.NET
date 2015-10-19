@@ -56,4 +56,7 @@
 {{ "" | prepend: x }}
 #
 {{ "" | append: x }}
-
+#
+{{ nil | default: "NIL TEST" }}
+#
+{{ "" | default: "ES TEST" }}

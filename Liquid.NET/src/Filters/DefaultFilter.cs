@@ -14,6 +14,18 @@ namespace Liquid.NET.Filters
             _defaultValue = defaultValue;
         }
 
+        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, StringValue liquidExpression)
+        {
+            if (liquidExpression.StringVal == null || liquidExpression.StringVal.Equals(""))
+            {
+                return CreateDefaultReturn();
+            }
+            else
+            {
+                return LiquidExpressionResult.Success(liquidExpression.ToOption());
+            }
+        }
+
         public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, IExpressionConstant liquidExpression)
         {
             return LiquidExpressionResult.Success(liquidExpression.ToOption());

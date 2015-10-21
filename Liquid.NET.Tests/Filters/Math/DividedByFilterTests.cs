@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using NUnit.Framework;
 
@@ -50,6 +52,25 @@ namespace Liquid.NET.Tests.Filters.Math
             // Assert
             //Assert.That(result, Is.EqualTo("Result : 2.5"));
             Assert.That(result, Is.EqualTo("Result : 2"));
+        }
+
+        [Test]
+        public void It_Should_Not_Divide_By_Zero_In_French()
+        {
+            // Arrange
+            var origCulture = Thread.CurrentThread.CurrentCulture;
+            try
+            {
+                Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("fr-CA");
+                var result = RenderingHelper.RenderTemplate("Result : {{ 10.0 | divided_by: 4 }}");
+
+                // Assert
+                Assert.That(result, Is.EqualTo("Result : 2,5"));
+            }
+            finally
+            {
+                Thread.CurrentThread.CurrentCulture = origCulture;
+            }
         }
 
     }

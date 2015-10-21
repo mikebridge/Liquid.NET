@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Numerics;
 using Liquid.NET.Filters;
@@ -172,7 +173,7 @@ namespace Liquid.NET.Constants
                     }
                     if (stringVal.Contains("."))
                     {
-                        var val = decimal.Parse(stringVal);
+                        var val = ToDecimalCultureInvariant(stringVal);
 
                         return LiquidExpressionResult.Success(NumericValue.Create(val));
                     }
@@ -185,7 +186,7 @@ namespace Liquid.NET.Constants
                         }
                         catch (OverflowException oex)
                         {
-                            var val = decimal.Parse(stringVal);
+                            var val = ToDecimalCultureInvariant(stringVal);
 
                             return LiquidExpressionResult.Success(NumericValue.Create(val));
                         }
@@ -209,6 +210,11 @@ namespace Liquid.NET.Constants
             }
             return LiquidExpressionResult.Error("Can't convert from string to " + destType);
            
+        }
+
+        private static decimal ToDecimalCultureInvariant(string stringVal)
+        {
+            return decimal.Parse(stringVal, NumberStyles.Any, CultureInfo.InvariantCulture);
         }
 
 

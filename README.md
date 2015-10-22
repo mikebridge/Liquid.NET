@@ -1,20 +1,9 @@
 # Liquid.NET
 
+Liquid.NET is a C# port of the [Shopify Liquid parser](https://docs.shopify.com/themes/liquid-documentation/basics).
+
+Although we use it in production, it should be considered beta software.
+
+More information is on the [Liquid.NET Wiki](https://github.com/mikebridge/Liquid.NET/wiki).
+
 http://mikebridge.github.io/Liquid.NET/
-
-
-## TODO
-
-- tablerow tag
-- ifchanged tag
-- allow keyword tag names as variables (e.g. "limit:limit")
-- allow expression in case (not just variable)
-- to_number filter
-
-- implement `{%- -%}` to trim spaces
-- several test fixes
-
-## ALSO TODO
-
-- I think the option syntax should be used in the filters
-- The non-custom filters should be directly called by the RenderingVisitor, rather than via dynamic instantiation.

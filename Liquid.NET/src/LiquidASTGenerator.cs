@@ -29,6 +29,7 @@ namespace Liquid.NET
     public class LiquidASTGenerator : LiquidBaseListener, ILiquidASTGenerator
     {
         // TODO: WHen done it shoudl check if all the stacks are reset.
+        // ReSharper disable once RedundantDefaultMemberInitializer
         private int _level = 0;
 
         public event OnParsingErrorEventHandler ParsingErrorEventHandler;
@@ -53,7 +54,7 @@ namespace Liquid.NET
 
         public LiquidAST Generate(String template)
         {
-            //Console.WriteLine("Parsing Template \r\n" + template);
+            //Log("Parsing Template \r\n" + template);
 
             //BufferedTokenStream tokenStream
             LiquidAST liquidAst = new LiquidAST();
@@ -118,7 +119,7 @@ namespace Liquid.NET
         /// <returns></returns>
         public IList<String> GetNonEmptyStackErrors()
         {
-            return this.CurrentBuilderContext.VerifyStacksEmpty();
+            return CurrentBuilderContext.VerifyStacksEmpty();
         }
 
         public override void EnterEveryRule(ParserRuleContext context)
@@ -135,7 +136,7 @@ namespace Liquid.NET
 
         public override void EnterTag(LiquidParser.TagContext tagContext)
         {
-            //Console.WriteLine("# EnterTag");
+            //Log("# EnterTag");
             base.EnterTag(tagContext);          
         }
 
@@ -147,18 +148,13 @@ namespace Liquid.NET
             String txt = TrimRawTags(context.RAW().GetText());
             
             //String allTokens = _tokenStream.GetText();
-            //Console.WriteLine(" *** Receiving Raw Text *** " + txt);
+            //Log(" *** Receiving Raw Text *** " + txt);
             var rawTag = new RawBlockTag(txt);
             var newNode = CreateTreeNode<IASTNode>(rawTag);
 
             CurrentAstNode.AddChild(newNode);
         }
 
-        /// <summary>
-        /// Todo: see if this can be lexed out.
-        /// </summary>
-        /// <param name="str"></param>
-        /// <returns></returns>
         public String TrimRawTags(String str)
         {
             var str1 = Regex.Replace(str, "^{%\\s*raw\\s%}", "", RegexOptions.IgnoreCase);
@@ -170,7 +166,7 @@ namespace Liquid.NET
         public override void EnterInclude_tag(LiquidParser.Include_tagContext context)
         {
             base.EnterInclude_tag(context);
-            //Console.WriteLine("Creating an include tag");
+            //Log("Creating an include tag");
 
             var includeTag = new IncludeTag();
             AddNodeToAST(includeTag);
@@ -192,7 +188,7 @@ namespace Liquid.NET
             base.EnterInclude_expr(context);
             StartNewLiquidExpressionTree(result =>
             {
-                //Console.WriteLine("+_+ Setting INCLUDE value ");
+                //Log("+_+ Setting INCLUDE value ");
                 CurrentBuilderContext.IncludeTagStack.Last().VirtualFileExpression = result;
             });
         }
@@ -208,7 +204,7 @@ namespace Liquid.NET
             base.EnterInclude_with(context);
             StartNewLiquidExpressionTree(result =>
             {
-                //Console.WriteLine("Setting INCLUDE WITH");
+                //Log("Setting INCLUDE WITH");
                 CurrentBuilderContext.IncludeTagStack.Last().WithExpression = result;
             });
         }
@@ -224,7 +220,7 @@ namespace Liquid.NET
             base.EnterInclude_for(context);
             StartNewLiquidExpressionTree(result =>
             {
-                //Console.WriteLine("Setting INCLUDE for");
+                //Log("Setting INCLUDE for");
                 CurrentBuilderContext.IncludeTagStack.Last().ForExpression = result;
             });
         }
@@ -241,9 +237,9 @@ namespace Liquid.NET
             String label = context.VARIABLENAME().GetText();
             StartNewLiquidExpressionTree(result =>
             {
-                //Console.WriteLine(" ---> Setting INCLUDE for "+label + " = " + result );
+                //Log(" ---> Setting INCLUDE for "+label + " = " + result );
                 CurrentBuilderContext.IncludeTagStack.Last().Definitions.Add(label, result);
-                //Console.WriteLine("THere are " + CurrentBuilderContext.IncludeTagStack.Last().Definitions.Count() +
+                //Log("THere are " + CurrentBuilderContext.IncludeTagStack.Last().Definitions.Count() +
                 //                  " definitions");
             });
         }
@@ -277,7 +273,7 @@ namespace Liquid.NET
 
             StartNewLiquidExpressionTree(result =>
             {
-                //Console.WriteLine("Setting ExpRESSION TREE TO " + result);
+                //Log("Setting ExpRESSION TREE TO " + result);
                 assignTag.LiquidExpressionTree = result;
             });
             //if (context.outputexpression() != null)
@@ -320,7 +316,7 @@ namespace Liquid.NET
         public override void EnterFor_tag(LiquidParser.For_tagContext context)
         {
             base.EnterFor_tag(context);
-            //Console.WriteLine("Entering FOR tag");
+            //Log("Entering FOR tag");
 
             var forBlock = new ForBlockTag
             {
@@ -353,7 +349,7 @@ namespace Liquid.NET
 
         public override void ExitFor_tag(LiquidParser.For_tagContext forContext)
         {
-            //Console.WriteLine("@@@ EXITING FOR TAG *" + forContext.GetText() + "*");
+            //Log("@@@ EXITING FOR TAG *" + forContext.GetText() + "*");
             
             base.ExitFor_tag(forContext);
             _astNodeStack.Pop(); // stop capturing the block inside the for tag.
@@ -383,7 +379,7 @@ namespace Liquid.NET
                 }
                 else if (context.for_param_limit().variable() != null)
                 {
-                    //Console.WriteLine("Start Parsing for.limit Variable...");
+                    //Log("Start Parsing for.limit Variable...");
                     // Performing without an explicit "CLOSE"
                     //LiquidExpression expr = new LiquidExpression();  // create the holding expression
                     StartCapturingVariable(
@@ -417,10 +413,10 @@ namespace Liquid.NET
             }
         }
 
-        public override void ExitFor_params(LiquidParser.For_paramsContext context)
-        {
-            base.ExitFor_params(context);
-        }
+//        public override void ExitFor_params(LiquidParser.For_paramsContext context)
+//        {
+//            base.ExitFor_params(context);
+//        }
 
         /// <summary>
         /// Put the iterable (string, array, generator aka range, etc.) into the current block of the "for block" stack.
@@ -442,7 +438,7 @@ namespace Liquid.NET
 
 //                StartNewLiquidExpressionTree(result =>
 //                {
-//                    Console.WriteLine("   --- Setting ExpRESSION TREE TO " + result);
+//                    Log("   --- Setting ExpRESSION TREE TO " + result);
 //                    forBlock.IterableCreator = new ArrayValueCreator(result);
 //                    
 //                });
@@ -454,7 +450,7 @@ namespace Liquid.NET
             }
             else if (context.generator() != null)
             {
-                //Console.WriteLine("  +++ FOUND a GENERATOR ");
+                //Log("  +++ FOUND a GENERATOR ");
 
                 CurrentBuilderContext.GeneratorCreator = new GeneratorCreator();
                 //forBlock.IterableCreator = CreateGeneratorContext(context.generator());
@@ -462,7 +458,7 @@ namespace Liquid.NET
             }
             else
             {   
-                //Console.WriteLine("TODO: Process the missing iterable");
+                //Log("TODO: Process the missing iterable");
                 // TODO: Maybe put an UNDEFINED variable in the AST?  Or an Erroneous If?
             }
         }
@@ -477,33 +473,33 @@ namespace Liquid.NET
 
         }
 
-        public override void EnterGenerator(LiquidParser.GeneratorContext context)
-        {
-            base.EnterGenerator(context);
-            //Console.WriteLine("/// Entering Generator "+ context.GetText());
-            
-        }
-
-        public override void ExitGenerator(LiquidParser.GeneratorContext context)
-        {
-            base.ExitGenerator(context);
-            //Console.WriteLine("/// Exiting Generator " + context.GetText());            
-        }
+//        public override void EnterGenerator(LiquidParser.GeneratorContext context)
+//        {
+//            base.EnterGenerator(context);
+//            //Log("/// Entering Generator "+ context.GetText());
+//            
+//        }
+//
+//        public override void ExitGenerator(LiquidParser.GeneratorContext context)
+//        {
+//            base.ExitGenerator(context);
+//            //Log("/// Exiting Generator " + context.GetText());            
+//        }
 
         public override void EnterGenerator_index(LiquidParser.Generator_indexContext context)
         {
             base.EnterGenerator_index(context);
             // if this is a number, then add it to the current Generator in 
             // the ContextBuilder.  otherwise, let the Generator 
-            //Console.WriteLine("___ ENTER Generator Index " + context.GetText());
+            //Log("___ ENTER Generator Index " + context.GetText());
 
             Action<TreeNode<LiquidExpression>> setCurrentExpression;
             if (CurrentBuilderContext.GeneratorCreator.StartExpression == null)
             {
-                //Console.WriteLine("==== Assiging START Index " + context.variable().GetText() + " to " + x);
+                //Log("==== Assiging START Index " + context.variable().GetText() + " to " + x);
                 setCurrentExpression = x =>
                 {
-                    //Console.WriteLine("SETTING START INDEX to " +x );
+                    //Log("SETTING START INDEX to " +x );
                     CurrentBuilderContext.GeneratorCreator.StartExpression = x;
                 };
             }
@@ -511,7 +507,7 @@ namespace Liquid.NET
             {
                 setCurrentExpression = x =>
                 {
-                    //Console.WriteLine("SETTING END INDEX to " + x);
+                    //Log("SETTING END INDEX to " + x);
                     CurrentBuilderContext.GeneratorCreator.EndExpression = x;
                 };
 
@@ -532,7 +528,7 @@ namespace Liquid.NET
 
 //                StartNewLiquidExpressionTree(x =>
 //                {
-//                    //Console.WriteLine("==== Assiging index Index " + context.variable().GetText() + " to " + x);
+//                    //Log("==== Assiging index Index " + context.variable().GetText() + " to " + x);
 //                    setCurrentExpression(x);
 //                });
 //                StartCapturingVariable(context.variable());
@@ -541,12 +537,12 @@ namespace Liquid.NET
 
         }
 
-        public override void ExitGenerator_index(LiquidParser.Generator_indexContext context)
-        {
-            base.ExitGenerator_index(context); 
-            //Console.WriteLine("___ EXIT Generator Index " + context.GetText());
-
-        }
+//        public override void ExitGenerator_index(LiquidParser.Generator_indexContext context)
+//        {
+//            base.ExitGenerator_index(context); 
+//            //Log("___ EXIT Generator Index " + context.GetText());
+//
+//        }
 
         public override void EnterContinue_tag(LiquidParser.Continue_tagContext context)
         {
@@ -587,7 +583,7 @@ namespace Liquid.NET
                 }
                 if (obj.variable() != null)
                 {
-                    //Console.WriteLine("Start Parsing CycleTag.cycle_list Variable...");
+                    //Log("Start Parsing CycleTag.cycle_list Variable...");
                     // Performing without an explicit "CLOSE"
                     LiquidExpression expr = new LiquidExpression();  // create the holding expression
                     cycleList.Add(new TreeNode<LiquidExpression>(expr)); // add the (currently empty) expression to the list of vals
@@ -627,7 +623,7 @@ namespace Liquid.NET
                 }
                 if (context.cycle_group().variable() != null)
                 {
-                    //Console.WriteLine("Start Parsing CycleTag.cycle_group Variable...");
+                    //Log("Start Parsing CycleTag.cycle_group Variable...");
                     StartCapturingVariable(
                         context.cycle_group().variable(),
                             x => cycleTag.GroupNameExpressionTree = new TreeNode<LiquidExpression>(new LiquidExpression { Expression = x }));
@@ -734,20 +730,20 @@ namespace Liquid.NET
             var tableRowBlock = CurrentBuilderContext.TableRowBlockTagStack.Peek();
             if (context.STRING() != null)
             {
-                //Console.WriteLine("  +++ FOUND a STRING ");
+                //Log("  +++ FOUND a STRING ");
                 tableRowBlock.IterableCreator =
                     new StringValueIterableCreator(GenerateStringSymbol(context.STRING().GetText()));
             }
             else if (context.variable() != null)
             {
-                //Console.WriteLine("  +++ FOUND a VARIABLE ");
+                //Log("  +++ FOUND a VARIABLE ");
                 StartCapturingVariable(
                     context.variable(),
                     x => tableRowBlock.IterableCreator = new ArrayValueCreator(new TreeNode<LiquidExpression>(new LiquidExpression { Expression = x })));
 
 //                StartNewLiquidExpressionTree(result =>
 //                {
-//                    //Console.WriteLine("   --- Setting ExpRESSION TREE TO " + result);
+//                    //Log("   --- Setting ExpRESSION TREE TO " + result);
 //                    tableRowBlock.IterableCreator = new ArrayValueCreator(result);
 //
 //                });
@@ -757,13 +753,13 @@ namespace Liquid.NET
             }
             else if (context.generator() != null)
             {
-                //Console.WriteLine("  +++ FOUND a GENERATOR ");
+                //Log("  +++ FOUND a GENERATOR ");
                 CurrentBuilderContext.GeneratorCreator = new GeneratorCreator();
                 tableRowBlock.IterableCreator = CurrentBuilderContext.GeneratorCreator;
             }
             else
             {
-                //Console.WriteLine("TODO: Process the missing iterable");
+                //Log("TODO: Process the missing iterable");
                 // TODO: Maybe put an UNDEFINED variable in the AST?  Or an Erroneous If?
             }
 
@@ -785,12 +781,12 @@ namespace Liquid.NET
             // custom tags are interpreted as CustomTags (not CustomTagBlocks) until we 
             // encounter an end tag.  at that point, the AST is rewritten to reflect this.
 
-            //Console.WriteLine("++ START OF OPENING CUSTOM TAG: " + context.VARIABLENAME());
+            //Log("++ START OF OPENING CUSTOM TAG: " + context.VARIABLENAME());
             base.EnterCustom_tag_start(context);
             var customTag = new CustomTag(context.VARIABLENAME().GetText());
             var newNode = AddNodeToAST(customTag);
             //CurrentBuilderContext.CustomTagStack.Push(customTag);
-            //Console.WriteLine("THe PARENT AST node (which needs to be stored in case of reparenting) is " + CurrentAstNode.Data);
+            //Log("THe PARENT AST node (which needs to be stored in case of reparenting) is " + CurrentAstNode.Data);
             var tuple = new Tuple<CustomTag, TreeNode<IASTNode>>(customTag, newNode);
             _customTagStackAndParent.Push(tuple);
         }
@@ -798,11 +794,11 @@ namespace Liquid.NET
          public override void EnterCustomtag_expr(LiquidParser.Customtag_exprContext context)
         {
             base.EnterCustomtag_expr(context);
-            //Console.WriteLine("EXPR IS "+context.outputexpression().GetText());
+            //Log("EXPR IS "+context.outputexpression().GetText());
             
             StartNewLiquidExpressionTree(result =>
             {
-                //Console.WriteLine("Setting ExpRESSION TREE TO " + result);
+                //Log("Setting ExpRESSION TREE TO " + result);
                 //CurrentBuilderContext.CustomTagStack.Peek().LiquidExpressionTrees.Add(result);
                 _customTagStackAndParent.Peek().Item1.LiquidExpressionTrees.Add(result);
             });
@@ -811,17 +807,17 @@ namespace Liquid.NET
 
 //        public override void ExitCustom_tag_start(LiquidParser.Custom_tag_startContext context)
 //        {
-//            //Console.WriteLine("++ END OF OPENING CUSTOM TAG: " + context.VARIABLENAME());
+//            //Log("++ END OF OPENING CUSTOM TAG: " + context.VARIABLENAME());
 //            base.ExitCustom_tag_start(context);
 //            //_astNodeStack.Pop();
 //        }
 
-        public override void EnterCustom_tag_end(LiquidParser.Custom_tag_endContext context)
-         {
-             //Console.WriteLine("-- START OF CLOSING CUSTOM TAG: " + context.ENDLABEL());
-             base.EnterCustom_tag_end(context);
-            //CurrentBuilderContext.CustomTagStack.Pop();
-         }
+//        public override void EnterCustom_tag_end(LiquidParser.Custom_tag_endContext context)
+//         {
+//             //Log("-- START OF CLOSING CUSTOM TAG: " + context.ENDLABEL());
+//             base.EnterCustom_tag_end(context);
+//            //CurrentBuilderContext.CustomTagStack.Pop();
+//         }
 
         public override void ExitCustom_tag_end(LiquidParser.Custom_tag_endContext context)
         {
@@ -829,8 +825,8 @@ namespace Liquid.NET
             // then place all the liquid blocks that were siblings in between the start tag and here
             // into the new CustomBlockTag
 
-           // Console.WriteLine("NEED TO Restructure TREE HERE");
-            //Console.WriteLine("-- END OF CLOSING CUSTOM TAG: " + context.ENDLABEL());
+           // Log("NEED TO Restructure TREE HERE");
+            //Log("-- END OF CLOSING CUSTOM TAG: " + context.ENDLABEL());
             while(true)
             {
                 //if (CurrentBuilderContext.CustomTagStack.Count > 0)
@@ -840,12 +836,12 @@ namespace Liquid.NET
                     var maybeOpeningTagTuple = _customTagStackAndParent.Pop();
                     var customTagOpen = maybeOpeningTagTuple.Item1;
                     var astForCustomOpeningTag = maybeOpeningTagTuple.Item2;
-                    //Console.WriteLine("CHECKING TAG " + customTagOpen.TagName);
+                    //Log("CHECKING TAG " + customTagOpen.TagName);
                     if (("end" + customTagOpen.TagName).ToLower().Equals(context.ENDLABEL().GetText().ToLower()))
                     {
-                        //Console.WriteLine("FOUND OPENING TAG " + customTagOpen.TagName);
-                        //Console.WriteLine("TODO: promote all sibling blocks between the start and end so they become the child of " + customTagOpen.TagName);
-                        //Console.WriteLine("PARENT IS " + astForCustomOpeningTag);
+                        //Log("FOUND OPENING TAG " + customTagOpen.TagName);
+                        //Log("TODO: promote all sibling blocks between the start and end so they become the child of " + customTagOpen.TagName);
+                        //Log("PARENT IS " + astForCustomOpeningTag);
                         //bool inSibling = false;
                         //var childrenToRemoveFromParent()
                         // find the content block and all its siblings up to here.
@@ -862,7 +858,7 @@ namespace Liquid.NET
                     }
                     else
                     {
-                        //Console.WriteLine("Not a match");
+                        //Log("Not a match");
                     }
                 }
                 else
@@ -892,7 +888,7 @@ namespace Liquid.NET
         public override void EnterUnless_tag(LiquidParser.Unless_tagContext unlessContext)
         {
             base.EnterUnless_tag(unlessContext);
-            //Console.WriteLine("CREATING UNLESS TAG *" + unlessContext.GetText() + "*");
+            //Log("CREATING UNLESS TAG *" + unlessContext.GetText() + "*");
             // create the parent if/then/else container and put it in the tree
             AddIfThenElseTagToCurrent();
 
@@ -917,7 +913,7 @@ namespace Liquid.NET
         public override void EnterIf_tag(LiquidParser.If_tagContext ifContext)
         {
             base.EnterIf_tag(ifContext);
-            //Console.WriteLine("CREATING IF TAG *" + ifContext.GetText() + "*");
+            //Log("CREATING IF TAG *" + ifContext.GetText() + "*");
 
             // create the parent if/then/else container and put it in the tree
             AddIfThenElseTagToCurrent();
@@ -931,10 +927,10 @@ namespace Liquid.NET
         /// </summary>
         private void AddIfThenElseTagToCurrent()
         {
-            //Console.WriteLine("Adding If then else to current");
+            //Log("Adding If then else to current");
             //CurrentBuilderContext.IfThenElseBlockTag = new IfThenElseBlockTag();
             var ifThenElseBlock = new IfThenElseBlockTag();
-            //Console.WriteLine("  -:> Pushing if block on stack");
+            //Log("  -:> Pushing if block on stack");
             CurrentBuilderContext.IfThenElseBlockStack.Push(ifThenElseBlock);
             var newNode = CreateTreeNode<IASTNode>(ifThenElseBlock);
             CurrentAstNode.AddChild(newNode);
@@ -947,7 +943,7 @@ namespace Liquid.NET
         private void InitiateIfClause()
         {
             var elsIfSymbol = new IfElseClause();
-            //Console.WriteLine("Creating if expressino");
+            //Log("Creating if expressino");
             CurrentBuilderContext.IfThenElseBlockStack.Peek().AddIfClause(elsIfSymbol);
             _astNodeStack.Push(elsIfSymbol.LiquidBlock); // capture the block
         }
@@ -957,7 +953,7 @@ namespace Liquid.NET
         public override void EnterIfexpr(LiquidParser.IfexprContext context)
         {
             base.EnterIfexpr(context);
-            //Console.WriteLine("New Expression Builder");
+            //Log("New Expression Builder");
             //InitiateExpressionBuilder();
             var ifexpr = CurrentBuilderContext.IfThenElseBlockStack.Peek().IfElseClauses.Last();
             StartNewLiquidExpressionTree(x => ifexpr.LiquidExpressionTree = x);
@@ -966,7 +962,7 @@ namespace Liquid.NET
         public override void ExitIfexpr(LiquidParser.IfexprContext context)
         {
             base.ExitIfexpr(context);
-            //Console.WriteLine("End Expression Builder");
+            //Log("End Expression Builder");
             
             //CurrentBuilderContext.LiquidExpressionBuilder.StartLiquidExpression();
 //            CurrentBuilderContext.IfThenElseBlockStack.Peek().IfElseClauses.Last().GroupNameExpressionTree =
@@ -980,7 +976,7 @@ namespace Liquid.NET
         public override void EnterElsif_tag(LiquidParser.Elsif_tagContext elsIfContext)
         {
             base.EnterElsif_tag(elsIfContext);
-            //Console.WriteLine("CREATING ELSIF TAG *" + elsIfContext.GetText() + "*");
+            //Log("CREATING ELSIF TAG *" + elsIfContext.GetText() + "*");
             InitiateIfClause();
         }
 
@@ -1000,17 +996,17 @@ namespace Liquid.NET
         public override void ExitIf_tag(LiquidParser.If_tagContext ifContext)
         {
             base.EnterIf_tag(ifContext);
-            //Console.WriteLine("  <:- Popping if block off stack");
+            //Log("  <:- Popping if block off stack");
             CurrentBuilderContext.IfThenElseBlockStack.Pop();
 
-            //Console.WriteLine("EXITING IF/ELSE/ELSIF TAG *" + ifContext.GetText() + "*");
+            //Log("EXITING IF/ELSE/ELSIF TAG *" + ifContext.GetText() + "*");
             EndIfClause();
         }
 
         public override void ExitElsif_tag(LiquidParser.Elsif_tagContext elsIfContext)
         {
             base.ExitElsif_tag(elsIfContext);
-            //Console.WriteLine("EXITING ELSIF TAG *" + elsIfContext.GetText() + "*");
+            //Log("EXITING ELSIF TAG *" + elsIfContext.GetText() + "*");
             EndIfClause();
         }
 
@@ -1071,7 +1067,7 @@ namespace Liquid.NET
 
         private void StartNewLiquidExpressionTree(Action<TreeNode<LiquidExpression>> setExpression)
         {
-            //Console.WriteLine("Set Expression " + setExpression);
+            //Log("Set Expression " + setExpression);
             CurrentBuilderContext.LiquidExpressionBuilder = new LiquidExpressionTreeBuilder();
             
             CurrentBuilderContext.LiquidExpressionBuilder.ExpressionCompleteEvent += new OnExpressionCompleteEventHandler(setExpression);
@@ -1079,7 +1075,7 @@ namespace Liquid.NET
 
         private void FinishLiquidExpressionTree()
         {
-            //Console.WriteLine("   <<< End FinishLiquidExpression (set Builder to Null)");
+            //Log("   <<< End FinishLiquidExpression (set Builder to Null)");
 
             CurrentBuilderContext.LiquidExpressionBuilder = null;
         }
@@ -1092,7 +1088,7 @@ namespace Liquid.NET
         public override void EnterCase_tag(LiquidParser.Case_tagContext context)
         {
             base.EnterCase_tag(context);
-            //Console.WriteLine(">>>FOUND CASE");
+            //Log(">>>FOUND CASE");
             var caseBlock = new CaseWhenElseBlockTag();
 
             CurrentBuilderContext.CaseWhenElseBlockStack.Push(caseBlock);
@@ -1104,7 +1100,7 @@ namespace Liquid.NET
             // so converted to a predicate.
             StartNewLiquidExpressionTree(result =>
             {
-                //Console.WriteLine("Setting Expression tree to" + result);
+                //Log("Setting Expression tree to" + result);
                 caseBlock.LiquidExpressionTree = result;
             });
 
@@ -1113,26 +1109,26 @@ namespace Liquid.NET
         public override void ExitCase_tag(LiquidParser.Case_tagContext context)
         {
             base.ExitCase_tag(context);
-            //Console.WriteLine("<<<Exit Case Tag");
+            //Log("<<<Exit Case Tag");
             CurrentBuilderContext.CaseWhenElseBlockStack.Pop();
             FinishLiquidExpressionTree();
         }
 
-        public override void EnterCase_tag_contents(LiquidParser.Case_tag_contentsContext context)
-        {
-            base.EnterCase_tag_contents(context);
-            //Console.WriteLine("CASE COntents");
-        }
+//        public override void EnterCase_tag_contents(LiquidParser.Case_tag_contentsContext context)
+//        {
+//            base.EnterCase_tag_contents(context);
+//            //Log("CASE COntents");
+//        }
 
         public override void EnterWhen_tag(LiquidParser.When_tagContext context)
         {
             base.EnterWhen_tag(context);
-            //Console.WriteLine("When Tag");
+            //Log("When Tag");
             InitiateWhenClause();
 
             StartNewLiquidExpressionTree(result =>
             {
-                //Console.WriteLine("Setting Expression tree to" + result);
+                //Log("Setting Expression tree to" + result);
                 // TODO: make when clauses multiple.
                 //CurrentBuilderContext.CaseWhenElseBlockStack.Peek().WhenClauses.Last().LiquidExpressionTree = result;
                 CurrentBuilderContext.CaseWhenElseBlockStack.Peek().WhenClauses.Last().LiquidExpressionTree.Add(result);
@@ -1149,7 +1145,7 @@ namespace Liquid.NET
         public override void EnterWhenblock(LiquidParser.WhenblockContext context)
         {
             base.EnterWhenblock(context);
-            //Console.WriteLine("WHEN BLOCK");
+            //Log("WHEN BLOCK");
         }
 
         public override void EnterWhen_else_tag(LiquidParser.When_else_tagContext context)
@@ -1170,7 +1166,7 @@ namespace Liquid.NET
         public override void ExitWhen_else_tag(LiquidParser.When_else_tagContext context)
         {
             base.ExitWhen_else_tag(context);
-            //Console.WriteLine("Exit When Else");
+            //Log("Exit When Else");
             //EndWhenClause();
             _astNodeStack.Pop();
         }
@@ -1178,7 +1174,7 @@ namespace Liquid.NET
         private void InitiateWhenClause()
         {
             var whenBlock = new CaseWhenElseBlockTag.WhenClause();
-            //Console.WriteLine("Creating if expressino");
+            //Log("Creating if expressino");
             CurrentBuilderContext.CaseWhenElseBlockStack.Peek().AddWhenBlock(whenBlock);
             _astNodeStack.Push(whenBlock.LiquidBlock); // capture the block
         }
@@ -1193,8 +1189,8 @@ namespace Liquid.NET
         public override void EnterMacro_tag(LiquidParser.Macro_tagContext macroContext)
         {
             base.EnterMacro_tag(macroContext);
-            //Console.WriteLine("Defining MACRO " + macroContext.macro_label().GetText());
-            //Console.WriteLine(" --> with parameters " + String.Join(",", macroContext.macro_param().Select(x => x.GetText())));
+            //Log("Defining MACRO " + macroContext.macro_label().GetText());
+            //Log(" --> with parameters " + String.Join(",", macroContext.macro_param().Select(x => x.GetText())));
 
             var macroBlockTag = new MacroBlockTag(macroContext.macro_label().GetText())
             {
@@ -1224,7 +1220,7 @@ namespace Liquid.NET
         /// </summary>
         private void MarkCurrentExpressionComplete()
         {
-            //Console.WriteLine("! MarkCurrentExpressionComplete !");
+            //Log("! MarkCurrentExpressionComplete !");
             CurrentBuilderContext.LiquidExpressionBuilder.EndLiquidExpression();
         }
 
@@ -1246,7 +1242,7 @@ namespace Liquid.NET
         public override void EnterContainsExpression(LiquidParser.ContainsExpressionContext context)
         {
             base.EnterContainsExpression(context);
-            //Console.WriteLine(" === creating CONTAINS expression >" + context.GetText() + "<");
+            //Log(" === creating CONTAINS expression >" + context.GetText() + "<");
             AddExpressionToCurrentExpressionBuilder(new ContainsExpression());
         }
 
@@ -1259,27 +1255,27 @@ namespace Liquid.NET
 //        public override void EnterMultExpr(LiquidParser.MultExprContext multContext)
 //        {
 //            base.EnterMultExpr(multContext);
-//            Console.WriteLine(" === creating MULTIPLICATION expression >" + multContext.GetText() + "<");
+//            Log(" === creating MULTIPLICATION expression >" + multContext.GetText() + "<");
 //        }
 //
 //        public override void EnterAddSubExpr(LiquidParser.AddSubExprContext addContext)
 //        {
 //            base.EnterAddSubExpr(addContext);
-//            Console.WriteLine(" === creating ADD expression >" + addContext.GetText() + "<");
+//            Log(" === creating ADD expression >" + addContext.GetText() + "<");
 //        }
 
         public override void EnterAndExpr(LiquidParser.AndExprContext andContext)
         {
             base.EnterAndExpr(andContext);
             AddExpressionToCurrentExpressionBuilder(new AndExpression());
-            //Console.WriteLine(" === creating AND expression >" + andContext.GetText() + "<");
+            //Log(" === creating AND expression >" + andContext.GetText() + "<");
             
         }
 
         public override void ExitAndExpr(LiquidParser.AndExprContext andContext)
         {
             base.ExitAndExpr(andContext);
-            //Console.WriteLine(" --- exiting AND expression >" + andContext.GetText() + "<");
+            //Log(" --- exiting AND expression >" + andContext.GetText() + "<");
             MarkCurrentExpressionComplete();
         }
 
@@ -1287,28 +1283,28 @@ namespace Liquid.NET
         {
             base.EnterNotExpr(notContext);
             AddExpressionToCurrentExpressionBuilder(new NotExpression());
-            //Console.WriteLine(" === creating NOT expression >" + notContext.GetText() + "<");
+            //Log(" === creating NOT expression >" + notContext.GetText() + "<");
 
         }
 
         public override void ExitNotExpr(LiquidParser.NotExprContext notContext)
         {
             base.ExitNotExpr(notContext);
-            //Console.WriteLine(" --- exiting NOT expression >" + notContext.GetText() + "<");
+            //Log(" --- exiting NOT expression >" + notContext.GetText() + "<");
             MarkCurrentExpressionComplete();
         }
 
         public override void EnterOrExpr(LiquidParser.OrExprContext orContext)
         {
             base.EnterOrExpr(orContext);          
-            //Console.WriteLine(" === creating OR expression >" + orContext.GetText() + "<");
+            //Log(" === creating OR expression >" + orContext.GetText() + "<");
             AddExpressionToCurrentExpressionBuilder(new OrExpression());
         }
 
         public override void ExitOrExpr(LiquidParser.OrExprContext orContext)
         {
             base.ExitOrExpr(orContext);
-            //Console.WriteLine(" --- exiting OR expression >" + orContext.GetText() + "<");
+            //Log(" --- exiting OR expression >" + orContext.GetText() + "<");
             MarkCurrentExpressionComplete();
         }
 
@@ -1324,25 +1320,25 @@ namespace Liquid.NET
             {
                 if (context.NEQ() != null)
                 {
-                    //Console.WriteLine("Completing NEQ");
+                    //Log("Completing NEQ");
                     AddExpressionToCurrentExpressionBuilder(new NotExpression());
                 }
 
                 if (context.EMPTY() != null || context.ISEMPTY() != null)
                 {
-                    //Console.WriteLine("Completing ISEMPTY");
+                    //Log("Completing ISEMPTY");
                     AddExpressionToCurrentExpressionBuilder(new IsEmptyExpression());
                 }
 
                 if (context.BLANK() != null || context.ISBLANK() != null)
                 {
-                    //Console.WriteLine("Completing ISBLANK");
+                    //Log("Completing ISBLANK");
                     AddExpressionToCurrentExpressionBuilder(new IsBlankExpression());
                 }
 
                 if (context.PRESENT() != null || context.ISPRESENT() != null)
                 {
-                    //Console.WriteLine("Completing PRESENT");
+                    //Log("Completing PRESENT");
                     AddExpressionToCurrentExpressionBuilder(new IsPresentExpression());
                 }
             }
@@ -1424,7 +1420,7 @@ namespace Liquid.NET
         public override void ExitComparisonExpr(LiquidParser.ComparisonExprContext comparisonContext)
         {
             base.ExitComparisonExpr(comparisonContext);
-            //Console.WriteLine(" --- exiting COMPARISON expression >" + comparisonContext.GetText() + "<");
+            //Log(" --- exiting COMPARISON expression >" + comparisonContext.GetText() + "<");
 
             MarkCurrentExpressionComplete();
 
@@ -1432,21 +1428,21 @@ namespace Liquid.NET
 
 
         // todo: rename this "Object" or something to indicate it's ajust teh Object part of the expression.
-        public override void EnterOutputExpression(LiquidParser.OutputExpressionContext context)
-        {
-            //Console.WriteLine("))) Entering Output Expression! " + context.GetText());
-            base.EnterOutputExpression(context);
+//        public override void EnterOutputExpression(LiquidParser.OutputExpressionContext context)
+//        {
+//            //Log("))) Entering Output Expression! " + context.GetText());
+//            base.EnterOutputExpression(context);
+//
+//        }
 
-        }
 
-
-        public override void ExitOutputExpression(LiquidParser.OutputExpressionContext context)
-        {
-            base.ExitOutputExpression(context);
-
-            //Console.WriteLine("((( Exiting Output Expression!" + context.GetText() + "<");
-            //MarkCurrentExpressionComplete();
-        }
+//        public override void ExitOutputExpression(LiquidParser.OutputExpressionContext context)
+//        {
+//            base.ExitOutputExpression(context);
+//
+//            //Log("((( Exiting Output Expression!" + context.GetText() + "<");
+//            //MarkCurrentExpressionComplete();
+//        }
         
 
         /// <summary>
@@ -1454,7 +1450,7 @@ namespace Liquid.NET
         /// </summary>
         private void AddExpressionToCurrentExpressionBuilder(IExpressionDescription symbol)
         {
-            //Console.WriteLine("AddExpressionToCurrentExpressionBuilder "+symbol);
+            //Log("AddExpressionToCurrentExpressionBuilder "+symbol);
             CurrentBuilderContext.LiquidExpressionBuilder.StartLiquidExpression(symbol);
         }
 
@@ -1471,7 +1467,7 @@ namespace Liquid.NET
 
         public override void EnterBlock(LiquidParser.BlockContext blockContext)
         {
-            //Console.WriteLine(">>> ENTERING BLOCK *" + blockContext.GetText() + "*");
+            //Log(">>> ENTERING BLOCK *" + blockContext.GetText() + "*");
             _blockBuilderContextStack.Push(new BlockBuilderContext());
             base.EnterBlock(blockContext);
 
@@ -1479,7 +1475,7 @@ namespace Liquid.NET
 
         public override void ExitBlock(LiquidParser.BlockContext blockContext)
         {
-            //Console.WriteLine(">>> EXITING BLOCK *" + blockContext.GetText() + "*");
+            //Log(">>> EXITING BLOCK *" + blockContext.GetText() + "*");
             _blockBuilderContextStack.Pop();
             base.ExitBlock(blockContext);
 
@@ -1490,7 +1486,7 @@ namespace Liquid.NET
         public override void EnterStringObject(LiquidParser.StringObjectContext context)
         {
             base.EnterStringObject(context);
-            //Console.WriteLine("ENTERING SRTRING OBJECT " + context.GetText());
+            //Log("ENTERING SRTRING OBJECT " + context.GetText());
             AddExpressionToCurrentExpressionBuilder(GenerateStringSymbol(context.GetText()));
         }
 
@@ -1540,7 +1536,7 @@ namespace Liquid.NET
 
         public override void EnterNumberObject(LiquidParser.NumberObjectContext context)
         {
-            //Console.WriteLine("CREATING NUMBER OBJECT  >" + context.GetText() + "<");
+            //Log("CREATING NUMBER OBJECT  >" + context.GetText() + "<");
             base.EnterNumberObject(context);
             //ValueCaster.ConvertToM
             var liquidExpressionResult = NumericValue.Parse(context.GetText());
@@ -1561,7 +1557,7 @@ namespace Liquid.NET
 
         public override void EnterBooleanObject(LiquidParser.BooleanObjectContext context)
         {
-            //Console.WriteLine("CREATING Boolean OBJECT >" + context.GetText() + "<");
+            //Log("CREATING Boolean OBJECT >" + context.GetText() + "<");
             base.EnterBooleanObject(context);
             AddExpressionToCurrentExpressionBuilder(new BooleanValue(Convert.ToBoolean(context.GetText())));
         }
@@ -1578,12 +1574,12 @@ namespace Liquid.NET
         /// <param name="context"></param>
         public override void EnterOutputmarkup(LiquidParser.OutputmarkupContext context)
         {
-            //Console.WriteLine("->-ENTERING OUTPUT MARKUP "+context.GetText());
+            //Log("->-ENTERING OUTPUT MARKUP "+context.GetText());
             base.EnterOutputmarkup(context);
             StartNewLiquidExpressionTree(result =>
             {
-                //Console.WriteLine("Adding Output Markup Tree Node "+context.GetText());
-                //Console.WriteLine(result);                
+                //Log("Adding Output Markup Tree Node "+context.GetText());
+                //Log(result);                
                 CurrentAstNode.AddChild(CreateTreeNode<IASTNode>(new LiquidExpressionTree(result)));
 
             });
@@ -1593,7 +1589,7 @@ namespace Liquid.NET
 
         public override void ExitOutputmarkup(LiquidParser.OutputmarkupContext context)
         {
-            //Console.WriteLine("-<-EXITING OUTPUT dMARKUP ");
+            //Log("-<-EXITING OUTPUT dMARKUP ");
             base.ExitOutputmarkup(context);
             FinishLiquidExpressionTree();
         } 
@@ -1606,7 +1602,7 @@ namespace Liquid.NET
         public override void EnterFiltername(LiquidParser.FilternameContext context)
         {
             base.EnterFiltername(context);           
-            //Console.WriteLine("CREATING FILTER " + context.GetText());
+            //Log("CREATING FILTER " + context.GetText());
 
             //context.
             //_currentFilterSymbol = new FilterSymbol(context.GetText());
@@ -1615,25 +1611,25 @@ namespace Liquid.NET
         }
 
         
-        public override void EnterOutputexpression(LiquidParser.OutputexpressionContext context)
-        {
-            //Console.WriteLine("* Entering Output Expression");
-            base.EnterOutputexpression(context);
-            //StartNewLiquidExpressionTree();
-            
-        }
+//        public override void EnterOutputexpression(LiquidParser.OutputexpressionContext context)
+//        {
+//            //Log("* Entering Output Expression");
+//            base.EnterOutputexpression(context);
+//            //StartNewLiquidExpressionTree();
+//            
+//        }
 
-        public override void ExitOutputexpression(LiquidParser.OutputexpressionContext context)
-        {
-            //Console.WriteLine("* Exiting Output Expression");
-            base.ExitOutputexpression(context);            
-            //FinishLiquidExpressionTree();
-        }
+//        public override void ExitOutputexpression(LiquidParser.OutputexpressionContext context)
+//        {
+//            //Log("* Exiting Output Expression");
+//            base.ExitOutputexpression(context);            
+//            //FinishLiquidExpressionTree();
+//        }
 
         public override void EnterStringFilterArg(LiquidParser.StringFilterArgContext context)
         {
             base.EnterStringFilterArg(context);
-            //Console.WriteLine("Enter STRING FILTERARG " + context.GetText());
+            //Log("Enter STRING FILTERARG " + context.GetText());
             CurrentBuilderContext.LiquidExpressionBuilder.AddFilterArgToLastExpressionsFilter(
                 CreateObjectSimpleExpressionNode(
                 GenerateStringSymbol(context.GetText())));
@@ -1642,7 +1638,7 @@ namespace Liquid.NET
         public override void EnterNumberFilterArg(LiquidParser.NumberFilterArgContext context)
         {
             base.EnterNumberFilterArg(context);
-            //Console.WriteLine("Enter NUMBER FILTERARG " + context.GetText());
+            //Log("Enter NUMBER FILTERARG " + context.GetText());
             var liquidExpressionResult = NumericValue.Parse(context.GetText());
             if (liquidExpressionResult.IsError)
             {
@@ -1656,7 +1652,7 @@ namespace Liquid.NET
         public override void EnterBooleanFilterArg(LiquidParser.BooleanFilterArgContext context)
         {
             base.EnterBooleanFilterArg(context);
-            //Console.WriteLine("Enter BOOLEAN FILTERARG " + context.GetText());
+            //Log("Enter BOOLEAN FILTERARG " + context.GetText());
             CurrentBuilderContext.LiquidExpressionBuilder.AddFilterArgToLastExpressionsFilter(
                 CreateObjectSimpleExpressionNode(new BooleanValue(Convert.ToBoolean(context.GetText()))));
         }
@@ -1664,7 +1660,7 @@ namespace Liquid.NET
         public override void EnterVariableFilterArg(LiquidParser.VariableFilterArgContext context)
         {
             base.EnterVariableFilterArg(context);
-            //Console.WriteLine("Enter VARIABLE FILTERARG >" + context.GetText() + "<");
+            //Log("Enter VARIABLE FILTERARG >" + context.GetText() + "<");
 
             //LiquidExpression expr = new LiquidExpression();  // create the holding expression
             //CurrentBuilderContext.LiquidExpressionBuilder.AddFilterArgToLastExpressionsFilter(
@@ -1687,7 +1683,7 @@ namespace Liquid.NET
 //            variableReferenceTreeBuilder.VariableReferenceTreeCompleteEvent +=
 //                x =>
 //                {
-//                    Console.WriteLine(">>> VariableReferenceTree Complete");
+//                    Log(">>> VariableReferenceTree Complete");
 //                    CurrentBuilderContext.LiquidExpressionBuilder.AddFilterArgToLastExpressionsFilter(
 //                           CreateObjectSimpleExpressionNode(x));
 //                    //AddExpressionToCurrentExpressionBuilder(x);
@@ -1711,7 +1707,7 @@ namespace Liquid.NET
         public override void EnterFilterargs(LiquidParser.FilterargsContext context)
         {
             base.EnterFilterargs(context);
-            //Console.WriteLine("Enter Filter Args "+context.GetText());
+            //Log("Enter Filter Args "+context.GetText());
             var originalTokens = _tokenStream.GetTokens(context.Start.TokenIndex, context.Stop.TokenIndex);
             // This removes extra whitespace---which may not be what we want...?
             // May need to figure out how to put the whitespace in the hidden stream for this only.
@@ -1722,11 +1718,11 @@ namespace Liquid.NET
 
         #endregion
 
-        public override void EnterFilter(LiquidParser.FilterContext context)
-        {
-            base.EnterFilter(context);
-            //Console.WriteLine("...Entering Filter");
-        }
+//        public override void EnterFilter(LiquidParser.FilterContext context)
+//        {
+//            base.EnterFilter(context);
+//            //Log("...Entering Filter");
+//        }
 
         #region Variables
 
@@ -1740,19 +1736,19 @@ namespace Liquid.NET
             Action<IExpressionDescription> onComplete = null)
         {
             // Create a new variable and put it on the stack.
-            Console.WriteLine(Indent() + "===> StartCapturingVariable: START: "+variableContext.GetText());
+            Log(Indent() + "===> StartCapturingVariable: START: "+variableContext.GetText());
 
             var variableReferenceTreeBuilder = new VariableReferenceTreeBuilder();
             CurrentBuilderContext.VarReferenceTreeBuilder.Push(variableReferenceTreeBuilder);
             variableReferenceTreeBuilder.VariableReferenceTreeCompleteEvent +=
                 x =>
                 {
-                    Console.WriteLine(Indent() + "<=== StartCapturingVariable: END: "+variableContext.GetText());
+                    Log(Indent() + "<=== StartCapturingVariable: END: "+variableContext.GetText());
                     //AddExpressionToCurrentExpressionBuilder(x);
                     //MarkCurrentExpressionComplete();
                     if (onComplete != null)
                     {
-                       // Console.WriteLine("OoO Calling OnCOmplete");
+                       // Log("OoO Calling OnCOmplete");
                         onComplete(x);
                     }
                     CurrentBuilderContext.VarReferenceTreeBuilder.Pop();
@@ -1762,7 +1758,7 @@ namespace Liquid.NET
 //        [Obsolete("Just use StartCapturingVariable with a callback")]
 //        private void StopCapturingVariable(LiquidParser.VariableContext variableContext)
 //        {
-//            Console.WriteLine(" ===> StopCapturingVariable: STOP CAPTURING VARIABLE " + variableContext.GetText());
+//            Log(" ===> StopCapturingVariable: STOP CAPTURING VARIABLE " + variableContext.GetText());
 //            //CurrentBuilderContext.VarReferenceTreeBuilder.Peek().NotifyListenersOfConstructedVariable();
 //            //CurrentBuilderContext.VarReferenceTreeBuilder.Peek().EndVariable();
 //            //CurrentBuilderContext.VarReferenceTreeBuilder.Pop();
@@ -1772,7 +1768,7 @@ namespace Liquid.NET
         public override void EnterVariableObject(LiquidParser.VariableObjectContext context)
         {
             base.EnterVariableObject(context);
-            Console.WriteLine(Indent() + "> ENTER VariableObject " + context.GetText());
+            Log(Indent() + "> ENTER VariableObject " + context.GetText());
 
             var variableReferenceTreeBuilder = new VariableReferenceTreeBuilder();
 
@@ -1800,7 +1796,7 @@ namespace Liquid.NET
 
         public override void ExitVariableObject(LiquidParser.VariableObjectContext context)
         {
-            Console.WriteLine(Indent() + "< EXIT VariableObject " + context.GetText());
+            Log(Indent() + "< EXIT VariableObject " + context.GetText());
             base.ExitVariableObject(context);
             //CurrentBuilderContext.VarReferenceTreeBuilder.Peek().InvokeComplete(false);
             CurrentBuilderContext.VarReferenceTreeBuilder.Pop();
@@ -1817,8 +1813,8 @@ namespace Liquid.NET
 
             base.EnterVariable(variableContext);
             var varname = variableContext.VARIABLENAME().GetText();
-            Console.WriteLine(Indent() + "> ENTER Variable "+ varname);
-            //Console.WriteLine("=== ENTER variable " + varname + " ===");
+            Log(Indent() + "> ENTER Variable "+ varname);
+            //Log("=== ENTER variable " + varname + " ===");
             CurrentBuilderContext.VarReferenceTreeBuilder.Peek().StartVariable();
             CurrentBuilderContext.VarReferenceTreeBuilder.Peek().AddVarName(varname);
 
@@ -1829,32 +1825,32 @@ namespace Liquid.NET
             base.ExitVariable(variableContext);
             var varname = variableContext.VARIABLENAME().GetText();
             CurrentBuilderContext.VarReferenceTreeBuilder.Peek().EndVariable();
-            CurrentBuilderContext.VarReferenceTreeBuilder.Peek().InvokeComplete(true);
-            Console.WriteLine(Indent() + "< EXIT Variable "+varname);
+            //zzz CurrentBuilderContext.VarReferenceTreeBuilder.Peek().InvokeComplete(true);
+            Log(Indent() + "< EXIT Variable "+varname);
         }
 
 
         public override void EnterObjectvariableindex(LiquidParser.ObjectvariableindexContext context)
         {
             base.EnterObjectvariableindex(context);
-            Console.WriteLine(Indent() + "> ENTER Object Variable Index");
+            Log(Indent() + "> ENTER Object Variable Index");
             CurrentBuilderContext.VarReferenceTreeBuilder.Peek().StartIndex();
             //var currentVariableReference = CurrentBuilderContext.VariableReferenceStack.Peek();
             if (context.arrayindex() != null)
             {                
                 String arrayIndex = context.arrayindex().GetText();
-                Console.WriteLine(Indent() + "*** create ARRAY INDEX =>" + arrayIndex);
+                Log(Indent() + "*** create ARRAY INDEX =>" + arrayIndex);
             }
             if (context.objectproperty() != null)
             {
                 String objectProperty = context.objectproperty().GetText();
-                Console.WriteLine(Indent() + "*** create OBJECT PROPERTY =>" + objectProperty);
+                Log(Indent() + "*** create OBJECT PROPERTY =>" + objectProperty);
             }
         }
 
         public override void ExitObjectvariableindex(LiquidParser.ObjectvariableindexContext context)
         {
-            Console.WriteLine(Indent() + "< EXIT Object Variable Index");
+            Log(Indent() + "< EXIT Object Variable Index");
             base.ExitObjectvariableindex(context);
             CurrentBuilderContext.VarReferenceTreeBuilder.Peek().EndIndex();
 
@@ -1862,50 +1858,57 @@ namespace Liquid.NET
 
         public override void EnterArrayindex(LiquidParser.ArrayindexContext context)
         {
-            Console.WriteLine(Indent() + "> ENTER Array Index");
+            Log(Indent() + "> ENTER Array Index");
             base.EnterArrayindex(context);
             if (context.ARRAYINT()!= null)
             {
                 String arrayIndex = context.ARRAYINT().GetText();
-                Console.WriteLine(Indent() + "** ARRAY INT =" + arrayIndex);
-                CurrentBuilderContext.VarReferenceTreeBuilder.Peek().StartVariable();
+                Log(Indent() + "** ARRAY INT =" + arrayIndex);
+                //CurrentBuilderContext.VarReferenceTreeBuilder.Peek().StartVariable();
                 CurrentBuilderContext.VarReferenceTreeBuilder.Peek().AddIntIndex(Convert.ToInt32(arrayIndex));
 
             }
             if (context.STRING() != null)
             {
                 String arrayIndex = StripQuotes(context.STRING().GetText());
-                Console.WriteLine(Indent() + "** ARRAY STRING =" + arrayIndex);
-                CurrentBuilderContext.VarReferenceTreeBuilder.Peek().StartVariable();
+                Log(Indent() + "** ARRAY STRING =" + arrayIndex);
+                //CurrentBuilderContext.VarReferenceTreeBuilder.Peek().StartVariable();
                 CurrentBuilderContext.VarReferenceTreeBuilder.Peek().AddStringIndex(arrayIndex);
             }
             if (context.variable() != null)
             {
                 String variable = context.variable().GetText();
-                Console.WriteLine(Indent() + "** variable =" + variable);
+                Log(Indent() + "** variable =" + variable);
             }
 
         }
 
         public override void ExitArrayindex(LiquidParser.ArrayindexContext context)
         {
-            Console.WriteLine(Indent() + "< EXIT Array Index");
+            Log(Indent() + "< EXIT Array Index");
             base.ExitArrayindex(context);
 
         }
 
         public override void EnterObjectproperty(LiquidParser.ObjectpropertyContext context)
         {
-            Console.WriteLine(Indent()+"> Enter Object Property" + context.VARIABLENAME().GetText());
+            Log(Indent()+"> Enter Object Property" + context.VARIABLENAME().GetText());
             base.EnterObjectproperty(context);
             // TODO: Make sure syntax like a.b[0] still works.
             if (context.VARIABLENAME() != null)
             {
                 String arrayIndex = context.VARIABLENAME().GetText();
-                Console.WriteLine(Indent() + "-> ** OBJECT REFERENCE =" + arrayIndex);
-                CurrentBuilderContext.VarReferenceTreeBuilder.Peek().StartVariable();
+                Log(Indent() + "-> ** OBJECT REFERENCE =" + arrayIndex);
                 CurrentBuilderContext.VarReferenceTreeBuilder.Peek().AddStringIndex(context.VARIABLENAME().GetText());
             }       
+        }
+
+        public override void ExitObjectproperty(LiquidParser.ObjectpropertyContext context)
+        {
+            if (context.VARIABLENAME() != null)
+            {
+                //CurrentBuilderContext.VarReferenceTreeBuilder.Peek().EndVariable();
+            }
         }
 
         #endregion
@@ -1930,16 +1933,16 @@ namespace Liquid.NET
         private void ErrorHandler(LiquidError liquiderror)
         {
 
-            //Console.WriteLine("hANDLING ERROR: " + liquiderror);
+            //Log("hANDLING ERROR: " + liquiderror);
             //CurrentAstNode.AddChild(CreateTreeNode<IASTNode>(new ErrorNode(liquiderror)));
-            this.LiquidErrors.Add(liquiderror);
+            LiquidErrors.Add(liquiderror);
         }     
        
 
         public override void EnterRawtext(LiquidParser.RawtextContext context)
         {
             base.EnterRawtext(context);
-            //Console.WriteLine("ADDING TEXT :"+context.GetText());
+            //Log("ADDING TEXT :"+context.GetText());
             CurrentAstNode.AddChild(CreateTreeNode<IASTNode>(new RawBlockTag(context.GetText())));
         }
 
@@ -1965,7 +1968,11 @@ namespace Liquid.NET
             CurrentAstNode.AddChild(newNode);
             return newNode;
         }
-       
+        
+        private void Log(String str)
+        {
+            //Console.WriteLine(str);
+        }
         private class BlockBuilderContext
         {
             //public readonly Stack<CustomTag> CustomTagStack = new Stack<CustomTag>();
@@ -2024,24 +2031,28 @@ namespace Liquid.NET
                 return errors;
             }
 
+//            private void Log(String str)
+//            {
+//                Console.WriteLine(str);
+//            }
+
         }
 
 
         public class VariableReferenceTreeBuilder
         {
-            private bool _endOnVariable;
-            private int _level = 0;
+
+            // ReSharper disable once RedundantDefaultMemberInitializer
+            private int _varLevel = 0; // we know we are done with this nested variable if the level reaches zero.
             private VariableReferenceTree _root;
             private VariableReferenceTree _current;
 
             public event OnVariableReferenceTreeCompleteEventHandler VariableReferenceTreeCompleteEvent;
 
-
-            public void StartVariable(bool endOnVariable= true)
+            public void StartVariable()
             {
-                _endOnVariable = endOnVariable;
-                _level++;
-                Console.WriteLine(Indent() + "# VariableReferenceTreeBuilder.StartVariable()");
+                _varLevel++;
+                Log(Indent() + "# VariableReferenceTreeBuilder.StartVariable()");
 
                 if (_root == null)
                 {
@@ -2052,9 +2063,10 @@ namespace Liquid.NET
 
             public void EndVariable()
             {               
-                Console.WriteLine(Indent() + "# VariableReferenceTreeBuilder.EndVariable()");
+                Log(Indent() + "# VariableReferenceTreeBuilder.EndVariable()");
+                _varLevel--;
                 //InvokeVariableReferenceTreeCompleteEvent(Result);
-                _level--;
+                InvokeComplete();
             }
 
             /// <summary>
@@ -2063,8 +2075,7 @@ namespace Liquid.NET
             /// </summary>
             public void StartIndex()
             {
-                _level++;
-                Console.WriteLine(Indent() + "# VariableReferenceTreeBuilder.StartIndex()");
+                Log(Indent() + "# VariableReferenceTreeBuilder.StartIndex()");
                 
                 if (_current.IndexExpression != null)
                 {
@@ -2082,17 +2093,17 @@ namespace Liquid.NET
 
             private void InsertNewNodeAboveCurrent(VariableReferenceTree newNode)
             {
-                Console.WriteLine(Indent() + "Insert new node above current");
+                Log(Indent() + "Insert new node above current");
                 newNode.Value = _current; // current node is now child of newnode
 
                 if (_current.Parent == null) 
                 {                    
-                    Console.WriteLine(Indent() + "NEW ROOT");
+                    Log(Indent() + "NEW ROOT");
                     _root = newNode; // this is the new toplevel node
                 }
                 else
                 {
-                    Console.WriteLine(Indent() + "new node");
+                    Log(Indent() + "new node");
                     //IS THIS Value or Index?
                     _current.Parent.IndexExpression = newNode;
                     //_current.Parent.Value = newNode; // The old parent must point to the new node
@@ -2101,50 +2112,48 @@ namespace Liquid.NET
                 newNode.Parent = _current.Parent;
                 _current.Parent = newNode;
                 _current = newNode;
-                //EndIndex();
             }
 
             public void EndIndex()
             {
                
-                Console.WriteLine(Indent() + "# VariableReferenceTreeBuilder.EndIndex()");
+                Log(Indent() + "# VariableReferenceTreeBuilder.EndIndex()");
                 if (_current == null)
                 {
-                    Console.WriteLine(Indent() + "Current is null");
+                    Log(Indent() + "Current is null");
                 }
                 else
                 {
                     _current = _current.Parent;
                 }
-                _level--;
             }
 
             public void AddVarName(String varname)
             {
-                Console.WriteLine(Indent() + "# VariableReferenceTreeBuilder.AddVarName("+varname+")");
+                Log(Indent() + "# VariableReferenceTreeBuilder.AddVarName("+varname+")");
                 _current.Value = new VariableReference(varname);
             }
 
             public void AddIntIndex(int index)
             {
-                Console.WriteLine(Indent() + "# VariableReferenceTreeBuilder.AddIntIndex(" + index+ ")");
+                Log(Indent() + "# VariableReferenceTreeBuilder.AddIntIndex(" + index+ ")");
                 _current.Value = NumericValue.Create(index);
             }
 
             public void AddStringIndex(String index)
             {
-                Console.WriteLine(Indent() + "# VariableReferenceTreeBuilder.AddStringIndex(" + index + ")");
+                Log(Indent() + "# VariableReferenceTreeBuilder.AddStringIndex(" + index + ")");
                 _current.Value = new StringValue(index);
 
             }
 
             private String Indent()
             {
-                if (_level < 0)
+                if (_varLevel < 0)
                 {
-                    return _level.ToString();
+                    return _varLevel.ToString();
                 }
-                return new String(' ', _level);
+                return new String(' ', _varLevel);
             }
             public VariableReferenceTree Result
             {
@@ -2156,21 +2165,26 @@ namespace Liquid.NET
                 OnVariableReferenceTreeCompleteEventHandler handler = VariableReferenceTreeCompleteEvent;
                 if (handler != null)
                 {
-                    Console.WriteLine(Indent() + "===> InvokeVariableReferenceTreeCompleteEvent: Notifying variable complete");
+                    Log(Indent() + "===> InvokeVariableReferenceTreeCompleteEvent: Notifying variable complete");
                     handler(variableReferenceTree);
                 }
                 else
                 {
-                    Console.WriteLine(Indent() + "*** WARNING: No one to notify about variable.");
+                    Log(Indent() + "*** WARNING: No one to notify about variable.");
                 }
             }
 
-            public void InvokeComplete(bool isEndVariable=true)
+            public void InvokeComplete()
             {
-                //if (isEndVariable && _endOnVariable)
-                //{
+                if (_varLevel <= 0)
+                {
                     InvokeVariableReferenceTreeCompleteEvent(Result);
-                //}
+                }
+            }
+
+            private void Log(String str)
+            {
+                //Console.WriteLine(str);
             }
         }
     }

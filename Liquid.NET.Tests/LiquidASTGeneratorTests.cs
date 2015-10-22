@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Policy;
 using Liquid.NET.Constants;
 using Liquid.NET.Expressions;
 using Liquid.NET.Symbols;
@@ -275,7 +276,20 @@ namespace Liquid.NET.Tests
             //String result = VariableReferenceTreeBuilderTests.VariableReferenceTreePrinter.Print(liquidExpressions);
         }
 
-
+        [Test]
+        public void It_Should_Parse_A_Regular_Variable()
+        {
+            String input = @"{{ v | plus: v }}";
+            var template = LiquidTemplate.Create(input);
+            
+            // Act
+            String result = template.Render(new TemplateContext()
+                .DefineLocalVariable("v", NumericValue.Create(3))
+                .WithAllFilters());
+        
+            // Assert
+            Assert.That(result.Trim(), Is.EqualTo("6"));
+        }
 
         public static IEnumerable<TreeNode<IASTNode>> FindNodesWithType(LiquidAST ast, Type type)
         {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-
+using System.Globalization;
+using System.Threading;
 using Liquid.NET.Constants;
 using Liquid.NET.Tests.Helpers;
 using NUnit.Framework;
@@ -14,6 +15,7 @@ namespace Liquid.NET.Tests.Filters
         public void It_Should_Display_Debugging_Info_For_A_Variable()
         {            
             // Arrange
+            Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
             TemplateContext ctx = new TemplateContext();
             DateTime dateTime = new DateTime(2015, 3, 30, 23, 1, 12);
             var dateValue = new DateValue(dateTime);
@@ -25,9 +27,9 @@ namespace Liquid.NET.Tests.Filters
 
             // Assert
             Assert.That(result, Is.StringContaining("\"metadata\" : { \"hello\" : \"test\" }"));
-            Assert.That(result, Is.StringContaining("\"value\" : \"2015-03-30 11:01:12 pm\""));
+            Assert.That(result, Is.StringContaining("\"value\" : \"03/30/2015 23:01:12\""));
             Assert.That(result, Is.StringContaining("\"type\" : \"date"));
-            Assert.That(result, Is.EqualTo("Result : { \"metadata\" : { \"hello\" : \"test\" }, \"value\" : \"2015-03-30 11:01:12 pm\", \"type\" : \"date\" }"));
+            Assert.That(result, Is.EqualTo("Result : { \"metadata\" : { \"hello\" : \"test\" }, \"value\" : \"03/30/2015 23:01:12\", \"type\" : \"date\" }"));
 
         }
 

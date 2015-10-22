@@ -29,6 +29,7 @@ namespace Liquid.NET
     public class LiquidASTGenerator : LiquidBaseListener, ILiquidASTGenerator
     {
         // TODO: WHen done it shoudl check if all the stacks are reset.
+        private int _level = 0;
 
         public event OnParsingErrorEventHandler ParsingErrorEventHandler;
 
@@ -118,6 +119,18 @@ namespace Liquid.NET
         public IList<String> GetNonEmptyStackErrors()
         {
             return this.CurrentBuilderContext.VerifyStacksEmpty();
+        }
+
+        public override void EnterEveryRule(ParserRuleContext context)
+        {
+            base.EnterEveryRule(context);
+            _level++;
+        }
+
+        public override void ExitEveryRule(ParserRuleContext context)
+        {
+            base.EnterEveryRule(context);
+            _level--;
         }
 
         public override void EnterTag(LiquidParser.TagContext tagContext)
@@ -1727,14 +1740,14 @@ namespace Liquid.NET
             Action<IExpressionDescription> onComplete = null)
         {
             // Create a new variable and put it on the stack.
-            //Console.WriteLine(" ===> StartCapturingVariable: LISTENING FOR VARIABLE CREATION "+variableContext.GetText());
+            Console.WriteLine(Indent() + "===> StartCapturingVariable: START: "+variableContext.GetText());
 
             var variableReferenceTreeBuilder = new VariableReferenceTreeBuilder();
             CurrentBuilderContext.VarReferenceTreeBuilder.Push(variableReferenceTreeBuilder);
             variableReferenceTreeBuilder.VariableReferenceTreeCompleteEvent +=
                 x =>
                 {
-                    //Console.WriteLine("VariableReferenceTree is Complete: "+variableContext.GetText());
+                    Console.WriteLine(Indent() + "<=== StartCapturingVariable: END: "+variableContext.GetText());
                     //AddExpressionToCurrentExpressionBuilder(x);
                     //MarkCurrentExpressionComplete();
                     if (onComplete != null)
@@ -1759,9 +1772,10 @@ namespace Liquid.NET
         public override void EnterVariableObject(LiquidParser.VariableObjectContext context)
         {
             base.EnterVariableObject(context);
-            //Console.WriteLine("<><> ENTER VariableObject " + context.GetText());
+            Console.WriteLine(Indent() + "> ENTER VariableObject " + context.GetText());
 
             var variableReferenceTreeBuilder = new VariableReferenceTreeBuilder();
+
             CurrentBuilderContext.VarReferenceTreeBuilder.Push(variableReferenceTreeBuilder);
             StartCapturingVariable(
                 context.variable(),
@@ -1769,6 +1783,7 @@ namespace Liquid.NET
                 {
                     AddExpressionToCurrentExpressionBuilder(x);
                     MarkCurrentExpressionComplete();
+                    //CurrentBuilderContext.VarReferenceTreeBuilder.Peek().InvokeComplete(false);
                 });
 
             // OK
@@ -1785,12 +1800,10 @@ namespace Liquid.NET
 
         public override void ExitVariableObject(LiquidParser.VariableObjectContext context)
         {
-            //Console.WriteLine("<><> EXIT VariableObject  " + context.GetText());
-//            base.ExitVariableObject(context);
-
+            Console.WriteLine(Indent() + "< EXIT VariableObject " + context.GetText());
+            base.ExitVariableObject(context);
+            //CurrentBuilderContext.VarReferenceTreeBuilder.Peek().InvokeComplete(false);
             CurrentBuilderContext.VarReferenceTreeBuilder.Pop();
-
-            // OK CurrentBuilderContext.VarReferenceTreeBuilder.Pop();
 
         }
 
@@ -1801,8 +1814,10 @@ namespace Liquid.NET
         /// <param name="variableContext"></param>
         public override void EnterVariable(LiquidParser.VariableContext variableContext)
         {
+
             base.EnterVariable(variableContext);
             var varname = variableContext.VARIABLENAME().GetText();
+            Console.WriteLine(Indent() + "> ENTER Variable "+ varname);
             //Console.WriteLine("=== ENTER variable " + varname + " ===");
             CurrentBuilderContext.VarReferenceTreeBuilder.Peek().StartVariable();
             CurrentBuilderContext.VarReferenceTreeBuilder.Peek().AddVarName(varname);
@@ -1814,32 +1829,32 @@ namespace Liquid.NET
             base.ExitVariable(variableContext);
             var varname = variableContext.VARIABLENAME().GetText();
             CurrentBuilderContext.VarReferenceTreeBuilder.Peek().EndVariable();
-            //Console.WriteLine("=== EXIT variable " + varname + " ===");
+            CurrentBuilderContext.VarReferenceTreeBuilder.Peek().InvokeComplete(true);
+            Console.WriteLine(Indent() + "< EXIT Variable "+varname);
         }
 
 
         public override void EnterObjectvariableindex(LiquidParser.ObjectvariableindexContext context)
         {
             base.EnterObjectvariableindex(context);
-            //Console.WriteLine(" -> START Object Variable Index");
+            Console.WriteLine(Indent() + "> ENTER Object Variable Index");
             CurrentBuilderContext.VarReferenceTreeBuilder.Peek().StartIndex();
             //var currentVariableReference = CurrentBuilderContext.VariableReferenceStack.Peek();
             if (context.arrayindex() != null)
             {                
                 String arrayIndex = context.arrayindex().GetText();
-
-                //Console.WriteLine("    -> create ARRAY INDEX =>" + arrayIndex);
+                Console.WriteLine(Indent() + "*** create ARRAY INDEX =>" + arrayIndex);
             }
             if (context.objectproperty() != null)
             {
                 String objectProperty = context.objectproperty().GetText();
-                //Console.WriteLine("    -> create OBJECT PROPERTY =>" + objectProperty);
+                Console.WriteLine(Indent() + "*** create OBJECT PROPERTY =>" + objectProperty);
             }
         }
 
         public override void ExitObjectvariableindex(LiquidParser.ObjectvariableindexContext context)
         {
-            //Console.WriteLine(" -> END Object Variable Index");
+            Console.WriteLine(Indent() + "< EXIT Object Variable Index");
             base.ExitObjectvariableindex(context);
             CurrentBuilderContext.VarReferenceTreeBuilder.Peek().EndIndex();
 
@@ -1847,12 +1862,12 @@ namespace Liquid.NET
 
         public override void EnterArrayindex(LiquidParser.ArrayindexContext context)
         {
-            //Console.WriteLine(" -> START Array Index");
+            Console.WriteLine(Indent() + "> ENTER Array Index");
             base.EnterArrayindex(context);
             if (context.ARRAYINT()!= null)
             {
                 String arrayIndex = context.ARRAYINT().GetText();
-                //Console.WriteLine("     -> ** ARRAY INT =" + arrayIndex);
+                Console.WriteLine(Indent() + "** ARRAY INT =" + arrayIndex);
                 CurrentBuilderContext.VarReferenceTreeBuilder.Peek().StartVariable();
                 CurrentBuilderContext.VarReferenceTreeBuilder.Peek().AddIntIndex(Convert.ToInt32(arrayIndex));
 
@@ -1860,34 +1875,34 @@ namespace Liquid.NET
             if (context.STRING() != null)
             {
                 String arrayIndex = StripQuotes(context.STRING().GetText());
-                //Console.WriteLine("     -> ** ARRAY STRING =" + arrayIndex);
+                Console.WriteLine(Indent() + "** ARRAY STRING =" + arrayIndex);
                 CurrentBuilderContext.VarReferenceTreeBuilder.Peek().StartVariable();
                 CurrentBuilderContext.VarReferenceTreeBuilder.Peek().AddStringIndex(arrayIndex);
             }
             if (context.variable() != null)
             {
                 String variable = context.variable().GetText();
-                //Console.WriteLine("     -> ** variable =" + variable);
+                Console.WriteLine(Indent() + "** variable =" + variable);
             }
 
         }
 
         public override void ExitArrayindex(LiquidParser.ArrayindexContext context)
         {
-            //Console.WriteLine(" -> END Array Index");
+            Console.WriteLine(Indent() + "< EXIT Array Index");
             base.ExitArrayindex(context);
 
         }
 
         public override void EnterObjectproperty(LiquidParser.ObjectpropertyContext context)
         {
-            //Console.WriteLine(" -> START Object Property " + context.VARIABLENAME().GetText());
+            Console.WriteLine(Indent()+"> Enter Object Property" + context.VARIABLENAME().GetText());
             base.EnterObjectproperty(context);
             // TODO: Make sure syntax like a.b[0] still works.
             if (context.VARIABLENAME() != null)
             {
                 String arrayIndex = context.VARIABLENAME().GetText();
-                //Console.WriteLine("     -> ** OBJECT REFERENCE =" + arrayIndex);
+                Console.WriteLine(Indent() + "-> ** OBJECT REFERENCE =" + arrayIndex);
                 CurrentBuilderContext.VarReferenceTreeBuilder.Peek().StartVariable();
                 CurrentBuilderContext.VarReferenceTreeBuilder.Peek().AddStringIndex(context.VARIABLENAME().GetText());
             }       
@@ -1896,7 +1911,14 @@ namespace Liquid.NET
         #endregion
 
 
-
+        private String Indent()
+        {
+            if (_level < 0)
+            {
+                return _level.ToString();
+            }
+            return new String(' ', _level);
+        }
 
 
 
@@ -2007,15 +2029,19 @@ namespace Liquid.NET
 
         public class VariableReferenceTreeBuilder
         {
+            private bool _endOnVariable;
+            private int _level = 0;
             private VariableReferenceTree _root;
             private VariableReferenceTree _current;
 
             public event OnVariableReferenceTreeCompleteEventHandler VariableReferenceTreeCompleteEvent;
 
 
-            public void StartVariable()
+            public void StartVariable(bool endOnVariable= true)
             {
-                //Console.WriteLine("# VariableReferenceTreeBuilder.StartVariable()");
+                _endOnVariable = endOnVariable;
+                _level++;
+                Console.WriteLine(Indent() + "# VariableReferenceTreeBuilder.StartVariable()");
 
                 if (_root == null)
                 {
@@ -2025,9 +2051,10 @@ namespace Liquid.NET
             }
 
             public void EndVariable()
-            {
-                //Console.WriteLine("# VariableReferenceTreeBuilder.EndVariable()");
-                InvokeVariableReferenceTreeCompleteEvent(Result);
+            {               
+                Console.WriteLine(Indent() + "# VariableReferenceTreeBuilder.EndVariable()");
+                //InvokeVariableReferenceTreeCompleteEvent(Result);
+                _level--;
             }
 
             /// <summary>
@@ -2036,7 +2063,8 @@ namespace Liquid.NET
             /// </summary>
             public void StartIndex()
             {
-                //Console.WriteLine("# VariableReferenceTreeBuilder.StartIndex()");
+                _level++;
+                Console.WriteLine(Indent() + "# VariableReferenceTreeBuilder.StartIndex()");
                 
                 if (_current.IndexExpression != null)
                 {
@@ -2054,15 +2082,17 @@ namespace Liquid.NET
 
             private void InsertNewNodeAboveCurrent(VariableReferenceTree newNode)
             {
+                Console.WriteLine(Indent() + "Insert new node above current");
                 newNode.Value = _current; // current node is now child of newnode
 
                 if (_current.Parent == null) 
                 {                    
-                    //Console.WriteLine("NEW ROOT");
+                    Console.WriteLine(Indent() + "NEW ROOT");
                     _root = newNode; // this is the new toplevel node
                 }
                 else
                 {
+                    Console.WriteLine(Indent() + "new node");
                     //IS THIS Value or Index?
                     _current.Parent.IndexExpression = newNode;
                     //_current.Parent.Value = newNode; // The old parent must point to the new node
@@ -2076,37 +2106,46 @@ namespace Liquid.NET
 
             public void EndIndex()
             {
-                //Console.WriteLine("# VariableReferenceTreeBuilder.EndIndex()");
+               
+                Console.WriteLine(Indent() + "# VariableReferenceTreeBuilder.EndIndex()");
                 if (_current == null)
                 {
-                    //Console.WriteLine("Current is null");
+                    Console.WriteLine(Indent() + "Current is null");
                 }
                 else
                 {
                     _current = _current.Parent;
                 }
+                _level--;
             }
 
             public void AddVarName(String varname)
             {
-                //Console.WriteLine("# VariableReferenceTreeBuilder.AddVarName("+varname+")");
+                Console.WriteLine(Indent() + "# VariableReferenceTreeBuilder.AddVarName("+varname+")");
                 _current.Value = new VariableReference(varname);
             }
 
             public void AddIntIndex(int index)
             {
-                //Console.WriteLine("# VariableReferenceTreeBuilder.AddIntIndex(" + index+ ")");
+                Console.WriteLine(Indent() + "# VariableReferenceTreeBuilder.AddIntIndex(" + index+ ")");
                 _current.Value = NumericValue.Create(index);
             }
 
             public void AddStringIndex(String index)
             {
-                //Console.WriteLine("# VariableReferenceTreeBuilder.AddStringIndex(" + index + ")");
+                Console.WriteLine(Indent() + "# VariableReferenceTreeBuilder.AddStringIndex(" + index + ")");
                 _current.Value = new StringValue(index);
 
             }
 
-
+            private String Indent()
+            {
+                if (_level < 0)
+                {
+                    return _level.ToString();
+                }
+                return new String(' ', _level);
+            }
             public VariableReferenceTree Result
             {
                 get { return _root; }
@@ -2117,13 +2156,21 @@ namespace Liquid.NET
                 OnVariableReferenceTreeCompleteEventHandler handler = VariableReferenceTreeCompleteEvent;
                 if (handler != null)
                 {
-                    //Console.WriteLine("-_-_ InvokeVariableReferenceTreeCompleteEvent: Notifying variable complete");
+                    Console.WriteLine(Indent() + "===> InvokeVariableReferenceTreeCompleteEvent: Notifying variable complete");
                     handler(variableReferenceTree);
                 }
                 else
                 {
-                    //Console.WriteLine("*** WARNING: No one to notify about variable.");
+                    Console.WriteLine(Indent() + "*** WARNING: No one to notify about variable.");
                 }
+            }
+
+            public void InvokeComplete(bool isEndVariable=true)
+            {
+                //if (isEndVariable && _endOnVariable)
+                //{
+                    InvokeVariableReferenceTreeCompleteEvent(Result);
+                //}
             }
         }
     }

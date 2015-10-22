@@ -21,7 +21,7 @@ namespace Liquid.NET.Tests.Tags
             
             // Act
             String result = template.Render(ctx);
-            Console.WriteLine(result);
+            Logger.Log(result);
             String expected =
                 "<tr class=\"row1\">\r\n" +
                 @"<td class=""col1"">ITER1</td><td class=""col2"">ITER2</td></tr>"+"\r\n"+
@@ -43,7 +43,7 @@ namespace Liquid.NET.Tests.Tags
 
             // Act
             String result = template.Render(ctx);
-            Console.WriteLine(result);
+            Logger.Log(result);
             String expected =
                 "<tr class=\"row1\">\r\n" +
                 @"<td class=""col1"">ITER1</td><td class=""col2"">ITER2</td></tr>" + "\r\n" +
@@ -72,7 +72,7 @@ namespace Liquid.NET.Tests.Tags
 
             // Act
             String result = template.Render(ctx);
-            Console.WriteLine(result);
+            Logger.Log(result);
 
             // Assert
             Assert.That(result, Is.StringContaining("<tr class=\"row1\">"));

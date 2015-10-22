@@ -36,12 +36,12 @@ namespace Liquid.NET.Tests
 
             var result = RenderingHelper.RenderTemplate(template, ctx);
 
-            //Console.WriteLine(result);
+            //Logger.Log(result);
 
             // Assert
             var end = DateTime.Now;
             TimeSpan timeDiff = end - start;
-            Console.WriteLine("ELAPSED: " + timeDiff.TotalMilliseconds);
+            Logger.Log("ELAPSED: " + timeDiff.TotalMilliseconds);
             Assert.That(timeDiff.Milliseconds < 500);
             //Assert.Fail("Not Implemented Yet");
 
@@ -54,7 +54,7 @@ namespace Liquid.NET.Tests
             // Arrange
 
             DateTime start = DateTime.Now;
-            Console.WriteLine("STARTING...");
+            Logger.Log("STARTING...");
             int iterations = 100;
 
             String template = "<html><body>\r\n";
@@ -74,12 +74,12 @@ namespace Liquid.NET.Tests
 
             var result = RenderingHelper.RenderTemplate(template, ctx);
 
-            Console.WriteLine(result);
+            Logger.Log(result);
 
             // Assert
             var end = DateTime.Now;
             TimeSpan timeDiff = end - start;
-            Console.WriteLine("ELAPSED: " + timeDiff.TotalMilliseconds);
+            Logger.Log("ELAPSED: " + timeDiff.TotalMilliseconds);
             Assert.That(timeDiff.Milliseconds < 1000);
             //Assert.Fail("Not Implemented Yet");
 

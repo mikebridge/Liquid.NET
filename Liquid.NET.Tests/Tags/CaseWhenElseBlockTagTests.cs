@@ -17,7 +17,7 @@ namespace Liquid.NET.Tests.Tags
             var result = RenderingHelper.RenderTemplate("Result : {% case 'test' %}{% when 'test' %}TEST{% endcase %}");
 
             // Act
-            Console.WriteLine(result);
+            Logger.Log(result);
             // Act
 
             // Assert
@@ -32,7 +32,7 @@ namespace Liquid.NET.Tests.Tags
             var result = RenderingHelper.RenderTemplate("Result : {% case 'test' %}{% when 'test' %}{% case 'test' %}{% when 'nottest' %}NOT TEST{% else %}SUCCESS{% endcase %}{% endcase %}");
 
             // Act
-            Console.WriteLine(result);
+            Logger.Log(result);
             // Act
 
             // Assert
@@ -50,7 +50,7 @@ namespace Liquid.NET.Tests.Tags
             var result = RenderingHelper.RenderTemplate(GetTestData(handle));
 
             // Act
-            Console.WriteLine(result);
+            Logger.Log(result);
 
             // Assert
             Assert.That(result.Trim(), Is.EqualTo(expected));
@@ -64,7 +64,7 @@ namespace Liquid.NET.Tests.Tags
             var result = RenderingHelper.RenderTemplate("{% case 1%}{% when 1,2,3 %}One{%else%}Not One{%endcase%}");
 
             // Act
-            Console.WriteLine(result);
+            Logger.Log(result);
 
             // Assert
             Assert.That(result.Trim(), Is.EqualTo("One"));
@@ -77,7 +77,7 @@ namespace Liquid.NET.Tests.Tags
             var result = RenderingHelper.RenderTemplate("{% case 1%}{% when 1 or 2 or 3 %}One{%else%}Not One{%endcase%}");
 
             // Act
-            Console.WriteLine(result);
+            Logger.Log(result);
 
             // Assert
             Assert.That(result.Trim(), Is.EqualTo("One"));

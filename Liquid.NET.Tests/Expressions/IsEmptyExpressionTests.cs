@@ -28,9 +28,9 @@ namespace Liquid.NET.Tests.Expressions
 
             // Act
             var tmpl = @"Result : {% if "+val+" "+op+" empty %}EMPTY{% else %}NOT EMPTY{% endif %}";
-            Console.WriteLine(tmpl);
+            Logger.Log(tmpl);
             var result = RenderingHelper.RenderTemplate(tmpl);
-            Console.WriteLine("Value is " + result);
+            Logger.Log("Value is " + result);
             // Assert
             Assert.That(result, Is.EqualTo("Result : " + expectedStr));
 
@@ -53,9 +53,9 @@ namespace Liquid.NET.Tests.Expressions
 
             // Act
             var tmpl = @"Result : {% if " + val + ".empty? %}EMPTY{% else %}NOT EMPTY{% endif %}";
-            Console.WriteLine(tmpl);
+            Logger.Log(tmpl);
             var result = RenderingHelper.RenderTemplate(tmpl);
-            Console.WriteLine("Value is " + result);
+            Logger.Log("Value is " + result);
             // Assert
             Assert.That(result, Is.EqualTo("Result : " + expectedStr));
 
@@ -75,11 +75,11 @@ namespace Liquid.NET.Tests.Expressions
             ctx.DefineLocalVariable("dict", new DictionaryValue(dict));
 
             // Act
-            Console.WriteLine(tmpl);
+            Logger.Log(tmpl);
             var result = RenderingHelper.RenderTemplate(tmpl, ctx);
 
             // Assert
-            Console.WriteLine("Value is " + result);
+            Logger.Log("Value is " + result);
             Assert.That(result, Is.EqualTo("Result : NOT EMPTY"));
 
         }
@@ -95,11 +95,11 @@ namespace Liquid.NET.Tests.Expressions
             ctx.DefineLocalVariable("dict", new DictionaryValue(dict));
 
             // Act
-            Console.WriteLine(tmpl);
+            Logger.Log(tmpl);
             var result = RenderingHelper.RenderTemplate(tmpl, ctx);
 
             // Assert
-            Console.WriteLine("Value is " + result);
+            Logger.Log("Value is " + result);
             Assert.That(result, Is.EqualTo("Result : EMPTY"));
 
         }

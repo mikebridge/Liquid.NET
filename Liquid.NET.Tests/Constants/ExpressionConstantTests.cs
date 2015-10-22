@@ -80,7 +80,7 @@ namespace Liquid.NET.Tests.Constants
 //            });
 //            //var result= fn(var2);
 //            // Assert
-//            Console.WriteLine(result2);
+//            Logger.Log(result2);
 //            Assert.That(result2.HasError, Is.True);
 //
 //        }

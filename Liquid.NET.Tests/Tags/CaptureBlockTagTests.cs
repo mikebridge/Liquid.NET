@@ -38,14 +38,14 @@ namespace Liquid.NET.Tests.Tags
             try
             {
                 String result = template.Render(ctx);
-                Console.WriteLine(result);
+                Logger.Log(result);
 
                 // Assert
                 Assert.That(result.TrimEnd(), Is.EqualTo("Result : odd even odd even"));
             }
             catch (LiquidRendererException ex)
             {
-                Console.WriteLine(ex.Message);
+                Logger.Log(ex.Message);
                 throw;
             }
 

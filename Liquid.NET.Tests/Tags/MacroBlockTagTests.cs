@@ -83,14 +83,14 @@ namespace Liquid.NET.Tests.Tags
             try
             {
                 String result = template.Render(ctx);
-                Console.WriteLine(result);
+                Logger.Log(result);
 
                 // Assert
                 Assert.That(result.TrimEnd(), Is.EqualTo("Result : oddevenoddeven"));
             }
             catch (LiquidRendererException ex)
             {
-                Console.WriteLine(ex.Message);
+                Logger.Log(ex.Message);
                 throw;
             }
 

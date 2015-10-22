@@ -22,7 +22,7 @@ namespace Liquid.NET.Tests.Ruby
             var result = DictionaryFactory.CreateArrayFromJson(json);
 
             // Assert
-            Console.WriteLine(result);
+            //Logger.Log(result.ToString());
             Assert.That(result, Is.TypeOf<ArrayValue>());
             
             Assert.That(((ArrayValue) result).Select(x => x.Value.Value), Is.EquivalentTo(new List<int> {1,2,3}));            
@@ -40,7 +40,7 @@ namespace Liquid.NET.Tests.Ruby
             IList<Tuple<String, IExpressionConstant>> result = DictionaryFactory.CreateStringMapFromJson(json);
 
             // Assert
-            Console.WriteLine(result);
+            //Logger.Log(result);
             
 
             Assert.That(result[0].Item1, Is.EqualTo("array"));

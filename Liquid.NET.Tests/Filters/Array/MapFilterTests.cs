@@ -59,11 +59,11 @@ namespace Liquid.NET.Tests.Filters.Array
 //                    x.DictValue[field].Value.ToString() :
 //                    UndefinedMessage(field)).ToList();
 
-            //Console.WriteLine("EXPECTED: " + String.Join(",", expected));
+            //Logger.Log("EXPECTED: " + String.Join(",", expected));
             Assert.That(result.Count(x => !x.HasValue), Is.EqualTo(1));
             //var actual = result.Select(x => x.Value.ToString());
 
-            //Console.WriteLine("ACTUAL: " + String.Join(",", actual));
+            //Logger.Log("ACTUAL: " + String.Join(",", actual));
             //Assert.That(actual, Is.EquivalentTo(expected));
 
         }

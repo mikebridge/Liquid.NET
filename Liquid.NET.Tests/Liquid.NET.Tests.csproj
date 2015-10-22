@@ -148,6 +148,7 @@
     <Compile Include="LiquidASTExpressionParsingTests.cs" />
     <Compile Include="LiquidASTGeneratorTests.cs" />
     <Compile Include="LiquidASTRendererTests.cs" />
+    <Compile Include="Logger.cs" />
     <Compile Include="Parser\ErrorTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DebuggingVisitor.cs" />

@@ -19,7 +19,7 @@ namespace Liquid.NET.Tests
             builder.StartVariable();
             builder.AddVarName("test");
             builder.EndVariable();
-            Console.WriteLine("RESULT: " + VariableReferenceTreePrinter.Print(builder.Result));
+            Logger.Log("RESULT: " + VariableReferenceTreePrinter.Print(builder.Result));
 
             // Assert
             Assert.That(builder.Result.Value, Is.TypeOf<VariableReference>());
@@ -79,7 +79,7 @@ namespace Liquid.NET.Tests
             
 
             builder.EndVariable();
-            //Console.WriteLine("RESULT: " + VariableReferenceTreePrinter.Print(builder.Result));
+            //Logger.Log("RESULT: " + VariableReferenceTreePrinter.Print(builder.Result));
 
             String result = VariableReferenceTreePrinter.Print(builder.Result);
 
@@ -237,23 +237,23 @@ namespace Liquid.NET.Tests
             builder.EndVariable();
 
             builder.EndIndex(); // ]
-            Console.WriteLine("1) " + VariableReferenceTreePrinter.Print(builder.Result));
+            Logger.Log("1) " + VariableReferenceTreePrinter.Print(builder.Result));
             builder.StartIndex(); // [
-            Console.WriteLine("2) " + VariableReferenceTreePrinter.Print(builder.Result));
+            Logger.Log("2) " + VariableReferenceTreePrinter.Print(builder.Result));
             builder.StartVariable();
-            Console.WriteLine("3) " + VariableReferenceTreePrinter.Print(builder.Result));
+            Logger.Log("3) " + VariableReferenceTreePrinter.Print(builder.Result));
             builder.AddVarName("d"); // d
             builder.EndVariable();
-            Console.WriteLine("4) " + VariableReferenceTreePrinter.Print(builder.Result));
+            Logger.Log("4) " + VariableReferenceTreePrinter.Print(builder.Result));
 
             builder.EndIndex(); // ]
-            Console.WriteLine("5) " + VariableReferenceTreePrinter.Print(builder.Result));
+            Logger.Log("5) " + VariableReferenceTreePrinter.Print(builder.Result));
             builder.EndIndex(); // ]
-            Console.WriteLine("6) " + VariableReferenceTreePrinter.Print(builder.Result));
+            Logger.Log("6) " + VariableReferenceTreePrinter.Print(builder.Result));
             builder.StartIndex(); // [
-            Console.WriteLine("7) " + VariableReferenceTreePrinter.Print(builder.Result));
+            Logger.Log("7) " + VariableReferenceTreePrinter.Print(builder.Result));
             builder.StartVariable();
-            Console.WriteLine("8) " + VariableReferenceTreePrinter.Print(builder.Result));
+            Logger.Log("8) " + VariableReferenceTreePrinter.Print(builder.Result));
             builder.AddVarName("e");
             builder.EndVariable();
             builder.EndIndex(); // ]

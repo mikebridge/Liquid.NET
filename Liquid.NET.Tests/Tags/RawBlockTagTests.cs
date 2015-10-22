@@ -15,7 +15,7 @@ namespace Liquid.NET.Tests.Tags
         {
             // Arrange
             const string tmpl = "Result : {% raw %}This is a comment{% endraw %}";
-            Console.WriteLine(tmpl);
+            Logger.Log(tmpl);
             String result = RenderingHelper.RenderTemplate(tmpl);
 
             // Assert
@@ -53,7 +53,7 @@ namespace Liquid.NET.Tests.Tags
             // Arrange
             const string txt = "test {{ item }} test  {% if done %}test";
             const string tmpl = "Result : {% raw %}"+txt+"{% endraw %}";
-            Console.WriteLine(tmpl);
+            Logger.Log(tmpl);
             String result = RenderingHelper.RenderTemplate(tmpl);
 
             // Assert

@@ -190,7 +190,7 @@ namespace Liquid.NET.Tests.Tags
         {
             // Arrange
             const string templateString = "Result : {% for item in array[1] %}<li>{{ item }}</li>{% endfor %}";
-            Console.WriteLine(templateString);
+            Logger.Log(templateString);
             TemplateContext ctx = new TemplateContext();
             ctx.DefineLocalVariable("array", new ArrayValue(new List<IExpressionConstant> {new StringValue("HELLO"), CreateArrayValues()}));
             var template = LiquidTemplate.Create(templateString);
@@ -322,7 +322,7 @@ namespace Liquid.NET.Tests.Tags
 
             // Act
             String result = template.Render(ctx);
-            Console.WriteLine(result);
+            Logger.Log(result);
             // Assert
             Assert.That(result.Trim(), Is.EqualTo(@"val-string-1-1-0-1-0-true-true-test string"));
         }
@@ -340,7 +340,7 @@ namespace Liquid.NET.Tests.Tags
 
             // Act
             String result = template.Render(ctx);
-            Console.WriteLine(result);
+            Logger.Log(result);
             // Assert
             Assert.That(result.Trim(), Is.EqualTo(@"oddevenoddeven"));
         }
@@ -374,7 +374,7 @@ namespace Liquid.NET.Tests.Tags
 
             // Act
             String result = template.Render(ctx);
-            Console.WriteLine(result);
+            Logger.Log(result);
 
             // Assert
             Assert.That(result.Trim(), Is.EqualTo("Result : " + expected));
@@ -470,7 +470,7 @@ namespace Liquid.NET.Tests.Tags
             // Arrange
             const string emptystr = "There is nothing in the collection";
             const string templateString = "Result : {% for item in array  %}<li>{{ item }}</li>{% else %}"+emptystr+"{% endfor %}";
-            Console.WriteLine(templateString);
+            Logger.Log(templateString);
             TemplateContext ctx = new TemplateContext();
             ctx.DefineLocalVariable("array", new ArrayValue(new List<IExpressionConstant>()));
             var template = LiquidTemplate.Create(templateString);

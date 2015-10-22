@@ -15,7 +15,7 @@ namespace Liquid.NET.Tests.Tags
         {
             // Arrange
             const string tmpl = "Result : {% comment %} This is a comment {% endcomment %}";
-            Console.WriteLine(tmpl);
+            Logger.Log(tmpl);
             String result = RenderingHelper.RenderTemplate(tmpl);
 
             // Assert
@@ -51,7 +51,7 @@ namespace Liquid.NET.Tests.Tags
         {
             // Arrange
             const string tmpl = "Result : {% comment %} test {{ item }} test  {% if done %}test {% endcomment %}";
-            Console.WriteLine(tmpl);
+            Logger.Log(tmpl);
             String result = RenderingHelper.RenderTemplate(tmpl);
 
             // Assert

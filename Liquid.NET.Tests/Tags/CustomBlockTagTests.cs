@@ -26,7 +26,7 @@ namespace Liquid.NET.Tests.Tags
                 var result =
                     RenderingHelper.RenderTemplate("Result : {% echoargs \"hello\" 123 true %}echo{% endechoargs %}",
                         templateContext);
-                Console.WriteLine(result);
+                Logger.Log(result);
 
                 // Assert
                 Assert.That(result, Is.EqualTo("Result : ohce"));
@@ -51,7 +51,7 @@ namespace Liquid.NET.Tests.Tags
             catch (LiquidParserException ex)
             {
                 var allErrors = String.Join(",", ex.LiquidErrors.Select(x => x.ToString()));
-                Console.WriteLine(allErrors);
+                Logger.Log(allErrors);
                 Assert.That(allErrors, Is.StringContaining("There was no opening tag for the ending tag 'endsomethingelse'"));
             }
         }

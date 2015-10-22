@@ -43,7 +43,7 @@ namespace Liquid.NET.Tests.Filters
 
             // Act
             var result = RenderingHelper.RenderTemplate(str, ctx);
-            Console.WriteLine(result);
+            Logger.Log(result);
 
             // Assert
             Assert.That(result, Is.StringContaining("{ \"assigned\" : \"test\""));
@@ -66,7 +66,7 @@ namespace Liquid.NET.Tests.Filters
 
             // Act
             var result = RenderingHelper.RenderTemplate(str, ctx);
-            Console.WriteLine(result);
+            Logger.Log(result);
 
             // Assert
             //Assert.That(result, Is.StringContaining("{ \"assigned\" : \"test\""));

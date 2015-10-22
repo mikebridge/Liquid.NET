@@ -20,7 +20,7 @@ namespace Liquid.NET.Tests.Filters.Strings
 
             // Act
             var result = RenderingHelper.RenderTemplate(tmpl);
-            Console.WriteLine(result);
+            Logger.Log(result);
 
             // Assert
             Assert.That(result, Is.EqualTo("orange apple banana"));

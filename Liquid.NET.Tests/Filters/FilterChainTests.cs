@@ -60,7 +60,7 @@ namespace Liquid.NET.Tests.Filters
 
             // Act
             String result = template.Render(ctx);
-            Console.WriteLine(result);
+            Logger.Log(result);
 
             // Assert
             Assert.That(result, Is.EqualTo("4"));
@@ -77,7 +77,7 @@ namespace Liquid.NET.Tests.Filters
 
             // Act
             String result = template.Render(ctx);
-            Console.WriteLine(result);
+            Logger.Log(result);
 
             // Assert
             Assert.That(result, Is.EqualTo("34"));
@@ -95,7 +95,7 @@ namespace Liquid.NET.Tests.Filters
 
             // Act
             String result = template.Render(ctx);
-            Console.WriteLine(result);
+            Logger.Log(result);
 
             // Assert
             Assert.That(result, Is.EqualTo("34"));
@@ -118,7 +118,7 @@ namespace Liquid.NET.Tests.Filters
 
             // Act
             String result = template.Render(ctx);
-            Console.WriteLine(result);
+            Logger.Log(result);
 
             // Assert
             Assert.That(result, Is.EqualTo("1 22 23"));
@@ -143,7 +143,7 @@ namespace Liquid.NET.Tests.Filters
 
             // Act
             String result = template.Render(ctx);
-            Console.WriteLine(result);
+            Logger.Log(result);
 
             // Assert
             Assert.That(result, Is.EqualTo(expected));
@@ -161,7 +161,7 @@ namespace Liquid.NET.Tests.Filters
 
             // Act
             String result = template.Render(ctx);
-            Console.WriteLine(result);
+            Logger.Log(result);
 
             // Assert
             Assert.That(result, Is.EqualTo("HELLO WORLD"));
@@ -179,7 +179,7 @@ namespace Liquid.NET.Tests.Filters
 
             // Act
             String result = template.Render(ctx);
-            Console.WriteLine(result);
+            Logger.Log(result);
 
             // Assert
             Assert.That(result, Is.EqualTo("HELLO WORLD"));
@@ -198,7 +198,7 @@ namespace Liquid.NET.Tests.Filters
 
             // Act
             String result = template.Render(ctx);
-            Console.WriteLine(result);
+            Logger.Log(result);
 
             // Assert
             Assert.That(result, Is.EqualTo("HELLO WORLD"));

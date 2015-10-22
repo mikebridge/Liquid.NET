@@ -26,8 +26,8 @@ namespace Liquid.NET.Tests
             // Assert
 
             var liquidExpressions = FindNodesWithType(ast, typeof (LiquidExpressionTree));
-            Console.WriteLine("There are " + ast.RootNode.Children.Count+" Nodes");
-            Console.WriteLine("It is " + ast.RootNode.Children[0].Data);
+            Logger.Log("There are " + ast.RootNode.Children.Count+" Nodes");
+            Logger.Log("It is " + ast.RootNode.Children[0].Data);
             Assert.That(liquidExpressions.Count(), Is.EqualTo(1));
         }
 
@@ -43,7 +43,7 @@ namespace Liquid.NET.Tests
             // Assert
 
             var liquidExpressions = FindNodesWithType(ast, typeof(LiquidExpressionTree));
-            Console.WriteLine("There are " + ast.RootNode.Children.Count + " Nodes");
+            Logger.Log("There are " + ast.RootNode.Children.Count + " Nodes");
             Assert.That(liquidExpressions.Count(), Is.EqualTo(1));
 
         }
@@ -61,7 +61,7 @@ namespace Liquid.NET.Tests
             // Assert
 
             var liquidExpressions = FindNodesWithType(ast, typeof(LiquidExpressionTree));
-            Console.WriteLine("There are " + ast.RootNode.Children.Count + " Nodes");
+            Logger.Log("There are " + ast.RootNode.Children.Count + " Nodes");
             Assert.That(liquidExpressions.Count(), Is.EqualTo(1));
 
         }
@@ -268,8 +268,8 @@ namespace Liquid.NET.Tests
             
             Assert.That(liquidExpressions, Is.Not.Null);
 
-            //Console.WriteLine("There are " + ast.RootNode.Children.Count + " Nodes");
-            //Console.WriteLine("It is " + ast.RootNode.Children[0].Data);
+            //Logger.Log("There are " + ast.RootNode.Children.Count + " Nodes");
+            //Logger.Log("It is " + ast.RootNode.Children[0].Data);
             //Assert.That(liquidExpressions.Count(), Is.EqualTo(1));
             //Assert.That(generator.GetNonEmptyStackErrors(), Is.Empty);
             Assert.That(liquidExpressions.Count(), Is.EqualTo(1));

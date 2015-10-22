@@ -150,7 +150,7 @@ namespace Liquid.NET.Tests.Grammar
         {
             // Act
             var result = RenderTemplate("Result : {{ true | plus }}");
-            Console.WriteLine(result);
+            Logger.Log(result);
             // Assert
             Assert.That(result, Is.StringContaining("Can't convert")); // note: it doesn't remove that extra space.
         }

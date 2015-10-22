@@ -19,7 +19,7 @@ namespace Liquid.NET.Tests.Filters.Strings
             ctx.DefineLocalVariable("email", new StringValue("mike@bridgecanada.com"));
             const string tmpl = "<img src=\"https://www.gravatar.com/avatar/{{ email | md5 }}\" />";
             var result = RenderingHelper.RenderTemplate(tmpl, ctx);
-            Console.WriteLine(result);
+            Logger.Log(result);
             // Assert
             Assert.That(result,
                 Is.EqualTo("<img src=\"https://www.gravatar.com/avatar/517ea04cf362ddc08f107f6ef98a12d9\" />"));

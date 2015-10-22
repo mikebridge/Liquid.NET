@@ -19,7 +19,7 @@ namespace Liquid.NET.Tests.Constants
 //            var type = ConstantFactory.GetReturnType(_testToString);
 //
 //            // Act
-//            Console.WriteLine("Type is "+type);
+//            Logger.Log("Type is "+type);
 //
 //            // Assert
 //            Assert.That(type, Is.EqualTo(typeof(StringValue)));

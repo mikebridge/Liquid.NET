@@ -184,7 +184,7 @@ namespace Liquid.NET.Tests
             // Act
             String result = Render(new TemplateContext(), ast);
 
-            Console.WriteLine("result is " + result);
+            Logger.Log("result is " + result);
             // Assert
             Assert.That(result, Is.EqualTo("Result : " + expected));
 
@@ -200,7 +200,7 @@ namespace Liquid.NET.Tests
 
             // Act
             String result = Render(templateContext, ast);
-            Console.WriteLine("result is " + result);
+            Logger.Log("result is " + result);
 
             // Assert
             Assert.That(result, Is.EqualTo("Result : TRUE"));
@@ -217,7 +217,7 @@ namespace Liquid.NET.Tests
 
             // Act
             String result = Render(templateContext, ast);
-            Console.WriteLine("result is " + result);
+            Logger.Log("result is " + result);
 
             // Assert
             Assert.That(result, Is.EqualTo("Result : TRUE"));
@@ -423,7 +423,7 @@ namespace Liquid.NET.Tests
             // Act
             var ast = _generator.Generate("Result : {% if array2[0][0][idx1] %}first is TRUE{% endif %}{%if array2[0][0][idx2] %}second is TRUE{% endif %}");
             String result = Render(templateContext, ast);
-            Console.WriteLine(result);
+            Logger.Log(result);
             // Assert
             Assert.That(result, Is.EqualTo("Result : first is TRUE"));
 
@@ -543,7 +543,7 @@ namespace Liquid.NET.Tests
 
             // Act
             String result = Render(templateContext, ast);
-            Console.WriteLine("result is " + result);
+            Logger.Log("result is " + result);
 
             // Assert
             Assert.That(result, Is.EqualTo("123 : HELLO"));
@@ -574,7 +574,7 @@ namespace Liquid.NET.Tests
 
             // Act
             String result = Render(templateContext, ast);
-            Console.WriteLine("result is " + result);
+            Logger.Log("result is " + result);
 
             // Assert
             Assert.That(result, Is.EqualTo("Title 1Title 2Title 3Title 4"));
@@ -591,7 +591,7 @@ namespace Liquid.NET.Tests
 
             // Act
             String result = Render(templateContext, ast);
-            Console.WriteLine(result);
+            Logger.Log(result);
             // Assert
             Assert.Fail("Not Implemented Yet");
 

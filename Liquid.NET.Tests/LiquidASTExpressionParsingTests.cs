@@ -99,7 +99,7 @@ namespace Liquid.NET.Tests
         private void DebugIfExpressions(TreeNode<LiquidExpression> ifExpression, int level = 0)
         {
   
-            Console.WriteLine("-> " + new string(' ', level * 2) +  ifExpression.Data);
+            Logger.Log("-> " + new string(' ', level * 2) +  ifExpression.Data);
             foreach (var child in ifExpression.Children)
             {
                 DebugIfExpressions(child, level + 1);
@@ -120,8 +120,8 @@ namespace Liquid.NET.Tests
             // ReSharper disable once PossibleNullReferenceException
             var elseSymbols = ((IfThenElseBlockTag) ifThenSymbolNode.Data).IfElseClauses;
 
-            Console.WriteLine("-- AST --");
-            Console.WriteLine(new ASTWalker().Walk(ast));
+            Logger.Log("-- AST --");
+            Logger.Log(new ASTWalker().Walk(ast));
 
             Assert.That(elseSymbols.Count, Is.EqualTo(4)); // the else symbol is an elsif set to "true".
 
@@ -138,7 +138,7 @@ namespace Liquid.NET.Tests
             var parentIfThenElseSymbol = LiquidASTGeneratorTests.FindNodesWithType(ast, typeof(IfThenElseBlockTag)).FirstOrDefault();
 
             var childIfThenElse = ((IfThenElseBlockTag) parentIfThenElseSymbol.Data).IfElseClauses[0].LiquidBlock;
-            Console.WriteLine(childIfThenElse);
+            //Logger.Log(childIfThenElse);
             Assert.That(childIfThenElse, Is.Not.Null);
 
         }

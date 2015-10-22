@@ -15,7 +15,7 @@ namespace Liquid.NET.Tests.Filters.Strings
 
             // Act
             var result = RenderingHelper.RenderTemplate(tmpl);
-            Console.WriteLine(result);
+            Logger.Log(result);
 
             // Assert            
             //Assert.That(result, Is.EqualTo(@"[ ""Uses"", ""cheat"", ""codes,"", ""calls"", ""the"", ""game"", ""boring."" ]"));
@@ -30,7 +30,7 @@ namespace Liquid.NET.Tests.Filters.Strings
 
             // Act
             var result = RenderingHelper.RenderTemplate(tmpl);
-            Console.WriteLine(result);
+            Logger.Log(result);
 
             // Assert            
             //Assert.That(result, Is.EqualTo(@"[ ""Uses"", ""cheat"", ""codes,"", ""calls"", ""the"", ""game"", ""boring."" ]"));

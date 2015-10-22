@@ -31,9 +31,9 @@ namespace Liquid.NET.Tests.Expressions
 
             // Act
             var tmpl = @"Result : {% if " + val + " " + op + " blank %}BLANK{% else %}NOT BLANK{% endif %}";
-            Console.WriteLine(tmpl);
+            Logger.Log(tmpl);
             var result = RenderingHelper.RenderTemplate(tmpl);
-            Console.WriteLine("Value is " + result);
+            Logger.Log("Value is " + result);
             // Assert
             Assert.That(result, Is.EqualTo("Result : " + expectedStr));
 
@@ -56,9 +56,9 @@ namespace Liquid.NET.Tests.Expressions
 
             // Act
             var tmpl = @"Result : {% if " + val + ".blank? %}BLANK{% else %}NOT BLANK{% endif %}";
-            Console.WriteLine(tmpl);
+            Logger.Log(tmpl);
             var result = RenderingHelper.RenderTemplate(tmpl);
-            Console.WriteLine("Value is " + result);
+            Logger.Log("Value is " + result);
             // Assert
             Assert.That(result, Is.EqualTo("Result : " + expectedStr));
 
@@ -75,9 +75,9 @@ namespace Liquid.NET.Tests.Expressions
 
             // Act
             var tmpl = @"{% assign myarr = '"+arr+@"' | split: '1' %}Result : {% if myarr == blank %}BLANK{% else %}NOT BLANK{% endif %}";
-            Console.WriteLine(tmpl);
+            Logger.Log(tmpl);
             var result = RenderingHelper.RenderTemplate(tmpl);
-            Console.WriteLine("Value is " + result);
+            Logger.Log("Value is " + result);
 
             // Assert
             Assert.That(result, Is.EqualTo("Result : " + expectedStr));
@@ -99,11 +99,11 @@ namespace Liquid.NET.Tests.Expressions
             ctx.DefineLocalVariable("dict", new DictionaryValue(dict));
 
             // Act
-            Console.WriteLine(tmpl);
+            Logger.Log(tmpl);
             var result = RenderingHelper.RenderTemplate(tmpl, ctx);
 
             // Assert
-            Console.WriteLine("Value is " + result);
+            Logger.Log("Value is " + result);
             Assert.That(result, Is.EqualTo("Result : NOT BLANK"));
 
         }
@@ -119,11 +119,11 @@ namespace Liquid.NET.Tests.Expressions
             ctx.DefineLocalVariable("dict", new DictionaryValue(dict));
 
             // Act
-            Console.WriteLine(tmpl);
+            Logger.Log(tmpl);
             var result = RenderingHelper.RenderTemplate(tmpl, ctx);
 
             // Assert
-            Console.WriteLine("Value is " + result);
+            Logger.Log("Value is " + result);
             Assert.That(result, Is.EqualTo("Result : NOT BLANK"));
 
         }

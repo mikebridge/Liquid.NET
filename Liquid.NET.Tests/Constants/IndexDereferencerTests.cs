@@ -52,7 +52,7 @@ namespace Liquid.NET.Tests.Constants
 
             // Act
             var result = RenderingHelper.RenderTemplate(tmpl, ctx);
-            Console.WriteLine(result);
+            Logger.Log(result);
             // Assert
             Assert.That(result, Is.EqualTo(expected));
         }

@@ -106,7 +106,7 @@ namespace Liquid.NET.Tests.Filters
             String result = RenderingHelper.RenderTemplate("Result: {{ mydate | date: 'HourOfDay24 %H, HourOfDay12 %I, DayOfYear %j, MonthOfYear %m, Minute %M, Meridian %p, Second %S' }}", ctx);
 
             // Assert
-            Console.WriteLine(result);
+            Logger.Log(result);
             Assert.That(result.Trim(), Is.EqualTo("Result: " + resultString));
         }
 

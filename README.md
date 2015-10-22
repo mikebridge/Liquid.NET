@@ -8,6 +8,6 @@ Although we use it in production, it should be considered beta software.
 
 More information is on the [Liquid.NET Wiki](https://github.com/mikebridge/Liquid.NET/wiki).
 
-* Note that this is an independent project and is not officially associated with Shopify in any way. *
+*Note that this is an independent project and is not officially associated with Shopify in any way.*
 
 

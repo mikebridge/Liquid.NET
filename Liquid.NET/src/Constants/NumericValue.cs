@@ -199,11 +199,25 @@ namespace Liquid.NET.Constants
         public override bool Equals(object obj)
         {
             var nv = obj as NumericValue;
-            return nv == null
-                ? false
-                : nv.DecimalValue == DecimalValue; // uses dynamic to unbox object, may overflow.
-                //: (dynamic)nv.DecimalValue == (dynamic)DecimalValue; // uses dynamic to unbox object, may overflow.
+            return Equals(nv);
         }
+
+        public override int GetHashCode()
+        {
+            unchecked 
+            {         
+                var hash = 27;
+                hash = (13 * hash) + DecimalValue.GetHashCode();
+                return hash;
+            }
+        }
+
+        private bool Equals(NumericValue nv)
+        {
+            return nv != null && nv.DecimalValue == DecimalValue;
+        }
+
+        
     }
 
     public class IntNumericValue : NumericValue

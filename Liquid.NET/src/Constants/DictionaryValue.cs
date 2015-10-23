@@ -41,11 +41,7 @@ namespace Liquid.NET.Constants
 
         public Option<IExpressionConstant> ValueAt(String key)
         {
-            //Console.WriteLine("VALUE AT " + key);
-            // TODO: Fix this.
-            var result = _value.ContainsKey(key) ? _value[key] : new None<IExpressionConstant>(); // new Undefined(key);
-            //var result = _value.ContainsKey(key) ? _value[key] : FilterFactory.CreateUndefinedForType(typeof(StringValue))
-            //Console.WriteLine("IS " + result);
+            var result = _value.ContainsKey(key) ? _value[key] : new None<IExpressionConstant>(); 
             return result;
         }
 

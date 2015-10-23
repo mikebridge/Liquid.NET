@@ -1,10 +1,5 @@
 ﻿using System;
-using System.CodeDom;
-using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using Liquid.NET.Utils;
 
 namespace Liquid.NET.Constants
@@ -99,7 +94,7 @@ namespace Liquid.NET.Constants
             String propertyNameString = ValueCaster.RenderAsString(indexProperty);
             if (propertyNameString.ToLower().Equals("size"))
             {
-                return LiquidExpressionResult.Success(NumericValue.Create(dictionaryValue.DictValue.Keys.Count()));
+                return LiquidExpressionResult.Success(NumericValue.Create(dictionaryValue.DictValue.Keys.Count));
             }
 
             return LiquidExpressionResult.Success(dictionaryValue.ValueAt(indexProperty.Value.ToString()));

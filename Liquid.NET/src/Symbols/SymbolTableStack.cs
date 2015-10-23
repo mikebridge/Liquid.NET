@@ -32,7 +32,7 @@ namespace Liquid.NET.Symbols
         /// <returns></returns>
         public LiquidExpressionResult Reference(String reference, int skiplevels = 0)
         {
-            for (int i = _symbolTables.Count() - 1 - skiplevels; i >= 0; i--)
+            for (int i = _symbolTables.Count - 1 - skiplevels; i >= 0; i--)
             {
                 //Console.WriteLine("Looking up" + reference);
                 if (_symbolTables[i].HasVariableReference(reference))
@@ -40,7 +40,8 @@ namespace Liquid.NET.Symbols
                     return _symbolTables[i].ReferenceLocalVariable(reference);
                 }
             }
-            return LiquidExpressionResult.Success(new None<IExpressionConstant>());
+            //return LiquidExpressionResult.Success(new None<IExpressionConstant>());
+            return LiquidExpressionResult.Error(SymbolTable.NotFoundError(reference));
         }
 
 

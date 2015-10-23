@@ -27,8 +27,23 @@ namespace Liquid.NET.Tests.Expressions
 
             // Assert
             Assert.That(result.Value, Is.EqualTo("HELLO"));
+        }
+
+        [Test]
+        public void It_Should_Derefence_A_Variable_Missing_Variable_As_None()
+        {
+            // Arrange
+            var variableReference = new VariableReference("myvar");
+            var templateContext = new TemplateContext();
+
+            // Act
+            var result = variableReference.Eval(templateContext, new List<Option<IExpressionConstant>>());
+
+            // Assert
+            Assert.That(result.SuccessResult.HasValue, Is.False);
 
 
         }
+
     }
 }

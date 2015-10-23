@@ -181,8 +181,14 @@ namespace Liquid.NET.Symbols
             }
             else
             {
-                return LiquidExpressionResult.Success(new None<IExpressionConstant>());
+                //return LiquidExpressionResult.Success(new None<IExpressionConstant>());
+                return LiquidExpressionResult.Error(NotFoundError(key));
             }
+        }
+
+        public static String NotFoundError(String key)
+        {
+            return key + " is undefined";
         }
 
         public Object ReferenceLocalRegistryVariable(string key)

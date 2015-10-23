@@ -113,7 +113,20 @@ namespace Liquid.NET
         private String FormatErrors(IEnumerable<LiquidError> liquidErrors)
         {
             //return "ERROR: " + String.Join("; ", liquidErrors.Select(x => x.Message));
-            return String.Join("; ", liquidErrors.Select(x => x.Message));
+            return String.Join("; ", liquidErrors.Select(x => FormatError(x)));
+        }
+
+        private static string FormatError(LiquidError x)
+        {
+            // to remain backwards-compatible, this leaves "Liquid Error:" alone.
+            if (x.Message.IndexOf("Liquid error") >= 0)
+            {
+                return x.Message;
+            }
+            else
+            {
+                return "ERROR: " + x.Message;
+            }
         }
 
         private void RenderErrors(IEnumerable<LiquidExpressionResult> liquidErrors)
@@ -400,10 +413,10 @@ namespace Liquid.NET
            // noop
         }
 
-        public void Visit(VariableReference variableReference)
-        {
-            variableReference.Eval(_templateContext, new List<Option<IExpressionConstant>>());
-        }
+//        public void Visit(VariableReference variableReference)
+//        {
+//            variableReference.Eval(_templateContext, new List<Option<IExpressionConstant>>());
+//        }
 
         public void Visit(StringValue stringValue)
         {          

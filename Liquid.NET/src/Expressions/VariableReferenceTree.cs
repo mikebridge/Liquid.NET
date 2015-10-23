@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using Liquid.NET.Constants;
+using Liquid.NET.Symbols;
 using Liquid.NET.Utils;
 
 namespace Liquid.NET.Expressions
@@ -24,17 +24,8 @@ namespace Liquid.NET.Expressions
 
         public LiquidExpressionResult Eval(ITemplateContext templateContext, IEnumerable<Option<IExpressionConstant>> childresults)
         {
-            //return EvalExpression(templateContext, (dynamic) this, childresults);
             return EvalExpression(templateContext, this, childresults);
         }
-
-//        private LiquidExpressionResult EvalExpression(
-//            ITemplateContext templateContext, 
-//            IExpressionDescription o, 
-//            IEnumerable<Option<IExpressionConstant>> childresults)
-//        {
-//            return o.Eval(templateContext, childresults);
-//        }
 
         private LiquidExpressionResult EvalExpression(
             ITemplateContext templateContext, 
@@ -63,7 +54,7 @@ namespace Liquid.NET.Expressions
             if (!valueResult.SuccessResult.HasValue)
             {
                 return LiquidExpressionResult.Success(new None<IExpressionConstant>());
-                //return LiquidExpressionResult.Error("ERROR: there is no value");
+                //return LiquidExpressionResult.Error(SymbolTable.NotFoundError(valueResult));
             }
             if (!indexResult.SuccessResult.HasValue)
             {

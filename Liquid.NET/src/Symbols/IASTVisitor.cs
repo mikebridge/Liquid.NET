@@ -21,7 +21,7 @@ namespace Liquid.NET.Symbols
 
         void Visit(RootDocumentNode rootDocumentNode);
 
-        void Visit(VariableReference variableReference);
+        //void Visit(VariableReference variableReference);
 
         void Visit(StringValue stringValue);
 

@@ -45,7 +45,7 @@ namespace Liquid.NET.Tests.Constants
         public void It_Should_Not_Display_An_Error_When_Dereferencing_Missing_Value(String varname)
         {
             // Arrange
-
+            Console.WriteLine(varname);
             TemplateContext ctx = new TemplateContext();
             ctx.DefineLocalVariable("e", new ArrayValue(new List<IExpressionConstant>()));
             ctx.DefineLocalVariable("d", new DictionaryValue(new Dictionary<String, IExpressionConstant>()));

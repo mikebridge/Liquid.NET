@@ -58,7 +58,7 @@ namespace Liquid.NET.Constants
         private static String FormatKvPair(string key, Option<IExpressionConstant> expressionConstant)
         {
             Type wrappedType = GetWrappedType(expressionConstant);
-            String exprConstantAsString = expressionConstant.HasValue? expressionConstant.Value.ToString() : "null";
+            String exprConstantAsString = expressionConstant.HasValue ? expressionConstant.Value.ToString() : "null";
             return Quote(typeof(StringValue), key) + " : " + Quote(wrappedType, exprConstantAsString);
         }
 

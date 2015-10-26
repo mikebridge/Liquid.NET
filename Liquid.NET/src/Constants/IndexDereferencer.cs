@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Liquid.NET.Symbols;
 using Liquid.NET.Utils;
 
 namespace Liquid.NET.Constants
@@ -43,11 +44,6 @@ namespace Liquid.NET.Constants
             return LiquidExpressionResult.Error("ERROR : cannot apply an index to a " + value.LiquidTypeName + ".");
         }
 
-        private LiquidExpressionResult DoLookup(ITemplateContext ctx, IExpressionConstant c, IExpressionConstant indexProperty)
-        {
-            return LiquidExpressionResult.Error("ERROR : cannot apply an index to a "+c.LiquidTypeName+".");
-
-        }
 
         private LiquidExpressionResult DoLookup(ITemplateContext ctx, ArrayValue arrayValue, IExpressionConstant indexProperty)
         {
@@ -85,6 +81,7 @@ namespace Liquid.NET.Constants
                 return LiquidExpressionResult.Success(new None<IExpressionConstant>()); // not an error in Ruby liquid.
             }
             var result = arrayValue.ValueAt(index);
+
             return LiquidExpressionResult.Success(result);
         }
 
@@ -97,7 +94,17 @@ namespace Liquid.NET.Constants
                 return LiquidExpressionResult.Success(NumericValue.Create(dictionaryValue.DictValue.Keys.Count));
             }
 
-            return LiquidExpressionResult.Success(dictionaryValue.ValueAt(indexProperty.Value.ToString()));
+            var valueAt = dictionaryValue.ValueAt(indexProperty.Value.ToString());
+            if (valueAt.HasValue)
+            {
+                return LiquidExpressionResult.Success(valueAt);
+            }
+            else
+            {
+                return ctx.Options.ErrorWhenValueMissing
+                    ? LiquidExpressionResult.Error(SymbolTable.NotFoundError(indexProperty.ToString()))
+                    : LiquidExpressionResult.Success(new None<IExpressionConstant>());
+            }
         }
 
         // TODO: this is inefficient and ugly and duplicates much of ArrayValue

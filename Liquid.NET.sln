@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+VisualStudioVersion = 12.0.40629.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Liquid.NET", "Liquid.NET\Liquid.NET.csproj", "{00128464-3F55-4C96-9445-F829DE49FBBA}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -16,6 +16,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{5F8139A0-750E-45D4-BA82-5D8D7ED4D277}"
 	ProjectSection(SolutionItems) = preProject
 		.travis.yml = .travis.yml
+		LICENSE.txt = LICENSE.txt
 		README.md = README.md
 		TODO.txt = TODO.txt
 	EndProjectSection

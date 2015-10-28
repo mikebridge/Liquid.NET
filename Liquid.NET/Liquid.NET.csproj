@@ -228,6 +228,7 @@
     <Compile Include="src\Utils\TreeNode.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Liquid.NET.nuspec" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

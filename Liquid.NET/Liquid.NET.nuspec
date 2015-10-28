@@ -12,5 +12,8 @@
     <description>$description$</description>
     <copyright>Copyright 2015 Mike Bridge</copyright>
     <tags>liquid markup template templating</tags>
+    <dependencies>
+      <dependency id="Antlr4.Runtime" version="4.3.0" />
+    </dependencies>    
   </metadata>
 </package>

@@ -1,3 +1,20 @@
+version: 0.8.{build}
 before_build:
   - nuget restore
-
+branches:
+  only:
+  - master
+  - nuspec
+assembly_info:
+  patch: true
+  file: '**\AssemblyInfo.*'
+  assembly_version: '{version}'
+  assembly_file_version: '{version}'
+  assembly_informational_version: '{version}'
+nuget:
+  account_feed: true
+  project_feed: true
+build:
+  publish_nuget: true
+  include_nuget_references: true
+  verbosity: minimal

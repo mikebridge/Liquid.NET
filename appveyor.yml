@@ -1,2 +1,5 @@
 before_build:
   - nuget restore
+
+nuget:
+  - project_feed: true

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package >
   <metadata>
-    <id>$id$</id>
+    <id>Liquid.NET</id>
     <version>$version$</version>
     <title>$title$</title>
     <authors>$author$</authors>
@@ -12,6 +12,9 @@
     <description>$description$</description>
     <copyright>Copyright 2015 Mike Bridge</copyright>
     <tags>liquid markup template templating</tags>
+    <files>
+      <file src="Liquid.NET\bin\Release\Liquid.NET.dll" target="lib\net45" />
+    </files>
     <dependencies>
       <dependency id="Antlr4.Runtime" version="4.3.0" />
     </dependencies>    

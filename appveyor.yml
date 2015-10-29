@@ -10,6 +10,9 @@
 
   configuration: Debug
 
+  build:
+    project: Liquid.NET.sln
+
   before_build:
   - nuget restore
 
@@ -42,6 +45,7 @@
     account_feed: true
     project_feed: true
   build:
+    project: Liquid.NET.sln
     publish_nuget: true
     include_nuget_references: true
     verbosity: minimal

@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Liquid.NET")]
-[assembly: AssemblyDescription("A port of the liquid templating language to C#")]
+[assembly: AssemblyDescription("A C# port of the Liquid templating language.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Mike Bridge")]
 [assembly: AssemblyProduct("Liquid.NET")]

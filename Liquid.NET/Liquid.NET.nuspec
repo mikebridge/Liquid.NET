@@ -11,7 +11,7 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
     <copyright>Copyright 2015 Mike Bridge</copyright>
-    <tags>liquid markup template templating</tags>
+    <tags>liquid markup template templating shopify</tags>
     <dependencies>
       <dependency id="Antlr4.Runtime" version="4.3.0" />
     </dependencies>    

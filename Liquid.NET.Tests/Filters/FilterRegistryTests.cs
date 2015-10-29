@@ -5,7 +5,6 @@ using NUnit.Framework;
 namespace Liquid.NET.Tests.Filters
 {
     [TestFixture]
-    //[Ignore("Not Implemented yet")]
     public class FilterRegistryTests
     {
         [Test]

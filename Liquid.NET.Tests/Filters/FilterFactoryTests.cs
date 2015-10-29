@@ -71,25 +71,6 @@ namespace Liquid.NET.Tests.Filters
             Assert.That(filter.StringArg1.Value, Is.EqualTo("123"));
         }
 
-
-        [Test]
-        [Ignore("Not Implemented yet")]
-        public void It_Should_Fail_If_Missing_Arg_Is_Not_Null()
-        {
-            // Arrange
-            var filterRegistry = new FilterRegistry();
-            filterRegistry.Register<PlusFilter>("add");
-
-            // Act
-            var symbol = new FilterSymbol("add");
-
-            //ar filter = (PlusFilter)CreateFilterFactory(filterRegistry).CreateFilter(symbol);
-
-            // Assert
-            Assert.Fail("Not sure");
-
-        }
-
         [Test]
         public void It_Should_Pass_A_Wrapped_Null_When_Arg_Missing()
         {

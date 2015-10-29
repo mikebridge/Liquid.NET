@@ -44,7 +44,6 @@ namespace Liquid.NET.Tests.Constants
         }
 
         [Test]
-        [Ignore("Should this be changed?")]
         public void It_Should_Format_Without_Trailing_Zeroes()
         {
             // Arrange

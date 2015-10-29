@@ -4,7 +4,6 @@ using NUnit.Framework;
 namespace Liquid.NET.Tests.Grammar
 {
     [TestFixture]
-    //[Ignore("Not Implemented yet")]
     public class GrammarTests
     {
 

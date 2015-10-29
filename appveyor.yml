@@ -1,2 +1,43 @@
+# configuration for "master" branch
+# build in Debug mode and Test
+
+version: 0.8.{build}
+
 before_build:
   - nuget restore
+
+-
+  branches:
+    only:
+    - master
+    - nuspec
+configuration: Debug
+
+# configuration for "release" branch
+# build in Debug mode and Test
+
+-
+  branches:
+    only:
+    - release
+  configuration: Release
+  assembly_info:
+    patch: true
+    file: '**\AssemblyInfo.*'
+    assembly_version: '{version}'
+    assembly_file_version: '{version}'
+    assembly_informational_version: '{version}'
+  nuget:
+    account_feed: true
+    project_feed: true
+    prerelease: false
+  build:
+    publish_nuget: true
+    include_nuget_references: true
+    verbosity: minimal
+  deploy:
+  - provider: NuGet
+    symbol_server: https://ci.appveyor.com/nuget/appveyorsystems/api/v2/package
+  api_key:
+    secure:  VupoidE3HdOx3mLhAdrOX/liMBaU122WL+0etvpc1fmlw6/8lE6W3TcLwByCFzhx
+    artifact: /.*\.nupkg/

@@ -17,7 +17,7 @@
   - nuget restore
 
   test_script:
-  - .\packages\OpenCover.4.6.166\tools\OpenCover.Console.exe -register:user -target:"packages\NUnit.Runners.2.6.4\tools\nunit-console.exe" -targetargs:""".\Liquid.NET.Tests\bin\Debug\Liquid.NET.Tests.dll"" /noshadow" -excludebyattribute:*.ExcludeFromCodeCoverage* -returntargetcode -output .\Liquid.NET.coverage.xml
+  - .\packages\OpenCover.4.6.166\tools\OpenCover.Console.exe -register:user -target:"packages\NUnit.Runners.2.6.4\tools\nunit-console.exe" -targetargs:""".\Liquid.NET.Tests\bin\Debug\Liquid.NET.Tests.dll"" /noshadow /appveyor" -excludebyattribute:*.ExcludeFromCodeCoverage* -returntargetcode -output .\Liquid.NET.coverage.xml
   - "SET PATH=C:\\Python34;C:\\Python34\\Scripts;%PATH%"
   - pip install codecov
   - codecov -f "Liquid.NET.coverage.xml"

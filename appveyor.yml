@@ -1,17 +1,16 @@
 # configuration for "master" branch
 # build in Debug mode and Test
 
-version: 0.8.{build}
-
-before_build:
-  - nuget restore
-
 -
   branches:
     only:
     - master
     - nuspec
-configuration: Debug
+
+  version: 0.8.{build}
+  configuration: Debug
+  before_build:
+	- nuget restore
 
 # configuration for "release" branch
 # build in Debug mode and Test
@@ -20,7 +19,10 @@ configuration: Debug
   branches:
     only:
     - release
+
   configuration: Release
+  before_build:
+	- nuget restore
   assembly_info:
     patch: true
     file: '**\AssemblyInfo.*'
@@ -36,7 +38,7 @@ configuration: Debug
     include_nuget_references: true
     verbosity: minimal
   deploy:
-  - provider: NuGet
+    provider: NuGet
     symbol_server: https://ci.appveyor.com/nuget/appveyorsystems/api/v2/package
   api_key:
     secure:  VupoidE3HdOx3mLhAdrOX/liMBaU122WL+0etvpc1fmlw6/8lE6W3TcLwByCFzhx

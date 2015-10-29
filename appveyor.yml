@@ -31,15 +31,14 @@
     assembly_informational_version: '{version}'
   nuget:
     account_feed: true
-    project_feed: true
-    prerelease: false
+    project_feed: true    
   build:
     publish_nuget: true
     include_nuget_references: true
     verbosity: minimal
   deploy:
     provider: NuGet
-    symbol_server: https://ci.appveyor.com/nuget/appveyorsystems/api/v2/package
-  api_key:
-    secure:  VupoidE3HdOx3mLhAdrOX/liMBaU122WL+0etvpc1fmlw6/8lE6W3TcLwByCFzhx
-    artifact: /.*\.nupkg/
+	prerelease: true
+    api_key:
+      secure:  VupoidE3HdOx3mLhAdrOX/liMBaU122WL+0etvpc1fmlw6/8lE6W3TcLwByCFzhx
+      artifact: /.*\.nupkg/

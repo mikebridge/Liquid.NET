@@ -4,9 +4,8 @@
   branches:
     only:
     - master
-    - nuspec
 
-  version: 0.8.{build}
+  version: 0.9.0.{build}
   configuration: Debug
   before_build:
   - nuget restore
@@ -18,8 +17,8 @@
   branches:
     only:
     - release
-    - nuspec_release
 
+  version: 0.9.0
   configuration: Release
   before_build:
     - nuget restore
@@ -39,7 +38,7 @@
     verbosity: minimal
   deploy:
   - provider: NuGet
-    prerelease: true
+    prerelease: false
     api_key:
       secure:  VupoidE3HdOx3mLhAdrOX/liMBaU122WL+0etvpc1fmlw6/8lE6W3TcLwByCFzhx
       artifact: /.*\.nupkg/

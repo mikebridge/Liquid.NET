@@ -18,6 +18,7 @@
   branches:
     only:
     - release
+    - nuspec_release
 
   configuration: Release
   before_build:

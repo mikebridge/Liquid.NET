@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="..\packages\Antlr4.4.3.0\build\Antlr4.props" Condition="Exists('..\packages\Antlr4.4.3.0\build\Antlr4.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
@@ -48,22 +48,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Liquid.NET.Grammar\obj\Debug\LiquidBaseListener.cs">
+    <Compile Include="..\Liquid.NET.Grammar\obj\$(Configuration)\LiquidBaseListener.cs">
       <Link>src\LiquidBaseListener.cs</Link>
     </Compile>
-    <Compile Include="..\Liquid.NET.Grammar\obj\Debug\LiquidBaseVisitor.cs">
+    <Compile Include="..\Liquid.NET.Grammar\obj\$(Configuration)\LiquidBaseVisitor.cs">
       <Link>src\LiquidBaseVisitor.cs</Link>
     </Compile>
-    <Compile Include="..\Liquid.NET.Grammar\obj\Debug\LiquidLexer.cs">
+    <Compile Include="..\Liquid.NET.Grammar\obj\$(Configuration)\LiquidLexer.cs">
       <Link>src\LiquidLexer.cs</Link>
     </Compile>
-    <Compile Include="..\Liquid.NET.Grammar\obj\Debug\LiquidListener.cs">
+    <Compile Include="..\Liquid.NET.Grammar\obj\$(Configuration)\LiquidListener.cs">
       <Link>src\LiquidListener.cs</Link>
     </Compile>
-    <Compile Include="..\Liquid.NET.Grammar\obj\Debug\LiquidParser.cs">
+    <Compile Include="..\Liquid.NET.Grammar\obj\$(Configuration)\LiquidParser.cs">
       <Link>src\LiquidParser.cs</Link>
     </Compile>
-    <Compile Include="..\Liquid.NET.Grammar\obj\Debug\LiquidVisitor.cs">
+    <Compile Include="..\Liquid.NET.Grammar\obj\$(Configuration)\LiquidVisitor.cs">
       <Link>src\LiquidVisitor.cs</Link>
     </Compile>
     <Compile Include="src\CachingLiquidASTGenerator.cs" />

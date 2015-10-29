@@ -122,6 +122,7 @@ namespace Liquid.NET
             RenderErrors(errors);
         }
 
+        // ReSharper disable once UnusedParameter.Local
         private void AddError(String message, IASTNode node)
         { 
             Errors.Add(new LiquidError{Message = message});
@@ -373,10 +374,10 @@ namespace Liquid.NET
             _templateContext.SymbolTableStack.DefineMacro(macroBlockTag.Name, macroBlockTag);
         }
 
-        public void Visit(ErrorNode errorNode)
-        {
-            AppendTextToCurrentAccumulator(errorNode.LiquidError.ToString());
-        }
+//        public void Visit(ErrorNode errorNode)
+//        {
+//            AppendTextToCurrentAccumulator(errorNode.LiquidError.ToString());
+//        }
 
         public void Visit(IfChangedBlockTag ifChangedBlockTag)
         {

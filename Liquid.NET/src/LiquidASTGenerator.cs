@@ -1142,12 +1142,6 @@ namespace Liquid.NET
             EndWhenClause();
         }
 
-        public override void EnterWhenblock(LiquidParser.WhenblockContext context)
-        {
-            base.EnterWhenblock(context);
-            //Log("WHEN BLOCK");
-        }
-
         public override void EnterWhen_else_tag(LiquidParser.When_else_tagContext context)
         {
             base.EnterWhen_else_tag(context);
@@ -1969,6 +1963,7 @@ namespace Liquid.NET
             return newNode;
         }
         
+        // ReSharper disable once UnusedParameter.Local
         private void Log(String str)
         {
             //Console.WriteLine(str);
@@ -2182,6 +2177,7 @@ namespace Liquid.NET
                 }
             }
 
+            // ReSharper disable once UnusedParameter.Local
             private void Log(String str)
             {
                 //Console.WriteLine(str);

@@ -8,6 +8,7 @@ using Liquid.NET.Utils;
 
 namespace Liquid.NET.Filters.Strings
 {
+    // ReSharper disable once ClassNeverInstantiated.Global
     public class ReplaceFilter : FilterExpression<IExpressionConstant, StringValue>
     {
         private readonly StringValue _stringToRemove;

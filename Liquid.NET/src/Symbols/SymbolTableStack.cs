@@ -20,7 +20,7 @@ namespace Liquid.NET.Symbols
         public SymbolTable Pop()
         {
             var last = _symbolTables.Last();
-             _symbolTables.RemoveAt(_symbolTables.Count()-1);
+             _symbolTables.RemoveAt(_symbolTables.Count-1);
             return last;
         }
 
@@ -32,7 +32,7 @@ namespace Liquid.NET.Symbols
         /// <returns></returns>
         public LiquidExpressionResult Reference(String reference, int skiplevels = 0)
         {
-            for (int i = _symbolTables.Count() - 1 - skiplevels; i >= 0; i--)
+            for (int i = _symbolTables.Count - 1 - skiplevels; i >= 0; i--)
             {
                 //Console.WriteLine("Looking up" + reference);
                 if (_symbolTables[i].HasVariableReference(reference))
@@ -46,7 +46,7 @@ namespace Liquid.NET.Symbols
 
         public Object ReferenceLocalRegistryVariable(String reference, int skiplevels = 0)
         {
-            for (int i = _symbolTables.Count() - 1 - skiplevels; i >= 0; i--)
+            for (int i = _symbolTables.Count - 1 - skiplevels; i >= 0; i--)
             {
                 if (_symbolTables[i].HasLocalRegistryVariableReference(reference))
                 {
@@ -61,7 +61,7 @@ namespace Liquid.NET.Symbols
             Action ifNotFoundAction)
         {
 
-            for (int i = _symbolTables.Count() - 1; i >= 0; i--) // iterate backwards from most-specific scope
+            for (int i = _symbolTables.Count - 1; i >= 0; i--) // iterate backwards from most-specific scope
             {
                 //Console.WriteLine("Looking up" + reference);
                 if (_symbolTables[i].HasVariableReference(reference))
@@ -101,7 +101,7 @@ namespace Liquid.NET.Symbols
 
         public bool HasFilter(String name)
         {
-            for (var i = _symbolTables.Count() - 1; i >= 0; i--)
+            for (var i = _symbolTables.Count - 1; i >= 0; i--)
             {
                 if (_symbolTables[i].HasFilterReference(name))
                 {
@@ -116,7 +116,7 @@ namespace Liquid.NET.Symbols
         public Type LookupFilterType(string filterName)
         {
             
-            for (var i = _symbolTables.Count() - 1; i >= 0; i--)
+            for (var i = _symbolTables.Count - 1; i >= 0; i--)
             {
                 if (_symbolTables[i].HasFilterReference(filterName))
                 {
@@ -128,7 +128,7 @@ namespace Liquid.NET.Symbols
 
         public Type LookupCustomTagRendererType(string tagName)
         {
-            for (var i = _symbolTables.Count() - 1; i >= 0; i--)
+            for (var i = _symbolTables.Count - 1; i >= 0; i--)
             {
                 if (_symbolTables[i].HasCustomTagReference(tagName))
                 {
@@ -140,7 +140,7 @@ namespace Liquid.NET.Symbols
 
         public Type LookupCustomBlockTagRendererType(string tagName)
         {
-            for (var i = _symbolTables.Count() - 1; i >= 0; i--)
+            for (var i = _symbolTables.Count - 1; i >= 0; i--)
             {
                 if (_symbolTables[i].HasCustomBlockTagReference(tagName))
                 {
@@ -158,7 +158,7 @@ namespace Liquid.NET.Symbols
 
         public MacroBlockTag LookupMacro(string tagName)
         {
-            for (var i = _symbolTables.Count() - 1; i >= 0; i--)
+            for (var i = _symbolTables.Count - 1; i >= 0; i--)
             {
                 if (_symbolTables[i].HasMacro(tagName))
                 {

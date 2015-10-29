@@ -8,6 +8,8 @@ using Liquid.NET.Utils;
 
 namespace Liquid.NET.Filters
 {
+
+    // ReSharper disable once ClassNeverInstantiated.Global
     public class DebugFilter : FilterExpression<ExpressionConstant, DictionaryValue>
     {
         public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, IExpressionConstant expr)

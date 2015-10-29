@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Liquid.NET.Utils;
 
 namespace Liquid.NET.Constants
@@ -14,15 +11,12 @@ namespace Liquid.NET.Constants
         /// <summary>
         /// Put the properties of an object into a dictionary.
         /// </summary>
-        /// <param name="obj"></param>
-        /// <param name="capitalizationStrategy"></param>
-        /// <returns></returns>
         public IExpressionConstant GenerateExpressionConstant(Object obj /*, CapitalizationStrategy capitalizationStrategy*/)
         {
             // TODO: reflect on dictionary, array
             // http://stackoverflow.com/questions/9115413/is-there-an-easy-way-to-convert-object-properties-to-a-dictionarystring-string
 
-            var type = obj.GetType();
+            //var type = obj.GetType();
             //Console.WriteLine("TYype is " + type);
             var dict = obj as IDictionary;
             if (dict != null) // TODO: handle any collection

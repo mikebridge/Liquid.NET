@@ -53,6 +53,7 @@ namespace Liquid.NET.Tests.Constants
 
             public String MyPropertyWithPrivateSetter { get; private set; }
 
+            // ReSharper disable once UnusedAutoPropertyAccessor.Local
             private String MyPrivateProperty { get; set; }
 
         }

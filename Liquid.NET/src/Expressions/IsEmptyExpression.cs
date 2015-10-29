@@ -21,7 +21,7 @@ namespace Liquid.NET.Expressions
         {
             //Console.WriteLine("** ISEMPTY EXPRESSION");
             var list = expressions.ToList();
-            if (list.Count() != 1)
+            if (list.Count != 1)
             {
                 return LiquidExpressionResult.Error("Expected one variable to compare with \"empty\"");
             }

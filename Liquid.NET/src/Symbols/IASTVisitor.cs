@@ -49,7 +49,7 @@ namespace Liquid.NET.Symbols
 
         void Visit(MacroBlockTag macroBlockTag);
 
-        void Visit(ErrorNode errorNode);
+        //void Visit(ErrorNode errorNode);
 
         void Visit(IfChangedBlockTag ifChangedBlockTag);
 

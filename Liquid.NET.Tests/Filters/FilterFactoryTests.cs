@@ -29,8 +29,7 @@ namespace Liquid.NET.Tests.Filters
         public void It_Should_Return_An_Error_If_Type_Isnt_A_Filter()
         {
             // Act
-            var filter = FilterFactory.InstantiateFilter("string", typeof(String), new List<Option<IExpressionConstant>>());
-
+            FilterFactory.InstantiateFilter("string", typeof(String), new List<Option<IExpressionConstant>>());
         }
 
         [Test]
@@ -81,6 +80,7 @@ namespace Liquid.NET.Tests.Filters
 
         }
 
+        // ReSharper disable once ClassNeverInstantiated.Global
         public class MockStringToStringFilter : FilterExpression<StringValue, StringValue>
         {
             public StringValue StringArg1 { get; set; }

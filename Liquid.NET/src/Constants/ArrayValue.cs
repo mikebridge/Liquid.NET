@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Diagnostics.PerformanceData;
 using System.Linq;
-using Liquid.NET.Symbols;
+
 using Liquid.NET.Utils;
 
 namespace Liquid.NET.Constants

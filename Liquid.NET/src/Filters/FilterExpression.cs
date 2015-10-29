@@ -18,12 +18,12 @@ namespace Liquid.NET.Filters
 
     };
 
-    public interface IFilterExpression<in TSource, out TResult> : IFilterExpression
-        where TSource : IExpressionConstant
-        where TResult : IExpressionConstant
-    {
-        TResult Apply(ITemplateContext ctx, TSource liquidExpression);
-    };
+//    public interface IFilterExpression<in TSource, out TResult> : IFilterExpression
+//        where TSource : IExpressionConstant
+//        where TResult : IExpressionConstant
+//    {
+//        TResult Apply(ITemplateContext ctx, TSource liquidExpression);
+//    };
 
     public abstract class FilterExpression<TSource, TResult> : IFilterExpression
         where TSource : IExpressionConstant

@@ -104,10 +104,10 @@ namespace Liquid.NET.Tests
             _result += macroBlockTag.ToString();
         }
 
-        public void Visit(ErrorNode errorNode)
-        {
-            _result += errorNode.ToString();
-        }
+//        public void Visit(ErrorNode errorNode)
+//        {
+//            _result += errorNode.ToString();
+//        }
 
         public void Visit(IfChangedBlockTag ifChangedBlockTag)
         {

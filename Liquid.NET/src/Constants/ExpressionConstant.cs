@@ -87,7 +87,7 @@ namespace Liquid.NET.Constants
 
         public Option<IExpressionConstant> ToOption()
         {
-            if (this.Value != null)
+            if (Value != null)
             {
                 return new Some<IExpressionConstant>(this);
             }
@@ -126,7 +126,7 @@ namespace Liquid.NET.Constants
                 }
                 else
                 {
-                    return this.Value == null;   
+                    return Value == null;   
                 }
             }
         }

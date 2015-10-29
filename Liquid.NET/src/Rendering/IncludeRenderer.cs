@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using Liquid.NET.Constants;
 
+using Liquid.NET.Constants;
 using Liquid.NET.Symbols;
 using Liquid.NET.Tags;
 using Liquid.NET.Utils;
@@ -94,14 +93,7 @@ namespace Liquid.NET.Rendering
                     {
                         var localBlockScope = new SymbolTable();
                         DefineLocalVariables(templateContext, localBlockScope, includeTag.Definitions);
-                        if (val.HasValue)
-                        {
-                            localBlockScope.DefineLocalVariable(virtualFileName, val.Value);
-                        }
-                        else
-                        {
-                            localBlockScope.DefineLocalVariable(virtualFileName, null);
-                        }
+                        localBlockScope.DefineLocalVariable(virtualFileName, val.HasValue ? val.Value : null);
                         RenderWithLocalScope(templateContext, localBlockScope, snippetAst.RootNode);
                     }
                 }

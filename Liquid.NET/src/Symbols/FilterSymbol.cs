@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Liquid.NET.Expressions;
 using Liquid.NET.Utils;
 
 namespace Liquid.NET.Symbols

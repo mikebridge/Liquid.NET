@@ -38,6 +38,7 @@ namespace Liquid.NET.Tests.Tags
         }
 
 
+        // ReSharper disable once ClassNeverInstantiated.Global
         public class EchoArgsTagRenderer : ICustomTagRenderer
         {
             public IList<String> KeyWords

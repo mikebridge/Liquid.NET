@@ -81,7 +81,7 @@ namespace Liquid.NET.Constants
             }
         }
 
-        public static String Quote(Type origType, String str)
+        private static String Quote(Type origType, String str)
         {
             if (origType == null)
             {

@@ -4,8 +4,10 @@ using Liquid.NET.Utils;
 
 namespace Liquid.NET.Filters.Math
 {
+    // ReSharper disable once ClassNeverInstantiated.Global
     public class RoundFilter : FilterExpression<NumericValue, NumericValue>
     {
+        // ReSharper disable once RedundantDefaultMemberInitializer
         readonly int _decimalPlaces = 0;
 
         public RoundFilter(NumericValue val)

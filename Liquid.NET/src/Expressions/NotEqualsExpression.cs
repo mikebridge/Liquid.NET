@@ -23,10 +23,10 @@ namespace Liquid.NET.Expressions
             IList<Option<IExpressionConstant>> exprList = expressions.ToList();
 
             //Console.WriteLine("EqualsExpression is Eval-ing expressions ");
-            if (exprList.Count() != 2)
+            if (exprList.Count != 2)
             {
                 //return LiquidExpressionResult.Error("Equals is a binary expression but received " + exprList.Count() + ".");
-                return LiquidExpressionResult.Error("Equals is a binary expression but received " + exprList.Count() + ".");
+                return LiquidExpressionResult.Error("Equals is a binary expression but received " + exprList.Count + ".");
             }
 
             if (exprList.All(x => !x.HasValue)) // both null

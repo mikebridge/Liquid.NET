@@ -77,7 +77,7 @@ namespace Liquid.NET.Rendering
                 subset = subset.Take(limit.IntValue);
             }
             var subsetList = subset.ToList();
-            var length = subsetList.Count();
+            var length = subsetList.Count;
             if (length <= 0) 
             {
                 _renderingVisitor.StartWalking(forBlockTag.ElseBlock);

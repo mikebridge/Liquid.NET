@@ -20,7 +20,7 @@ namespace Liquid.NET.Expressions
         public override LiquidExpressionResult Eval(ITemplateContext templateContext, IEnumerable<Option<IExpressionConstant>> expressions)
         {
             var list = expressions.ToList();
-            if (list.Count() != 1)
+            if (list.Count != 1)
             {
                 return LiquidExpressionResult.Error("Expected one variable to compare with \"present\"");
             }

@@ -82,7 +82,7 @@ namespace Liquid.NET.Tests.Filters.Array
             var result = mapFilter.Apply(new TemplateContext(), new ArrayValue(objlist)).SuccessValue<ArrayValue>();
 
             // Assert
-            Assert.That(result.ArrValue.Count, Is.EqualTo(objlist.Count()));
+            Assert.That(result.ArrValue.Count, Is.EqualTo(objlist.Count));
             Assert.That(result.ArrValue[0].HasValue, Is.False);
             Assert.That(result.ArrValue[1].HasValue, Is.False);
         }

@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
+
 using Liquid.NET.Expressions;
-using Liquid.NET.Filters.Strings;
-using Liquid.NET.Symbols;
 
 namespace Liquid.NET.Constants
 {

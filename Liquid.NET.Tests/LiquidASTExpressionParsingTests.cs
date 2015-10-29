@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using Liquid.NET.Constants;
 using Liquid.NET.Expressions;
 using Liquid.NET.Symbols;
 using Liquid.NET.Tags;
 using Liquid.NET.Utils;
 using NUnit.Framework;
-using NUnit.Framework.Constraints;
 
 namespace Liquid.NET.Tests
 {
@@ -137,6 +132,7 @@ namespace Liquid.NET.Tests
             // Assert
             var parentIfThenElseSymbol = LiquidASTGeneratorTests.FindNodesWithType(ast, typeof(IfThenElseBlockTag)).FirstOrDefault();
 
+            // ReSharper disable once PossibleNullReferenceException
             var childIfThenElse = ((IfThenElseBlockTag) parentIfThenElseSymbol.Data).IfElseClauses[0].LiquidBlock;
             //Logger.Log(childIfThenElse);
             Assert.That(childIfThenElse, Is.Not.Null);
@@ -169,6 +165,7 @@ namespace Liquid.NET.Tests
             // Assert
             var liquidExpressionNode = LiquidASTGeneratorTests.FindNodesWithType(ast, typeof(LiquidExpressionTree)).FirstOrDefault();
             Assert.That(liquidExpressionNode, Is.Not.Null);
+            // ReSharper disable once PossibleNullReferenceException
             Assert.That(liquidExpressionNode.Data, Is.Not.Null);
             var liquidExpression = ((LiquidExpressionTree)liquidExpressionNode.Data);
 
@@ -192,6 +189,7 @@ namespace Liquid.NET.Tests
             // Assert
             var liquidExpressionNode = LiquidASTGeneratorTests.FindNodesWithType(ast, typeof(LiquidExpressionTree)).FirstOrDefault();
             Assert.That(liquidExpressionNode, Is.Not.Null);
+            // ReSharper disable once PossibleNullReferenceException
             Assert.That(liquidExpressionNode.Data, Is.Not.Null);
             var liquidExpression = ((LiquidExpressionTree)liquidExpressionNode.Data);
 

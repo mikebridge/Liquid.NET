@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Liquid.NET.Utils;
 
 namespace Liquid.NET.Constants
@@ -20,7 +19,7 @@ namespace Liquid.NET.Constants
             return array[key];
         }
 
-        public static int WrapMod(int index, int length)
+        private static int WrapMod(int index, int length)
         {
             return (index % length + length) % length;
         }

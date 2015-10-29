@@ -48,7 +48,7 @@ namespace Liquid.NET.Filters
             };
         }
 
-        public static Func<LiquidExpressionResult, LiquidExpressionResult> BindAll(
+        private static Func<LiquidExpressionResult, LiquidExpressionResult> BindAll(
             ITemplateContext ctx,
             IEnumerable<IFilterExpression> filterExpressions)
         {
@@ -99,7 +99,7 @@ namespace Liquid.NET.Filters
             return result;
         }
 
-        public static IFilterExpression CreateCastFilter(Type sourceType, Type resultType)
+        private static IFilterExpression CreateCastFilter(Type sourceType, Type resultType)
             //where sourceType: IExpressionConstant
         {
             // TODO: Move this to FilterFactory.Instantiate

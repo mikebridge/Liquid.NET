@@ -13,6 +13,7 @@ namespace Liquid.NET.Filters.Strings
     /// (as per ruby http://ruby-doc.org/core-2.2.0/Array.html)
     /// Verified in liquid.
     /// </summary>
+    // ReSharper disable once ClassNeverInstantiated.Global
     public class SliceFilter : FilterExpression<IExpressionConstant, IExpressionConstant>
     {
         private readonly NumericValue _start;

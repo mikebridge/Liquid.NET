@@ -14,6 +14,7 @@ namespace Liquid.NET.Filters.Strings
     /// 
     /// this is Pascal Case, not Camel Case.
     /// </summary>
+    // ReSharper disable once ClassNeverInstantiated.Global
     public class CamelCaseFilter : FilterExpression<IExpressionConstant, StringValue>
     {
 

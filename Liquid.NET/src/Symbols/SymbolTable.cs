@@ -69,22 +69,22 @@ namespace Liquid.NET.Symbols
 
         private void SaveIncludeWhereReDefined(IExpressionConstant obj)
         {
-            if (this.HasLocalRegistryVariableReference(IncludeRenderer.LOCALREGISTRY_FILE_KEY))
+            if (HasLocalRegistryVariableReference(IncludeRenderer.LOCALREGISTRY_FILE_KEY))
             {
                 if (obj != null && obj.MetaData!= null && !obj.MetaData.ContainsKey("reassigned"))
                 {
-                    obj.MetaData.Add("reassigned", this.ReferenceLocalRegistryVariable(IncludeRenderer.LOCALREGISTRY_FILE_KEY));
+                    obj.MetaData.Add("reassigned", ReferenceLocalRegistryVariable(IncludeRenderer.LOCALREGISTRY_FILE_KEY));
                 }
             }
         }
 
         private void SaveIncludeWhereDefined(IExpressionConstant obj)
         {
-            if (this.HasLocalRegistryVariableReference(IncludeRenderer.LOCALREGISTRY_FILE_KEY))
+            if (HasLocalRegistryVariableReference(IncludeRenderer.LOCALREGISTRY_FILE_KEY))
             {
                 if (obj != null && obj.MetaData != null && !obj.MetaData.ContainsKey("assigned"))
                 {
-                    obj.MetaData.Add("assigned", this.ReferenceLocalRegistryVariable(IncludeRenderer.LOCALREGISTRY_FILE_KEY));
+                    obj.MetaData.Add("assigned", ReferenceLocalRegistryVariable(IncludeRenderer.LOCALREGISTRY_FILE_KEY));
                 }
             }
         }

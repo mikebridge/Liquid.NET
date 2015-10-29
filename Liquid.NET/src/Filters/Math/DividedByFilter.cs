@@ -8,6 +8,7 @@ using Liquid.NET.Utils;
 
 namespace Liquid.NET.Filters.Math
 {
+    // ReSharper disable once ClassNeverInstantiated.Global
     public class DividedByFilter : FilterExpression<NumericValue, NumericValue>
     {        
         private readonly NumericValue _divisor;

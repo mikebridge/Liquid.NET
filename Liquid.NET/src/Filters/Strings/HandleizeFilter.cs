@@ -11,6 +11,7 @@ namespace Liquid.NET.Filters.Strings
     /// <summary>
     /// https://docs.shopify.com/themes/liquid-documentation/filters/string-filters#handle
     /// </summary>
+    // ReSharper disable once ClassNeverInstantiated.Global
     public class HandleizeFilter : FilterExpression<IExpressionConstant, StringValue>
     {
 
@@ -38,9 +39,6 @@ namespace Liquid.NET.Filters.Strings
             /// http://stackoverflow.com/questions/25259/how-do-you-include-a-webpage-title-as-part-of-a-webpage-url/25486#25486
             /// http://stackoverflow.com/questions/3769457/how-can-i-remove-accents-on-a-string
             /// </summary>
-            /// <param name="toLower"></param>
-            /// <param name="normalised"></param>
-            /// <returns></returns>
             public static string Create(bool toLower, string value)
             {
                 if (value == null)

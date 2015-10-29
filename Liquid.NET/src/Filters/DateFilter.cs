@@ -7,6 +7,7 @@ namespace Liquid.NET.Filters
     /// <summary>
     /// See: http://www.ruby-doc.org/core/Time.html#method-i-strftime
     /// </summary>
+    // ReSharper disable once ClassNeverInstantiated.Global
     public class DateFilter : FilterExpression<DateValue, StringValue>
     {
         private readonly StringValue _format;

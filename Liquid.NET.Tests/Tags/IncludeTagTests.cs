@@ -44,7 +44,7 @@ namespace Liquid.NET.Tests.Tags
             // Act
             try
             {
-                var result = RenderingHelper.RenderTemplate(str, ctx);
+                RenderingHelper.RenderTemplate(str, ctx);
                 Assert.Fail("Expected exception");
             }
             catch (LiquidParserException ex)

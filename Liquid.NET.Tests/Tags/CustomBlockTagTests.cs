@@ -44,7 +44,7 @@ namespace Liquid.NET.Tests.Tags
             var templateContext = new TemplateContext().WithAllFilters().WithCustomTagBlockRenderer<WordReverserBlockTag>("echoargs");
             try
             {
-                var result = RenderingHelper.RenderTemplate(
+                RenderingHelper.RenderTemplate(
                     "Result : {% echoargs \"hello\" 123 true %}echo{% endsomethingelse %}", templateContext);
                 Assert.Fail("This should have thrown an error.");
             }
@@ -115,7 +115,8 @@ namespace Liquid.NET.Tests.Tags
         /// <summary>
         /// Reverse each word
         /// </summary>
-        public class WordReverserBlockTag : ICustomBlockTagRenderer
+        // ReSharper disable once ClassNeverInstantiated.Local
+        private class WordReverserBlockTag : ICustomBlockTagRenderer
         {
 
             public StringValue Render(
@@ -153,7 +154,8 @@ namespace Liquid.NET.Tests.Tags
         /// <summary>
         /// Reverse each word
         /// </summary>
-        public class ForLikeBlockTag : ICustomBlockTagRenderer
+        // ReSharper disable once ClassNeverInstantiated.Local
+        private class ForLikeBlockTag : ICustomBlockTagRenderer
         {
 
             public StringValue Render(

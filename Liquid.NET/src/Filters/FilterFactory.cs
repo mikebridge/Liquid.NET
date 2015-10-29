@@ -7,16 +7,9 @@ using Liquid.NET.Utils;
 
 namespace Liquid.NET.Filters
 {
+    // ReSharper disable once ClassNeverInstantiated.Global
     public class FilterFactory
     {
-        private readonly FilterRegistry _registry;
-
-        public FilterFactory(FilterRegistry registry)
-        {
-            _registry = registry;
-        }
-
-
         /// <summary>
         /// TODO: THe IExpressionDescription args should be eval-ed before
         /// </summary>
@@ -45,7 +38,7 @@ namespace Liquid.NET.Filters
             }
             var constructors = filterType.GetConstructors();
 
-            if (constructors.Count() != 1)
+            if (constructors.Length != 1)
             {
                 // for the time being, ensure just one constructor.
                 throw new Exception("The \""+filterType+"\" class for " + name + " has more than one constructor.  Please contact the developer to fix this.");
@@ -99,14 +92,7 @@ namespace Liquid.NET.Filters
                     else
                     {
                         // TODO: This is a test
-                        if (argType == typeof (NumericValue))
-                        {
-                            result.Add(NumericValue.Create(0));
-                        }
-                        else
-                        {
-                            result.Add(null);
-                        }
+                        result.Add(argType == typeof (NumericValue) ? NumericValue.Create(0) : null);
                     }
 
 //                    if (filterList[i].HasValue)

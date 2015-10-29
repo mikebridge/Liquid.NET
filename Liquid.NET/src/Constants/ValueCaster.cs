@@ -112,6 +112,7 @@ namespace Liquid.NET.Constants
        
         }
 
+        // ReSharper disable once UnusedParameter.Local
         private static LiquidExpressionResult Convert<TDest>(DateValue date)
              where TDest : IExpressionConstant
         {
@@ -141,6 +142,7 @@ namespace Liquid.NET.Constants
             return LiquidExpressionResult.Error("Can't convert from a DictionaryValue to " + destType);
         }
 
+        // ReSharper disable once UnusedParameter.Local
         private static LiquidExpressionResult Convert<TDest>(ArrayValue arrayValue)
               where TDest : IExpressionConstant
         {
@@ -280,7 +282,7 @@ namespace Liquid.NET.Constants
             return result;
         }
 
-        public static IFilterExpression CreateCastFilter(Type sourceType, Type resultType)
+        private static IFilterExpression CreateCastFilter(Type sourceType, Type resultType)
         {
             // TODO: Move this to FilterFactory.Instantiate
             Type genericClass = typeof(CastFilter<,>);

@@ -71,10 +71,6 @@ namespace Liquid.NET.Expressions
         private TreeNode<LiquidExpression> _startExpression;
         private TreeNode<LiquidExpression> _endExpression;
 
-        public GeneratorCreator()
-        {
-            
-        }
 //        public GeneratorCreator(TreeNode<LiquidExpression> start, TreeNode<LiquidExpression> end)
 //        {
 //            _startExpression = start;

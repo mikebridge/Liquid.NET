@@ -6,6 +6,7 @@ using Liquid.NET.Utils;
 
 namespace Liquid.NET.Filters.Strings
 {
+    // ReSharper disable once ClassNeverInstantiated.Global
     public class SplitFilter : FilterExpression<StringValue, ArrayValue>
     {
         private readonly StringValue _delimiter;

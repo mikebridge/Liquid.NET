@@ -28,7 +28,7 @@ namespace Liquid.NET.Tests.Filters
             var castedFilters = FilterChain.InterpolateCastFilters(filters).ToList();
 
             // Assert
-            Assert.That(castedFilters.Count(), Is.EqualTo(3));
+            Assert.That(castedFilters.Count, Is.EqualTo(3));
             Assert.That(castedFilters[1], Is.TypeOf(typeof(CastFilter<StringValue, NumericValue>)));
 
         }

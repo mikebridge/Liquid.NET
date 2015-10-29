@@ -11,6 +11,7 @@ namespace Liquid.NET.Filters.Strings
     /// <summary>
     /// https://docs.shopify.com/themes/liquid-documentation/filters/string-filters#append
     /// </summary>
+    // ReSharper disable once ClassNeverInstantiated.Global
     public class AppendFilter : FilterExpression<StringValue, StringValue>
     {
         private readonly StringValue _strToAppend;

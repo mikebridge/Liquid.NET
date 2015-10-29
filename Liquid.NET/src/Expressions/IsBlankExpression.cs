@@ -32,7 +32,7 @@ namespace Liquid.NET.Expressions
             {
                 return LiquidExpressionResult.Success(new BooleanValue(true));
             }
-            if (list.Count() != 1)
+            if (list.Count != 1)
             {
                 return LiquidExpressionResult.Error("Expected one variable to compare with \"blank\"");
             }

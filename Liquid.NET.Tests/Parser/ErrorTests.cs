@@ -22,7 +22,7 @@ namespace Liquid.NET.Tests.Parser
                 var template = CreateRenderer(errors, input);
 
                 // Act
-                String result = template.Render(ctx);
+                template.Render(ctx);
             }
             catch (LiquidParserException ex)
             {
@@ -40,13 +40,13 @@ namespace Liquid.NET.Tests.Parser
         {
             // Arrange
             const string erroneousTemplate = "{{";
-            ITemplateContext ctx = new TemplateContext().WithAllFilters();
+            //ITemplateContext ctx = new TemplateContext().WithAllFilters();
             IList<LiquidError> errors = new List<LiquidError>();            
             
             // Act
             try
             {
-                var template = CreateRenderer(errors, erroneousTemplate);
+                CreateRenderer(errors, erroneousTemplate);
                 Assert.Fail("It Should throw an exception.");
             }
             catch (LiquidParserException ex)
@@ -63,7 +63,7 @@ namespace Liquid.NET.Tests.Parser
             // Act
             try
             {
-                var result = RenderingHelper.RenderTemplate("Result : {{ 2  | modulo 2 }}");
+                RenderingHelper.RenderTemplate("Result : {{ 2  | modulo 2 }}");
                 Assert.Fail("Expected exception");
             }
             catch (LiquidParserException ex)

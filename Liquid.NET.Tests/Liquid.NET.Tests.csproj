@@ -78,7 +78,6 @@
     <Compile Include="Expressions\NotExpressionTests.cs" />
     <Compile Include="Expressions\OrExpressionTests.cs" />
     <Compile Include="Expressions\SymbolTableTests.cs" />
-    <Compile Include="Expressions\VariableReferenceIndexTests.cs" />
     <Compile Include="Expressions\VariableReferenceTests.cs" />
     <Compile Include="Filters\Array\DataFixtures.cs" />
     <Compile Include="Filters\Array\FirstFilterTests.cs" />

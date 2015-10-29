@@ -5,6 +5,7 @@ using Liquid.NET.Utils;
 
 namespace Liquid.NET.Filters.Strings
 {
+    // ReSharper disable once ClassNeverInstantiated.Global
     public class TruncateWordsFilter : FilterExpression<StringValue, StringValue>
     {
         private NumericValue _length;

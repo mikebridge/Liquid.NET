@@ -1,14 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 using Liquid.NET.Constants;
 using Liquid.NET.Utils;
 
 namespace Liquid.NET.Filters.Strings
 {
+    // ReSharper disable once ClassNeverInstantiated.Global
     public class Md5Filter : FilterExpression<IExpressionConstant, StringValue>
     {
 

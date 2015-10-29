@@ -102,7 +102,7 @@ namespace Liquid.NET
                 //return new Tuple<String, IFilterExpression>(filterSymbol.Name, null);
                 return null;
             }
-            var expressionConstants = filterSymbol.Args.Select(x => LiquidExpressionEvaluator.Eval(x, templateContext)).ToList();
+            var expressionConstants = filterSymbol.Args.Select(x => Eval(x, templateContext)).ToList();
             //var expressionConstants = filterSymbol.Args.Select(x => x.Eval(templateContext, new List<Option<IExpressionConstant>>())).ToList();
             // TODO: Handle the error if any
             //return FilterFactory.InstantiateFilter(filterSymbol.Name, filterType, expressionConstants.Select(x => x.IsSuccess? x.SuccessResult));

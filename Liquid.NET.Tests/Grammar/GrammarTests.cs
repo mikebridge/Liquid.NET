@@ -74,17 +74,6 @@ namespace Liquid.NET.Tests.Grammar
         }
 
         [Test]
-        [Ignore("Need to write a thing for this")]
-        public void RawArgs_Should_Contain_The_Original_Arg_String()
-        {
-            // Act
-            var result = RenderTemplate("Result : {{ \"test awesome\" | echoargs: \"awesome\" 123 }}");
-
-            // Assert
-            Assert.That(result, Is.EqualTo("Result : TEST ")); // note: it doesn't remove that extra space.
-        }
-
-        [Test]
         public void It_Should_Extract_A_Filter()
         {
             // Act

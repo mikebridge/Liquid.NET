@@ -43,22 +43,7 @@ namespace Liquid.NET.Tests.Filters
 
             // Assert
             Assert.That(filter, Is.TypeOf(typeof(RemoveFilter)));
-        }
-
-        [Test]
-        [Ignore("this is no longer the case.  TODO: make the args into option types")]
-        public void It_Should_Pass_ArgDefault_If_Missing_Args()
-        {
-            // Arrange
-
-            var filter = FilterFactory.InstantiateFilter<MockStringToStringFilter>("mockfilter", new List<Option<IExpressionConstant>>() { new StringValue("test") });
-
-            // Assert
-            Assert.That(filter.StringArg1, Is.Not.Null);
-            Assert.That(filter.StringArg2, Is.Not.Null);
-            Assert.Fail("Fix former undefined behaviour");
-            //Assert.That(filter.StringArg2.IsUndefined, Is.True);
-        }
+        }      
 
         [Test]
         public void It_Should_Cast_Numeric_Args_To_A_String()

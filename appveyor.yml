@@ -10,7 +10,7 @@
   version: 0.8.{build}
   configuration: Debug
   before_build:
-	- nuget restore
+  - nuget restore
 
 # configuration for "release" branch
 # build in Debug mode and Test
@@ -22,7 +22,7 @@
 
   configuration: Release
   before_build:
-	- nuget restore
+    - nuget restore
   assembly_info:
     patch: true
     file: '**\AssemblyInfo.*'

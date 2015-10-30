@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Liquid.NET.Constants;
-using Liquid.NET.Filters.Array;
 using NUnit.Framework;
 
 namespace Liquid.NET.Tests.Filters.Strings

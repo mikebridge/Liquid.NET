@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Antlr4.Runtime;
 using Liquid.NET.Constants;
 using Liquid.NET.Tests.Ruby;
 using NUnit.Framework;

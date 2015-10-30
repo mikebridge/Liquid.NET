@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Liquid.NET.Constants;
 using Liquid.NET.Filters.Array;
 using NUnit.Framework;

@@ -1,12 +1,7 @@
 ﻿using System;
-using System.CodeDom;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Liquid.NET.Constants;
 using Liquid.NET.Expressions;
-using Liquid.NET.Symbols;
 using Liquid.NET.Utils;
 using NUnit.Framework;
 
@@ -46,6 +41,7 @@ namespace Liquid.NET.Tests.Expressions
             var expr = new AndExpression();
 
             // Act
+            // ReSharper disable once UnusedVariable
             var result = expr.Eval(new TemplateContext(), new List<Option<IExpressionConstant>>
             {
                 new BooleanValue(true),

@@ -6,7 +6,6 @@ using Liquid.NET.Symbols;
 using Liquid.NET.Tags;
 using Liquid.NET.Utils;
 
-
 namespace Liquid.NET.Tests
 {
     public class DebuggingVisitor : IASTVisitor

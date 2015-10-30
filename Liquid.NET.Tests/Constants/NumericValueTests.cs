@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Numerics;
 using Liquid.NET.Constants;
-using Liquid.NET.Symbols;
 using Liquid.NET.Utils;
 using NUnit.Framework;
 

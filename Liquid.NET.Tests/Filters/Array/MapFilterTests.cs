@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Liquid.NET.Constants;
 using Liquid.NET.Filters.Array;
-using Liquid.NET.Utils;
 using NUnit.Framework;
 
 namespace Liquid.NET.Tests.Filters.Array

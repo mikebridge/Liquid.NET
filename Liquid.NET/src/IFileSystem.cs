@@ -1,6 +1,5 @@
 ﻿using System;
 
-
 namespace Liquid.NET
 {
     public interface IFileSystem

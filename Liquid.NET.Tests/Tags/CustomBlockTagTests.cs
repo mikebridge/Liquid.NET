@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
 using Liquid.NET.Constants;
 using Liquid.NET.Expressions;
 using Liquid.NET.Symbols;
@@ -87,7 +86,7 @@ namespace Liquid.NET.Tests.Tags
             // Act
             try
             {
-                var result = RenderingHelper.RenderTemplate("Result : {% test %}{% endtest %}");
+                RenderingHelper.RenderTemplate("Result : {% test %}{% endtest %}");
 
                 Assert.Fail("THis should have thrown an error");
             }

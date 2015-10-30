@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-
 using Liquid.NET.Constants;
-
 using NUnit.Framework;
 
 namespace Liquid.NET.Tests.Constants

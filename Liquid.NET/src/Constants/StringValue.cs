@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections;
 
-using Liquid.NET.Expressions;
-
 namespace Liquid.NET.Constants
 {
     public class StringValue : ExpressionConstant, IEnumerable

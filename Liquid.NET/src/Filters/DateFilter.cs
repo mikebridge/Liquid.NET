@@ -1,6 +1,6 @@
 ﻿using System;
-using Liquid.NET.Utils;
 using Liquid.NET.Constants;
+using Liquid.NET.Utils;
 
 namespace Liquid.NET.Filters
 {

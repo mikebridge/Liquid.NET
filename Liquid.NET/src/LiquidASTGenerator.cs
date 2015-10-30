@@ -6,7 +6,6 @@ using System.Text.RegularExpressions;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Atn;
 using Antlr4.Runtime.Tree;
-
 using Liquid.NET.Constants;
 using Liquid.NET.Expressions;
 using Liquid.NET.Grammar;

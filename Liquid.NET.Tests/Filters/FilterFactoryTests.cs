@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using Liquid.NET.Constants;
 using Liquid.NET.Filters;
-using Liquid.NET.Filters.Math;
 using Liquid.NET.Filters.Strings;
-using Liquid.NET.Symbols;
 using Liquid.NET.Utils;
 using NUnit.Framework;
 

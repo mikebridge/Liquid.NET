@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Liquid.NET.Constants;
-using Liquid.NET.Filters.Array;
 using Liquid.NET.Filters.Strings;
 using NUnit.Framework;
 

@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Globalization;
 using Liquid.NET.Constants;
 using Liquid.NET.Symbols;
 using Liquid.NET.Tests.Helpers;
-using Liquid.NET.Utils;
 using NUnit.Framework;
 
 namespace Liquid.NET.Tests.Symbols

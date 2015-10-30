@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Liquid.NET.Expressions;
 using Liquid.NET.Utils;
 
-
 namespace Liquid.NET.Constants
 {
     public interface IExpressionConstant : IExpressionDescription

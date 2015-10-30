@@ -1,5 +1,4 @@
-﻿using System;
-using Liquid.NET.Filters.Strings;
+﻿using Liquid.NET.Filters.Strings;
 using NUnit.Framework;
 
 namespace Liquid.NET.Tests.Filters.Strings

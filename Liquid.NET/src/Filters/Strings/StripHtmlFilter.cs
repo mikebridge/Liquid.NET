@@ -2,7 +2,6 @@
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
-
 using Liquid.NET.Constants;
 using Liquid.NET.Utils;
 

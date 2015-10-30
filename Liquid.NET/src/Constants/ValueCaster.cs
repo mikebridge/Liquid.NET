@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Numerics;
-using Liquid.NET.Filters;
 using Liquid.NET.Utils;
 
 namespace Liquid.NET.Constants

@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Liquid.NET.Constants;
-using Liquid.NET.Symbols;
 using Liquid.NET.Utils;
 
 namespace Liquid.NET.Expressions

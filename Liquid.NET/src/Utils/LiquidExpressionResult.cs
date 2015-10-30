@@ -1,5 +1,4 @@
 ﻿using System;
-
 using Liquid.NET.Constants;
 
 namespace Liquid.NET.Utils

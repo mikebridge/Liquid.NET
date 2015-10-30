@@ -40,7 +40,8 @@ namespace Liquid.NET.Tests.Utils
             // Act
 
             // Assert
-            var reesult = either.Left;
+            // ReSharper disable once UnusedVariable
+            var result = either.Left;
         }
 
         [Test]
@@ -52,7 +53,8 @@ namespace Liquid.NET.Tests.Utils
             // Act
 
             // Assert
-            var reesult = either.Right;
+            // ReSharper disable once UnusedVariable
+            var result = either.Right;
         }
 
     }

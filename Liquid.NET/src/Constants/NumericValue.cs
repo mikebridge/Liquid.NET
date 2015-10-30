@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Numerics;
-using Liquid.NET.Expressions;
 using Liquid.NET.Utils;
 
 namespace Liquid.NET.Constants

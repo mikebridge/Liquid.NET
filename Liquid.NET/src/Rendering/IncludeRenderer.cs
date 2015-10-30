@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-
 using Liquid.NET.Constants;
 using Liquid.NET.Symbols;
 using Liquid.NET.Tags;

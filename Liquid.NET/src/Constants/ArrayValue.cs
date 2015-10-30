@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-
 using Liquid.NET.Utils;
 
 namespace Liquid.NET.Constants

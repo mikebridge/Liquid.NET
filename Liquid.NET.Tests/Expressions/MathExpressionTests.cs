@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NUnit.Framework;
-
-namespace Liquid.NET.Tests.Expressions
-{
+﻿//namespace Liquid.NET.Tests.Expressions
+//{
 //    [TestFixture]
 //    [Ignore("Removed simplified math to allow minus in variables")]
 //    class MathExpressionTests
@@ -27,4 +20,4 @@ namespace Liquid.NET.Tests.Expressions
 //        }
 //
 //    }
-}
+//}

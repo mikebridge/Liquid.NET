@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-
 using Liquid.NET.Constants;
 using Liquid.NET.Filters;
 using Liquid.NET.Rendering;

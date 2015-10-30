@@ -1,5 +1,4 @@
 ﻿using System;
-
 using Liquid.NET.Utils;
 using NUnit.Framework;
 
@@ -18,6 +17,7 @@ namespace Liquid.NET.Tests.Utils
         [ExpectedException(typeof(InvalidOperationException))]
         public void It_Should_Disallow_Dereferenced_None_Value()
         {
+            // ReSharper disable once UnusedVariable
             var result = Option<String>.None().Value;
         }
 
@@ -53,6 +53,7 @@ namespace Liquid.NET.Tests.Utils
         public void Same_Ref_Should_Be_Considered_Equal()
         {
             var val1 = Option<String>.Create("Test");
+            // ReSharper disable once EqualExpressionComparison
             Assert.That(val1.Equals(val1), Is.True);
         }
 
@@ -85,6 +86,7 @@ namespace Liquid.NET.Tests.Utils
         public void Options_Cant_Be_Compared_To_Null()
         {
             var val1 = Option<String>.Create("Test");
+            // ReSharper disable once UnusedVariable
             var result = val1 == null;
         }
 
@@ -93,6 +95,7 @@ namespace Liquid.NET.Tests.Utils
         public void Null_Cant_Be_Compared_To_Option()
         {
             var val1 = Option<String>.Create("Test");
+            // ReSharper disable once UnusedVariable
             var result = null == val1;
         }
 
@@ -153,6 +156,7 @@ namespace Liquid.NET.Tests.Utils
         [ExpectedException(typeof(ArgumentNullException))]
         public void It_Should_Not_Bind_To_Null_func()
         {
+            // ReSharper disable once UnusedVariable
             var result = Option<String>.None().Bind(null);           
         }
     }

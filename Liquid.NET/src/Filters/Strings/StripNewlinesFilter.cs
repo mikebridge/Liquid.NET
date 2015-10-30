@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using Liquid.NET.Constants;
 using Liquid.NET.Utils;
 

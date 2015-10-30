@@ -10,10 +10,6 @@ namespace Liquid.NET.Expressions
 
     public class GreaterThanExpression : ExpressionDescription
     {
-        public override void Accept(IExpressionDescriptionVisitor expressionDescriptionVisitor)
-        {
-            expressionDescriptionVisitor.Visit(this);
-        }
 
         public override LiquidExpressionResult Eval(ITemplateContext templateContext,
             IEnumerable<Option<IExpressionConstant>> expressions)
@@ -29,10 +25,6 @@ namespace Liquid.NET.Expressions
 
     public class LessThanOrEqualsExpression : ExpressionDescription
     {
-        public override void Accept(IExpressionDescriptionVisitor expressionDescriptionVisitor)
-        {
-            expressionDescriptionVisitor.Visit(this);
-        }
 
         public override LiquidExpressionResult Eval(ITemplateContext templateContext,
             IEnumerable<Option<IExpressionConstant>> expressions)
@@ -48,11 +40,6 @@ namespace Liquid.NET.Expressions
 
     public class GreaterThanOrEqualsExpression : ExpressionDescription
     {
-        public override void Accept(IExpressionDescriptionVisitor expressionDescriptionVisitor)
-        {
-            expressionDescriptionVisitor.Visit(this);
-        }
-
         public override LiquidExpressionResult Eval(ITemplateContext templateContext,
             IEnumerable<Option<IExpressionConstant>> expressions)
         {
@@ -67,10 +54,6 @@ namespace Liquid.NET.Expressions
 
     public class LessThanExpression : ExpressionDescription
     {
-        public override void Accept(IExpressionDescriptionVisitor expressionDescriptionVisitor)
-        {
-            expressionDescriptionVisitor.Visit(this);
-        }
 
         public override LiquidExpressionResult Eval(ITemplateContext templateContext,
             IEnumerable<Option<IExpressionConstant>> expressions)

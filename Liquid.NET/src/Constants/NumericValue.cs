@@ -60,10 +60,6 @@ namespace Liquid.NET.Constants
 
         public override string LiquidTypeName { get { return "numeric"; } }
 
-        public override void Accept(IExpressionDescriptionVisitor expressionDescriptionVisitor)
-        {
-            expressionDescriptionVisitor.Visit(this);
-        }
         public override bool Equals(object obj)
         {
             var nv = obj as NumericValue;

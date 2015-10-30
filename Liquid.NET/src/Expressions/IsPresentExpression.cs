@@ -12,10 +12,10 @@ namespace Liquid.NET.Expressions
 {
     public class IsPresentExpression : ExpressionDescription
     {
-        public override void Accept(IExpressionDescriptionVisitor expressionDescriptionVisitor)
-        {
-            expressionDescriptionVisitor.Visit(this);
-        }
+//        public override void Accept(IExpressionDescriptionVisitor expressionDescriptionVisitor)
+//        {
+//            expressionDescriptionVisitor.Visit(this);
+//        }
 
         public override LiquidExpressionResult Eval(ITemplateContext templateContext, IEnumerable<Option<IExpressionConstant>> expressions)
         {

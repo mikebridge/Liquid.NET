@@ -10,10 +10,6 @@ namespace Liquid.NET.Expressions
 {
     public class AndExpression : ExpressionDescription
     {
-        public override void Accept(IExpressionDescriptionVisitor expressionDescriptionVisitor)
-        {
-            expressionDescriptionVisitor.Visit(this);
-        }
 
         public override LiquidExpressionResult Eval(ITemplateContext templateContext, IEnumerable<Option<IExpressionConstant>> expressions)
         {

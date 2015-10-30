@@ -10,10 +10,10 @@ namespace Liquid.NET.Expressions
     public class NotEqualsExpression :ExpressionDescription
     {
         
-        public override void Accept(IExpressionDescriptionVisitor expressionDescriptionVisitor)
-        {
-            expressionDescriptionVisitor.Visit(this);
-        }
+//        public override void Accept(IExpressionDescriptionVisitor expressionDescriptionVisitor)
+//        {
+//            expressionDescriptionVisitor.Visit(this);
+//        }
 
         //public IExpressionConstant Eval(SymbolTableStack symbolTableStack, IEnumerable<IExpressionConstant> expressions)
         public override LiquidExpressionResult Eval(ITemplateContext templateContext, IEnumerable<Option<IExpressionConstant>> expressions)

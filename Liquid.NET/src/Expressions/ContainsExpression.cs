@@ -9,10 +9,6 @@ namespace Liquid.NET.Expressions
 {
     public class ContainsExpression :ExpressionDescription
     {
-        public override void Accept(IExpressionDescriptionVisitor expressionDescriptionVisitor)
-        {
-            expressionDescriptionVisitor.Visit(this);
-        }
 
         public override LiquidExpressionResult Eval(ITemplateContext templateContext, IEnumerable<Option<IExpressionConstant>> expressions)
         {
@@ -49,7 +45,6 @@ namespace Liquid.NET.Expressions
         private LiquidExpressionResult Contains(IExpressionConstant expr, IExpressionConstant expressionConstant)
         // ReSharper restore UnusedParameter.Local
         {
-            //Console.WriteLine("ERROR");
             return LiquidExpressionResult.Error("Unable to use 'contains' on this type."); 
         }
 

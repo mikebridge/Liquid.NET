@@ -12,11 +12,6 @@ namespace Liquid.NET.Constants
             _val = val;       
         }
 
-        public override void Accept(IExpressionDescriptionVisitor visitor)
-        {
-            visitor.Visit(this);
-        }
-
         public override Object Value { get { return _val; } }
 
         public override bool IsTrue { get { return _val;  } }

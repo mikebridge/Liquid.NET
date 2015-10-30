@@ -19,10 +19,10 @@ namespace Liquid.NET.Expressions
     /// </summary>
     public class IsBlankExpression : ExpressionDescription
     {
-        public override void Accept(IExpressionDescriptionVisitor expressionDescriptionVisitor)
-        {
-            expressionDescriptionVisitor.Visit(this);
-        }
+//        public override void Accept(IExpressionDescriptionVisitor expressionDescriptionVisitor)
+//        {
+//            expressionDescriptionVisitor.Visit(this);
+//        }
 
         public override LiquidExpressionResult Eval(ITemplateContext templateContext, IEnumerable<Option<IExpressionConstant>> expressions)
         {

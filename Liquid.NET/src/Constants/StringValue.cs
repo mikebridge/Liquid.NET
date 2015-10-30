@@ -29,11 +29,6 @@ namespace Liquid.NET.Constants
 
         public override string LiquidTypeName { get { return "string"; } }
 
-        public override void Accept(IExpressionDescriptionVisitor visitor)
-        {
-            visitor.Visit(this);
-        }
-
         /// <summary>
         /// Return a new StringValue with str appended.
         /// </summary>

@@ -20,10 +20,10 @@ namespace Liquid.NET.Constants
         {
             //Console.WriteLine("LOOKUP=> VALUE: " + value);
             //Console.WriteLine("      => INDEX: " + indexProperty);
-            if (value == null)
-            {
-                return LiquidExpressionResult.Error("ERROR : cannot apply an index to a nil value.");
-            }
+//            if (value == null)
+//            {
+//                return LiquidExpressionResult.Error("ERROR : cannot apply an index to a nil value.");
+//            }
             //return DoLookup(ctx, (dynamic) value, indexProperty);
             var arr = value as ArrayValue;
             if (arr != null)

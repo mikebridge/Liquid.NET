@@ -82,6 +82,23 @@ namespace Liquid.NET.Tests.Tags
         }
 
         [Test]
+        public void It_Should_Show_Error_On_Missing_Tags()
+        {
+            // Act
+            try
+            {
+                var result = RenderingHelper.RenderTemplate("Result : {% test %}{% endtest %}");
+
+                Assert.Fail("THis should have thrown an error");
+            }
+            catch (LiquidRendererException ex)
+            {
+                // Assert
+                Assert.That(String.Join(",", ex.LiquidErrors.Select(x => x.Message)), Is.EqualTo("Liquid syntax error: Unknown tag 'test'"));
+            }
+        }
+
+        [Test]
         public void It_Should_Parse_A_Custom_BlockTag_Along_With_A_Custom_Tag() 
         {
             // Act
@@ -109,6 +126,18 @@ namespace Liquid.NET.Tests.Tags
 
             // Assert
             Assert.That(result, Is.EqualTo("Result : START CUSTOM FOR LOOP1011END CUSTOM FOR LOOP"));
+
+        }
+
+        [Test]
+        public void It_Should_Parse_A_Nested_Error()
+        {
+            // Act
+            var templateContext = new TemplateContext().WithAllFilters().WithCustomTagBlockRenderer<WordReverserBlockTag>("reverse");
+            var result = RenderingHelper.RenderTemplate("Result : {% reverse %}{{ 1 | divided_by: 0 }}{% endreverse %}", templateContext);
+
+            // Assert
+            Assert.That(result, Is.EqualTo("Result : diuqiL :rorre dedivid yb 0"));
 
         }
 

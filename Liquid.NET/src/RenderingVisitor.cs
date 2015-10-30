@@ -399,16 +399,12 @@ namespace Liquid.NET
 //        {
 //            variableReference.Eval(_templateContext, new List<Option<IExpressionConstant>>());
 //        }
+//
+//        public void Visit(StringValue stringValue)
+//        {          
+//           AppendTextToCurrentAccumulator(Render(stringValue)); 
+//        }
 
-        public void Visit(StringValue stringValue)
-        {          
-           AppendTextToCurrentAccumulator(Render(stringValue)); 
-        }
-
-        /// <summary>
-        /// Process the object / filter chain
-        /// </summary>
-        /// <param name="liquidExpression"></param>
 //        public void Visit(LiquidExpression liquidExpression)
 //        {
 //            //Console.WriteLine("Visiting Object Expression ");

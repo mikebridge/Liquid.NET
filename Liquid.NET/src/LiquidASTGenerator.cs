@@ -113,14 +113,14 @@ namespace Liquid.NET
             return liquidErrorListener;
         }
 
-        /// <summary>
-        /// For debugging, verify that all the stacks have been cleaned up.
-        /// </summary>
-        /// <returns></returns>
-        public IList<String> GetNonEmptyStackErrors()
-        {
-            return CurrentBuilderContext.VerifyStacksEmpty();
-        }
+//        /// <summary>
+//        /// For debugging, verify that all the stacks have been cleaned up.
+//        /// </summary>
+//        /// <returns></returns>
+//        public IList<String> GetNonEmptyStackErrors()
+//        {
+//            return CurrentBuilderContext.VerifyStacksEmpty();
+//        }
 
         public override void EnterEveryRule(ParserRuleContext context)
         {
@@ -256,11 +256,6 @@ namespace Liquid.NET
         {
             base.EnterAssign_tag(context);
             var label = context.VARIABLENAME();
-            if (label == null)
-            {
-                // ignore the assignment
-                return;
-            }
             var assignTag = new AssignTag
             {
                 VarName = label.GetText()
@@ -456,11 +451,11 @@ namespace Liquid.NET
                 //forBlock.IterableCreator = CreateGeneratorContext(context.generator());
                 forBlock.IterableCreator = CurrentBuilderContext.GeneratorCreator;
             }
-            else
-            {   
-                //Log("TODO: Process the missing iterable");
-                // TODO: Maybe put an UNDEFINED variable in the AST?  Or an Erroneous If?
-            }
+//            else
+//            {   
+//                //Log("TODO: Process the missing iterable");
+//                // TODO: Maybe put an UNDEFINED variable in the AST?  Or an Erroneous If?
+//            }
         }
 
         public override void ExitFor_iterable(LiquidParser.For_iterableContext context)
@@ -595,8 +590,8 @@ namespace Liquid.NET
                 }
                 if (obj.NULL() != null)
                 {
-                    throw new Exception("Null not implemented yet");
-                    //cycleList.Add(CreateObjectSimpleExpressionNode());
+                    //throw new Exception("Null not implemented yet");
+                    cycleList.Add(CreateObjectSimpleExpressionNode(new StringValue("")));
                 }   
             }
             while (varsToCapture.Count > 0) // eval the queued variable captures.
@@ -757,11 +752,11 @@ namespace Liquid.NET
                 CurrentBuilderContext.GeneratorCreator = new GeneratorCreator();
                 tableRowBlock.IterableCreator = CurrentBuilderContext.GeneratorCreator;
             }
-            else
-            {
-                //Log("TODO: Process the missing iterable");
-                // TODO: Maybe put an UNDEFINED variable in the AST?  Or an Erroneous If?
-            }
+//            else
+//            {
+//                //Log("TODO: Process the missing iterable");
+//                // TODO: Maybe put an UNDEFINED variable in the AST?  Or an Erroneous If?
+//            }
 
         }
 
@@ -1984,47 +1979,47 @@ namespace Liquid.NET
             //public readonly Stack<VariableReference> VariableReferenceStack = new Stack<VariableReference>();  
             public readonly Stack<VariableReferenceTreeBuilder> VarReferenceTreeBuilder = new Stack<VariableReferenceTreeBuilder>();
 
-            public IList<String> VerifyStacksEmpty()
-            {
-                IList<String> errors = new List<String>();
-//                if (CustomTagStack.Count > 0)
+//            public IList<String> VerifyStacksEmpty()
+//            {
+//                IList<String> errors = new List<String>();
+////                if (CustomTagStack.Count > 0)
+////                {
+////                    errors.Add("CustomTagStack has items");
+////                }
+////                if (CustomBlockTagStack.Count > 0)
+////                {
+////                    errors.Add("CustomBlockTagStack has items");
+////                }
+//                if (IfThenElseBlockStack.Count > 0)
 //                {
-//                    errors.Add("CustomTagStack has items");
+//                    errors.Add("IfThenElseBlockStack has items");
 //                }
-//                if (CustomBlockTagStack.Count > 0)
+//                if (CaseWhenElseBlockStack.Count > 0)
 //                {
-//                    errors.Add("CustomBlockTagStack has items");
+//                    errors.Add("CaseWhenElseBlockStack has items");
 //                }
-                if (IfThenElseBlockStack.Count > 0)
-                {
-                    errors.Add("IfThenElseBlockStack has items");
-                }
-                if (CaseWhenElseBlockStack.Count > 0)
-                {
-                    errors.Add("CaseWhenElseBlockStack has items");
-                }
-                if (MacroBlockTagStack.Count > 0)
-                {
-                    errors.Add("MacroBlockTagStack has items");
-                }
-                if (ForBlockStack.Count > 0)
-                {
-                    errors.Add("ForBlockStack has items");
-                }
-                if (IncludeTagStack.Count > 0)
-                {
-                    errors.Add("IncludeTagStack has items");
-                }
-                if (TableRowBlockTagStack.Count > 0)
-                {
-                    errors.Add("TableRowBlockTagStack has items");
-                }
-                if (VarReferenceTreeBuilder.Count > 0)
-                {
-                    errors.Add("VarReferenceTreeBuilder has items");
-                }
-                return errors;
-            }
+//                if (MacroBlockTagStack.Count > 0)
+//                {
+//                    errors.Add("MacroBlockTagStack has items");
+//                }
+//                if (ForBlockStack.Count > 0)
+//                {
+//                    errors.Add("ForBlockStack has items");
+//                }
+//                if (IncludeTagStack.Count > 0)
+//                {
+//                    errors.Add("IncludeTagStack has items");
+//                }
+//                if (TableRowBlockTagStack.Count > 0)
+//                {
+//                    errors.Add("TableRowBlockTagStack has items");
+//                }
+//                if (VarReferenceTreeBuilder.Count > 0)
+//                {
+//                    errors.Add("VarReferenceTreeBuilder has items");
+//                }
+//                return errors;
+//            }
 
 //            private void Log(String str)
 //            {

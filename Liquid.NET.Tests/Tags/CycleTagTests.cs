@@ -45,6 +45,40 @@ namespace Liquid.NET.Tests.Tags
 
         }
 
+        [Test]
+        public void It_Should_Cycle_Through_Booleans()
+        {
+            // Arrange
+            TemplateContext ctx = new TemplateContext();
+            ctx.DefineLocalVariable("array", CreateArrayValues());
+
+            var template = LiquidTemplate.Create("Result : {% for item in array %}ITEM:{% cycle true, false %} {% endfor %}");
+
+            // Act
+            String result = template.Render(ctx);
+
+            // Assert
+            Assert.That(result.TrimEnd(), Is.EqualTo("Result : ITEM:true ITEM:false ITEM:true ITEM:false"));
+
+        }
+
+        [Test]
+        public void It_Should_Cycle_Through_Nil()
+        {
+            // Arrange
+            TemplateContext ctx = new TemplateContext();
+            ctx.DefineLocalVariable("array", CreateArrayValues());
+
+            var template = LiquidTemplate.Create("Result : {% for item in array %}ITEM:{% cycle nil %} {% endfor %}");
+
+            // Act
+            String result = template.Render(ctx);
+
+            // Assert
+            Assert.That(result.TrimEnd(), Is.EqualTo("Result : ITEM: ITEM: ITEM: ITEM:"));
+
+        }
+
 
         /// <summary>
         /// Test of group behaviour described at 

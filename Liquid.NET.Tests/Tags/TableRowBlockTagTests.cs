@@ -35,6 +35,27 @@ namespace Liquid.NET.Tests.Tags
         }
 
         [Test]
+        public void It_Should_Render_A_Table_Row_From_A_String()
+        {
+            // Arrange
+            TemplateContext ctx = new TemplateContext();
+            ctx.DefineLocalVariable("numbers", DictionaryFactory.CreateArrayFromJson("[1, 2, 3, 4, 5, 6]"));
+            var template = LiquidTemplate.Create(@"{% tablerow n in ""Test"" cols:2%}ITER{{n}}{% endtablerow %}");
+
+            // Act
+            String result = template.Render(ctx);
+            Logger.Log(result);
+            String expected =
+                "<tr class=\"row1\">\r\n<td class=\"col1\">ITERTest</td></tr>";
+            // Act
+
+            // Assert
+            Assert.That(result, Is.StringContaining(expected));
+
+        }
+
+
+        [Test]
         public void It_Should_Render_A_Table_Row_With_A_Generator()
         {
             // Arrange

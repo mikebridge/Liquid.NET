@@ -2,7 +2,7 @@
 
 namespace Liquid.NET.Utils
 {
-    public abstract class Option<T> : IEquatable<T> //: IEquatable<Option<T>>
+    public abstract class Option<T> : IEquatable<T> 
     {
         public abstract T Value { get; protected set; }
 
@@ -48,7 +48,7 @@ namespace Liquid.NET.Utils
             else
             {
                 var option = obj as Option<T>;
-                if (option != null)
+                if (!ReferenceEquals(option, null))
                 {
                     var rhs = option;
                     return HasValue && rhs.HasValue

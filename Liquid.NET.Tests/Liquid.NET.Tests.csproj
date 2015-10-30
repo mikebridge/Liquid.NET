@@ -71,6 +71,7 @@
     <Compile Include="Expressions\AndExpressionTests.cs" />
     <Compile Include="Expressions\ComparisonExpressionTests.cs" />
     <Compile Include="Expressions\ContainsExpressionTests.cs" />
+    <Compile Include="Expressions\FalseExpressionTests.cs" />
     <Compile Include="Expressions\IsPresentExpressionTests.cs" />
     <Compile Include="Expressions\IsBlankExpressionTests.cs" />
     <Compile Include="Expressions\IsEmptyExpressionTests.cs" />
@@ -177,6 +178,7 @@
     <Compile Include="Tags\TableRowBlockTagTests.cs" />
     <Compile Include="Tags\UnlessBlockTagTests.cs" />
     <Compile Include="TemplateContextTests.cs" />
+    <Compile Include="Utils\OptionTests.cs" />
     <Compile Include="Utils\StrFTimeTests.cs" />
     <Compile Include="VariableReferenceTreeBuilderTests.cs" />
   </ItemGroup>

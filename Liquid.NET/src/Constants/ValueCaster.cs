@@ -89,11 +89,11 @@ namespace Liquid.NET.Constants
         private static LiquidExpressionResult Convert<TDest>(NumericValue num)
             where TDest : IExpressionConstant
         {
-            var destType = typeof (TDest);
-            if (destType == typeof (NumericValue))
-            {
-                return LiquidExpressionResult.Success(num);
-            }
+            //var destType = typeof (TDest);
+//            if (destType == typeof (NumericValue))
+//            {
+//                return LiquidExpressionResult.Success(num);
+//            }
 
             return LiquidExpressionResult.Success(NumericValue.Create(0)); // Liquid seems to convert unknowns to numeric.
            
@@ -103,10 +103,10 @@ namespace Liquid.NET.Constants
             where TDest : IExpressionConstant
         {
             var destType = typeof (TDest);
-            if (destType == typeof (BooleanValue))
-            {
-                return LiquidExpressionResult.Success(boolean);
-            }
+//            if (destType == typeof (BooleanValue))
+//            {
+//                return LiquidExpressionResult.Success(boolean);
+//            }
 
             return LiquidExpressionResult.Error("Can't convert from boolean to " + destType);
        
@@ -159,10 +159,10 @@ namespace Liquid.NET.Constants
             where TDest : IExpressionConstant
         {
             var destType = typeof (TDest);
-            if (destType == typeof (StringValue))
-            {
-                return LiquidExpressionResult.Success(str);
-            }
+//            if (destType == typeof (StringValue))
+//            {
+//                return LiquidExpressionResult.Success(str);
+//            }
 
             if (destType == typeof (NumericValue))
             {
@@ -297,12 +297,6 @@ namespace Liquid.NET.Constants
 
             return val.HasValue ? RenderAsString(val.Value) : "";
 
-//            // TODO: Does this render an error if it can't cast or an empty string?
-//            if (stringResult.IsError)
-//            {
-//                return "";
-//            }
-//            return stringResult.SuccessResult.HasValue ? ((StringValue)stringResult.SuccessResult.Value).StringVal : "";
         }
 
         public static string RenderAsString(IExpressionConstant val)
@@ -313,13 +307,7 @@ namespace Liquid.NET.Constants
                 return "";
             }
             return val.ToString();
-//            var stringResult = Cast<IExpressionConstant, StringValue>(val);
-//
-//            if (stringResult.IsError)
-//            {
-//                return "";
-//            }
-//            return stringResult.SuccessResult.HasValue ? ((StringValue)stringResult.SuccessResult.Value).StringVal : "";
+
         }
 
     }

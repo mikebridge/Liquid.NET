@@ -34,7 +34,7 @@ namespace Liquid.NET.Tests.Utils
         }
 
         [Test]
-        public void Underlying_Values_Should_Be_Considered_Equal()
+        public void Underlying_Values_Should_Be_Considered_Equal_With_Operator()
         {
             var val1 = Option<String>.Create("Test");
             var val2 = Option<String>.Create("Test");
@@ -42,11 +42,42 @@ namespace Liquid.NET.Tests.Utils
         }
 
         [Test]
+        public void Underlying_Values_Should_Be_Considered_Equal()
+        {
+            var val1 = Option<String>.Create("Test");
+            var val2 = Option<String>.Create("Test");
+            Assert.That(val1.Equals(val2), Is.True);
+        }
+
+        [Test]
+        public void Same_Ref_Should_Be_Considered_Equal()
+        {
+            var val1 = Option<String>.Create("Test");
+            Assert.That(val1.Equals(val1), Is.True);
+        }
+
+
+        [Test]
         public void Underlying_Differing_Values_Should_Not_Be_Considered_Equal()
         {
             var val1 = Option<String>.Create("Test");
             var val2 = Option<String>.Create("Test2");
             Assert.That(val1 == val2, Is.False);
+        }
+
+        [Test]
+        public void Underlying_Differing_Values_Should_Not_Be_Considered_Equal_To_Null()
+        {
+            var val1 = Option<String>.Create("Test");
+            Assert.That(val1.Equals(null), Is.False);
+        }
+
+        [Test]
+        public void Underlying_Differing_Values_Should_Be_Unequal()
+        {
+            var val1 = Option<String>.Create("Test");
+            var val2 = Option<String>.Create("Test2");
+            Assert.That(val1 != val2, Is.True);
         }
 
         [Test]
@@ -64,7 +95,6 @@ namespace Liquid.NET.Tests.Utils
             var val1 = Option<String>.Create("Test");
             var result = null == val1;
         }
-
 
         [Test]
         public void It_Should_Use_WhenSome_When_Has_Value()

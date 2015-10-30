@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Liquid.NET.Expressions;
 using Liquid.NET.Utils;
 
@@ -91,9 +90,5 @@ namespace Liquid.NET.Constants
             return LiquidExpressionResult.Success(this);
         }
 
-//        public override string ToString()
-//        {
-//            return ValueCaster.RenderAsString((IExpressionConstant)this);
-//        }
     }
 }

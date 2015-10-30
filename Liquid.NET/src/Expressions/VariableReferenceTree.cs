@@ -28,14 +28,6 @@ namespace Liquid.NET.Expressions
             return EvalExpression(templateContext, this, childresults);
         }
 
-//        private LiquidExpressionResult EvalExpression(
-//            ITemplateContext templateContext, 
-//            IExpressionDescription o, 
-//            IEnumerable<Option<IExpressionConstant>> childresults)
-//        {
-//            return o.Eval(templateContext, childresults);
-//        }
-
         private LiquidExpressionResult EvalExpression(
             ITemplateContext templateContext, 
             VariableReferenceTree o,

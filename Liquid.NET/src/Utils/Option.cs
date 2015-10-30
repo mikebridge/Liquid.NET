@@ -48,20 +48,16 @@ namespace Liquid.NET.Utils
             else
             {
                 var option = obj as Option<T>;
-                if (!ReferenceEquals(option, null))
+                if (ReferenceEquals(option, null))
+                {
+                    return true;
+                }
+                else
                 {
                     var rhs = option;
                     return HasValue && rhs.HasValue
                         ? Value.Equals(rhs.Value)
                         : !HasValue && !rhs.HasValue;
-                }
-                else if (obj is T)
-                {
-                    return HasValue && Value.Equals((T)obj);
-                }
-                else
-                {
-                    return false;
                 }
             }
         }

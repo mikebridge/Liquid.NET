@@ -84,7 +84,6 @@
     <Compile Include="src\Constants\IIndexable.cs" />
     <Compile Include="src\Constants\NumericValue.cs" />
     <Compile Include="src\Constants\FilterArgumentAttribute.cs" />
-    <Compile Include="src\Constants\Reflector.cs" />
     <Compile Include="src\Constants\StringValue.cs" />
     <Compile Include="src\Constants\ValueCaster.cs" />
     <Compile Include="src\Expressions\ContainsExpression.cs" />

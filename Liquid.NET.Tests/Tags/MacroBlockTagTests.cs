@@ -96,6 +96,23 @@ namespace Liquid.NET.Tests.Tags
 
         }
 
+        [Test]
+        public void It_Should_Parse_A_Nested_Error()
+        {
+            // Act
+            var templateContext = new TemplateContext().WithAllFilters();
+            const string templateString = @"Result : {% macro mymacro arg1 %}"
+                              + @"{{ 1 | divided_by: 0}}"
+                              + @"{% endmacro %}"
+                              + @"{% mymacro ""hello"" ""world""%}";
+            var result = RenderingHelper.RenderTemplate(templateString, templateContext);
+
+            // Assert
+            Assert.That(result, Is.EqualTo("Result : Liquid error: divided by 0"));
+
+        }
+
+
         private ArrayValue CreateArrayValues()
         {
             var list = new List<IExpressionConstant>

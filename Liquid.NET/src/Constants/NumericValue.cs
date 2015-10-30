@@ -46,15 +46,9 @@ namespace Liquid.NET.Constants
 
         public static LiquidExpressionResult Parse(String str)
         {
-            try
-            {
-                return ValueCaster.Cast<IExpressionConstant, NumericValue>(new StringValue(str));
-            }
-            catch
-            {
-                // This shouldn't actually fail...
-                return LiquidExpressionResult.Error("Unable to convert '" + str + "' to a number.");
-            }
+
+            return ValueCaster.Cast<IExpressionConstant, NumericValue>(new StringValue(str));
+
         }
 
         public override string LiquidTypeName { get { return "numeric"; } }

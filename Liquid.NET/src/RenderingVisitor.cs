@@ -77,7 +77,6 @@ namespace Liquid.NET
             if (macroDescription != null)
             {
                 //Console.WriteLine("...");
-                //var evalResult = LiquidExpressionEvaluator.Eval(customTag.LiquidExpressionTrees, _templateContext.SymbolTableStack);
                 var evalResults =
                     customTag.LiquidExpressionTrees.Select(x => LiquidExpressionEvaluator.Eval(x, _templateContext)).ToList();
                 if (evalResults.Any(x => x.IsError))

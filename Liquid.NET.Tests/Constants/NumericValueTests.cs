@@ -172,6 +172,13 @@ namespace Liquid.NET.Tests.Constants
             Assert.That(NumericValue.Create(new BigInteger(123)), Is.EqualTo(NumericValue.Create(123)));
         }
 
-
+        
+        [Test]
+        public void An_Int_Should_Create_A_Hash_Code()
+        {
+            var num = NumericValue.Create(123);
+            Assert.That(num.GetHashCode(), Is.Not.EqualTo(123.GetHashCode()));
+        }
+      
     }
 }

@@ -64,12 +64,6 @@ namespace Liquid.NET
             AppendTextToCurrentAccumulator(rawBlockTag.Value);
         }
 
-
-        public void Visit(CommentBlockTag commentBlockTag)
-        {
-            // do nothing
-        }
-
         public void Visit(CustomTag customTag)
         {
             //Console.WriteLine("Looking up Custom Tag " + customTag.TagName);

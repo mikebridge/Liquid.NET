@@ -14,13 +14,6 @@ namespace Liquid.NET.Constants
 
         String LiquidTypeName { get; }
 
-        LiquidExpressionResult Bind(Func<IExpressionConstant, LiquidExpressionResult> f);
-
-        TOut Bind<TOut>(Func<LiquidExpressionResult, TOut> f)
-            where TOut : LiquidExpressionResult;
-
-        T ValueAs<T>();
-
         Option<IExpressionConstant> ToOption();
 
         IDictionary<String, Object> MetaData { get; }

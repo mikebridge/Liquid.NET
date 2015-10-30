@@ -32,5 +32,23 @@ namespace Liquid.NET.Tests.Expressions
             Assert.That(result.Value, Is.False);
 
         }
+
+        [Test]
+        public void It_Should_Not_Accept_Two_Arguments()
+        {
+            // Arrange
+
+            var expr = new NotExpression();
+
+            // Act
+            var result = expr.Eval(new TemplateContext(), new List<Option<IExpressionConstant>>
+            {
+                new BooleanValue(true),
+                new BooleanValue(false),
+            });
+
+            Assert.That(result.IsError);
+        }
+
     }
 }

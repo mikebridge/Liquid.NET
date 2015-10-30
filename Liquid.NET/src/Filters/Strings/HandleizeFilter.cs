@@ -18,6 +18,7 @@ namespace Liquid.NET.Filters.Strings
         public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, IExpressionConstant liquidExpression)
         {
             var strArray = ValueCaster.RenderAsString(liquidExpression).Split();
+            // TODO: add ability to toggle lower-case on/off
             return LiquidExpressionResult.Success(StringUtils.Eval(liquidExpression, x => Slug.Create(true, strArray)));
         }
 

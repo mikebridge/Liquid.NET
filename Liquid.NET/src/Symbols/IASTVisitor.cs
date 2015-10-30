@@ -7,7 +7,7 @@ namespace Liquid.NET.Symbols
 
     public interface IASTVisitor
     {
-        void Visit(LiquidExpression liquidExpression);
+        //void Visit(LiquidExpression liquidExpression);
 
         void Visit(LiquidExpressionTree liquidExpressionTree);
 
@@ -21,7 +21,7 @@ namespace Liquid.NET.Symbols
 
         void Visit(RootDocumentNode rootDocumentNode);
 
-        void Visit(VariableReference variableReference);
+        //void Visit(VariableReference variableReference);
 
         void Visit(StringValue stringValue);
 

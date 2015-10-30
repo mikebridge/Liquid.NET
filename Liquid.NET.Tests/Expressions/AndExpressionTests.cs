@@ -36,5 +36,23 @@ namespace Liquid.NET.Tests.Expressions
             // Assert
             Assert.That(result, Is.EqualTo(expected));
         }
+
+        [Test]
+        [ExpectedException(typeof(Exception))]
+        public void It_Should_Not_Accept_Three_Arguments()
+        {
+            // Arrange
+
+            var expr = new AndExpression();
+
+            // Act
+            var result = expr.Eval(new TemplateContext(), new List<Option<IExpressionConstant>>
+            {
+                new BooleanValue(true),
+                new BooleanValue(false),
+                new BooleanValue(false)
+            });
+        }
+
     }
 }

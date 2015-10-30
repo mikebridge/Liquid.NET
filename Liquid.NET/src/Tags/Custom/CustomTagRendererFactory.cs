@@ -15,7 +15,6 @@ namespace Liquid.NET.Tags.Custom
                 return null;
             }
             //Console.WriteLine("Instantiating " + tagType);
-            //(ICustomTagRenderer)Activator.CreateInstance(tagType, args);
             return (ICustomTagRenderer) Activator.CreateInstance(tagType);
         }
     }

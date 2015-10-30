@@ -18,11 +18,6 @@ namespace Liquid.NET.Expressions
             Name = name;
         }
 
-//        public override void Accept(IExpressionDescriptionVisitor visitor)
-//        {
-//            visitor.Visit(this);
-//        }
-
         public override LiquidExpressionResult Eval(ITemplateContext templateContext, IEnumerable<Option<IExpressionConstant>> childresults)
         {
             return templateContext.SymbolTableStack.Reference(Name);

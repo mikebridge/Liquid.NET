@@ -36,16 +36,16 @@ namespace Liquid.NET
             }
         }
 
-        public void ClearEvents()
-        {
-            if (ParsingErrorEventHandler != null)
-            {
-                foreach (var handler in ParsingErrorEventHandler.GetInvocationList().Cast<OnParsingErrorEventHandler>())
-                {
-                    ParsingErrorEventHandler -= handler;
-                }
-            }
-        }
+//        public void ClearEvents()
+//        {
+//            if (ParsingErrorEventHandler != null)
+//            {
+//                foreach (var handler in ParsingErrorEventHandler.GetInvocationList().Cast<OnParsingErrorEventHandler>())
+//                {
+//                    ParsingErrorEventHandler -= handler;
+//                }
+//            }
+//        }
 
 
     }

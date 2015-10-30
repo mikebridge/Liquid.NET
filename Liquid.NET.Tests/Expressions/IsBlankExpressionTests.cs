@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Liquid.NET.Constants;
+using Liquid.NET.Expressions;
+using Liquid.NET.Utils;
 using NUnit.Framework;
 
 namespace Liquid.NET.Tests.Expressions
@@ -41,6 +43,36 @@ namespace Liquid.NET.Tests.Expressions
         }
 
         [Test]
+        public void It_Should_Not_Accept_Two_Args()
+        {
+            // Arrange
+            var expr = new IsBlankExpression();
+
+            // Act
+            var result = expr.Eval(new TemplateContext(), new List<Option<IExpressionConstant>>
+            {
+                new BooleanValue(true),
+                new BooleanValue(false)
+            });
+            Assert.That(result.IsError);
+
+        }
+
+        [Test]
+        public void It_Should_Return_True_With_No_Args()
+        {
+            // Arrange
+            var expr = new IsBlankExpression();
+
+            // Act
+            var result = expr.Eval(new TemplateContext(), new List<Option<IExpressionConstant>>());
+          
+            Assert.That(result.SuccessValue<BooleanValue>().BoolValue, Is.True);
+
+        }
+
+
+        [Test]
         [TestCase("\"\"", true)]
         [TestCase("\" \"",true)]
         [TestCase("\"x\"",  false)]
@@ -61,7 +93,6 @@ namespace Liquid.NET.Tests.Expressions
             Logger.Log("Value is " + result);
             // Assert
             Assert.That(result, Is.EqualTo("Result : " + expectedStr));
-
 
         }
 

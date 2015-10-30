@@ -395,10 +395,10 @@ namespace Liquid.NET
            // noop
         }
 
-        public void Visit(VariableReference variableReference)
-        {
-            variableReference.Eval(_templateContext, new List<Option<IExpressionConstant>>());
-        }
+//        public void Visit(VariableReference variableReference)
+//        {
+//            variableReference.Eval(_templateContext, new List<Option<IExpressionConstant>>());
+//        }
 
         public void Visit(StringValue stringValue)
         {          
@@ -409,14 +409,14 @@ namespace Liquid.NET
         /// Process the object / filter chain
         /// </summary>
         /// <param name="liquidExpression"></param>
-        public void Visit(LiquidExpression liquidExpression)
-        {
-            //Console.WriteLine("Visiting Object Expression ");
-            LiquidExpressionEvaluator.Eval(liquidExpression, new List<Option<IExpressionConstant>>(), _templateContext)
-                .WhenSuccess(x => x.WhenSome(some => AppendTextToCurrentAccumulator(Render(x.Value)))
-                                   .WhenNone(() => AppendTextToCurrentAccumulator("")))
-                .WhenError(RenderError);
-        }
+//        public void Visit(LiquidExpression liquidExpression)
+//        {
+//            //Console.WriteLine("Visiting Object Expression ");
+//            LiquidExpressionEvaluator.Eval(liquidExpression, new List<Option<IExpressionConstant>>(), _templateContext)
+//                .WhenSuccess(x => x.WhenSome(some => AppendTextToCurrentAccumulator(Render(x.Value)))
+//                                   .WhenNone(() => AppendTextToCurrentAccumulator("")))
+//                .WhenError(RenderError);
+//        }
 
         public void Visit(LiquidExpressionTree liquidExpressionTree)
         {

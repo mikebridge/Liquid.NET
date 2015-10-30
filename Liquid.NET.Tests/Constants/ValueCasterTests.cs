@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
 using System.Reflection;
 
@@ -95,13 +94,26 @@ namespace Liquid.NET.Tests.Constants
         }
 
         [Test]
-        public void It_Should_Return_The_Same_Object_If_Src_And_Dest_Are_The_Same()
+        public void It_Should_Return_The_Same_Object_If_Src_And_Dest_Are_Arrays()
         {
             // Arrange
             var original = new ArrayValue(new List<IExpressionConstant>{NumericValue.Create(123.4m), NumericValue.Create(5)});
 
             // Act
             var result = ValueCaster.Cast<ArrayValue, ArrayValue>(original).SuccessValue<ArrayValue>();
+
+            // Assert
+            Assert.That(result, Is.EqualTo(original));
+        }
+
+        [Test]
+        public void It_Should_Return_The_Same_Object_If_Src_And_Dest_Are_Strings()
+        {
+            // Arrange
+            var original = new StringValue("Test");
+
+            // Act
+            var result = ValueCaster.Cast<StringValue, StringValue>(original).SuccessValue<StringValue>();
 
             // Assert
             Assert.That(result, Is.EqualTo(original));
@@ -338,6 +350,78 @@ namespace Liquid.NET.Tests.Constants
             Assert.That(result, Is.EqualTo("Result : { \"one\" : null, \"two\" : { \"abc\" : \"def\", \"ghi\" : null } }"));
 
         }
+
+        [Test]
+        public void It_Should_Cast_Null_To_None()
+        {
+            // Arrange
+            var result = ValueCaster.Cast<StringValue, NumericValue>(null);
+            Assert.That(result.IsSuccess, Is.True);
+            Assert.That(result.SuccessResult.HasValue, Is.False);
+        }
+
+        [Test]
+        public void It_Should_ConvertFromNull()
+        {
+            // Arrange
+            var result = ValueCaster.ConvertFromNull<ArrayValue>();
+            Assert.That(result.IsSuccess, Is.True);
+            Assert.That(result.SuccessResult.HasValue, Is.False);
+        }
+
+        [Test]
+        public void It_Should_Convert_Num()
+        {
+            // Arrange
+            var result = ValueCaster.Cast<NumericValue, StringValue>(NumericValue.Create(1));
+            Assert.That(result.IsSuccess, Is.True);
+            Assert.That(result.SuccessResult.HasValue, Is.True);
+        }
+
+        [Test]
+        public void It_Should_Convert_An_Array()
+        {
+            // Arrange
+            var result = ValueCaster.Cast<ArrayValue, StringValue>(new ArrayValue(new List<IExpressionConstant>{new StringValue("test")}));
+            Assert.That(result.IsSuccess, Is.True);
+            Assert.That(result.SuccessResult.HasValue, Is.True);
+            Assert.That(result.SuccessValue<StringValue>().StringVal, Is.EqualTo("test"));
+        }
+
+        [Test]
+        public void It_Should_Convert_A_Date()
+        {
+            // Arrange
+            var result = ValueCaster.Cast<DateValue, StringValue>(new DateValue(DateTime.UtcNow));
+            Assert.That(result.IsSuccess, Is.True);
+            Assert.That(result.SuccessResult.HasValue, Is.True);
+        }
+
+        [Test]
+        public void It_Should_Cast_Numeric_To_Numeric()
+        {
+            // Arrange
+            var result = ValueCaster.Cast<NumericValue, NumericValue>(NumericValue.Create(1));
+            Assert.That(result.IsSuccess, Is.True);
+            Assert.That(result.SuccessResult.HasValue, Is.True);
+        }
+
+        [Test]
+        public void It_Should_Not_Cast_Dict_To_Numeric()
+        {
+            // Arrange
+            var result = ValueCaster.Cast<DictionaryValue, NumericValue>(new DictionaryValue(new Dictionary<string, Option<IExpressionConstant>>()));
+            Assert.That(result.IsSuccess, Is.False);
+        }
+
+        [Test]
+        public void It_Should_Not_Cast_Array_To_Numeric()
+        {
+            // Arrange
+            var result = ValueCaster.Cast<ArrayValue, NumericValue>(new ArrayValue(new List<IExpressionConstant> { new StringValue("test") }));
+            Assert.That(result.IsSuccess, Is.False);
+        }
+
 
     }
 }

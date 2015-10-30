@@ -71,6 +71,7 @@
     <Compile Include="Expressions\AndExpressionTests.cs" />
     <Compile Include="Expressions\ComparisonExpressionTests.cs" />
     <Compile Include="Expressions\ContainsExpressionTests.cs" />
+    <Compile Include="Expressions\FalseExpressionTests.cs" />
     <Compile Include="Expressions\IsPresentExpressionTests.cs" />
     <Compile Include="Expressions\IsBlankExpressionTests.cs" />
     <Compile Include="Expressions\IsEmptyExpressionTests.cs" />

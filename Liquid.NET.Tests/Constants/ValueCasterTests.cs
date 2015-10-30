@@ -185,6 +185,25 @@ namespace Liquid.NET.Tests.Constants
         }
 
         [Test]
+        [TestCase(123.0, 123L)]
+        [TestCase(123.45, 123L)]
+        [TestCase(123.5, 124L)]
+        [TestCase(124.5, 125L)]
+        [TestCase(-124.5, -125L)]
+        [TestCase(-123.5, -124L)]
+        [TestCase(0, 0L)]
+        public void It_Should_Convert_To_A_Long_Using_Away_From_Zero(decimal input, long expected)
+        {
+
+            // Act
+            var result = ValueCaster.ConvertToLong(input);
+
+            // Assert
+            Assert.That(result, Is.EqualTo(expected));
+
+        }
+
+        [Test]
         public void It_Should_Convert_Null_To_Numeric_Zero()
         {
 
@@ -354,7 +373,6 @@ namespace Liquid.NET.Tests.Constants
         [Test]
         public void It_Should_Cast_Null_To_None()
         {
-            // Arrange
             var result = ValueCaster.Cast<StringValue, NumericValue>(null);
             Assert.That(result.IsSuccess, Is.True);
             Assert.That(result.SuccessResult.HasValue, Is.False);
@@ -363,7 +381,6 @@ namespace Liquid.NET.Tests.Constants
         [Test]
         public void It_Should_ConvertFromNull()
         {
-            // Arrange
             var result = ValueCaster.ConvertFromNull<ArrayValue>();
             Assert.That(result.IsSuccess, Is.True);
             Assert.That(result.SuccessResult.HasValue, Is.False);
@@ -372,7 +389,6 @@ namespace Liquid.NET.Tests.Constants
         [Test]
         public void It_Should_Convert_Num()
         {
-            // Arrange
             var result = ValueCaster.Cast<NumericValue, StringValue>(NumericValue.Create(1));
             Assert.That(result.IsSuccess, Is.True);
             Assert.That(result.SuccessResult.HasValue, Is.True);
@@ -381,7 +397,6 @@ namespace Liquid.NET.Tests.Constants
         [Test]
         public void It_Should_Convert_An_Array()
         {
-            // Arrange
             var result = ValueCaster.Cast<ArrayValue, StringValue>(new ArrayValue(new List<IExpressionConstant>{new StringValue("test")}));
             Assert.That(result.IsSuccess, Is.True);
             Assert.That(result.SuccessResult.HasValue, Is.True);
@@ -389,18 +404,40 @@ namespace Liquid.NET.Tests.Constants
         }
 
         [Test]
-        public void It_Should_Convert_A_Date()
+        public void It_Should_Convert_A_Date_To_A_Numeric()
         {
-            // Arrange
-            var result = ValueCaster.Cast<DateValue, StringValue>(new DateValue(DateTime.UtcNow));
+            var date = new DateTime(2015, 10, 29, 10, 11, 12);
+            var result = ValueCaster.Cast<DateValue, NumericValue>(new DateValue(date));
             Assert.That(result.IsSuccess, Is.True);
             Assert.That(result.SuccessResult.HasValue, Is.True);
+            // ReSharper disable once PossibleInvalidOperationException
+            Assert.That(result.SuccessValue<NumericValue>().LongValue, Is.EqualTo(date.Ticks));
+        }
+
+        [Test]
+        public void It_Should_Convert_A_Null_Date_To_0L()
+        {
+            var result = ValueCaster.Cast<DateValue, NumericValue>(new DateValue(null));
+            Assert.That(result.IsSuccess, Is.True);
+            Assert.That(result.SuccessResult.HasValue, Is.True);
+            // ReSharper disable once PossibleInvalidOperationException
+            Assert.That(result.SuccessValue<NumericValue>().LongValue, Is.EqualTo(0L));
+        }
+
+        [Test]
+        public void It_Should_Convert_A_Numeric_To_A_Date()
+        {
+            var date = new DateTime(2015,10,29,10,11,12);
+            var result = ValueCaster.Cast<NumericValue, DateValue>(NumericValue.Create(date.Ticks));
+            Assert.That(result.IsSuccess, Is.True);
+            Assert.That(result.SuccessResult.HasValue, Is.True);
+            // ReSharper disable once PossibleInvalidOperationException
+            Assert.That(result.SuccessValue<DateValue>().DateTimeValue.Value, Is.EqualTo(date));
         }
 
         [Test]
         public void It_Should_Cast_Numeric_To_Numeric()
         {
-            // Arrange
             var result = ValueCaster.Cast<NumericValue, NumericValue>(NumericValue.Create(1));
             Assert.That(result.IsSuccess, Is.True);
             Assert.That(result.SuccessResult.HasValue, Is.True);
@@ -409,7 +446,6 @@ namespace Liquid.NET.Tests.Constants
         [Test]
         public void It_Should_Not_Cast_Dict_To_Numeric()
         {
-            // Arrange
             var result = ValueCaster.Cast<DictionaryValue, NumericValue>(new DictionaryValue(new Dictionary<string, Option<IExpressionConstant>>()));
             Assert.That(result.IsSuccess, Is.False);
         }
@@ -420,6 +456,14 @@ namespace Liquid.NET.Tests.Constants
             // Arrange
             var result = ValueCaster.Cast<ArrayValue, NumericValue>(new ArrayValue(new List<IExpressionConstant> { new StringValue("test") }));
             Assert.That(result.IsSuccess, Is.False);
+        }
+
+        [Test]
+        public void It_Renders_Null_As_Empty()
+        {
+            // Arrange
+            var result = ValueCaster.RenderAsString((IExpressionConstant) null);
+            Assert.That(result, Is.EqualTo(""));
         }
 
 

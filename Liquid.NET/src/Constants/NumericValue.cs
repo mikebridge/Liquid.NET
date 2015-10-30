@@ -13,24 +13,20 @@ namespace Liquid.NET.Constants
         public static NumericValue Create(int val)
         {
             return new IntNumericValue(val);
-            //return new NumericValue<int>(val, isInt: true);
         }
 
         public static NumericValue Create(long val)
         {
-            //return new NumericValue<long>(val, isInt: true);
             return new LongNumericValue(val);
         }
 
         public static NumericValue Create(BigInteger val)
         {
-            //return new NumericValue<BigInteger>(val, isInt: true);
             return new BigIntegerNumericValue(val);
         }
 
         public static NumericValue Create(decimal val)
         {
-            //return new NumericValue<decimal>(val, isInt: false);
             return new DecimalNumericValue(val);
         }
 
@@ -45,6 +41,8 @@ namespace Liquid.NET.Constants
 
         public abstract BigInteger BigIntValue { get; }
 
+        public abstract long LongValue { get; }
+
         public abstract bool IsInt { get; }
 
         public static LiquidExpressionResult Parse(String str)
@@ -56,8 +54,6 @@ namespace Liquid.NET.Constants
             catch
             {
                 // This shouldn't actually fail...
-                //var errorSymbol = NumericValue.Create(0) {ErrorMessage = "Unable to convert '" + str + "' to a number."};
-                //return errorSymbol;
                 return LiquidExpressionResult.Error("Unable to convert '" + str + "' to a number.");
             }
         }
@@ -116,6 +112,11 @@ namespace Liquid.NET.Constants
             get { return _val; }
         }
 
+        public override long LongValue
+        {
+            get { return _val; }
+        }
+
         public override BigInteger BigIntValue
         {
             get { return new BigInteger(_val); }
@@ -153,6 +154,11 @@ namespace Liquid.NET.Constants
         public override int IntValue
         {
             get { return ValueCaster.ConvertToInt(_val); }
+        }
+
+        public override long LongValue
+        {
+            get { return ValueCaster.ConvertToLong(_val); }
         }
 
         public override BigInteger BigIntValue
@@ -195,6 +201,11 @@ namespace Liquid.NET.Constants
             get { return ValueCaster.ConvertToInt(_val); }
         }
 
+        public override long LongValue
+        {
+            get { return _val; }
+        }
+
         public override BigInteger BigIntValue
         {
             get { return new BigInteger(_val); }
@@ -233,6 +244,14 @@ namespace Liquid.NET.Constants
         public override int IntValue
         {
             get { return ValueCaster.ConvertToInt((decimal)_val); }
+        }
+
+        /// <summary>
+        /// This may overflow!
+        /// </summary>
+        public override long LongValue
+        {
+            get { return ValueCaster.ConvertToLong((decimal)_val); }
         }
 
         public override BigInteger BigIntValue

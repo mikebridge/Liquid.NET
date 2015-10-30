@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Liquid.NET.Expressions;
 
 namespace Liquid.NET.Symbols
@@ -18,17 +19,10 @@ namespace Liquid.NET.Symbols
             _filterSymbols.Add(filterSymbol);
         }
 
-        public void AddFilterSymbols(IEnumerable<FilterSymbol> filterSymbols)
-        {
-            foreach (var filterSymbol in filterSymbols)
-            {
-                _filterSymbols.Add(filterSymbol);
-            }
-        }
 
-
+        // this never gets called....
         public void Accept(IASTVisitor visitor)
-        {            
+        {                   
             visitor.Visit(this);
         }
 

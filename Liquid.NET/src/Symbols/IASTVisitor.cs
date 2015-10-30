@@ -13,7 +13,7 @@ namespace Liquid.NET.Symbols
 
         void Visit(RawBlockTag rawBlockTag);
 
-        void Visit(CommentBlockTag commentBlockTag);
+        //void Visit(CommentBlockTag commentBlockTag);
 
         void Visit(CustomTag customTag);
 

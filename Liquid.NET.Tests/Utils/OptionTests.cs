@@ -82,21 +82,21 @@ namespace Liquid.NET.Tests.Utils
         }
 
         [Test]
-        [ExpectedException(typeof(ArgumentNullException))]
+        //[ExpectedException(typeof(ArgumentNullException))]
         public void Options_Cant_Be_Compared_To_Null()
         {
             var val1 = Option<String>.Create("Test");
             // ReSharper disable once UnusedVariable
-            var result = val1 == null;
+            Assert.That(val1 == null, Is.False);
         }
 
         [Test]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public void Null_Cant_Be_Compared_To_Option()
+        //[ExpectedException(typeof(ArgumentNullException))]
+        public void Null_Compared_To_Option_Is_False()
         {
             var val1 = Option<String>.Create("Test");
             // ReSharper disable once UnusedVariable
-            var result = null == val1;
+            Assert.That(null == val1, Is.False);
         }
 
         [Test]

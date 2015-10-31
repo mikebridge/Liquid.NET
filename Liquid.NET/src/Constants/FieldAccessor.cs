@@ -10,16 +10,9 @@ namespace Liquid.NET.Constants
             if (dict == null)
             {
                 return new None<IExpressionConstant>();
-                //return new Undefined(stringVal);
+               
             }
-            if (!dict.DictValue.ContainsKey(stringVal))
-            {
-                return new None<IExpressionConstant>();
-            }
-            else
-            {
-                return dict.DictValue[stringVal];
-            }
+            return dict.DictValue.ContainsKey(stringVal) ? dict.DictValue[stringVal] : new None<IExpressionConstant>();
         }
     }
 }

@@ -9,13 +9,10 @@ namespace Liquid.NET.Constants
         {
             if (key >= array.Count || key < -array.Count)
             {
-                //return ConstantFactory.CreateNilValueOfType<StringValue>("index "+key+" is outside the bounds of the array.");
-                //return new NilValue();
                 return new None<IExpressionConstant>();
             }
             key = WrapMod(key, array.Count);
-            
-            //Console.WriteLine("KEY IS "+ key);
+
             return array[key];
         }
 

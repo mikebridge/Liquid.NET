@@ -42,7 +42,6 @@ namespace Liquid.NET
         public TemplateContext()
         {            
             _globalSymbolTable = new SymbolTable();
-            //_globalSymbolTable.DefineFilter<LookupFilter>("lookup"); // TODO: make this global somehow.
             _symbolTablestack.Push(_globalSymbolTable);            
             _astGeneratorFunc = snippet => new CachingLiquidASTGenerator(new LiquidASTGenerator()).Generate(snippet);
         }        

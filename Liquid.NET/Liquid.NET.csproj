@@ -70,7 +70,6 @@
     <Compile Include="src\Constants\ArrayIndexer.cs" />
     <Compile Include="src\Constants\ArrayValue.cs" />
     <Compile Include="src\Constants\BooleanValue.cs" />
-    <Compile Include="src\Constants\ConstantFactory.cs" />
     <Compile Include="src\Constants\DateValue.cs" />
     <Compile Include="src\Constants\IndexDereferencer.cs" />
     <Compile Include="src\Constants\DictionaryValue.cs" />
@@ -81,9 +80,7 @@
     <Compile Include="src\Constants\FieldAccessor.cs" />
     <Compile Include="src\Constants\GeneratorValue.cs" />
     <Compile Include="src\Constants\IExpressionConstant.cs" />
-    <Compile Include="src\Constants\IIndexable.cs" />
     <Compile Include="src\Constants\NumericValue.cs" />
-    <Compile Include="src\Constants\FilterArgumentAttribute.cs" />
     <Compile Include="src\Constants\StringValue.cs" />
     <Compile Include="src\Constants\ValueCaster.cs" />
     <Compile Include="src\Expressions\ContainsExpression.cs" />

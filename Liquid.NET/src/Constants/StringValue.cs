@@ -17,9 +17,6 @@ namespace Liquid.NET.Constants
             _val = val;
         }
 
-        /// <summary>
-        /// TODO: is an empty string true or false?
-        /// </summary>
         public override bool IsTrue
         {
             get { return _val != null; }

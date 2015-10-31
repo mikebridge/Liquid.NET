@@ -9,7 +9,7 @@ namespace Liquid.NET.Constants
 
     public class ArrayValue : ExpressionConstant, IEnumerable<Option<IExpressionConstant>>
     {
-        private readonly IList<Option<IExpressionConstant>> _values;// = new List<IExpressionConstant>(); 
+        private readonly IList<Option<IExpressionConstant>> _values; 
 
         public ArrayValue(IList<Option<IExpressionConstant>> values)
         {

@@ -10,25 +10,17 @@ namespace Liquid.NET.Constants
     {
         public bool Equals(IExpressionConstant x, IExpressionConstant y)
         {
-            //Console.WriteLine("Comparing " + x.Value + " to " + y.Value);
             //Check whether the compared objects reference the same data.
             if (ReferenceEquals(x, y))
             {
-                //Console.WriteLine("1 EQUAL");
                 return true;
             }
 
             //Check whether any of the compared objects is null.
             if (ReferenceEquals(x, null) || ReferenceEquals(y, null))
             {
-                //Console.WriteLine("2 UNEQUAL");
                 return false;
             }
-
-            //Check whether the products' properties are equal.
-            //Console.WriteLine("3 EQ: " + (x.Value == y.Value));
-            //Console.WriteLine("3 EQ: " + (x.Value.Equals(y.Value)));
-            //return x.Value == y.Value;
             return x.Value.Equals(y.Value);
         }
 

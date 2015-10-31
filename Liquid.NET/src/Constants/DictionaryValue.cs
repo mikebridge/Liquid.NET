@@ -41,12 +41,7 @@ namespace Liquid.NET.Constants
 
         public Option<IExpressionConstant> ValueAt(String key)
         {
-            //Console.WriteLine("VALUE AT " + key);
-            // TODO: Fix this.
-            var result = _value.ContainsKey(key) ? _value[key] : new None<IExpressionConstant>(); // new Undefined(key);
-            //var result = _value.ContainsKey(key) ? _value[key] : FilterFactory.CreateUndefinedForType(typeof(StringValue))
-            //Console.WriteLine("IS " + result);
-            return result;
+            return _value.ContainsKey(key) ? _value[key] : new None<IExpressionConstant>();
         }
 
         public override string ToString()
@@ -69,16 +64,7 @@ namespace Liquid.NET.Constants
         private static Type GetWrappedType<T>(Option<T> expressionConstant)
             where T : IExpressionConstant
         {
-            if (expressionConstant.HasValue)
-            {
-                var nestedType = expressionConstant.Value.GetType();
-                //Console.WriteLine("NEsted type " + nestedType);
-                return nestedType;
-            }
-            else
-            {
-                return null;
-            }
+            return expressionConstant.HasValue ? expressionConstant.Value.GetType() : null;
         }
 
         private static String Quote(Type origType, String str)
@@ -87,18 +73,15 @@ namespace Liquid.NET.Constants
             {
                 return "null";
             }
-            //            if (typeof(NumericValue).IsAssignableFrom(origType) || typeof(BooleanValue).IsAssignableFrom(origType) ||
-            //                if (typeof(ArrayValue).IsAssignableFrom(origType) || typeof(DictionaryValue).IsAssignableFrom(origType))
-            //            {
-            if (typeof(StringValue).IsAssignableFrom(origType) || typeof(DateValue).IsAssignableFrom(origType))
-            {
-                return "\"" + str + "\"";
-            }
-            else
-            {
-                return str;
-            }
+
+            return TypeNeedsQuotes(origType)
+                ? "\"" + str + "\""
+                : str;
         }
 
+        private static bool TypeNeedsQuotes(Type origType)
+        {
+            return typeof (StringValue).IsAssignableFrom(origType) || typeof (DateValue).IsAssignableFrom(origType);
+        }
     }
 }

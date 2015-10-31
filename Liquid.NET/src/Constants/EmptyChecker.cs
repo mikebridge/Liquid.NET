@@ -7,26 +7,29 @@ namespace Liquid.NET.Constants
     {
         public static bool IsEmpty(IExpressionConstant val)
         {
-            if (val == null /* || val.IsNil */)
+            if (val == null)
             {
-                return false; // this appears to be the case in liquid?
+                return false;
             }
-            //return CheckIsEmpty((dynamic)val);
+        
             var str = val as StringValue;
             if (str != null)
             {
                 return CheckIsEmpty(str);
             }
+
             var arr = val as ArrayValue;
             if (arr != null)
             {
                 return CheckIsEmpty(arr);
             }
+
             var dict = val as DictionaryValue;
             if (dict != null)
             {
                 return CheckIsEmpty(dict);
             }
+
             return CheckIsEmpty(val);
         }
 

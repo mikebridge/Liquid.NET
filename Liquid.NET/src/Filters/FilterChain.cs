@@ -32,7 +32,8 @@ namespace Liquid.NET.Filters
                     CreateCastFilter(objExpr.GetType(), expressions[0].SourceType).Apply(ctx, objExpr) : 
                     LiquidExpressionResult.Success(new None<IExpressionConstant>());
      
-            return optionExpression => (castFn(optionExpression.HasValue ? optionExpression.Value : null)).Bind(CreateChain(ctx, expressions));
+            return optionExpression => (castFn(optionExpression.HasValue ? optionExpression.Value : null)).Bind(
+                CreateChain(ctx, expressions));
 
         }
 
@@ -41,15 +42,16 @@ namespace Liquid.NET.Filters
             ITemplateContext ctx,
             IEnumerable<IFilterExpression> filterExpressions)
         {
-            // TODO: Move the Success wrapper into the BindALl.
-            return x => BindAll(ctx, InterpolateCastFilters(filterExpressions))(LiquidExpressionResult.Success(x));
+            return x => BindAll(ctx, InterpolateCastFilters(filterExpressions))(x);
         }
 
-        private static Func<LiquidExpressionResult, LiquidExpressionResult> BindAll(
+        private static Func<Option<IExpressionConstant>, LiquidExpressionResult> BindAll(
             ITemplateContext ctx,
             IEnumerable<IFilterExpression> filterExpressions)
         {
-            return initValue => filterExpressions.Aggregate(initValue, (current, filter) => filter.BindFilter(ctx, current));
+            return initValue => filterExpressions.Aggregate(
+                LiquidExpressionResult.Success(initValue), 
+                (current, filter) => filter.BindFilter(ctx, current));
         }
 
         /// <summary>

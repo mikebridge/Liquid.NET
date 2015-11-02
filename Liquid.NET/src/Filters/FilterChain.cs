@@ -25,16 +25,19 @@ namespace Liquid.NET.Filters
                 return x => new LiquidExpressionResult(x);
             }
 
-            // create the casting filter which will cast the incoming object to the input type of filter #1
-            
-            Func<IExpressionConstant, LiquidExpressionResult> castFn = 
-                objExpr => objExpr != null
-                    ? CreateCastFilter(objExpr.GetType(), expressions[0].SourceType).Apply(ctx, objExpr)
-                    : LiquidExpressionResult.Success(new None<IExpressionConstant>());
-     
-            return optionExpression => 
-                CreateExitFunction(castFn, optionExpression).Bind(CreateChain(ctx, expressions));
 
+
+            return optionExpression => 
+                CreateExitFunction(CreateCastFn(ctx, expressions), optionExpression).Bind(CreateChain(ctx, expressions));
+
+        }
+
+        // create the casting filter which will cast the incoming object to the input type of filter #1
+        private static Func<IExpressionConstant, LiquidExpressionResult> CreateCastFn(ITemplateContext ctx, List<IFilterExpression> expressions)
+        {
+            return objExpr => objExpr != null
+                ? CreateCastFilter(objExpr.GetType(), expressions[0].SourceType).Apply(ctx, objExpr)
+                : LiquidExpressionResult.Success(new None<IExpressionConstant>());
         }
 
         // TODO: this is the "value" function for the monad.

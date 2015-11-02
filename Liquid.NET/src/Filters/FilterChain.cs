@@ -41,11 +41,8 @@ namespace Liquid.NET.Filters
             ITemplateContext ctx,
             IEnumerable<IFilterExpression> filterExpressions)
         {
-            return x =>
-            {
-                var bindAll = BindAll(ctx, InterpolateCastFilters(filterExpressions));
-                return bindAll(LiquidExpressionResult.Success(x)); // TODO: Is this the best way to kick off the chain?
-            };
+            // TODO: Move the Success wrapper into the BindALl.
+            return x => BindAll(ctx, InterpolateCastFilters(filterExpressions))(LiquidExpressionResult.Success(x));
         }
 
         private static Func<LiquidExpressionResult, LiquidExpressionResult> BindAll(

@@ -27,16 +27,16 @@ namespace Liquid.NET.Filters
         public abstract LiquidExpressionResult Apply(ITemplateContext ctx, IExpressionConstant liquidExpression);
         public abstract LiquidExpressionResult ApplyToNil(ITemplateContext ctx);
 
-        public static LiquidExpressionResult ApplyValueOrNil(ITemplateContext ctx, LiquidExpressionResult current, IFilterExpression filter)
+        public LiquidExpressionResult BindFilter(ITemplateContext ctx, LiquidExpressionResult current /*, IFilterExpression filter*/)
+        {
+            return current.IsError ? current : ApplyValueOrNil(ctx, current, this);
+        }
+
+        private static LiquidExpressionResult ApplyValueOrNil(ITemplateContext ctx, LiquidExpressionResult current, IFilterExpression filter)
         {
             return current.SuccessResult.HasValue
                 ? filter.Apply(ctx, current.SuccessResult.Value)
                 : filter.ApplyToNil(ctx);
-        }
-
-        public LiquidExpressionResult BindFilter(ITemplateContext ctx, LiquidExpressionResult current /*, IFilterExpression filter*/)
-        {
-            return current.IsError ? current : ApplyValueOrNil(ctx, current, this);
         }
     }
 

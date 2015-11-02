@@ -52,21 +52,7 @@ namespace Liquid.NET.Filters
             ITemplateContext ctx,
             IEnumerable<IFilterExpression> filterExpressions)
         {
-            return initValue => filterExpressions.Aggregate(initValue, (current, filter) =>
-            {
-                if (initValue.IsError)
-                {
-                    return initValue;
-                }
-                if (current.IsError)
-                {
-                    return current;
-                }
-                return current.SuccessResult.HasValue ? 
-                    filter.Apply(ctx, current.SuccessResult.Value) : 
-                    filter.ApplyToNil(ctx);
-                
-            });
+            return initValue => filterExpressions.Aggregate(initValue, (current, filter) => filter.BindFilter(ctx, current));
         }
 
         /// <summary>

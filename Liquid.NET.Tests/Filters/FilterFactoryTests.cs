@@ -11,47 +11,81 @@ namespace Liquid.NET.Tests.Filters
     [TestFixture]
     public class FilterFactoryTests
     {
+
+
         [Test]
         public void It_Should_Instantiate_A_Filter()
         {
             // Act
-            var filter = FilterFactory.InstantiateFilter<UpCaseFilter>("upcase", new List<Option<IExpressionConstant>>());
-
+            var filterResult = FilterFactory.InstantiateFilter("upcase", typeof(UpCaseFilter), new List<Option<IExpressionConstant>>());
+        
             // Assert
-            Assert.That(filter, Is.TypeOf(typeof (UpCaseFilter)));
-
+            Assert.That(filterResult.Value, Is.TypeOf(typeof (UpCaseFilter)));
+       
         }
 
         [Test]
-        [ExpectedException(typeof(ArgumentException))]
         public void It_Should_Return_An_Error_If_Type_Isnt_A_Filter()
         {
             // Act
-            FilterFactory.InstantiateFilter("string", typeof(String), new List<Option<IExpressionConstant>>());
+            var result = FilterFactory.InstantiateFilter("string", typeof(String), new List<Option<IExpressionConstant>>());
+            Assert.That(result.IsFailure, Is.True);
         }
 
         [Test]
         public void It_Should_Convert_A_Symbol_With_Args_To_A_Filter()
         {
             // Arrange
-            var filter = FilterFactory.InstantiateFilter<RemoveFilter>("remove", new List<Option<IExpressionConstant>>() { new StringValue("test") });
+            var filter = FilterFactory.InstantiateFilter("remove", typeof(RemoveFilter), new List<Option<IExpressionConstant>>() { new StringValue("test") });
 
             // Act
 
             // Assert
-            Assert.That(filter, Is.TypeOf(typeof(RemoveFilter)));
+            Assert.That(filter.Value, Is.TypeOf(typeof(RemoveFilter)));
         }      
 
         [Test]
         public void It_Should_Cast_Numeric_Args_To_A_String()
         {
             // Arrange
-            var filter = FilterFactory.InstantiateFilter<MockStringToStringFilter>("mockfilter", new List<Option<IExpressionConstant>>() { NumericValue.Create(123) });
+            var filter = FilterFactory.InstantiateFilter("mockfilter", typeof(MockStringToStringFilter), new List<Option<IExpressionConstant>>() { NumericValue.Create(123) });
 
             // Act
 
-            Assert.That(filter.StringArg1.Value, Is.EqualTo("123"));
+            Assert.That((((MockStringToStringFilter) filter.Value).StringArg1.Value), Is.EqualTo("123"));
         }
+
+        [Test]
+        public void It_Should_Return_Error_When_Not_Filter_Type()
+        {
+            // Arrange
+            var filter = FilterFactory.InstantiateFilter("mockfilter", typeof(String), new List<Option<IExpressionConstant>> { NumericValue.Create(123) });
+
+            // Assert
+            Assert.That(filter.IsFailure, Is.True);
+        }
+
+
+        [Test]
+        public void It_Should_Return_Error_When_Null_Type()
+        {
+            // Arrange
+            var filter = FilterFactory.InstantiateFilter("mockfilter", null, new List<Option<IExpressionConstant>> { NumericValue.Create(123) });
+
+            // Assert
+            Assert.That(filter.IsFailure, Is.True);
+        }
+
+        [Test]
+        public void It_Should_Return_Error_When_Multiple_Constructors()
+        {
+            // Arrange
+            var filter = FilterFactory.InstantiateFilter("mockfilter", typeof(TwoConstructorFilter), new List<Option<IExpressionConstant>> { NumericValue.Create(123) });
+
+            // Assert
+            Assert.That(filter.IsFailure, Is.True);
+        }
+
 
         [Test]
         public void It_Should_Pass_A_Wrapped_Null_When_Arg_Missing()
@@ -63,20 +97,26 @@ namespace Liquid.NET.Tests.Filters
             Assert.That(result, Is.EqualTo("Result : xy"));
         }
 
-
-        [Test]
-        public void It_Should_Instantiate_The_Right_Generic_Class()
+        public class TwoConstructorFilter : FilterExpression<StringValue, StringValue>
         {
-            // Arrange
+            public StringValue StringArg1 { get; set; }
+            public StringValue StringArg2 { get; set; }
 
-            // Act
-            var result = FilterFactory.CreateCastExpression(typeof(NumericValue), typeof(StringValue));
+            public String MESSAGE = "The object was {0}, parm1 was {1} and parm2 was {2}.";
 
+            public TwoConstructorFilter(StringValue stringLiteral1, StringValue stringLiteral2)
+            {
+                StringArg1 = stringLiteral1;
+                StringArg2 = stringLiteral2;
+            }
 
-            // Assert
-            Assert.That(result, Is.TypeOf(typeof(CastFilter<NumericValue, StringValue>)));
+            public TwoConstructorFilter(StringValue stringLiteral1)
+            {
+                StringArg1 = stringLiteral1;
+            }
 
         }
+
 
         // ReSharper disable once ClassNeverInstantiated.Global
         public class MockStringToStringFilter : FilterExpression<StringValue, StringValue>

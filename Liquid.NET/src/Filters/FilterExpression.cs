@@ -64,12 +64,12 @@ namespace Liquid.NET.Filters
 
         public virtual LiquidExpressionResult ApplyTo(ITemplateContext ctx, BooleanValue val)
         {
-            return ApplyTo(ctx, (IExpressionConstant)val);
+            return ApplyTo(ctx, (IExpressionConstant) val);
         }
 
         public virtual LiquidExpressionResult ApplyTo(ITemplateContext ctx, DateValue val)
         {
-            return ApplyTo(ctx, (IExpressionConstant)val);
+            return ApplyTo(ctx, (IExpressionConstant) val);
         }
 
 
@@ -82,7 +82,6 @@ namespace Liquid.NET.Filters
         public virtual LiquidExpressionResult ApplyToNil(ITemplateContext ctx)
         {
             return LiquidExpressionResult.Success(new None<IExpressionConstant>());
-            //return new LiquidExpressionResult(Option<IExpressionConstant>.None);
         }
 
     }

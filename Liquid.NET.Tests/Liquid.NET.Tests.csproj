@@ -181,6 +181,7 @@
     <Compile Include="Utils\OptionTests.cs" />
     <Compile Include="Utils\RegistryTests.cs" />
     <Compile Include="Utils\StrFTimeTests.cs" />
+    <Compile Include="Utils\TryTests.cs" />
     <Compile Include="VariableReferenceTreeBuilderTests.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -217,6 +217,7 @@
     <Compile Include="src\Utils\Registry.cs" />
     <Compile Include="src\Utils\StrFTime.cs" />
     <Compile Include="src\Utils\TreeNode.cs" />
+    <Compile Include="src\Utils\Try.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Liquid.NET.nuspec">

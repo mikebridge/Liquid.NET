@@ -24,28 +24,33 @@ namespace Liquid.NET.Filters
             {
                 return x => new LiquidExpressionResult(x);
             }
-
-
-
-            return optionExpression => 
-                CreateExitFunction(CreateCastFn(ctx, expressions), optionExpression).Bind(CreateChain(ctx, expressions));
+            // create the initial cast for the first value, then a way of unwrapping the value into an Option,
+            // then chain with all the other functions.
+            return optionExpression => CreateUnwrapFunction(InitialCast(ctx, expressions.FirstOrDefault()), optionExpression)
+                .Bind(CreateChain(ctx, expressions));
 
         }
 
-        // create the casting filter which will cast the incoming object to the input type of filter #1
-        private static Func<IExpressionConstant, LiquidExpressionResult> CreateCastFn(ITemplateContext ctx, List<IFilterExpression> expressions)
+        private static Func<IExpressionConstant, LiquidExpressionResult> InitialCast(
+            ITemplateContext ctx, IFilterExpression initialExpression)
         {
-            return objExpr => objExpr != null
-                ? CreateCastFilter(objExpr.GetType(), expressions[0].SourceType).Apply(ctx, objExpr)
+            return expressionConstant => expressionConstant != null
+                ? CreateCastFilter(expressionConstant.GetType(), initialExpression.SourceType).Apply(ctx, expressionConstant)
                 : LiquidExpressionResult.Success(new None<IExpressionConstant>());
         }
 
-        // TODO: this is the "value" function for the monad.
-        private static LiquidExpressionResult CreateExitFunction(Func<IExpressionConstant, LiquidExpressionResult> castFn, Option<IExpressionConstant> optionExpression)
+        /// <summary>
+        /// create the casting filter which will cast the incoming object to the input type of filter #1
+        /// </summary>
+        /// <param name="castFn"></param>
+        /// <param name="optionExpression"></param>
+        /// <returns></returns>
+        private static LiquidExpressionResult CreateUnwrapFunction(
+            Func<IExpressionConstant, LiquidExpressionResult> castFn, 
+            Option<IExpressionConstant> optionExpression)
         {
             return castFn(optionExpression.HasValue ? optionExpression.Value : null);
         }
-
 
         public static Func<Option<IExpressionConstant>, LiquidExpressionResult> CreateChain(
             ITemplateContext ctx,
@@ -59,17 +64,14 @@ namespace Liquid.NET.Filters
             IEnumerable<IFilterExpression> filterExpressions)
         {
             return initValue => filterExpressions.Aggregate(
-                LiquidExpressionResult.Success(initValue), 
+                LiquidExpressionResult.Success(initValue),
                 (current, filter) => filter.BindFilter(ctx, current));
         }
 
         /// <summary>
         /// Make a list of functions, each of which has the input of the previous function.  Interpolate a casting
         /// function if the input of one doesn't fit with the value of the next.
-        /// 
-        /// TODO: I think this should be part of the bind function.
         /// </summary>
-        /// <param name="filterExpressions"></param>
         /// <returns></returns>
         public static IEnumerable<IFilterExpression> InterpolateCastFilters(IEnumerable<IFilterExpression> filterExpressions)
         {
@@ -79,11 +81,8 @@ namespace Liquid.NET.Filters
             Type expectedInputType = null;
             foreach (var filterExpression in filterExpressions)
             {
-                // TODO: The expectedInputType might be a superclass of the output (not just equal type)
-                //if (expectedInputType != null && filterExpression.SourceType != expectedInputType)
-                if (expectedInputType != null && !filterExpression.SourceType.IsAssignableFrom(expectedInputType))
+                if (NeedsACast(expectedInputType, filterExpression))
                 {
-                    //Console.WriteLine("Creating cast from " + filterExpression +" TO "+expectedInputType);
                     result.Add(CreateCastFilter(expectedInputType, filterExpression.SourceType));
                 }
                 result.Add(filterExpression);
@@ -93,13 +92,14 @@ namespace Liquid.NET.Filters
             return result;
         }
 
-        private static IFilterExpression CreateCastFilter(Type sourceType, Type resultType)
-            //where sourceType: IExpressionConstant
+        private static bool NeedsACast(Type expectedInputType, IFilterExpression filterExpression)
         {
-            // TODO: Move this to FilterFactory.Instantiate
+            return expectedInputType != null && !filterExpression.SourceType.IsAssignableFrom(expectedInputType);
+        }
+
+        private static IFilterExpression CreateCastFilter(Type sourceType, Type resultType)
+        {
             Type genericClass = typeof(CastFilter<,>);
-            // MakeGenericType is badly named
-            //Console.WriteLine("FilterChain Creating Converter from " + sourceType + " to " + resultType);
             Type constructedClass = genericClass.MakeGenericType(sourceType, resultType);
             return (IFilterExpression)Activator.CreateInstance(constructedClass);
         }

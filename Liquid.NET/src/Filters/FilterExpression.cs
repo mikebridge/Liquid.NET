@@ -15,36 +15,82 @@ namespace Liquid.NET.Filters
 
         LiquidExpressionResult ApplyToNil(ITemplateContext ctx);
 
-        // bind function
         LiquidExpressionResult BindFilter(ITemplateContext ctx, LiquidExpressionResult current);
     };
 
     public abstract class FilterExpression: IFilterExpression
     {
-        public abstract string Name { get; set; }
+        public virtual String Name { get; set; }
         public abstract Type SourceType { get; }
         public abstract Type ResultType { get; }
         public abstract LiquidExpressionResult Apply(ITemplateContext ctx, IExpressionConstant liquidExpression);
-        public abstract LiquidExpressionResult ApplyToNil(ITemplateContext ctx);
+        
 
-        public LiquidExpressionResult BindFilter(ITemplateContext ctx, LiquidExpressionResult current /*, IFilterExpression filter*/)
+        public LiquidExpressionResult BindFilter(ITemplateContext ctx, LiquidExpressionResult current)
         {
-            return current.IsError ? current : ApplyValueOrNil(ctx, current, this);
+            return current.IsError ? current : ApplyValueOrNil(ctx, current);
         }
 
-        private static LiquidExpressionResult ApplyValueOrNil(ITemplateContext ctx, LiquidExpressionResult current, IFilterExpression filter)
+        private LiquidExpressionResult ApplyValueOrNil(ITemplateContext ctx, LiquidExpressionResult current)
         {
             return current.SuccessResult.HasValue
-                ? filter.Apply(ctx, current.SuccessResult.Value)
-                : filter.ApplyToNil(ctx);
+                ? Apply(ctx, current.SuccessResult.Value)
+                : ApplyToNil(ctx); // pass through nil, because maybe there's e.g. a "default" filter somewhere in the chain.
         }
+
+        /* override some or all of these ApplyTo functions */
+        public virtual LiquidExpressionResult ApplyTo(ITemplateContext _, IExpressionConstant liquidExpression)
+        {
+            throw new NotImplementedException();
+        }
+        public virtual LiquidExpressionResult ApplyTo(ITemplateContext ctx, NumericValue val)
+        {
+            return ApplyTo(ctx, (IExpressionConstant)val);
+        }
+
+        public virtual LiquidExpressionResult ApplyTo(ITemplateContext ctx, StringValue val)
+        {
+            return ApplyTo(ctx, (IExpressionConstant)val);
+        }
+
+        public virtual LiquidExpressionResult ApplyTo(ITemplateContext ctx, DictionaryValue val)
+        {
+            return ApplyTo(ctx, (IExpressionConstant)val);
+        }
+        public virtual LiquidExpressionResult ApplyTo(ITemplateContext ctx, ArrayValue val)
+        {
+            return ApplyTo(ctx, (IExpressionConstant)val);
+        }
+
+        public virtual LiquidExpressionResult ApplyTo(ITemplateContext ctx, BooleanValue val)
+        {
+            return ApplyTo(ctx, (IExpressionConstant)val);
+        }
+
+        public virtual LiquidExpressionResult ApplyTo(ITemplateContext ctx, DateValue val)
+        {
+            return ApplyTo(ctx, (IExpressionConstant)val);
+        }
+
+
+        public virtual LiquidExpressionResult ApplyTo(ITemplateContext ctx, GeneratorValue val)
+        {
+            //throw new Exception("Need to figure out how to do this part");
+            return ApplyTo(ctx, (IExpressionConstant)val);
+        }
+
+        public virtual LiquidExpressionResult ApplyToNil(ITemplateContext ctx)
+        {
+            return LiquidExpressionResult.Success(new None<IExpressionConstant>());
+            //return new LiquidExpressionResult(Option<IExpressionConstant>.None);
+        }
+
     }
 
     public abstract class FilterExpression<TSource, TResult> : FilterExpression
         where TSource : IExpressionConstant
         where TResult : IExpressionConstant
     {
-        public override String Name {get; set;}
 
 
         public virtual LiquidExpressionResult Apply(ITemplateContext ctx, TSource expr)
@@ -93,54 +139,6 @@ namespace Liquid.NET.Filters
             return Apply(ctx, (TSource)liquidExpression);
         }
         
-        // TODO: Move these up to the superclass.
-   
-        /* override some or all of these ApplyTo functions */
-        public virtual LiquidExpressionResult ApplyTo(ITemplateContext _, IExpressionConstant liquidExpression) // todo: make this fallback abtstract
-        {
-            throw new NotImplementedException();
-        }
-        public virtual LiquidExpressionResult ApplyTo(ITemplateContext ctx, NumericValue val)
-        {
-            return ApplyTo(ctx,  (IExpressionConstant)val);
-        }
-
-        public virtual LiquidExpressionResult ApplyTo(ITemplateContext ctx, StringValue val)
-        {
-            return ApplyTo(ctx, (IExpressionConstant)val);
-        }
-
-        public virtual LiquidExpressionResult ApplyTo(ITemplateContext ctx, DictionaryValue val)
-        {
-            return ApplyTo(ctx, (IExpressionConstant)val);
-        }
-        public virtual LiquidExpressionResult ApplyTo(ITemplateContext ctx, ArrayValue val)
-        {
-            return ApplyTo(ctx, (IExpressionConstant)val);
-        }
-
-        public virtual LiquidExpressionResult ApplyTo(ITemplateContext ctx, BooleanValue val)
-        {
-            return ApplyTo(ctx, (IExpressionConstant)val);
-        }
-
-        public virtual LiquidExpressionResult ApplyTo(ITemplateContext ctx, DateValue val)
-        {
-            return ApplyTo(ctx, (IExpressionConstant)val);
-        }
-
-
-        public virtual LiquidExpressionResult ApplyTo(ITemplateContext ctx, GeneratorValue val)
-        {
-            //throw new Exception("Need to figure out how to do this part");
-            return ApplyTo(ctx, (IExpressionConstant)val);
-        }
-
-        public override LiquidExpressionResult ApplyToNil(ITemplateContext ctx)
-        {
-            return LiquidExpressionResult.Success(new None<IExpressionConstant>());
-            //return new LiquidExpressionResult(Option<IExpressionConstant>.None);
-        }
 
         public override Type SourceType
         {

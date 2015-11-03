@@ -47,6 +47,61 @@ namespace Liquid.NET.Tests.Filters.Strings
 
         }
 
+        [Test]
+        public void It_Should_Not_Slice_A_Number()
+        {
+            // Arrange
+            var ctx = new TemplateContext();
+            ctx.DefineLocalVariable("num", NumericValue.Create(1));
+            // Act
+            var result = RenderingHelper.RenderTemplate("Result : {{ num | slice : 1,2 }}", ctx);
+
+            // Assert
+            Assert.That(result, Is.StringContaining("Can't slice a object of type"));
+
+        }
+
+        [Test]
+        public void It_Should_Handle_Missing_Start_With_Arrays()
+        {
+            // Arrange
+            var ctx = new TemplateContext();
+            ctx.DefineLocalVariable("array", CreateArray());
+            // Act
+            var result = RenderingHelper.RenderTemplate("Result : {{ array | slice }}", ctx);
+
+            // Assert
+            Assert.That(result, Is.StringContaining("Please pass a start parameter"));
+
+        }
+
+        [Test]
+        public void It_Should_Handle_Missing_Start_With_Strings()
+        {
+            // Arrange
+            var ctx = new TemplateContext();
+            ctx.DefineLocalVariable("str", new StringValue("Test"));
+            // Act
+            var result = RenderingHelper.RenderTemplate("Result : {{ str | slice }}", ctx);
+
+            // Assert
+            Assert.That(result, Is.StringContaining("Please pass a start parameter"));
+
+        }
+
+        [Test]
+        public void It_Should_Slice_Nil()
+        {
+            // Arrange
+            var ctx = new TemplateContext();
+            //ctx.DefineLocalVariable("array", CreateArray());
+            // Act
+            var result = RenderingHelper.RenderTemplate("Result : {{ novar | slice }}", ctx);
+
+            // Assert
+            Assert.That(result, Is.StringContaining("Result : "));
+
+        }
 
         public ArrayValue CreateArray()
         {

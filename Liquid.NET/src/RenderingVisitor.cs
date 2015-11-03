@@ -83,9 +83,7 @@ namespace Liquid.NET
                 AppendTextToCurrentAccumulator(RenderMacro(macroDescription, evalResults.Select(x => x.SuccessResult)));
                 return;
             }
-            //_result += " ERROR: There is no macro or tag named "+  customTag.TagName+ " ";
             AddError("Liquid syntax error: Unknown tag '" + customTag.TagName + "'", customTag);
-            //_result += "Liquid syntax error: Unknown tag '"+customTag.TagName+"'";
         }
 
         private void RenderError(LiquidError liquidError)

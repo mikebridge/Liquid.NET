@@ -159,5 +159,13 @@ namespace Liquid.NET.Tests.Utils
             // ReSharper disable once UnusedVariable
             var result = Option<String>.None().Bind(null);           
         }
+
+        [Test]
+        public void It_Should_Use_The_Underling_Hash_Value()
+        {
+            var result = Option<String>.Create("Test").GetHashCode();
+            Assert.That(result, Is.EqualTo("Test".GetHashCode()));
+        }
+
     }
 }

@@ -26,18 +26,14 @@ namespace Liquid.NET.Filters.Strings
 
         public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, IExpressionConstant liquidExpression)
         {
-            return LiquidExpressionResult.Error("Can't find sub-elements from that object.  It is not an array or a string.");
+            return LiquidExpressionResult.Error("Can't slice a object of type '"+liquidExpression.LiquidTypeName+"'.  It is not an array or a string.");
         }
 
         public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, ArrayValue liquidArrayExpression)
         {
-            if (liquidArrayExpression == null || liquidArrayExpression.Value == null)
-            {
-                return LiquidExpressionResult.Error("Array is nil");
-            }
             var list = liquidArrayExpression.ArrValue;
 
-            if (_start == null /*|| _start.IsUndefined*/)
+            if (_start == null)
             {
                 return LiquidExpressionResult.Error("Please pass a start parameter.");
             }
@@ -47,13 +43,9 @@ namespace Liquid.NET.Filters.Strings
 
         public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, StringValue stringValue)
         {
-            if (stringValue == null || stringValue.Value == null)
-            {
-                return LiquidExpressionResult.Error("String is null");
-            }
             var list = stringValue.StringVal.ToCharArray().ToList();
 
-            if (_start == null /*|| _start.IsUndefined*/)
+            if (_start == null)
             {
                 return LiquidExpressionResult.Error("Please pass a start parameter.");
             }
@@ -67,17 +59,11 @@ namespace Liquid.NET.Filters.Strings
             var skip = _start.IntValue;
             skip = FindPosition(list, skip);
 
-            if (_length != null /*&& !_length.IsUndefined*/)
+            if (_length != null)
             {
                 take = _length.IntValue;
             }
-            if (take < 0)
-            {
-                return new List<T>();
-            }
-
-            return Slice(list, skip, take);
-
+            return take < 0 ? new List<T>() : Slice(list, skip, take);
         }
 
         /// <summary>
@@ -87,7 +73,7 @@ namespace Liquid.NET.Filters.Strings
         /// <param name="list"></param>
         /// <param name="skip"></param>
         /// <returns></returns>
-        private static int FindPosition<T>(IList<T> list, int skip)
+        private static int FindPosition<T>(ICollection<T> list, int skip)
         {
             if (skip < 0)
             {
@@ -97,7 +83,7 @@ namespace Liquid.NET.Filters.Strings
         }
 
 
-        private static IList<T> Slice<T>(IList<T> list, int skip, int take)
+        private static IList<T> Slice<T>(IEnumerable<T> list, int skip, int take)
         {            
             return new List<T>(list.Skip(skip).Take(take));            
         }

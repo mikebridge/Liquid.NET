@@ -39,7 +39,8 @@ namespace Liquid.NET.Symbols
                     return _symbolTables[i].ReferenceLocalVariable(reference);
                 }
             }
-            return LiquidExpressionResult.Success(new None<IExpressionConstant>());
+            //return LiquidExpressionResult.Success(new None<IExpressionConstant>());
+            return LiquidExpressionResult.Error(SymbolTable.NotFoundError(reference));
         }
 
 

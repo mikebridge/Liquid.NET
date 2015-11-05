@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using Liquid.NET.Constants;
 using Liquid.NET.Utils;
 
 namespace Liquid.NET.Filters.Array 
 {
-    public class MapFilter: FilterExpression<IExpressionConstant , IExpressionConstant>// : FilterExpression<ArrayValue, ArrayValue>
+    public class MapFilter: FilterExpression<IExpressionConstant , IExpressionConstant>
     {
         private readonly StringValue _selector;
 
@@ -22,24 +23,20 @@ namespace Liquid.NET.Filters.Array
 
         public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, ArrayValue liquidArrayExpression)
         {
-            if (liquidArrayExpression == null || liquidArrayExpression.Value == null)
-            {
-                return LiquidExpressionResult.Error("Array is nil");
-            }
-            var list = liquidArrayExpression.ArrValue.Select(x => x.HasValue ? 
-                FieldAccessor.TryField(x.Value, _selector.StringVal) : 
-                new None<IExpressionConstant>()).ToList();
-            return LiquidExpressionResult.Success(new ArrayValue(list));
+            var list = liquidArrayExpression.ArrValue.Select(x => x.HasValue
+                ? FieldAccessor.TryField(ctx, x.Value, _selector.StringVal)
+                : LiquidExpressionResult.ErrorOrNone(ctx, _selector.StringVal)).ToList();
+                //new None<IExpressionConstant>()).ToList();
+            return list.Any(x => x.IsError) ? 
+                list.First(x => x.IsError) : 
+                LiquidExpressionResult.Success(new ArrayValue(list.Select(x => x.SuccessResult).ToList()));
         }
 
         public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, DictionaryValue liquidDictionaryValue)
         {
-            if (liquidDictionaryValue == null || liquidDictionaryValue.Value == null)
-            {
-                return LiquidExpressionResult.Error("Hash is nil");
-            }
             String propertyNameString = ValueCaster.RenderAsString((IExpressionConstant)_selector);
-             return LiquidExpressionResult.Success(liquidDictionaryValue.ValueAt(propertyNameString));
+
+            return LiquidExpressionResult.Success(liquidDictionaryValue.ValueAt(propertyNameString));
             
         }
 

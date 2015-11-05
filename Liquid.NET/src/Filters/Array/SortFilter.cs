@@ -30,16 +30,20 @@ namespace Liquid.NET.Filters.Array
             }
             else
             {
-                return LiquidExpressionResult.Success(SortByProperty(liquidArrayExpression, sortfield));
+                return SortByProperty(ctx, liquidArrayExpression, sortfield);
             }
         }
 
-        private ArrayValue SortByProperty(ArrayValue val, string sortfield)
+        private LiquidExpressionResult SortByProperty(ITemplateContext ctx, ArrayValue val, string sortfield)
         {
+            if (ctx.Options.ErrorWhenValueMissing &&
+                val.ArrValue.Any(x => FieldAccessor.TryField(ctx, x.Value, sortfield).IsError))
+            {
+                return LiquidExpressionResult.Error("an array element is missing the field '" + sortfield + "'");
+            }
+            var ordered = val.ArrValue.OrderBy(x => AsString(ctx, x, sortfield));
 
-            var ordered = val.ArrValue.OrderBy(x => AsString(x, sortfield));
-            // TODO: ThenBy
-            return new ArrayValue(ordered.ToList());
+            return LiquidExpressionResult.Success(new ArrayValue(ordered.ToList()));
         }
 
         private static ArrayValue SortAsArrayOfStrings(ArrayValue val)
@@ -48,13 +52,19 @@ namespace Liquid.NET.Filters.Array
             return new ArrayValue(result.ToList());
         }
 
-        private String AsString(Option<IExpressionConstant> x, string field)
+        private String AsString(ITemplateContext ctx, Option<IExpressionConstant> x, string field)
         {
             if (!x.HasValue)
             {
                 return "";
             }
-            return ValueCaster.RenderAsString(FieldAccessor.TryField(x.Value, field));
+
+            var liquidExpressionResult = FieldAccessor.TryField(ctx, x.Value, field);
+            if (liquidExpressionResult.IsError || !liquidExpressionResult.SuccessResult.HasValue)
+            {
+                return "";
+            }
+            return ValueCaster.RenderAsString(liquidExpressionResult.SuccessResult.Value);
         }
     }
 

@@ -47,7 +47,7 @@ namespace Liquid.NET.Tests.Symbols
 
 
         [Test]
-        public void It_Should_Retrieve_An_Undefined_Value_When_Missing()
+        public void It_Should_Retrieve_An_Error_When_Missing()
         {
             // Arrange
             var stack = StackHelper.CreateSymbolTableStack();
@@ -57,7 +57,7 @@ namespace Liquid.NET.Tests.Symbols
 
             // Assert
             Assert.That(result, Is.Not.Null);
-            Assert.That(result.SuccessResult.HasValue, Is.False);
+            Assert.That(result.IsError, Is.True);
             //Assert.That(result, Is.TypeOf<Undefined>());
 
         }

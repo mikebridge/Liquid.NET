@@ -64,6 +64,7 @@
     <Compile Include="Constants\ExpressionConstantTests.cs" />
     <Compile Include="Constants\GeneratorValueTests.cs" />
     <Compile Include="Constants\IndexDereferencerTests.cs" />
+    <Compile Include="Constants\MissingValueTests.cs" />
     <Compile Include="Constants\NumericValueTests.cs" />
     <Compile Include="Constants\StringValueTests.cs" />
     <Compile Include="Constants\ValueCasterTests.cs" />

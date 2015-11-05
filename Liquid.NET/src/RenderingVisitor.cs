@@ -97,7 +97,22 @@ namespace Liquid.NET
 
         private String FormatErrors(IEnumerable<LiquidError> liquidErrors)
         {
-            return String.Join("; ", liquidErrors.Select(x => x.Message));
+            //return "ERROR: " + String.Join("; ", liquidErrors.Select(x => x.Message));
+            return String.Join("; ", liquidErrors.Select(x => FormatError(x)));
+        }
+
+        private static string FormatError(LiquidError x)
+        {
+            // to remain backwards-compatible, this leaves "Liquid Error:" alone.
+            if (x.Message.IndexOf("Liquid error") >= 0)
+            {
+                return x.Message;
+            }
+            else
+            {
+                return "ERROR: " + x.Message;
+            }
+
         }
 
         private void RenderErrors(IEnumerable<LiquidExpressionResult> liquidErrors)
@@ -378,6 +393,28 @@ namespace Liquid.NET
            // noop
         }
 
+//        public void Visit(VariableReference variableReference)
+//        {
+//            variableReference.Eval(_templateContext, new List<Option<IExpressionConstant>>());
+//        }
+
+        public void Visit(StringValue stringValue)
+        {          
+           AppendTextToCurrentAccumulator(Render(stringValue)); 
+        }
+
+        /// <summary>
+        /// Process the object / filter chain
+        /// </summary>
+        /// <param name="liquidExpression"></param>
+        public void Visit(LiquidExpression liquidExpression)
+        {
+            //Console.WriteLine("Visiting Object Expression ");
+            LiquidExpressionEvaluator.Eval(liquidExpression, new List<Option<IExpressionConstant>>(), _templateContext)
+                .WhenSuccess(x => x.WhenSome(some => AppendTextToCurrentAccumulator(Render(x.Value)))
+                                   .WhenNone(() => AppendTextToCurrentAccumulator("")))
+                .WhenError(RenderError);
+        }
 
         public void Visit(LiquidExpressionTree liquidExpressionTree)
         {

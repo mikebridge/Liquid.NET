@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Liquid.NET.Constants;
+using Liquid.NET.Symbols;
 using Liquid.NET.Utils;
 
 namespace Liquid.NET.Expressions
@@ -22,7 +23,6 @@ namespace Liquid.NET.Expressions
 
         public LiquidExpressionResult Eval(ITemplateContext templateContext, IEnumerable<Option<IExpressionConstant>> childresults)
         {
-            //return EvalExpression(templateContext, (dynamic) this, childresults);
             return EvalExpression(templateContext, this, childresults);
         }
 
@@ -53,7 +53,7 @@ namespace Liquid.NET.Expressions
             if (!valueResult.SuccessResult.HasValue)
             {
                 return LiquidExpressionResult.Success(new None<IExpressionConstant>());
-                //return LiquidExpressionResult.Error("ERROR: there is no value");
+                //return LiquidExpressionResult.Error(SymbolTable.NotFoundError(valueResult));
             }
             if (!indexResult.SuccessResult.HasValue)
             {

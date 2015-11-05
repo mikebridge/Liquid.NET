@@ -27,11 +27,9 @@ namespace Liquid.NET.Constants
 
         public IDictionary<String, Option<IExpressionConstant>> DictValue { get { return _value; } }
 
-        // TODO: not sure what this should do
         public override bool IsTrue
         {
             get { return _value != null;  }
-            //get { return _value.Keys.Any(); }
         }
 
         public override string LiquidTypeName
@@ -39,9 +37,19 @@ namespace Liquid.NET.Constants
             get { return "hash"; }
         }
 
+        /// <summary>
+        /// This will return None if the key is missing, even if ErrorOnMissing is enabled.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
         public Option<IExpressionConstant> ValueAt(String key)
         {
-            return _value.ContainsKey(key) ? _value[key] : new None<IExpressionConstant>();
+            return ContainsKey(key) ? _value[key] : new None<IExpressionConstant>();
+        }
+
+        public bool ContainsKey(string key)
+        {
+            return _value.ContainsKey(key);
         }
 
         public override string ToString()
@@ -57,7 +65,7 @@ namespace Liquid.NET.Constants
         private static String FormatKvPair(string key, Option<IExpressionConstant> expressionConstant)
         {
             Type wrappedType = GetWrappedType(expressionConstant);
-            String exprConstantAsString = expressionConstant.HasValue? expressionConstant.Value.ToString() : "null";
+            String exprConstantAsString = expressionConstant.HasValue ? expressionConstant.Value.ToString() : "null";
             return Quote(typeof(StringValue), key) + " : " + Quote(wrappedType, exprConstantAsString);
         }
 

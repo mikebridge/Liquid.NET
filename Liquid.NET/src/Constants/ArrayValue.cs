@@ -63,7 +63,7 @@ namespace Liquid.NET.Constants
             //return "[ " + String.Join(", ", strs) + " ]"; 
 
             // The Concatenated way:
-            var strs = ArrValue.Select(x => x.Value.ToString());
+            var strs = ArrValue.Where(x => x.HasValue).Select(x => x.Value.ToString());
             return String.Join("", strs); 
         }
     }

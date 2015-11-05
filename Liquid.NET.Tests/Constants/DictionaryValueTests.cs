@@ -58,5 +58,18 @@ namespace Liquid.NET.Tests.Constants
             Assert.That(result, Is.EqualTo("Result : Dict 3->Dict3"));
         }
 
+        [Test]
+        public void It_Should_Fail_When_Dereferencing_A_Missing_Property()
+        {
+            // Arrange
+            var dict = new Dictionary<String, IExpressionConstant>
+            {
+            };
+            DictionaryValue dictValue = new DictionaryValue(dict);
+
+            // Assert
+            Assert.That(dictValue.ValueAt("string1").HasValue, Is.False);
+
+        }
     }
 }

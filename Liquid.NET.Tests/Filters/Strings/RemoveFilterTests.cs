@@ -48,7 +48,7 @@ namespace Liquid.NET.Tests.Filters.Strings
             var result = RenderingHelper.RenderTemplate("Result : {{ \"test\" | remove : x }}");
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : Please specify a replacement string."));
+            Assert.That(result, Is.EqualTo("Result : ERROR: Please specify a replacement string."));
         }
 
 

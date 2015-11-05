@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+
 using Liquid.NET.Constants;
 using Liquid.NET.Filters;
 using Liquid.NET.Filters.Array;
@@ -250,12 +251,17 @@ namespace Liquid.NET
             return this;
         }
 
+        public ITemplateContext ErrorWhenValueMissing()
+        {
+            _options.ErrorWhenValueMissing = true;
+            return this;
+        }
     }
 
     public class LiquidOptions
     {
         public bool NoForLimit { get; internal set; }
-
+        public bool ErrorWhenValueMissing { get; set; }
     }
 
 }

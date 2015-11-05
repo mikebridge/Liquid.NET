@@ -1,2 +1,56 @@
-before_build:
+# configuration for "master" branch
+# build in Debug mode and Test
+-
+  branches:
+    only:
+    - master
+
+  version: 0.9.1.{build}
+
+  configuration: Debug
+
+  build:
+    project: Liquid.NET.sln
+
+  before_build:
   - nuget restore
+
+  test_script:
+  - .\packages\OpenCover.4.6.166\tools\OpenCover.Console.exe -register:user -target:"packages\NUnit.Runners.2.6.4\tools\nunit-console.exe" -targetargs:""".\Liquid.NET.Tests\bin\Debug\Liquid.NET.Tests.dll"" /noshadow" -excludebyattribute:*.ExcludeFromCodeCoverage* -filter:"+[Liquid.NET]* -[Liquid.NET]Liquid.NET.Tests.*" -returntargetcode -output:.\Liquid.NET.coverage.xml
+  - "SET PATH=C:\\Python34;C:\\Python34\\Scripts;%PATH%"
+  - pip install codecov
+  - codecov -f "Liquid.NET.coverage.xml"
+
+# configuration for "release" branch
+# build in Debug mode and Test
+
+-
+  branches:
+    only:
+    - release
+
+  version: 0.9.1
+  configuration: Release
+  before_build:
+    - nuget restore
+
+  assembly_info:
+    patch: true
+    file: '**\AssemblyInfo.*'
+    assembly_version: '{version}'
+    assembly_file_version: '{version}'
+    assembly_informational_version: '{version}'
+  nuget:
+    account_feed: true
+    project_feed: true
+  build:
+    project: Liquid.NET.sln
+    publish_nuget: true
+    include_nuget_references: true
+    verbosity: minimal
+  deploy:
+  - provider: NuGet
+    prerelease: false
+    api_key:
+      secure:  VupoidE3HdOx3mLhAdrOX/liMBaU122WL+0etvpc1fmlw6/8lE6W3TcLwByCFzhx
+      artifact: /.*\.nupkg/

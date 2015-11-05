@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Policy;
 using Liquid.NET.Constants;
 using Liquid.NET.Expressions;
 using Liquid.NET.Symbols;
@@ -80,10 +79,10 @@ namespace Liquid.NET.Tests
             // Assert
             var liquidExpressions = FindNodesWithType(ast, typeof(LiquidExpressionTree)).FirstOrDefault();
             Assert.That(liquidExpressions, Is.Not.Null);
-
+            // ReSharper disable once PossibleNullReferenceException
             var liquidExpression = ((LiquidExpressionTree)liquidExpressions.Data);
 
-            Assert.That(liquidExpression.ExpressionTree.Data.FilterSymbols.Count(), Is.EqualTo(1));
+            Assert.That(liquidExpression.ExpressionTree.Data.FilterSymbols.Count, Is.EqualTo(1));
 
         }
 
@@ -99,8 +98,10 @@ namespace Liquid.NET.Tests
             // Assert
             var liquidExpressions = FindNodesWithType(ast, typeof (LiquidExpressionTree)).FirstOrDefault();
             Assert.That(liquidExpressions, Is.Not.Null);
+            // ReSharper disable once PossibleNullReferenceException
             var liquidExpression = (LiquidExpressionTree) liquidExpressions.Data;
-            Assert.That(liquidExpression.ExpressionTree.Data.FilterSymbols.FirstOrDefault().Args.Count(), Is.EqualTo(1));
+            // ReSharper disable once PossibleNullReferenceException
+            Assert.That(liquidExpression.ExpressionTree.Data.FilterSymbols.FirstOrDefault().Args.Count, Is.EqualTo(1));
 
         }
 
@@ -178,6 +179,7 @@ namespace Liquid.NET.Tests
             // Act
             LiquidAST ast = generator.Generate("Result : {% if true %} 33 + 4 = {{ 33 | add: 4}} {% else %} hello {% endif %}");
             var tagExpressions = FindNodesWithType(ast, typeof(IfThenElseBlockTag)).FirstOrDefault();
+            // ReSharper disable once PossibleNullReferenceException
             var ifThenElseTag = (IfThenElseBlockTag) tagExpressions.Data;
             var liquidExpressions = FindWhere(ifThenElseTag.IfElseClauses[0].LiquidBlock.Children, typeof(LiquidExpressionTree));
             
@@ -195,6 +197,7 @@ namespace Liquid.NET.Tests
             LiquidAST ast = generator.Generate("Result : {% if true %} 33 + 4 = {% if true %} {{ 33 | add: 4}} {% endif %}{% else %} hello {% endif %}");
 
             var tagExpressions = FindNodesWithType(ast, typeof(IfThenElseBlockTag)).FirstOrDefault();
+            // ReSharper disable once PossibleNullReferenceException
             var ifThenElseTag = (IfThenElseBlockTag)tagExpressions.Data;
             var blockTags = ifThenElseTag.IfElseClauses[0].LiquidBlock.Children;
             var liquidExpressions = FindWhere(blockTags, typeof(IfThenElseBlockTag));
@@ -227,7 +230,7 @@ namespace Liquid.NET.Tests
             var tagExpressions = FindNodesWithType(ast, typeof(IfThenElseBlockTag)).ToList();
             var ifThenElseTag = (IfThenElseBlockTag) tagExpressions[0].Data;
 
-            Assert.That(tagExpressions.Count(), Is.EqualTo(1));
+            Assert.That(tagExpressions.Count, Is.EqualTo(1));
             //Assert.That(ifThenElseTag.IfElseClauses[0].RootNode.Data, Is.TypeOf<AndExpression>());            
             //TODO: TextMessageWriter otu the tree
             //Assert.That(ifThenElseTag.IfElseClauses[0].RootNode[0].Data, Is.TypeOf<AndExpression>());
@@ -296,7 +299,9 @@ namespace Liquid.NET.Tests
             return FindWhere(ast.RootNode.Children, type);
         }
 
+        // ReSharper disable UnusedParameter.Local
         private static IEnumerable<TreeNode<IASTNode>> FindWhere(IEnumerable<TreeNode<IASTNode>> nodes, Type type)
+        // ReSharper restore UnusedParameter.Local
         {
             return TreeNode<IASTNode>.FindWhere(nodes, x => x.GetType() == type);
         }

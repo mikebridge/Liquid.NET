@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Concurrent;
-
 using Liquid.NET.Symbols;
 using Liquid.NET.Utils;
 

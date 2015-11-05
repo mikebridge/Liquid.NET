@@ -1,10 +1,8 @@
-﻿using System;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 
 namespace Liquid.NET.Tests.Grammar
 {
     [TestFixture]
-    //[Ignore("Not Implemented yet")]
     public class GrammarTests
     {
 
@@ -72,17 +70,6 @@ namespace Liquid.NET.Tests.Grammar
             // Assert
             Assert.That(result, Is.EqualTo("Result : TEST "));
 
-        }
-
-        [Test]
-        [Ignore("Need to write a thing for this")]
-        public void RawArgs_Should_Contain_The_Original_Arg_String()
-        {
-            // Act
-            var result = RenderTemplate("Result : {{ \"test awesome\" | echoargs: \"awesome\" 123 }}");
-
-            // Assert
-            Assert.That(result, Is.EqualTo("Result : TEST ")); // note: it doesn't remove that extra space.
         }
 
         [Test]

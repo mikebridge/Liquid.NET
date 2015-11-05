@@ -2,7 +2,7 @@
 
 namespace Liquid.NET.Utils
 {
-    public abstract class Option<T> : IEquatable<T> //: IEquatable<Option<T>>
+    public abstract class Option<T> : IEquatable<T> 
     {
         public abstract T Value { get; protected set; }
 
@@ -23,10 +23,10 @@ namespace Liquid.NET.Utils
 
         public static bool operator ==(Option<T> option1, Option<T> option2)
         {
-            if (ReferenceEquals(null, option1)) throw new ArgumentNullException("option1");
-            if (ReferenceEquals(null, option2)) throw new ArgumentNullException("option2");
-
-            return option1.Equals(option2);
+            // shouldn't be comparing an option with null, but it will return false anyway.
+            //if (ReferenceEquals(null, option1)) throw new ArgumentNullException("option1");
+            //if (ReferenceEquals(null, option2)) throw new ArgumentNullException("option2");
+            return !ReferenceEquals(null, option1) && !ReferenceEquals(null, option2) && option1.Equals(option2);
         }
 
         public static bool operator !=(Option<T> lhs, Option<T> rhs)
@@ -48,20 +48,16 @@ namespace Liquid.NET.Utils
             else
             {
                 var option = obj as Option<T>;
-                if (option != null)
+                if (ReferenceEquals(option, null))
+                {
+                    return true;
+                }
+                else
                 {
                     var rhs = option;
                     return HasValue && rhs.HasValue
                         ? Value.Equals(rhs.Value)
                         : !HasValue && !rhs.HasValue;
-                }
-                else if (obj is T)
-                {
-                    return HasValue && Value.Equals((T)obj);
-                }
-                else
-                {
-                    return false;
                 }
             }
         }

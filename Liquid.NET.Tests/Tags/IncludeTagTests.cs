@@ -1,9 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
 using Liquid.NET.Constants;
 using Liquid.NET.Tests.Helpers;
 using NUnit.Framework;
@@ -44,7 +40,7 @@ namespace Liquid.NET.Tests.Tags
             // Act
             try
             {
-                var result = RenderingHelper.RenderTemplate(str, ctx);
+                RenderingHelper.RenderTemplate(str, ctx);
                 Assert.Fail("Expected exception");
             }
             catch (LiquidParserException ex)

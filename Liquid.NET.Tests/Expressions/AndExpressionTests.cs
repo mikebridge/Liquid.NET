@@ -1,12 +1,7 @@
 ﻿using System;
-using System.CodeDom;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Liquid.NET.Constants;
 using Liquid.NET.Expressions;
-using Liquid.NET.Symbols;
 using Liquid.NET.Utils;
 using NUnit.Framework;
 
@@ -36,5 +31,24 @@ namespace Liquid.NET.Tests.Expressions
             // Assert
             Assert.That(result, Is.EqualTo(expected));
         }
+
+        [Test]
+        [ExpectedException(typeof(Exception))]
+        public void It_Should_Not_Accept_Three_Arguments()
+        {
+            // Arrange
+
+            var expr = new AndExpression();
+
+            // Act
+            // ReSharper disable once UnusedVariable
+            var result = expr.Eval(new TemplateContext(), new List<Option<IExpressionConstant>>
+            {
+                new BooleanValue(true),
+                new BooleanValue(false),
+                new BooleanValue(false)
+            });
+        }
+
     }
 }

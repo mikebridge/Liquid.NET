@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Liquid.NET.Constants;
+using Liquid.NET.Expressions;
+using Liquid.NET.Utils;
 using NUnit.Framework;
 
 namespace Liquid.NET.Tests.Expressions
@@ -105,6 +104,23 @@ namespace Liquid.NET.Tests.Expressions
             Assert.That(result, Is.EqualTo("Result : NOT PRESENT"));
 
         }
+
+        [Test]
+        public void It_Should_Not_Accept_Two_Args()
+        {
+            // Arrange
+            var expr = new IsPresentExpression();
+
+            // Act
+            var result = expr.Eval(new TemplateContext(), new List<Option<IExpressionConstant>>
+            {
+                new BooleanValue(true),
+                new BooleanValue(false)
+            });
+            Assert.That(result.IsError);
+
+        }
+
 
     }
 

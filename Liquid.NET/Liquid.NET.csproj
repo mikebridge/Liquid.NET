@@ -48,29 +48,28 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Liquid.NET.Grammar\obj\Debug\LiquidBaseListener.cs">
+    <Compile Include="..\Liquid.NET.Grammar\obj\$(Configuration)\LiquidBaseListener.cs">
       <Link>src\LiquidBaseListener.cs</Link>
     </Compile>
-    <Compile Include="..\Liquid.NET.Grammar\obj\Debug\LiquidBaseVisitor.cs">
+    <Compile Include="..\Liquid.NET.Grammar\obj\$(Configuration)\LiquidBaseVisitor.cs">
       <Link>src\LiquidBaseVisitor.cs</Link>
     </Compile>
-    <Compile Include="..\Liquid.NET.Grammar\obj\Debug\LiquidLexer.cs">
+    <Compile Include="..\Liquid.NET.Grammar\obj\$(Configuration)\LiquidLexer.cs">
       <Link>src\LiquidLexer.cs</Link>
     </Compile>
-    <Compile Include="..\Liquid.NET.Grammar\obj\Debug\LiquidListener.cs">
+    <Compile Include="..\Liquid.NET.Grammar\obj\$(Configuration)\LiquidListener.cs">
       <Link>src\LiquidListener.cs</Link>
     </Compile>
-    <Compile Include="..\Liquid.NET.Grammar\obj\Debug\LiquidParser.cs">
+    <Compile Include="..\Liquid.NET.Grammar\obj\$(Configuration)\LiquidParser.cs">
       <Link>src\LiquidParser.cs</Link>
     </Compile>
-    <Compile Include="..\Liquid.NET.Grammar\obj\Debug\LiquidVisitor.cs">
+    <Compile Include="..\Liquid.NET.Grammar\obj\$(Configuration)\LiquidVisitor.cs">
       <Link>src\LiquidVisitor.cs</Link>
     </Compile>
     <Compile Include="src\CachingLiquidASTGenerator.cs" />
     <Compile Include="src\Constants\ArrayIndexer.cs" />
     <Compile Include="src\Constants\ArrayValue.cs" />
     <Compile Include="src\Constants\BooleanValue.cs" />
-    <Compile Include="src\Constants\ConstantFactory.cs" />
     <Compile Include="src\Constants\DateValue.cs" />
     <Compile Include="src\Constants\IndexDereferencer.cs" />
     <Compile Include="src\Constants\DictionaryValue.cs" />
@@ -81,11 +80,7 @@
     <Compile Include="src\Constants\FieldAccessor.cs" />
     <Compile Include="src\Constants\GeneratorValue.cs" />
     <Compile Include="src\Constants\IExpressionConstant.cs" />
-    <Compile Include="src\Constants\IIndexable.cs" />
-    <Compile Include="src\Constants\NilValue.cs" />
     <Compile Include="src\Constants\NumericValue.cs" />
-    <Compile Include="src\Constants\FilterArgumentAttribute.cs" />
-    <Compile Include="src\Constants\Reflector.cs" />
     <Compile Include="src\Constants\StringValue.cs" />
     <Compile Include="src\Constants\ValueCaster.cs" />
     <Compile Include="src\Expressions\ContainsExpression.cs" />
@@ -109,7 +104,6 @@
     <Compile Include="src\Expressions\TernaryExpression.cs" />
     <Compile Include="src\Expressions\UnaryExpression.cs" />
     <Compile Include="src\Expressions\VariableReference.cs" />
-    <Compile Include="src\Expressions\IndexedVariableReference.cs" />
     <Compile Include="src\Expressions\VariableReferenceTree.cs" />
     <Compile Include="src\Filters\Array\FirstFilter.cs" />
     <Compile Include="src\Filters\Array\JoinFilter.cs" />
@@ -185,7 +179,6 @@
     <Compile Include="src\Rendering\IncludeRenderer.cs" />
     <Compile Include="src\Rendering\MacroRenderer.cs" />
     <Compile Include="src\Rendering\TableRowRenderer.cs" />
-    <Compile Include="src\Symbols\ErrorNode.cs" />
     <Compile Include="src\Symbols\FilterSymbol.cs" />
     <Compile Include="src\LiquidTemplate.cs" />
     <Compile Include="src\Symbols\IASTNode.cs" />
@@ -194,12 +187,10 @@
     <Compile Include="src\Symbols\RootDocumentNode.cs" />
     <Compile Include="src\Symbols\SymbolTable.cs" />
     <Compile Include="src\Symbols\SymbolTableStack.cs" />
-    <Compile Include="src\Symbols\SymbolTableStackFactory.cs" />
     <Compile Include="src\Tags\AssignTag.cs" />
     <Compile Include="src\Tags\BreakTag.cs" />
     <Compile Include="src\Tags\CaptureBlockTag.cs" />
     <Compile Include="src\Tags\CaseWhenElseBlockTag.cs" />
-    <Compile Include="src\Tags\CommentBlockTag.cs" />
     <Compile Include="src\Tags\ContinueTag.cs" />
     <Compile Include="src\Tags\CustomBlockTag.cs" />
     <Compile Include="src\Tags\CustomTag.cs" />
@@ -226,8 +217,12 @@
     <Compile Include="src\Utils\Registry.cs" />
     <Compile Include="src\Utils\StrFTime.cs" />
     <Compile Include="src\Utils\TreeNode.cs" />
+    <Compile Include="src\Utils\Try.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Liquid.NET.nuspec">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

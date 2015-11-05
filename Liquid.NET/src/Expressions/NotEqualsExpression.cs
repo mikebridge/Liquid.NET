@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Liquid.NET.Constants;
-using Liquid.NET.Symbols;
 using Liquid.NET.Utils;
 
 namespace Liquid.NET.Expressions
@@ -10,10 +8,10 @@ namespace Liquid.NET.Expressions
     public class NotEqualsExpression :ExpressionDescription
     {
         
-        public override void Accept(IExpressionDescriptionVisitor expressionDescriptionVisitor)
-        {
-            expressionDescriptionVisitor.Visit(this);
-        }
+//        public override void Accept(IExpressionDescriptionVisitor expressionDescriptionVisitor)
+//        {
+//            expressionDescriptionVisitor.Visit(this);
+//        }
 
         //public IExpressionConstant Eval(SymbolTableStack symbolTableStack, IEnumerable<IExpressionConstant> expressions)
         public override LiquidExpressionResult Eval(ITemplateContext templateContext, IEnumerable<Option<IExpressionConstant>> expressions)
@@ -23,10 +21,10 @@ namespace Liquid.NET.Expressions
             IList<Option<IExpressionConstant>> exprList = expressions.ToList();
 
             //Console.WriteLine("EqualsExpression is Eval-ing expressions ");
-            if (exprList.Count() != 2)
+            if (exprList.Count != 2)
             {
                 //return LiquidExpressionResult.Error("Equals is a binary expression but received " + exprList.Count() + ".");
-                return LiquidExpressionResult.Error("Equals is a binary expression but received " + exprList.Count() + ".");
+                return LiquidExpressionResult.Error("Equals is a binary expression but received " + exprList.Count + ".");
             }
 
             if (exprList.All(x => !x.HasValue)) // both null

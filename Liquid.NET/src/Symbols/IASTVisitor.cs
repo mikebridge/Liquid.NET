@@ -1,29 +1,19 @@
-﻿using Liquid.NET.Constants;
-using Liquid.NET.Expressions;
-using Liquid.NET.Tags;
+﻿using Liquid.NET.Tags;
 
 namespace Liquid.NET.Symbols
 {
 
     public interface IASTVisitor
     {
-        void Visit(LiquidExpression liquidExpression);
-
         void Visit(LiquidExpressionTree liquidExpressionTree);
 
         void Visit(RawBlockTag rawBlockTag);
-
-        void Visit(CommentBlockTag commentBlockTag);
 
         void Visit(CustomTag customTag);
 
         void Visit(CustomBlockTag caseWhenElseBlockTag);
 
         void Visit(RootDocumentNode rootDocumentNode);
-
-        //void Visit(VariableReference variableReference);
-
-        void Visit(StringValue stringValue);
 
         void Visit(ForBlockTag forBlockTag);
 
@@ -48,8 +38,6 @@ namespace Liquid.NET.Symbols
         void Visit(BreakTag breakTag);
 
         void Visit(MacroBlockTag macroBlockTag);
-
-        void Visit(ErrorNode errorNode);
 
         void Visit(IfChangedBlockTag ifChangedBlockTag);
 

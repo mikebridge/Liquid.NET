@@ -1,7 +1,7 @@
-﻿using System;
+﻿//using System;
+
 using System.Collections.Generic;
 using System.Linq;
-
 using Liquid.NET.Symbols;
 using Liquid.NET.Utils;
 
@@ -15,7 +15,7 @@ namespace Liquid.NET.Expressions
 
         public event OnExpressionCompleteEventHandler ExpressionCompleteEvent;
 
-        private TreeNode<LiquidExpression> _liquidExpressionTree;
+        //private TreeNode<LiquidExpression> _liquidExpressionTree;
         private TreeNode<LiquidExpression> _lastExpression; // we need to keep track of the previous one because we don't know if we're completely done or if there are filters.
         private readonly Stack<TreeNode<LiquidExpression>> _liquidExpressionStack = new Stack<TreeNode<LiquidExpression>>(); 
 
@@ -30,11 +30,11 @@ namespace Liquid.NET.Expressions
                 //Console.WriteLine(" to " + _liquidExpressionStack.Peek());
                 _liquidExpressionStack.Peek().AddChild(child);
             }
-            else
-            {
-                //Console.WriteLine(" to ROOT ");
-                _liquidExpressionTree = child;
-            }
+//            else
+//            {
+//                //Console.WriteLine(" to ROOT ");
+//                _liquidExpressionTree = child; 
+//            }
             _liquidExpressionStack.Push(child);
         }
 
@@ -53,20 +53,20 @@ namespace Liquid.NET.Expressions
             _lastExpression.Data.FilterSymbols.Last().RawArgs = argstring;
         }
 
-        public void AddFilterSymbolToCurrentExpression(FilterSymbol filter)
-        {
-            _liquidExpressionStack.Peek().Data.AddFilterSymbol(filter);
-        }
-
-        public void AddFilterArgToCurrentExpressionsFilter(TreeNode<LiquidExpression> filterArg)
-        {
-            _liquidExpressionStack.Peek().Data.FilterSymbols.Last().AddArg(filterArg);
-        }
-
-        public void SetRawArgsForCurrentExpressionsFilter(string argstring)
-        {
-            _liquidExpressionStack.Peek().Data.FilterSymbols.Last().RawArgs = argstring;
-        }
+//        public void AddFilterSymbolToCurrentExpression(FilterSymbol filter)
+//        {
+//            _liquidExpressionStack.Peek().Data.AddFilterSymbol(filter);
+//        }
+//
+//        public void AddFilterArgToCurrentExpressionsFilter(TreeNode<LiquidExpression> filterArg)
+//        {
+//            _liquidExpressionStack.Peek().Data.FilterSymbols.Last().AddArg(filterArg);
+//        }
+//
+//        public void SetRawArgsForCurrentExpressionsFilter(string argstring)
+//        {
+//            _liquidExpressionStack.Peek().Data.FilterSymbols.Last().RawArgs = argstring;
+//        }
 
 
         public void EndLiquidExpression()
@@ -77,16 +77,7 @@ namespace Liquid.NET.Expressions
             InvokeExpressionCompleteEvent(_lastExpression);
         }
 
-
-        public TreeNode<LiquidExpression> ConstructedLiquidExpressionTree
-        {
-            get
-            {
-                return _liquidExpressionTree;
-            }
-        }
-
-        public void InvokeExpressionCompleteEvent(TreeNode<LiquidExpression> expressionTree)
+        private void InvokeExpressionCompleteEvent(TreeNode<LiquidExpression> expressionTree)
         {
             OnExpressionCompleteEventHandler handler = ExpressionCompleteEvent;
             if (handler != null)

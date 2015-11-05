@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Liquid.NET.Constants;
+﻿using Liquid.NET.Constants;
 using NUnit.Framework;
 
 namespace Liquid.NET.Tests.Constants
@@ -35,5 +30,25 @@ namespace Liquid.NET.Tests.Constants
 
         }
 
+        [Test]
+        public void It_Should_Compare_Two_Identical_Values()
+        {
+            // Arrange
+            var str = new StringValue("hello");
+
+            // Act
+            Assert.That(new EasyValueComparer().Equals(str, str), Is.True);
+
+        }
+        [Test]
+        public void It_Should_Compare_Against_Null()
+        {
+            // Arrange
+            var str = new StringValue("hello");
+
+            // Act
+            Assert.That(new EasyValueComparer().Equals(null, str), Is.False);
+
+        }
     }
 }

@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
 using System.Reflection;
-
 using Liquid.NET.Constants;
 using Liquid.NET.Utils;
 using NUnit.Framework;
@@ -95,13 +93,26 @@ namespace Liquid.NET.Tests.Constants
         }
 
         [Test]
-        public void It_Should_Return_The_Same_Object_If_Src_And_Dest_Are_The_Same()
+        public void It_Should_Return_The_Same_Object_If_Src_And_Dest_Are_Arrays()
         {
             // Arrange
             var original = new ArrayValue(new List<IExpressionConstant>{NumericValue.Create(123.4m), NumericValue.Create(5)});
 
             // Act
             var result = ValueCaster.Cast<ArrayValue, ArrayValue>(original).SuccessValue<ArrayValue>();
+
+            // Assert
+            Assert.That(result, Is.EqualTo(original));
+        }
+
+        [Test]
+        public void It_Should_Return_The_Same_Object_If_Src_And_Dest_Are_Strings()
+        {
+            // Arrange
+            var original = new StringValue("Test");
+
+            // Act
+            var result = ValueCaster.Cast<StringValue, StringValue>(original).SuccessValue<StringValue>();
 
             // Assert
             Assert.That(result, Is.EqualTo(original));
@@ -166,6 +177,25 @@ namespace Liquid.NET.Tests.Constants
             
             // Act
             var result = ValueCaster.ConvertToInt(input);
+
+            // Assert
+            Assert.That(result, Is.EqualTo(expected));
+
+        }
+
+        [Test]
+        [TestCase(123.0, 123L)]
+        [TestCase(123.45, 123L)]
+        [TestCase(123.5, 124L)]
+        [TestCase(124.5, 125L)]
+        [TestCase(-124.5, -125L)]
+        [TestCase(-123.5, -124L)]
+        [TestCase(0, 0L)]
+        public void It_Should_Convert_To_A_Long_Using_Away_From_Zero(decimal input, long expected)
+        {
+
+            // Act
+            var result = ValueCaster.ConvertToLong(input);
 
             // Assert
             Assert.That(result, Is.EqualTo(expected));
@@ -338,6 +368,103 @@ namespace Liquid.NET.Tests.Constants
             Assert.That(result, Is.EqualTo("Result : { \"one\" : null, \"two\" : { \"abc\" : \"def\", \"ghi\" : null } }"));
 
         }
+
+        [Test]
+        public void It_Should_Cast_Null_To_None()
+        {
+            var result = ValueCaster.Cast<StringValue, NumericValue>(null);
+            Assert.That(result.IsSuccess, Is.True);
+            Assert.That(result.SuccessResult.HasValue, Is.False);
+        }
+
+        [Test]
+        public void It_Should_ConvertFromNull()
+        {
+            var result = ValueCaster.ConvertFromNull<ArrayValue>();
+            Assert.That(result.IsSuccess, Is.True);
+            Assert.That(result.SuccessResult.HasValue, Is.False);
+        }
+
+        [Test]
+        public void It_Should_Convert_Num()
+        {
+            var result = ValueCaster.Cast<NumericValue, StringValue>(NumericValue.Create(1));
+            Assert.That(result.IsSuccess, Is.True);
+            Assert.That(result.SuccessResult.HasValue, Is.True);
+        }
+
+        [Test]
+        public void It_Should_Convert_An_Array()
+        {
+            var result = ValueCaster.Cast<ArrayValue, StringValue>(new ArrayValue(new List<IExpressionConstant>{new StringValue("test")}));
+            Assert.That(result.IsSuccess, Is.True);
+            Assert.That(result.SuccessResult.HasValue, Is.True);
+            Assert.That(result.SuccessValue<StringValue>().StringVal, Is.EqualTo("test"));
+        }
+
+        [Test]
+        public void It_Should_Convert_A_Date_To_A_Numeric()
+        {
+            var date = new DateTime(2015, 10, 29, 10, 11, 12);
+            var result = ValueCaster.Cast<DateValue, NumericValue>(new DateValue(date));
+            Assert.That(result.IsSuccess, Is.True);
+            Assert.That(result.SuccessResult.HasValue, Is.True);
+            // ReSharper disable once PossibleInvalidOperationException
+            Assert.That(result.SuccessValue<NumericValue>().LongValue, Is.EqualTo(date.Ticks));
+        }
+
+        [Test]
+        public void It_Should_Convert_A_Null_Date_To_0L()
+        {
+            var result = ValueCaster.Cast<DateValue, NumericValue>(new DateValue(null));
+            Assert.That(result.IsSuccess, Is.True);
+            Assert.That(result.SuccessResult.HasValue, Is.True);
+            // ReSharper disable once PossibleInvalidOperationException
+            Assert.That(result.SuccessValue<NumericValue>().LongValue, Is.EqualTo(0L));
+        }
+
+        [Test]
+        public void It_Should_Convert_A_Numeric_To_A_Date()
+        {
+            var date = new DateTime(2015,10,29,10,11,12);
+            var result = ValueCaster.Cast<NumericValue, DateValue>(NumericValue.Create(date.Ticks));
+            Assert.That(result.IsSuccess, Is.True);
+            Assert.That(result.SuccessResult.HasValue, Is.True);
+            // ReSharper disable once PossibleInvalidOperationException
+            Assert.That(result.SuccessValue<DateValue>().DateTimeValue.Value, Is.EqualTo(date));
+        }
+
+        [Test]
+        public void It_Should_Cast_Numeric_To_Numeric()
+        {
+            var result = ValueCaster.Cast<NumericValue, NumericValue>(NumericValue.Create(1));
+            Assert.That(result.IsSuccess, Is.True);
+            Assert.That(result.SuccessResult.HasValue, Is.True);
+        }
+
+        [Test]
+        public void It_Should_Not_Cast_Dict_To_Numeric()
+        {
+            var result = ValueCaster.Cast<DictionaryValue, NumericValue>(new DictionaryValue(new Dictionary<string, Option<IExpressionConstant>>()));
+            Assert.That(result.IsSuccess, Is.False);
+        }
+
+        [Test]
+        public void It_Should_Not_Cast_Array_To_Numeric()
+        {
+            // Arrange
+            var result = ValueCaster.Cast<ArrayValue, NumericValue>(new ArrayValue(new List<IExpressionConstant> { new StringValue("test") }));
+            Assert.That(result.IsSuccess, Is.False);
+        }
+
+        [Test]
+        public void It_Renders_Null_As_Empty()
+        {
+            // Arrange
+            var result = ValueCaster.RenderAsString((IExpressionConstant) null);
+            Assert.That(result, Is.EqualTo(""));
+        }
+
 
     }
 }

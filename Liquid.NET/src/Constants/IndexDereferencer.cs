@@ -19,31 +19,26 @@ namespace Liquid.NET.Constants
             IExpressionConstant value,
             IExpressionConstant indexProperty)
         {
-            //Console.WriteLine("LOOKUP=> VALUE: " + value);
-            //Console.WriteLine("      => INDEX: " + indexProperty);
-            if (value == null)
-            {
-                return LiquidExpressionResult.Error("ERROR : cannot apply an index to a nil value.");
-            }
-            //return DoLookup(ctx, (dynamic) value, indexProperty);
             var arr = value as ArrayValue;
             if (arr != null)
             {
                 return DoLookup(ctx, arr, indexProperty);
             }
+
             var dict = value as DictionaryValue;
             if (dict != null)
             {
                 return DoLookup(ctx, dict, indexProperty);
             }
+
             var str = value as StringValue;
             if (str != null)
             {
                 return DoLookup(ctx, str, indexProperty);
             }
+
             return LiquidExpressionResult.Error("ERROR : cannot apply an index to a " + value.LiquidTypeName + ".");
         }
-
 
         private LiquidExpressionResult DoLookup(ITemplateContext ctx, ArrayValue arrayValue, IExpressionConstant indexProperty)
         {
@@ -77,7 +72,6 @@ namespace Liquid.NET.Constants
 
             if (arrayValue.ArrValue.Count == 0)
             {
-                //return LiquidExpressionResult.Error("array is empty: " + propertyNameString);
                 return LiquidExpressionResult.Success(new None<IExpressionConstant>()); // not an error in Ruby liquid.
             }
             var result = arrayValue.ValueAt(index);

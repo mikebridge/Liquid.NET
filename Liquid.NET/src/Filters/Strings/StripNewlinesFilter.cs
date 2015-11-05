@@ -1,10 +1,10 @@
-﻿using System;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using Liquid.NET.Constants;
 using Liquid.NET.Utils;
 
 namespace Liquid.NET.Filters.Strings
 {
+    // ReSharper disable once ClassNeverInstantiated.Global
     public class StripNewlinesFilter : FilterExpression<IExpressionConstant, StringValue>
     {
 

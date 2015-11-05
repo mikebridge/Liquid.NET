@@ -1,10 +1,10 @@
-﻿using System;
-using Liquid.NET.Constants;
+﻿using Liquid.NET.Constants;
 using Liquid.NET.Utils;
 
 namespace Liquid.NET.Filters
 {
 
+    // ReSharper disable once ClassNeverInstantiated.Global
     public class DefaultFilter : FilterExpression<IExpressionConstant, IExpressionConstant>
     {
         private readonly IExpressionConstant _defaultValue;

@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Remoting.Messaging;
-using System.Text;
-using System.Threading.Tasks;
-using Liquid.NET.Constants;
-using Liquid.NET.Filters.Strings;
+﻿using Liquid.NET.Constants;
 using Liquid.NET.Utils;
 
 namespace Liquid.NET.Filters.Math
 {
+    // ReSharper disable once ClassNeverInstantiated.Global
     public class TimesFilter : FilterExpression<NumericValue, NumericValue>
     {
         private readonly NumericValue _addend1;

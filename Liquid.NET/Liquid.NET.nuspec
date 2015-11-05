@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>Liquid.NET</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>$author$</authors>
+    <owners>$author$</owners>
+    <licenseUrl>https://raw.githubusercontent.com/mikebridge/Liquid.NET/master/LICENSE.txt</licenseUrl>
+    <projectUrl>https://github.com/mikebridge/Liquid.NET</projectUrl>
+    <iconUrl>https://raw.githubusercontent.com/mikebridge/Liquid.NET/master/icon32x32.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>$description$</description>
+    <copyright>Copyright 2015 Mike Bridge</copyright>
+    <tags>liquid markup template templating shopify</tags>
+    <dependencies>
+      <dependency id="Antlr4.Runtime" version="4.3.0" />
+    </dependencies>    
+  </metadata>
+</package>

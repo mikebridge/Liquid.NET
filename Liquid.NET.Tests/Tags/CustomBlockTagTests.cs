@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
 using Liquid.NET.Constants;
 using Liquid.NET.Expressions;
 using Liquid.NET.Symbols;
@@ -44,7 +43,7 @@ namespace Liquid.NET.Tests.Tags
             var templateContext = new TemplateContext().WithAllFilters().WithCustomTagBlockRenderer<WordReverserBlockTag>("echoargs");
             try
             {
-                var result = RenderingHelper.RenderTemplate(
+                RenderingHelper.RenderTemplate(
                     "Result : {% echoargs \"hello\" 123 true %}echo{% endsomethingelse %}", templateContext);
                 Assert.Fail("This should have thrown an error.");
             }
@@ -82,6 +81,23 @@ namespace Liquid.NET.Tests.Tags
         }
 
         [Test]
+        public void It_Should_Show_Error_On_Missing_Tags()
+        {
+            // Act
+            try
+            {
+                RenderingHelper.RenderTemplate("Result : {% test %}{% endtest %}");
+
+                Assert.Fail("THis should have thrown an error");
+            }
+            catch (LiquidRendererException ex)
+            {
+                // Assert
+                Assert.That(String.Join(",", ex.LiquidErrors.Select(x => x.Message)), Is.EqualTo("Liquid syntax error: Unknown tag 'test'"));
+            }
+        }
+
+        [Test]
         public void It_Should_Parse_A_Custom_BlockTag_Along_With_A_Custom_Tag() 
         {
             // Act
@@ -112,10 +128,23 @@ namespace Liquid.NET.Tests.Tags
 
         }
 
+        [Test]
+        public void It_Should_Parse_A_Nested_Error()
+        {
+            // Act
+            var templateContext = new TemplateContext().WithAllFilters().WithCustomTagBlockRenderer<WordReverserBlockTag>("reverse");
+            var result = RenderingHelper.RenderTemplate("Result : {% reverse %}{{ 1 | divided_by: 0 }}{% endreverse %}", templateContext);
+
+            // Assert
+            Assert.That(result, Is.EqualTo("Result : diuqiL :rorre dedivid yb 0"));
+
+        }
+
         /// <summary>
         /// Reverse each word
         /// </summary>
-        public class WordReverserBlockTag : ICustomBlockTagRenderer
+        // ReSharper disable once ClassNeverInstantiated.Local
+        private class WordReverserBlockTag : ICustomBlockTagRenderer
         {
 
             public StringValue Render(
@@ -153,7 +182,8 @@ namespace Liquid.NET.Tests.Tags
         /// <summary>
         /// Reverse each word
         /// </summary>
-        public class ForLikeBlockTag : ICustomBlockTagRenderer
+        // ReSharper disable once ClassNeverInstantiated.Local
+        private class ForLikeBlockTag : ICustomBlockTagRenderer
         {
 
             public StringValue Render(

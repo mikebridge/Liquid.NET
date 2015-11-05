@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using Liquid.NET.Constants;
+using Liquid.NET.Expressions;
+using Liquid.NET.Utils;
 using NUnit.Framework;
 
 namespace Liquid.NET.Tests.Expressions
@@ -104,6 +106,21 @@ namespace Liquid.NET.Tests.Expressions
 
         }
 
+        [Test]
+        public void It_Should_Not_Accept_Two_Args()
+        {
+            // Arrange
+            var expr = new IsEmptyExpression();
+
+            // Act
+            var result = expr.Eval(new TemplateContext(), new List<Option<IExpressionConstant>>
+            {
+                new BooleanValue(true),
+                new BooleanValue(false)
+            });
+            Assert.That(result.IsError);
+
+        }
 
     }
 

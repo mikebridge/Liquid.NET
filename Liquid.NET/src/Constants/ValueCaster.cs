@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Numerics;
-using Liquid.NET.Filters;
 using Liquid.NET.Utils;
 
 namespace Liquid.NET.Constants
@@ -90,9 +89,11 @@ namespace Liquid.NET.Constants
             where TDest : IExpressionConstant
         {
             var destType = typeof (TDest);
-            if (destType == typeof (NumericValue))
+            if (destType == typeof (DateValue))
             {
-                return LiquidExpressionResult.Success(num);
+                var longVal = num.LongValue;
+                var dateTime = new DateTime(longVal);
+                return LiquidExpressionResult.Success(new DateValue(dateTime));
             }
 
             return LiquidExpressionResult.Success(NumericValue.Create(0)); // Liquid seems to convert unknowns to numeric.
@@ -103,19 +104,33 @@ namespace Liquid.NET.Constants
             where TDest : IExpressionConstant
         {
             var destType = typeof (TDest);
-            if (destType == typeof (BooleanValue))
-            {
-                return LiquidExpressionResult.Success(boolean);
-            }
+//            if (destType == typeof (BooleanValue))
+//            {
+//                return LiquidExpressionResult.Success(boolean);
+//            }
 
             return LiquidExpressionResult.Error("Can't convert from boolean to " + destType);
        
         }
 
+        // ReSharper disable once UnusedParameter.Local
         private static LiquidExpressionResult Convert<TDest>(DateValue date)
              where TDest : IExpressionConstant
         {
             var destType = typeof(TDest);
+            if (destType == typeof(NumericValue))
+            {
+                NumericValue ticks;
+                if (date == null || !date.DateTimeValue.HasValue)
+                {
+                    ticks = NumericValue.Create(0L);
+                }
+                else
+                {
+                    ticks = NumericValue.Create(date.DateTimeValue.Value.Ticks);
+                }
+                return LiquidExpressionResult.Success(ticks);
+            }
 
             return LiquidExpressionResult.Error("Can't convert from date to " + destType);
 
@@ -141,6 +156,7 @@ namespace Liquid.NET.Constants
             return LiquidExpressionResult.Error("Can't convert from a DictionaryValue to " + destType);
         }
 
+        // ReSharper disable once UnusedParameter.Local
         private static LiquidExpressionResult Convert<TDest>(ArrayValue arrayValue)
               where TDest : IExpressionConstant
         {
@@ -157,10 +173,10 @@ namespace Liquid.NET.Constants
             where TDest : IExpressionConstant
         {
             var destType = typeof (TDest);
-            if (destType == typeof (StringValue))
-            {
-                return LiquidExpressionResult.Success(str);
-            }
+//            if (destType == typeof (StringValue))
+//            {
+//                return LiquidExpressionResult.Success(str);
+//            }
 
             if (destType == typeof (NumericValue))
             {
@@ -244,50 +260,14 @@ namespace Liquid.NET.Constants
             return (int) Math.Round(val, MidpointRounding.AwayFromZero);
         }
 
+        public static long ConvertToLong(decimal val)
+        {
+            return (long)Math.Round(val, MidpointRounding.AwayFromZero);
+        }
+
         public static BigInteger ConvertToBigInt(decimal val)
         {
             return new BigInteger(Math.Round(val, MidpointRounding.AwayFromZero));
-        }
-
-        // Not sure where to put these yet
-        /// <summary>
-        /// Make a list of functions, each of which has the input of the previous function.  Interpolate a casting
-        /// function if the input of one doesn't fit with the value of the next.
-        /// 
-        /// TODO: I think this should be part of the bind function.
-        /// </summary>
-        /// <param name="filterExpressions"></param>
-        /// <returns></returns>
-        public static IEnumerable<IFilterExpression> InterpolateCastFilters(IEnumerable<IFilterExpression> filterExpressions)
-        {
-
-            var result = new List<IFilterExpression>();
-
-            Type expectedInputType = null;
-            foreach (var filterExpression in filterExpressions)
-            {
-                // TODO: The expectedInputType might be a superclass of the output (not just equal type)
-                //if (expectedInputType != null && filterExpression.SourceType != expectedInputType)
-                if (expectedInputType != null && !filterExpression.SourceType.IsAssignableFrom(expectedInputType))
-                {
-                    //Console.WriteLine("Creating cast from " + filterExpression + " TO " + expectedInputType);
-                    result.Add(CreateCastFilter(expectedInputType, filterExpression.SourceType));
-                }
-                result.Add(filterExpression);
-                expectedInputType = filterExpression.ResultType;
-            }
-
-            return result;
-        }
-
-        public static IFilterExpression CreateCastFilter(Type sourceType, Type resultType)
-        {
-            // TODO: Move this to FilterFactory.Instantiate
-            Type genericClass = typeof(CastFilter<,>);
-            // MakeGenericType is badly named
-            //Console.WriteLine("FilterChain Creating Converter from " + sourceType + " to " + resultType);
-            Type constructedClass = genericClass.MakeGenericType(sourceType, resultType);
-            return (IFilterExpression)Activator.CreateInstance(constructedClass);
         }
 
         public static string RenderAsString(Option<IExpressionConstant> val)
@@ -295,12 +275,6 @@ namespace Liquid.NET.Constants
 
             return val.HasValue ? RenderAsString(val.Value) : "";
 
-//            // TODO: Does this render an error if it can't cast or an empty string?
-//            if (stringResult.IsError)
-//            {
-//                return "";
-//            }
-//            return stringResult.SuccessResult.HasValue ? ((StringValue)stringResult.SuccessResult.Value).StringVal : "";
         }
 
         public static string RenderAsString(IExpressionConstant val)
@@ -311,14 +285,9 @@ namespace Liquid.NET.Constants
                 return "";
             }
             return val.ToString();
-//            var stringResult = Cast<IExpressionConstant, StringValue>(val);
-//
-//            if (stringResult.IsError)
-//            {
-//                return "";
-//            }
-//            return stringResult.SuccessResult.HasValue ? ((StringValue)stringResult.SuccessResult.Value).StringVal : "";
+
         }
+
 
     }
 }

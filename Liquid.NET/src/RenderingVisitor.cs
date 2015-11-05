@@ -2,9 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-
 using Liquid.NET.Constants;
-using Liquid.NET.Expressions;
 using Liquid.NET.Rendering;
 using Liquid.NET.Symbols;
 using Liquid.NET.Tags;
@@ -19,8 +17,6 @@ namespace Liquid.NET
     /// </summary>
     public class RenderingVisitor : IASTVisitor
     {
-        //private String _result = "";
-        
         private readonly ITemplateContext _templateContext;
         private readonly ConcurrentDictionary<String, int> _counters = new ConcurrentDictionary<string, int>();
         public readonly IList<LiquidError> Errors = new List<LiquidError>();
@@ -30,12 +26,10 @@ namespace Liquid.NET
 
         private readonly Stack<Action<String>> _accumulators = new Stack<Action<string>>();
 
-        //public RenderingVisitor(LiquidASTRenderer astRenderer, SymbolTableStack symbolTableStack)
-        public RenderingVisitor(
-            ITemplateContext templateContext)
+
+        public RenderingVisitor(ITemplateContext templateContext)
         {
             _templateContext = templateContext;
-            //_accumulators.Push(accumulator);
         }
 
         public void PushTextAccumulator(Action<String> accumulator)
@@ -64,12 +58,6 @@ namespace Liquid.NET
             AppendTextToCurrentAccumulator(rawBlockTag.Value);
         }
 
-
-        public void Visit(CommentBlockTag commentBlockTag)
-        {
-            // do nothing
-        }
-
         public void Visit(CustomTag customTag)
         {
             //Console.WriteLine("Looking up Custom Tag " + customTag.TagName);
@@ -85,7 +73,6 @@ namespace Liquid.NET
             if (macroDescription != null)
             {
                 //Console.WriteLine("...");
-                //var evalResult = LiquidExpressionEvaluator.Eval(customTag.LiquidExpressionTrees, _templateContext.SymbolTableStack);
                 var evalResults =
                     customTag.LiquidExpressionTrees.Select(x => LiquidExpressionEvaluator.Eval(x, _templateContext)).ToList();
                 if (evalResults.Any(x => x.IsError))
@@ -96,9 +83,7 @@ namespace Liquid.NET
                 AppendTextToCurrentAccumulator(RenderMacro(macroDescription, evalResults.Select(x => x.SuccessResult)));
                 return;
             }
-            //_result += " ERROR: There is no macro or tag named "+  customTag.TagName+ " ";
             AddError("Liquid syntax error: Unknown tag '" + customTag.TagName + "'", customTag);
-            //_result += "Liquid syntax error: Unknown tag '"+customTag.TagName+"'";
         }
 
         private void RenderError(LiquidError liquidError)
@@ -127,6 +112,7 @@ namespace Liquid.NET
             {
                 return "ERROR: " + x.Message;
             }
+
         }
 
         private void RenderErrors(IEnumerable<LiquidExpressionResult> liquidErrors)
@@ -135,6 +121,7 @@ namespace Liquid.NET
             RenderErrors(errors);
         }
 
+        // ReSharper disable once UnusedParameter.Local
         private void AddError(String message, IASTNode node)
         { 
             Errors.Add(new LiquidError{Message = message});
@@ -143,14 +130,8 @@ namespace Liquid.NET
         private string RenderMacro(MacroBlockTag macroBlockTag, IEnumerable<Option<IExpressionConstant>> args)
         {
             var macroRenderer = new MacroRenderer();
-            //IList<LiquidError> macroErrors = new List<LiquidError>();
-            //var macro = ValueCaster.RenderAsString((IExpressionConstant) macroRenderer.Render(macroBlockTag, _templateContext, args.ToList(), macroErrors));
-            var macro = ValueCaster.RenderAsString((IExpressionConstant)macroRenderer.Render(this, macroBlockTag, _templateContext, args.ToList()));
-            //foreach (var error in macroErrors)
-            //{
-                //Errors.Add(error);
-            //}
-            return macro;
+            var expressionConstant = (IExpressionConstant)macroRenderer.Render(this, macroBlockTag, _templateContext, args.ToList());
+            return ValueCaster.RenderAsString(expressionConstant);
         }
 
         private String RenderCustomTag(CustomTag customTag, Type tagType)
@@ -185,22 +166,22 @@ namespace Liquid.NET
 
         public void Visit(CycleTag cycleTag)
         {
-            String groupName = null;
-            if (cycleTag.GroupNameExpressionTree != null)
+            if (cycleTag.GroupNameExpressionTree == null)
             {
-                LiquidError error = null;
+                AppendTextToCurrentAccumulator(GetNextCycleText(groupName: null, cycleTag: cycleTag));
+            }
+            else
+            {
                 // figure out the group name if any, otherwise use null.
                 LiquidExpressionEvaluator.Eval(cycleTag.GroupNameExpressionTree, _templateContext)
-                    .WhenSuccess(x => groupName = x.HasValue ? ValueCaster.RenderAsString(x.Value) : null)
-                    .WhenError(x => error = x);
-                if (error!=null)
-                {
-                    RenderError(error);
-                    return;
-                } 
-
+                    .WhenSuccess(
+                        x =>
+                            AppendTextToCurrentAccumulator(
+                                GetNextCycleText(
+                                    groupName: x.HasValue ? ValueCaster.RenderAsString(x.Value) : null, 
+                                    cycleTag: cycleTag)))
+                    .WhenError(RenderError);
             }
-            AppendTextToCurrentAccumulator(GetNextCycleText(groupName, cycleTag));
         }
 
         /// <summary>
@@ -240,17 +221,13 @@ namespace Liquid.NET
 
         public void Visit(AssignTag assignTag)
         {
-            if (assignTag.LiquidExpressionTree == null)
-            {
-                _templateContext.SymbolTableStack.DefineGlobal(assignTag.VarName, null);
-            }
-            else
-            {
-                LiquidExpressionEvaluator.Eval(assignTag.LiquidExpressionTree, _templateContext)
-                    .WhenSuccess(x => x.WhenSome(some => _templateContext.SymbolTableStack.DefineGlobal(assignTag.VarName, some))
+
+            LiquidExpressionEvaluator.Eval(assignTag.LiquidExpressionTree, _templateContext)
+                .WhenSuccess(
+                    x => x.WhenSome(some => _templateContext.SymbolTableStack.DefineGlobal(assignTag.VarName, some))
                         .WhenNone(() => _templateContext.SymbolTableStack.DefineGlobal(assignTag.VarName, null)))
-                    .WhenError(RenderError);
-            }
+                .WhenError(RenderError);
+
 
         }
 
@@ -327,15 +304,18 @@ namespace Liquid.NET
 
             // find the first place where the expression tree evaluates to true (i.e. which of the if/elsif/else clauses)
             // This ignores "eval" errors in clauses.
+
             var match = ifThenElseBlockTag.IfElseClauses.FirstOrDefault(
-                                expr => {
-                                    var result = LiquidExpressionEvaluator.Eval(expr.LiquidExpressionTree, _templateContext);
-                                    return result.IsSuccess && result.SuccessResult.HasValue && result.SuccessResult.Value.IsTrue;
-                                });
+                                expr => LiquidExpressionResultIsTrue(LiquidExpressionEvaluator.Eval(expr.LiquidExpressionTree, _templateContext)));
             if (match != null)
             {
                 StartWalking(match.LiquidBlock); // then render the contents
             }
+        }
+
+        private static bool LiquidExpressionResultIsTrue(LiquidExpressionResult result)
+        {
+            return result.IsSuccess && result.SuccessResult.HasValue && result.SuccessResult.Value.IsTrue;
         }
 
         public void Visit(CaseWhenElseBlockTag caseWhenElseBlockTag)
@@ -361,9 +341,9 @@ namespace Liquid.NET
                                         LiquidExpressionEvaluator.Eval(val, _templateContext).SuccessResult)));
 
 
-            if (match != null)
+            if (match != null) // found match
             {
-                StartWalking(match.LiquidBlock); // then eval + render the HTML
+                StartWalking(match.LiquidBlock); // so eval + render the HTML
             }
             else if (caseWhenElseBlockTag.HasElseClause)
             {
@@ -386,10 +366,10 @@ namespace Liquid.NET
             _templateContext.SymbolTableStack.DefineMacro(macroBlockTag.Name, macroBlockTag);
         }
 
-        public void Visit(ErrorNode errorNode)
-        {
-            AppendTextToCurrentAccumulator(errorNode.LiquidError.ToString());
-        }
+//        public void Visit(ErrorNode errorNode)
+//        {
+//            AppendTextToCurrentAccumulator(errorNode.LiquidError.ToString());
+//        }
 
         public void Visit(IfChangedBlockTag ifChangedBlockTag)
         {

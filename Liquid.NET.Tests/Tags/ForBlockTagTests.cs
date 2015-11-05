@@ -487,7 +487,6 @@ namespace Liquid.NET.Tests.Tags
         [TestCase("\'\'", "char:")]
         //[TestCase("\'abc\'", "char:a char:b char:c ")]// these don't work this way
         [TestCase("\'abc\'", "char:abc")]
-        //[Ignore("Looks like liquid doesn't iterate over a string.")]
         public void It_Should_Iterate_Over_A_Strings_Characters(String str, String expected)
         {
             //[TestCase(@"{% for char in characters %}I WILL NOT BE OUTPUT{% endfor %}", @"{""characters"":""""}", @"")]

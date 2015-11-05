@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
 using Liquid.NET.Constants;
 using Liquid.NET.Tests.Helpers;
 using NUnit.Framework;
@@ -34,6 +33,7 @@ namespace Liquid.NET.Tests
 
             // Act
 
+            // ReSharper disable once UnusedVariable
             var result = RenderingHelper.RenderTemplate(template, ctx);
 
             //Logger.Log(result);
@@ -90,13 +90,6 @@ namespace Liquid.NET.Tests
         {
             return "{% for i in (1..10) %}{{ array[i] }}{% endfor %}";
         }
-
-        private static ITemplateContext CreateContext(Dictionary<String, String> dict)
-        {
-            return new TemplateContext().WithFileSystem(new TestFileSystem(dict));
-        }
-
-
 
         private ArrayValue CreateArrayValues()
         {

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 
-
 namespace Liquid.NET.Tests.Helpers
 {
     public class TestFileSystem : IFileSystem

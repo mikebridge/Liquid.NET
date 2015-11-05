@@ -1,8 +1,4 @@
 ﻿using System;
-using System.IO;
-using Antlr4.Runtime;
-using Antlr4.Runtime.Tree;
-using Liquid.NET.Grammar;
 
 namespace Liquid.NET
 {

@@ -1,5 +1,4 @@
 ﻿using System;
-
 using Liquid.NET.Constants;
 
 namespace Liquid.NET.Utils
@@ -46,7 +45,6 @@ namespace Liquid.NET.Utils
         public Option<T> SuccessOption<T>()
             where T : IExpressionConstant
         {
-            //return (Option<T>) ((dynamic) Right);
             return (Option<T>)((object)Right);
         }
 

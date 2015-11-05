@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Liquid.NET.Constants;
 using Liquid.NET.Filters.Array;
-using Liquid.NET.Utils;
 using NUnit.Framework;
 
 namespace Liquid.NET.Tests.Filters.Array
@@ -31,7 +26,7 @@ namespace Liquid.NET.Tests.Filters.Array
             var result = filter.Apply(new TemplateContext(), arrayValue).SuccessValue<BooleanValue>();
 
             // Assert
-            Assert.That(result, Is.EqualTo(objlist[objlist.Count() - 1]));
+            Assert.That(result, Is.EqualTo(objlist[objlist.Count - 1]));
 
         }
 

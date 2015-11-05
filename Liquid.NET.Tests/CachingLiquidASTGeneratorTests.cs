@@ -1,5 +1,4 @@
 ﻿using System;
-
 using NUnit.Framework;
 
 namespace Liquid.NET.Tests
@@ -67,7 +66,7 @@ namespace Liquid.NET.Tests
 
     public class MockGenerator : ILiquidASTGenerator
     {
-        public int Calls { get; set; }
+        public int Calls { get; private set; }
         public LiquidAST Generate(string template)
         {
             Calls ++;

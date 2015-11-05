@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-
 using Liquid.NET.Constants;
 using Liquid.NET.Tests.Filters.Array;
 using NUnit.Framework;
@@ -35,6 +34,7 @@ namespace Liquid.NET.Tests.Constants
             //var expected = ValueCaster.RenderAsString(arrayValue.ArrValue[3]);
             Assert.That(result, Is.EqualTo(expected));
         }
+
 
         [Test]
         [TestCase("mydict.field1", "Property 1")]
@@ -92,6 +92,26 @@ namespace Liquid.NET.Tests.Constants
             // Assert          
             Assert.That(result, Is.EqualTo(expected));
         }
+
+        [Test]
+        [TestCase("first", "a")]
+        [TestCase("last", "g")]
+        [TestCase("size", "7")]
+        public void It_Should_Dereference_Properties_Of_String(String property, String expected)
+        {
+            // Arrange
+            TemplateContext ctx = new TemplateContext();
+            //var arrayValue = DataFixtures.CreateArrayValue();
+            ctx.DefineLocalVariable("mystr", new StringValue("abcdefg"));
+            String tmpl = "{{ mystr." + property + " }}";
+
+            // Act
+            var result = RenderingHelper.RenderTemplate(tmpl, ctx);
+
+            // Assert          
+            Assert.That(result, Is.EqualTo(expected));
+        }
+
 
         [Test]
         [TestCase("size")]

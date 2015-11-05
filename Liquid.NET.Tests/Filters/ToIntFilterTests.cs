@@ -1,5 +1,4 @@
 ﻿using System;
-
 using Liquid.NET.Constants;
 using Liquid.NET.Filters;
 using NUnit.Framework;

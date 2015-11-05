@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Security.Policy;
-using System.Text;
-using System.Threading.Tasks;
-using Liquid.NET.Grammar;
 
 namespace Liquid.NET.Constants
 {
@@ -12,29 +7,33 @@ namespace Liquid.NET.Constants
     {
         public static bool IsEmpty(IExpressionConstant val)
         {
-            if (val == null /* || val.IsNil */)
+            if (val == null)
             {
-                return false; // this appears to be the case in liquid?
+                return false;
             }
-            //return CheckIsEmpty((dynamic)val);
+        
             var str = val as StringValue;
             if (str != null)
             {
                 return CheckIsEmpty(str);
             }
+
             var arr = val as ArrayValue;
             if (arr != null)
             {
                 return CheckIsEmpty(arr);
             }
+
             var dict = val as DictionaryValue;
             if (dict != null)
             {
                 return CheckIsEmpty(dict);
             }
+
             return CheckIsEmpty(val);
         }
 
+        // ReSharper disable once UnusedParameter.Local
         private static bool CheckIsEmpty(IExpressionConstant _)
         {
             return false; // the only conditions will have been caught by IsEmpty
@@ -86,6 +85,7 @@ namespace Liquid.NET.Constants
             return CheckIsBlank(val);
         }
 
+        // ReSharper disable once UnusedParameter.Local
         private static bool CheckIsBlank(IExpressionConstant _)
         {
             return false; // the only conditions will have been caught by IsBlank -- other types are never blank

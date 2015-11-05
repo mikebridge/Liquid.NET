@@ -1,6 +1,5 @@
 ﻿using System;
 using Liquid.NET.Tags;
-using Liquid.NET.Tests.Helpers;
 using NUnit.Framework;
 
 namespace Liquid.NET.Tests

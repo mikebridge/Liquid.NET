@@ -44,14 +44,9 @@ namespace Liquid.NET.Constants
             var start = _start.IntValue;
             var end = _end.IntValue;
 
-            if (end < start)
-            {
-                return CreateEnumerable(end, start).Reverse().GetEnumerator();
-            }
-            else
-            {
-                return CreateEnumerable(start, end).GetEnumerator();
-            }
+            return end < start ?
+                CreateEnumerable(end, start).Reverse().GetEnumerator() : 
+                CreateEnumerable(start, end).GetEnumerator();
 
         }
 
@@ -59,7 +54,7 @@ namespace Liquid.NET.Constants
         {
             var length = end - start + 1;
             return Enumerable.Range(start, length)
-                .Select(x => NumericValue.Create(x));
+                .Select(NumericValue.Create);
         }
 
         IEnumerator IEnumerable.GetEnumerator()

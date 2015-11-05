@@ -1,28 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Liquid.NET.Constants;
-using Liquid.NET.Symbols;
 using Liquid.NET.Utils;
 
 namespace Liquid.NET.Expressions
 {
     public class EqualsExpression :ExpressionDescription
     {
-        public override void Accept(IExpressionDescriptionVisitor expressionDescriptionVisitor)
-        {
-            expressionDescriptionVisitor.Visit(this);
-        }
 
         public override LiquidExpressionResult Eval(ITemplateContext templateContext, IEnumerable<Option<IExpressionConstant>> expressions)
         {
             IList<Option<IExpressionConstant>> exprList = expressions.ToList();
 
             
-            if (exprList.Count() != 2)
+            if (exprList.Count != 2)
             {
                 // This shouldn't happen if the parser is correct.
-                return LiquidExpressionResult.Error("Equals is a binary expression but received " + exprList.Count() + "."); 
+                return LiquidExpressionResult.Error("Equals is a binary expression but received " + exprList.Count + "."); 
             }
 
             if (!exprList[0].HasValue && !exprList[1].HasValue)

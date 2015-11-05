@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.Caching;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Liquid.NET
 {
@@ -21,7 +17,7 @@ namespace Liquid.NET
             _generator = generator;
         }
 
-        public String CacheKey(String str)
+        private String CacheKey(String str)
         {
             return str;
         }

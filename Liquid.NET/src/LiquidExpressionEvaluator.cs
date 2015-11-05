@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
+using System.Security.Cryptography.X509Certificates;
 using Liquid.NET.Constants;
 using Liquid.NET.Filters;
 using Liquid.NET.Symbols;
@@ -60,17 +60,23 @@ namespace Liquid.NET
 
             // Compose a chain of filters, making sure type-casting
             // is done between them.
-            IEnumerable<Tuple<FilterSymbol, IFilterExpression>> filterExpressionTuples;
-            try
-            {
-                filterExpressionTuples = expression.FilterSymbols.Select(symbol =>
-                    new Tuple<FilterSymbol, IFilterExpression>(symbol, InstantiateFilter(templateContext, symbol)))
+            //IEnumerable<Tuple<FilterSymbol, IFilterExpression>> filterExpressionTuples;
+//            try
+//            {
+            var  filterExpressionTuples = expression.FilterSymbols.Select(symbol =>
+                    new Tuple<FilterSymbol, Try<IFilterExpression>>(symbol, InstantiateFilter(templateContext, symbol)))
                     .ToList();
-            }
-            catch (Exception ex)
+            //}
+            //catch (Exception ex)
+            //{
+             //   return LiquidExpressionResult.Error(ex.Message);
+            //}
+            if (filterExpressionTuples.Any(x => x.Item2.IsFailure))
             {
-                return LiquidExpressionResult.Error(ex.Message);
+                // just return the first error.
+                return LiquidExpressionResult.Error(filterExpressionTuples.First().Item2.Exception.Message);
             }
+
             var erroringFilternames = filterExpressionTuples.Where(x => x.Item2 == null).Select(x => x.Item1).ToList();
 
             if (erroringFilternames.Any())
@@ -83,7 +89,7 @@ namespace Liquid.NET
             var filterChain = FilterChain.CreateChain(
                 objResult.GetType(),
                 templateContext,
-                filterExpressionTuples.Select(x => x.Item2));
+                filterExpressionTuples.Select(x => x.Item2.Value));
 
             // apply the composed function to the object
             
@@ -92,24 +98,23 @@ namespace Liquid.NET
         }
 
 
-        private static IFilterExpression InstantiateFilter(ITemplateContext templateContext, FilterSymbol filterSymbol)
+        private static Try<IFilterExpression> InstantiateFilter(ITemplateContext templateContext, FilterSymbol filterSymbol)
         {
             var filterType = templateContext.SymbolTableStack.LookupFilterType(filterSymbol.Name);
-            if (filterType == null)
-            {
-                //TODO: make this return an error filter or something?
-                //throw new Exception("Invalid filter: " + filterSymbol.Name);
-                //return new Tuple<String, IFilterExpression>(filterSymbol.Name, null);
-                return null;
-            }
-            var expressionConstants = filterSymbol.Args.Select(x => LiquidExpressionEvaluator.Eval(x, templateContext)).ToList();
-            //var expressionConstants = filterSymbol.Args.Select(x => x.Eval(templateContext, new List<Option<IExpressionConstant>>())).ToList();
-            // TODO: Handle the error if any
-            //return FilterFactory.InstantiateFilter(filterSymbol.Name, filterType, expressionConstants.Select(x => x.IsSuccess? x.SuccessResult));
+//            if (filterType == null)
+//            {
+//                return null;
+//            }
+            var expressionConstants = filterSymbol.Args.Select(x => Eval(x, templateContext)).ToList();
+
             if (expressionConstants.Any(x => x.IsError))
             {
-                //return null; // eval-ing a constant failed.
-                throw new Exception(String.Join("," ,expressionConstants.Where(x => x.IsError).Select(x => x.ErrorResult.Message)));
+                //return null; // eval-ing a constant failed.  TODO: Is this actually possible?
+                //throw new Exception(String.Join("," ,expressionConstants.Where(x => x.IsError).Select(x => x.ErrorResult.Message)));
+                return
+                    new Failure<IFilterExpression>(
+                        new Exception(String.Join(",",
+                            expressionConstants.Where(x => x.IsError).Select(x => x.ErrorResult.Message))));
             }
             return FilterFactory.InstantiateFilter(filterSymbol.Name, filterType, expressionConstants.Select(x => x.SuccessResult));
         }

@@ -41,8 +41,7 @@ namespace Liquid.NET.Constants
 
         public Option<IExpressionConstant> ValueAt(String key)
         {
-            var result = _value.ContainsKey(key) ? _value[key] : new None<IExpressionConstant>(); 
-            return result;
+            return _value.ContainsKey(key) ? _value[key] : new None<IExpressionConstant>();
         }
 
         public override string ToString()
@@ -65,36 +64,24 @@ namespace Liquid.NET.Constants
         private static Type GetWrappedType<T>(Option<T> expressionConstant)
             where T : IExpressionConstant
         {
-            if (expressionConstant.HasValue)
-            {
-                var nestedType = expressionConstant.Value.GetType();
-                //Console.WriteLine("NEsted type " + nestedType);
-                return nestedType;
-            }
-            else
-            {
-                return null;
-            }
+            return expressionConstant.HasValue ? expressionConstant.Value.GetType() : null;
         }
 
-        public static String Quote(Type origType, String str)
+        private static String Quote(Type origType, String str)
         {
             if (origType == null)
             {
                 return "null";
             }
-            //            if (typeof(NumericValue).IsAssignableFrom(origType) || typeof(BooleanValue).IsAssignableFrom(origType) ||
-            //                if (typeof(ArrayValue).IsAssignableFrom(origType) || typeof(DictionaryValue).IsAssignableFrom(origType))
-            //            {
-            if (typeof(StringValue).IsAssignableFrom(origType) || typeof(DateValue).IsAssignableFrom(origType))
-            {
-                return "\"" + str + "\"";
-            }
-            else
-            {
-                return str;
-            }
+
+            return TypeNeedsQuotes(origType)
+                ? "\"" + str + "\""
+                : str;
         }
 
+        private static bool TypeNeedsQuotes(Type origType)
+        {
+            return typeof (StringValue).IsAssignableFrom(origType) || typeof (DateValue).IsAssignableFrom(origType);
+        }
     }
 }

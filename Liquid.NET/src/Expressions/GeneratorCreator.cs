@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
 using Liquid.NET.Constants;
 using Liquid.NET.Symbols;
 using Liquid.NET.Utils;
@@ -71,10 +70,6 @@ namespace Liquid.NET.Expressions
         private TreeNode<LiquidExpression> _startExpression;
         private TreeNode<LiquidExpression> _endExpression;
 
-        public GeneratorCreator()
-        {
-            
-        }
 //        public GeneratorCreator(TreeNode<LiquidExpression> start, TreeNode<LiquidExpression> end)
 //        {
 //            _startExpression = start;

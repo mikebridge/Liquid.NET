@@ -1,7 +1,4 @@
-﻿using System;
-using System.Runtime.Remoting.Messaging;
-using Liquid.NET.Constants;
-using Liquid.NET.Filters.Math;
+﻿using Liquid.NET.Constants;
 using NUnit.Framework;
 
 namespace Liquid.NET.Tests.Constants
@@ -101,7 +98,7 @@ namespace Liquid.NET.Tests.Constants
 
           //private Func<NumericValue, NumericValue, NumericValue> Add = (x, y) => new NumericValue((decimal)x.Value + (Decimal)y.Value);
 
-          private readonly Func<NumericValue, StringValue> _testToString = num => new StringValue(num.Value.ToString());
+          //private readonly Func<NumericValue, StringValue> _testToString = num => new StringValue(num.Value.ToString());
 
 
     }

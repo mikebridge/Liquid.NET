@@ -4,7 +4,7 @@ using Liquid.NET.Expressions;
 namespace Liquid.NET.Symbols
 {
 
-    public class LiquidExpression : IASTNode
+    public class LiquidExpression
     {
 
         public IExpressionDescription Expression { get; set; }
@@ -18,19 +18,6 @@ namespace Liquid.NET.Symbols
             _filterSymbols.Add(filterSymbol);
         }
 
-        public void AddFilterSymbols(IEnumerable<FilterSymbol> filterSymbols)
-        {
-            foreach (var filterSymbol in filterSymbols)
-            {
-                _filterSymbols.Add(filterSymbol);
-            }
-        }
-
-
-        public void Accept(IASTVisitor visitor)
-        {            
-            visitor.Visit(this);
-        }
 
     }
 }

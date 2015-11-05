@@ -523,26 +523,26 @@ c")]
 
 
         [Test]
-        [TestCase(@"{% case false %}{% when %}true{% endcase %}", @"{}", @"Liquid syntax error: Syntax Error in tag 'case' - Valid when condition: {% when [condition] [or condition2...] %}")]
+        //[TestCase(@"{% case false %}{% when %}true{% endcase %}", @"{}", @"Liquid syntax error: Syntax Error in tag 'case' - Valid when condition: {% when [condition] [or condition2...] %}")]
         [TestCase(@"{% case false %}{% huh %}true{% endcase %}", @"{}", @"Liquid syntax error: Unknown tag 'huh'")]
-        [TestCase(@"{{ var2 }}{% capture %}{{ var }} foo {% endcapture %}{{ var2 }}{{ var2 }}", @"{""var"":""content""}", @"Liquid syntax error: Syntax Error in 'capture' - Valid syntax: capture [var]")]
+        //[TestCase(@"{{ var2 }}{% capture %}{{ var }} foo {% endcapture %}{{ var2 }}{{ var2 }}", @"{""var"":""content""}", @"Liquid syntax error: Syntax Error in 'capture' - Valid syntax: capture [var]")]
         [TestCase(@"{% unknown_tag %}", @"{}", @"Liquid syntax error: Unknown tag 'unknown_tag'")]
-        [TestCase(@"{{ 1 | modulo: 0 }}", @"{}", @"Liquid error: divided by 0")]
-        [TestCase(@"{{ 1.0 | divided_by: 0.0 | ceil }}", @"{}", @"Liquid error: Computation results to 'Infinity'")]
-        [TestCase(@"{{ 1.0 | divided_by: 0.0 | round }}", @"{}", @"Liquid error: Infinity")]
-        [TestCase(@"{% if %}", @"{}", @"Liquid syntax error: Syntax Error in tag 'if' - Valid syntax: if [expression]")]
+        //[TestCase(@"{{ 1 | modulo: 0 }}", @"{}", @"Liquid error: divided by 0")]
+        //[TestCase(@"{{ 1.0 | divided_by: 0.0 | ceil }}", @"{}", @"Liquid error: Computation results to 'Infinity'")]
+        //[TestCase(@"{{ 1.0 | divided_by: 0.0 | round }}", @"{}", @"Liquid error: Infinity")]
+        //[TestCase(@"{% if %}", @"{}", @"Liquid syntax error: Syntax Error in tag 'if' - Valid syntax: if [expression]")]
         //[TestCase(@"{% if jerry == 1 %}", @"{}", @"Liquid syntax error: 'if' tag was never closed")]
         //[TestCase(@"{% if 1 or throw or or 1 %}yes{% endif %}", @"{}", @"Liquid syntax error: Syntax Error in tag 'if' - Valid syntax: if [expression]")]
-        [TestCase(@"{{ 1 | modulo: 0 }}", @"{}", @"Liquid error: divided by 0")]
-        [TestCase(@"{{ 1.0 | divided_by: 0.0 | floor }}", @"{}", @"Liquid error: Computation results to 'Infinity'")]
-        [Ignore("Need to fix this")]
+        //[TestCase(@"{{ 1 | modulo: 0 }}", @"{}", @"Liquid error: divided by 0")]
+        //[TestCase(@"{{ 1.0 | divided_by: 0.0 | floor }}", @"{}", @"Liquid error: Computation results to 'Infinity'")]
+//        [Ignore("Need to fix this")]
         public void It_Should_Generate_An_Exception(String input, String assigns, String expectedMessage)
         {
             // Arrange
             ITemplateContext ctx = new TemplateContext()
                 .WithAllFilters()
                 .WithFileSystem(new TestFileSystem());
-
+            //Console.WriteLine(input);
             foreach (var tuple in DictionaryFactory.CreateStringMapFromJson(assigns))
             {
                 ctx.DefineLocalVariable(tuple.Item1, tuple.Item2);
@@ -551,7 +551,6 @@ c")]
             try
             {
                 String result = template.Render(ctx);
-                //var result = RenderingHelper.RenderTemplate(input);
                 Assert.Fail("Expected exception: " + expectedMessage);
             }
             catch (LiquidParserException ex)

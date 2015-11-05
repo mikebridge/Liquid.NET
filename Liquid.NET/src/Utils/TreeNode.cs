@@ -51,7 +51,7 @@ namespace Liquid.NET.Utils
                 return new List<TreeNode<T>>();
             }
 
-            return nodes.SelectMany(node => FindWhere((TreeNode<T>) node, predicate));
+            return nodes.SelectMany(node => FindWhere(node, predicate));
         }
 
         public static IEnumerable<TreeNode<T>> FindWhere(

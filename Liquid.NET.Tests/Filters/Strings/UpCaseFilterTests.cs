@@ -1,5 +1,4 @@
-﻿using System;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 
 namespace Liquid.NET.Tests.Filters.Strings
 {
@@ -39,6 +38,27 @@ namespace Liquid.NET.Tests.Filters.Strings
 
         }
 
+        [Test]
+        public void It_Should_Put_A_Bool_In_Upper_Case()
+        {
+            // Arrange
+            var result = RenderingHelper.RenderTemplate("Result : {{ true | upcase }}");
+
+            // Assert
+            Assert.That(result, Is.EqualTo("Result : TRUE"));
+
+        }
+
+        [Test]
+        public void It_Should_Ignore_An_Extra_Arg()
+        {
+            // Arrange
+            var result = RenderingHelper.RenderTemplate("Result : {{ \"Test\" | upcase: true }}");
+
+            // Assert
+            Assert.That(result, Is.EqualTo("Result : TEST"));
+
+        }
 
     }
 }

@@ -1,9 +1,5 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
-using Liquid.NET.Expressions;
-using Liquid.NET.Filters.Strings;
-using Liquid.NET.Symbols;
 
 namespace Liquid.NET.Constants
 {
@@ -21,20 +17,12 @@ namespace Liquid.NET.Constants
             _val = val;
         }
 
-        /// <summary>
-        /// TODO: is an empty string true or false?
-        /// </summary>
         public override bool IsTrue
         {
             get { return _val != null; }
         }
 
         public override string LiquidTypeName { get { return "string"; } }
-
-        public override void Accept(IExpressionDescriptionVisitor visitor)
-        {
-            visitor.Visit(this);
-        }
 
         /// <summary>
         /// Return a new StringValue with str appended.

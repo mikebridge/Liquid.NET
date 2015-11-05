@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Liquid.NET.Constants;
 using NUnit.Framework;
 
 namespace Liquid.NET.Tests.Tags
@@ -67,26 +62,6 @@ namespace Liquid.NET.Tests.Tags
 
             // Assert
             Assert.That(result, Is.EqualTo("00"));
-
-        }
-
-        [Test]
-        [Ignore("Not implemented: the index isn't stored a reusable place.")]
-        public void Rendering_Repeatedly_Will_Use_The_Same_Context()
-        {
-            // Arrange
-            TemplateContext ctx = new TemplateContext();
-            var tmpl = "{% increment a %}";
-            var template = LiquidTemplate.Create(tmpl);
-            var template2 = LiquidTemplate.Create(tmpl);
-
-            // Act
-            String result = template.Render(ctx);
-            String result2 = template2.Render(ctx);
-
-            // Assert
-            Assert.That(result, Is.EqualTo("0"));
-            Assert.That(result2, Is.EqualTo("1"));
 
         }
 

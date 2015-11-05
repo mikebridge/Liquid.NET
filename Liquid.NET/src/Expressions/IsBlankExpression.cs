@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-
 using Liquid.NET.Constants;
-using Liquid.NET.Symbols;
 using Liquid.NET.Utils;
-
 using ExpressionResult = Liquid.NET.Utils.Either<Liquid.NET.LiquidError, Liquid.NET.Utils.Option<Liquid.NET.Constants.IExpressionConstant>>;
 
 namespace Liquid.NET.Expressions
@@ -19,10 +15,10 @@ namespace Liquid.NET.Expressions
     /// </summary>
     public class IsBlankExpression : ExpressionDescription
     {
-        public override void Accept(IExpressionDescriptionVisitor expressionDescriptionVisitor)
-        {
-            expressionDescriptionVisitor.Visit(this);
-        }
+//        public override void Accept(IExpressionDescriptionVisitor expressionDescriptionVisitor)
+//        {
+//            expressionDescriptionVisitor.Visit(this);
+//        }
 
         public override LiquidExpressionResult Eval(ITemplateContext templateContext, IEnumerable<Option<IExpressionConstant>> expressions)
         {
@@ -32,7 +28,7 @@ namespace Liquid.NET.Expressions
             {
                 return LiquidExpressionResult.Success(new BooleanValue(true));
             }
-            if (list.Count() != 1)
+            if (list.Count != 1)
             {
                 return LiquidExpressionResult.Error("Expected one variable to compare with \"blank\"");
             }

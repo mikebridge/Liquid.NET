@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Liquid.NET.Constants;
 using Liquid.NET.Symbols;
@@ -17,10 +16,10 @@ namespace Liquid.NET.Expressions
         public IExpressionDescription IndexExpression { get; set; }
 
 
-        public void Accept(IExpressionDescriptionVisitor expressionDescriptionVisitor)
-        {
-            throw new NotImplementedException("");
-        }
+//        public void Accept(IExpressionDescriptionVisitor expressionDescriptionVisitor)
+//        {
+//            throw new NotImplementedException("");
+//        }
 
         public LiquidExpressionResult Eval(ITemplateContext templateContext, IEnumerable<Option<IExpressionConstant>> childresults)
         {

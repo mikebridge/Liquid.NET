@@ -24,58 +24,54 @@ namespace Liquid.NET.Filters
             {
                 return x => new LiquidExpressionResult(x);
             }
-
-            // create the casting filter which will cast the incoming object to the input type of filter #1
-            
-            Func<IExpressionConstant, LiquidExpressionResult> castFn = 
-                objExpr => objExpr!=null ? 
-                    CreateCastFilter(objExpr.GetType(), expressions[0].SourceType).Apply(ctx, objExpr) : 
-                    LiquidExpressionResult.Success(new None<IExpressionConstant>());
-     
-            return optionExpression => (castFn(optionExpression.HasValue ? optionExpression.Value : null)).Bind(CreateChain(ctx, expressions));
+            // create the initial cast for the first value, then a way of unwrapping the value into an Option,
+            // then chain with all the other functions.
+            return optionExpression => CreateUnwrapFunction(InitialCast(ctx, expressions.FirstOrDefault()), optionExpression)
+                .Bind(CreateChain(ctx, expressions));
 
         }
 
+        private static Func<IExpressionConstant, LiquidExpressionResult> InitialCast(
+            ITemplateContext ctx, IFilterExpression initialExpression)
+        {
+            return expressionConstant => expressionConstant != null
+                ? CreateCastFilter(expressionConstant.GetType(), initialExpression.SourceType).Apply(ctx, expressionConstant)
+                : LiquidExpressionResult.Success(new None<IExpressionConstant>());
+        }
+
+        /// <summary>
+        /// create the casting filter which will cast the incoming object to the input type of filter #1
+        /// </summary>
+        /// <param name="castFn"></param>
+        /// <param name="optionExpression"></param>
+        /// <returns></returns>
+        private static LiquidExpressionResult CreateUnwrapFunction(
+            Func<IExpressionConstant, LiquidExpressionResult> castFn, 
+            Option<IExpressionConstant> optionExpression)
+        {
+            return castFn(optionExpression.HasValue ? optionExpression.Value : null);
+        }
 
         public static Func<Option<IExpressionConstant>, LiquidExpressionResult> CreateChain(
             ITemplateContext ctx,
             IEnumerable<IFilterExpression> filterExpressions)
         {
-            return x =>
-            {
-                var bindAll = BindAll(ctx, InterpolateCastFilters(filterExpressions));
-                return bindAll(LiquidExpressionResult.Success(x)); // TODO: Is this the best way to kick off the chain?
-            };
+            return x => BindAll(ctx, InterpolateCastFilters(filterExpressions))(x);
         }
 
-        public static Func<LiquidExpressionResult, LiquidExpressionResult> BindAll(
+        private static Func<Option<IExpressionConstant>, LiquidExpressionResult> BindAll(
             ITemplateContext ctx,
             IEnumerable<IFilterExpression> filterExpressions)
         {
-            return initValue => filterExpressions.Aggregate(initValue, (current, filter) =>
-            {
-                if (initValue.IsError)
-                {
-                    return initValue;
-                }
-                if (current.IsError)
-                {
-                    return current;
-                }
-                return current.SuccessResult.HasValue ? 
-                    filter.Apply(ctx, current.SuccessResult.Value) : 
-                    filter.ApplyToNil(ctx);
-                
-            });
+            return initValue => filterExpressions.Aggregate(
+                LiquidExpressionResult.Success(initValue),
+                (current, filter) => filter.BindFilter(ctx, current));
         }
 
         /// <summary>
         /// Make a list of functions, each of which has the input of the previous function.  Interpolate a casting
         /// function if the input of one doesn't fit with the value of the next.
-        /// 
-        /// TODO: I think this should be part of the bind function.
         /// </summary>
-        /// <param name="filterExpressions"></param>
         /// <returns></returns>
         public static IEnumerable<IFilterExpression> InterpolateCastFilters(IEnumerable<IFilterExpression> filterExpressions)
         {
@@ -85,11 +81,8 @@ namespace Liquid.NET.Filters
             Type expectedInputType = null;
             foreach (var filterExpression in filterExpressions)
             {
-                // TODO: The expectedInputType might be a superclass of the output (not just equal type)
-                //if (expectedInputType != null && filterExpression.SourceType != expectedInputType)
-                if (expectedInputType != null && !filterExpression.SourceType.IsAssignableFrom(expectedInputType))
+                if (NeedsACast(expectedInputType, filterExpression))
                 {
-                    //Console.WriteLine("Creating cast from " + filterExpression +" TO "+expectedInputType);
                     result.Add(CreateCastFilter(expectedInputType, filterExpression.SourceType));
                 }
                 result.Add(filterExpression);
@@ -99,13 +92,14 @@ namespace Liquid.NET.Filters
             return result;
         }
 
-        public static IFilterExpression CreateCastFilter(Type sourceType, Type resultType)
-            //where sourceType: IExpressionConstant
+        private static bool NeedsACast(Type expectedInputType, IFilterExpression filterExpression)
         {
-            // TODO: Move this to FilterFactory.Instantiate
+            return expectedInputType != null && !filterExpression.SourceType.IsAssignableFrom(expectedInputType);
+        }
+
+        private static IFilterExpression CreateCastFilter(Type sourceType, Type resultType)
+        {
             Type genericClass = typeof(CastFilter<,>);
-            // MakeGenericType is badly named
-            //Console.WriteLine("FilterChain Creating Converter from " + sourceType + " to " + resultType);
             Type constructedClass = genericClass.MakeGenericType(sourceType, resultType);
             return (IFilterExpression)Activator.CreateInstance(constructedClass);
         }

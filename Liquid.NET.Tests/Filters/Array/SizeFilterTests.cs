@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-
 using Liquid.NET.Constants;
 using Liquid.NET.Filters.Array;
 using Liquid.NET.Utils;
@@ -66,7 +64,7 @@ namespace Liquid.NET.Tests.Filters.Array
             var result = sizeFilter.Apply(new TemplateContext(), dictValue).SuccessValue<NumericValue>();
 
             // Assert
-            Assert.That(result.Value, Is.EqualTo(dict.Keys.Count()));
+            Assert.That(result.Value, Is.EqualTo(dict.Keys.Count));
 
         }
 
@@ -96,7 +94,7 @@ namespace Liquid.NET.Tests.Filters.Array
             var result = filter.Apply(new TemplateContext(), strVal).SuccessValue<NumericValue>();
 
             // Assert
-            Assert.That(result.Value, Is.EqualTo(strVal.StringVal.Count()));
+            Assert.That(result.Value, Is.EqualTo(strVal.StringVal.Length));
 
         }
 
@@ -119,7 +117,6 @@ namespace Liquid.NET.Tests.Filters.Array
         public void An_Undefined_Value_Should_Have_Zero_Length()
         {
             // Arrange
-            var strVal = new None<IExpressionConstant>();
             var filter = new SizeFilter();
 
             // Act

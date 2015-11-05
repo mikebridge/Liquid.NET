@@ -1,9 +1,7 @@
 ﻿using System.Collections.Generic;
-
 using Liquid.NET.Constants;
 using Liquid.NET.Filters.Strings;
 using Liquid.NET.Symbols;
-
 using NUnit.Framework;
 
 namespace Liquid.NET.Tests.Expressions

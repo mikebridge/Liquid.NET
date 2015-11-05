@@ -96,6 +96,54 @@ namespace Liquid.NET.Tests.Tags
 
         }
 
+        [Test]
+        public void It_Should_Parse_A_Nested_Error()
+        {
+            // Act
+            var templateContext = new TemplateContext().WithAllFilters();
+            const string templateString = @"Result : {% macro mymacro arg1 %}"
+                              + @"{{ 1 | divided_by: 0}}"
+                              + @"{% endmacro %}"
+                              + @"{% mymacro ""hello"" ""world""%}";
+            var result = RenderingHelper.RenderTemplate(templateString, templateContext);
+
+            // Assert
+            Assert.That(result, Is.EqualTo("Result : Liquid error: divided by 0"));
+
+        }
+        [Test]
+        public void It_Should_Handle_Missing_Args()
+        {
+            // Act
+            var templateContext = new TemplateContext().WithAllFilters();
+            const string templateString = @"Result : {% macro mymacro arg1 %}"
+                              + @"{{arg1}}"
+                              + @"{% endmacro %}"
+                              + @"{% mymacro x %}";
+            var result = RenderingHelper.RenderTemplate(templateString, templateContext);
+
+            // Assert
+            Assert.That(result, Is.EqualTo("Result : "));
+
+        }
+
+        [Test]
+        [Ignore("When erroring-args is implemented, this should print an error.")]
+        public void It_Should_Handle_Error_Args()
+        {
+            // Act
+            var templateContext = new TemplateContext().WithAllFilters(); // .WithMissingArgsAsError();
+            const string templateString = @"Result : {% macro mymacro arg1 %}"
+                              + @"in macro:{{arg1}}"
+                              + @"{% endmacro %}"
+                              + @"{% mymacro x %}";
+            var result = RenderingHelper.RenderTemplate(templateString, templateContext);
+
+            // Assert
+            Assert.That(result, Is.EqualTo("Result : "));
+
+        }
+
         private ArrayValue CreateArrayValues()
         {
             var list = new List<IExpressionConstant>

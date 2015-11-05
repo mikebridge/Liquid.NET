@@ -1,27 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
 using Liquid.NET.Constants;
-using Liquid.NET.Symbols;
 using Liquid.NET.Utils;
 
 namespace Liquid.NET.Expressions
 {
     public class ContainsExpression :ExpressionDescription
     {
-        public override void Accept(IExpressionDescriptionVisitor expressionDescriptionVisitor)
-        {
-            expressionDescriptionVisitor.Visit(this);
-        }
 
         public override LiquidExpressionResult Eval(ITemplateContext templateContext, IEnumerable<Option<IExpressionConstant>> expressions)
         {
             IList<Option<IExpressionConstant>> exprList = expressions.ToList();
-            if (exprList.Count() != 2)
+            if (exprList.Count != 2)
             {
-                //return LiquidExpressionResult.Error("Contains is a binary expression but received " + exprList.Count() + ".");
-                return LiquidExpressionResult.Error("Contains is a binary expression but received " + exprList.Count() + "."); 
+                return LiquidExpressionResult.Error("Contains is a binary expression but received " + exprList.Count + "."); 
             }
             if (!exprList[0].HasValue || !exprList[1].HasValue)
             {
@@ -47,9 +40,10 @@ namespace Liquid.NET.Expressions
             return Contains(exprList[0].Value, exprList[1].Value);
         }
 
+        // ReSharper disable UnusedParameter.Local
         private LiquidExpressionResult Contains(IExpressionConstant expr, IExpressionConstant expressionConstant)
+        // ReSharper restore UnusedParameter.Local
         {
-            //Console.WriteLine("ERROR");
             return LiquidExpressionResult.Error("Unable to use 'contains' on this type."); 
         }
 

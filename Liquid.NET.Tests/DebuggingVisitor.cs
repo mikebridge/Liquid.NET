@@ -6,7 +6,6 @@ using Liquid.NET.Symbols;
 using Liquid.NET.Tags;
 using Liquid.NET.Utils;
 
-
 namespace Liquid.NET.Tests
 {
     public class DebuggingVisitor : IASTVisitor
@@ -28,10 +27,6 @@ namespace Liquid.NET.Tests
             _result += rawBlockTag.ToString();
         }
 
-        public void Visit(CommentBlockTag commentBlockTag)
-        {
-            _result += commentBlockTag.ToString();
-        }
 
         public void Visit(CustomTag customTag)
         {
@@ -104,10 +99,10 @@ namespace Liquid.NET.Tests
             _result += macroBlockTag.ToString();
         }
 
-        public void Visit(ErrorNode errorNode)
-        {
-            _result += errorNode.ToString();
-        }
+//        public void Visit(ErrorNode errorNode)
+//        {
+//            _result += errorNode.ToString();
+//        }
 
         public void Visit(IfChangedBlockTag ifChangedBlockTag)
         {

@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using Liquid.NET.Expressions;
-using Liquid.NET.Symbols;
 
 namespace Liquid.NET.Constants
 {
@@ -12,11 +9,6 @@ namespace Liquid.NET.Constants
         public BooleanValue(bool val)
         {
             _val = val;       
-        }
-
-        public override void Accept(IExpressionDescriptionVisitor visitor)
-        {
-            visitor.Visit(this);
         }
 
         public override Object Value { get { return _val; } }

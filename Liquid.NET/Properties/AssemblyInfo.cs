@@ -1,16 +1,15 @@
 ﻿using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Liquid.NET")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("A C# port of the Liquid templating language.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Mike Bridge")]
 [assembly: AssemblyProduct("Liquid.NET")]
-[assembly: AssemblyCopyright("Copyright ©  2014")]
+[assembly: AssemblyCopyright("Copyright © 2015 Mike Bridge")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

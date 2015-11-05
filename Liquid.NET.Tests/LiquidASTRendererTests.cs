@@ -581,22 +581,6 @@ namespace Liquid.NET.Tests
 
         }
 
-        [Test]
-        [Ignore("Not implemented")]
-        public void It_Should_Remove_A_Line_BReak_When_Minus_Added_To_Tag_Delimiter()
-        {
-            // Arrange
-            var templateContext = new TemplateContext();
-            var ast = _generator.Generate("Result : {% if true -%}\r\n     true     {% endif -%}\r\nOK");
-
-            // Act
-            String result = Render(templateContext, ast);
-            Logger.Log(result);
-            // Assert
-            Assert.Fail("Not Implemented Yet");
-
-        }
-
     }
 
 }

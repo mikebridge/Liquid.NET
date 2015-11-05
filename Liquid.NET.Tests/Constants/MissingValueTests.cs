@@ -53,7 +53,7 @@ namespace Liquid.NET.Tests.Constants
         }
 
         [Test]
-        public void It_Should_Display_Error_When_Dereferencing_Array_With_Non_Int(String varname)
+        public void It_Should_Display_Error_When_Dereferencing_Array_With_Non_Int()
         {
             // Arrange
             ITemplateContext ctx = new TemplateContext()

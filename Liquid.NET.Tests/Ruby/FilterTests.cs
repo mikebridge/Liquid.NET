@@ -55,6 +55,9 @@ namespace Liquid.NET.Tests.Ruby
         [TestCase(@"{{ """" | append: x }}", @"", @"")]
         [TestCase(@"{{ nil | default: ""NIL TEST"" }}", @"", @"NIL TEST")]
         [TestCase(@"{{ """" | default: ""ES TEST"" }}", @"", @"ES TEST")]
+        [TestCase(@"{{ nil | map: ""test"" }}", @"", @"")]
+        [TestCase(@"{% assign myarray = ""1,2,3,4"" |split: "","" %}{{ myarray.x }}", @"", @"")]
+        [TestCase(@"{% assign myarray = ""1,2,3,4"" |split: "","" %}{{ myarray[x] }}", @"", @"")]
         public void It_Should_Match_Ruby_Output(String input, String assigns, String expected) {
 
             // Arrange

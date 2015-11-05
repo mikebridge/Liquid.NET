@@ -1,5 +1,6 @@
 ﻿using System;
 using Liquid.NET.Constants;
+using Liquid.NET.Symbols;
 
 namespace Liquid.NET.Utils
 {
@@ -12,6 +13,18 @@ namespace Liquid.NET.Utils
         internal LiquidExpressionResult(Option<IExpressionConstant> success)
             : base(success)
         {
+        }
+
+        public static LiquidExpressionResult ErrorOrNone(ITemplateContext ctx, String varname)
+        {
+            if (ctx.Options.ErrorWhenValueMissing)
+            {
+                return Error(SymbolTable.NotFoundError(varname));
+            }
+            else
+            {
+                return Success(new None<IExpressionConstant>());
+            }
         }
 
         public LiquidExpressionResult WhenError(Action<LiquidError> fn)

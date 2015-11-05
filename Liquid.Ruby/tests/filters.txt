@@ -60,3 +60,9 @@
 {{ nil | default: "NIL TEST" }}
 #
 {{ "" | default: "ES TEST" }}
+#
+{{ nil | map: "test" }}
+#
+{% assign myarray = "1,2,3,4" |split: "," %}{{ myarray.x }}
+#
+{% assign myarray = "1,2,3,4" |split: "," %}{{ myarray[x] }}

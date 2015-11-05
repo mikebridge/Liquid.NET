@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Liquid.NET.Constants;
 using Liquid.NET.Filters.Array;
+using Liquid.NET.Utils;
 using NUnit.Framework;
 
 namespace Liquid.NET.Tests.Filters.Array
@@ -45,25 +46,7 @@ namespace Liquid.NET.Tests.Filters.Array
 
             // Act
             var result = (mapFilter.Apply(new TemplateContext(), array).SuccessValue<ArrayValue>()).ToList();
-
-
-            // Assert
-            //IEnumerable<String> expected = dictionaryValues.Select(x => x.DictValue[field].;
-//            var expected = array.ArrValue.Select(x => x.Value.ValueAs<DictionaryValue>().DictValue)
-//                .Select(x => x.ContainsKey(field) ? x[field].Value.ToString() : "");
-                
-
-//            var expected = array.ArrValue.Cast<DictionaryValue>().Select(
-//                x => x.DictValue.ContainsKey(field) ?
-//                    x.DictValue[field].Value.ToString() :
-//                    UndefinedMessage(field)).ToList();
-
-            //Logger.Log("EXPECTED: " + String.Join(",", expected));
             Assert.That(result.Count(x => !x.HasValue), Is.EqualTo(1));
-            //var actual = result.Select(x => x.Value.ToString());
-
-            //Logger.Log("ACTUAL: " + String.Join(",", actual));
-            //Assert.That(actual, Is.EquivalentTo(expected));
 
         }
 
@@ -101,10 +84,46 @@ namespace Liquid.NET.Tests.Filters.Array
             Assert.That(result, Is.EquivalentTo("Value 1 A"));
         }
 
-//        private static string UndefinedMessage(string field)
-//        {
-//            return Undefined.CreateUndefinedMessage(field).ToString();
-//        }
+
+        [Test]
+        public void It_Should_Render_The_Fields()
+        {
+            // Arrange
+            var array = CreateArray();
+            ITemplateContext ctx = new TemplateContext()             
+                .WithAllFilters().DefineLocalVariable("arr", array);
+            var result = RenderingHelper.RenderTemplate("Result : {{ arr | map: \"field1\" }}",ctx);
+
+            // Assert
+            Assert.That(result, Is.EqualTo("Result : Value 1 AValue 2 AValue 3 AValue 4 A"));
+        }
+
+        [Test]
+        public void It_Should_Render_Missing_Fields_When_ErrorsOff()
+        {
+            // Arrange
+            var array = CreateArray();
+            ITemplateContext ctx = new TemplateContext()
+                .WithAllFilters().DefineLocalVariable("arr", array);
+            var result = RenderingHelper.RenderTemplate("Result : {{ arr | map: \"awefwef\" }}", ctx);
+
+            // Assert
+            Assert.That(result, Is.EqualTo("Result : "));
+        }
+
+        [Test]
+        public void It_Should_Error_When_No_Field_When_ErrorsOn()
+        {
+            // Arrange
+            var array = CreateArray();
+            ITemplateContext ctx = new TemplateContext()
+                .ErrorWhenValueMissing()
+                .WithAllFilters().DefineLocalVariable("arr", array);
+            var result = RenderingHelper.RenderTemplate("Result : {{ arr | map: \"missing\" }}", ctx);
+            Console.WriteLine("Result "+result);
+            // Assert
+            Assert.That(result, Is.StringContaining("missing is undefined"));
+        }
 
         public ArrayValue CreateArray()
         {

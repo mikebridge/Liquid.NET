@@ -80,6 +80,7 @@
     <Compile Include="src\Constants\FieldAccessor.cs" />
     <Compile Include="src\Constants\GeneratorValue.cs" />
     <Compile Include="src\Constants\IExpressionConstant.cs" />
+    <Compile Include="src\Constants\MissingValueTest.cs" />
     <Compile Include="src\Constants\NumericValue.cs" />
     <Compile Include="src\Constants\StringValue.cs" />
     <Compile Include="src\Constants\ValueCaster.cs" />

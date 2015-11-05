@@ -251,7 +251,7 @@ namespace Liquid.NET
             return this;
         }
 
-        public TemplateContext ErrorWhenValueMissing()
+        public ITemplateContext ErrorWhenValueMissing()
         {
             _options.ErrorWhenValueMissing = true;
             return this;

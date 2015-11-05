@@ -42,15 +42,26 @@ namespace Liquid.NET.Constants
 
         private LiquidExpressionResult DoLookup(ITemplateContext ctx, ArrayValue arrayValue, IExpressionConstant indexProperty)
         {
+            bool errorOnEmpty = ctx.Options.ErrorWhenValueMissing && arrayValue.ArrValue.Count == 0;
+
+                            
 
             String propertyNameString = ValueCaster.RenderAsString(indexProperty);
             int index;
             if (propertyNameString.ToLower().Equals("first"))
             {
+                if (errorOnEmpty)
+                {
+                    return LiquidExpressionResult.Error("cannot dereference empty array");
+                }
                 index = 0;
             }
             else if (propertyNameString.ToLower().Equals("last"))
             {
+                if (errorOnEmpty)
+                {
+                    return LiquidExpressionResult.Error("cannot dereference empty array");
+                }
                 index = arrayValue.ArrValue.Count - 1;
             }
             else if (propertyNameString.ToLower().Equals("size"))
@@ -59,20 +70,36 @@ namespace Liquid.NET.Constants
             }
             else
             {
-                var maybeIndexResult = ValueCaster.Cast<IExpressionConstant, NumericValue>(indexProperty);
-                if (maybeIndexResult.IsError || !maybeIndexResult.SuccessResult.HasValue)
+                var success = Int32.TryParse(propertyNameString, out index);
+                //var maybeIndexResult = ValueCaster.Cast<IExpressionConstant, NumericValue>(indexProperty);
+
+                if (!success)
                 {
-                    return LiquidExpressionResult.Error("invalid array index: " + propertyNameString);
+                    if (ctx.Options.ErrorWhenValueMissing)
+                    {
+                        return LiquidExpressionResult.Error("invalid index: '" + propertyNameString + "'");
+                    }
+                    else
+                    {
+                        return LiquidExpressionResult.Success(new None<IExpressionConstant>());// liquid seems to return nothing when non-int index.
+                    }
                 }
-                else
-                {
-                    index = maybeIndexResult.SuccessValue<NumericValue>().IntValue;
-                }
+
+//                if (maybeIndexResult.IsError || !maybeIndexResult.SuccessResult.HasValue)
+//                {
+//                    return LiquidExpressionResult.Error("invalid array index: " + propertyNameString);
+//                }
+//                else
+//                {
+//                    index = maybeIndexResult.SuccessValue<NumericValue>().IntValue;
+//                }
             }
 
             if (arrayValue.ArrValue.Count == 0)
             {
-                return LiquidExpressionResult.Success(new None<IExpressionConstant>()); // not an error in Ruby liquid.
+                return errorOnEmpty ? 
+                    LiquidExpressionResult.Error("cannot dereference empty array") : 
+                    LiquidExpressionResult.Success(new None<IExpressionConstant>());
             }
             var result = arrayValue.ValueAt(index);
 
@@ -95,9 +122,8 @@ namespace Liquid.NET.Constants
             }
             else
             {
-                return ctx.Options.ErrorWhenValueMissing
-                    ? LiquidExpressionResult.Error(SymbolTable.NotFoundError(indexProperty.ToString()))
-                    : LiquidExpressionResult.Success(new None<IExpressionConstant>());
+                return LiquidExpressionResult.ErrorOrNone(ctx, indexProperty.ToString());
+
             }
         }
 

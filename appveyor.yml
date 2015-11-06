@@ -8,7 +8,7 @@ environment:
     only:
     - master
 
-  version: {release_version}.{build}
+  version: $(release_version).{build}
 
   configuration: Debug
 
@@ -32,7 +32,7 @@ environment:
     only:
     - release
 
-  version: {release_version}.{build}
+  version: $(release_version).{build}
   configuration: Release
   before_build:
     - nuget restore
@@ -40,9 +40,9 @@ environment:
   assembly_info:
     patch: true
     file: '**\AssemblyInfo.*'
-    assembly_version: '{release_version}'
-    assembly_file_version: '{release_version}'
-    assembly_informational_version: '{release_version}'
+    assembly_version: '$(release_version)'
+    assembly_file_version: '$(release_version)'
+    assembly_informational_version: '$(release_version)'
   nuget:
     account_feed: true
     project_feed: true

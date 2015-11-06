@@ -154,6 +154,27 @@ namespace Liquid.NET.Tests.Expressions
 
         }
 
+
+        [Test]
+        public void It_Should_Return_True_If_LiquidString_Wraps_Null()
+        {
+            // Arrange
+            var str = new LiquidString(null);
+            var tmpl = @"Result : {% if str == blank %}BLANK{% else %}NOT BLANK{% endif %}";
+            ITemplateContext ctx = new TemplateContext();
+
+            ctx.DefineLocalVariable("str", str);
+
+            // Act
+            Logger.Log(tmpl);
+            var result = RenderingHelper.RenderTemplate(tmpl, ctx);
+
+            // Assert
+            Logger.Log("Value is " + result);
+            Assert.That(result, Is.EqualTo("Result : BLANK"));
+
+        }
+
     }
 
 

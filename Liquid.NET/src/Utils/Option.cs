@@ -79,7 +79,7 @@ namespace Liquid.NET.Utils
             Value = val;
         }
 
-        public override sealed T Value { get; protected set; }
+        public sealed override T Value { get; protected set; }
 
         public override bool HasValue
         {

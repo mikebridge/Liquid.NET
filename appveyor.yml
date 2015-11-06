@@ -1,7 +1,7 @@
 # configuration for "master" branch
 # build in Debug mode and Test
 environment:
-  release_version: 0.9.3
+  release_version: "0.9.3"
 
 -
   branches:

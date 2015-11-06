@@ -87,7 +87,7 @@ namespace Liquid.NET.Tests.Filters
             // Arrange
             ITemplateContext ctx =
                 new TemplateContext().WithAllFilters();
-            ArrayValue arr = new ArrayValue(new List<IExpressionConstant> { NumericValue.Create(33) });
+            ArrayValue arr = new ArrayValue { NumericValue.Create(33) };
             ctx.DefineLocalVariable("bar", arr);
             var template = LiquidTemplate.Create("{{ 1 | plus: bar[0]  }}");
 
@@ -171,7 +171,7 @@ namespace Liquid.NET.Tests.Filters
         {
             // Arrange
             ITemplateContext ctx = new TemplateContext().WithAllFilters();
-            ctx.DefineLocalVariable("a", new ArrayValue(new List<IExpressionConstant> {new StringValue("HELLO")}));
+            ctx.DefineLocalVariable("a", new ArrayValue{new StringValue("HELLO")});
             //var template = LiquidTemplate.Create("{% assign x = 1 | plus: bar.foo %} 1 + {{ bar.foo }} = {{ x }}");
             var template = LiquidTemplate.Create("{{ a[0] }} WORLD");
 
@@ -189,7 +189,7 @@ namespace Liquid.NET.Tests.Filters
         {
             // Arrange
             ITemplateContext ctx = new TemplateContext().WithAllFilters();
-            var arr = new ArrayValue(new List<IExpressionConstant> {new StringValue("HELLO")});
+            var arr = new ArrayValue{new StringValue("HELLO")};
             ctx.DefineLocalVariable("a", new DictionaryValue{{ "b", arr }});
             //var template = LiquidTemplate.Create("{% assign x = 1 | plus: bar.foo %} 1 + {{ bar.foo }} = {{ x }}");
             var template = LiquidTemplate.Create("{{ a.b[0] }} WORLD");

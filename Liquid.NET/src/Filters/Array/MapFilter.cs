@@ -23,7 +23,7 @@ namespace Liquid.NET.Filters.Array
 
         public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, ArrayValue liquidArrayExpression)
         {
-            var list = liquidArrayExpression.ArrValue.Select(x => x.HasValue
+            var list = liquidArrayExpression.Select(x => x.HasValue
                 ? FieldAccessor.TryField(ctx, x.Value, _selector.StringVal)
                 : LiquidExpressionResult.ErrorOrNone(ctx, _selector.StringVal)).ToList();
                 //new None<IExpressionConstant>()).ToList();

@@ -48,9 +48,14 @@ namespace Liquid.NET.Tests.Ruby
 
         public static IExpressionConstant Transform(JArray arr)
         {
+            var result = new ArrayValue();
             var list = arr.Select(el => Transform((dynamic) el))
-                .Cast<IExpressionConstant>().ToList();
-            return new ArrayValue(list);
+                .Cast<IExpressionConstant>();
+            foreach (var item in list)
+            {
+                result.Add(item == null ? Option<IExpressionConstant>.None() : Option<IExpressionConstant>.Create(item));
+            }
+            return result;
         }
 
         public static IExpressionConstant Transform(JObject obj)

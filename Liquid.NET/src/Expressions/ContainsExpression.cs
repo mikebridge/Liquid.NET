@@ -55,7 +55,7 @@ namespace Liquid.NET.Expressions
 
         private LiquidExpressionResult Contains(ArrayValue arrayValue, IExpressionConstant expressionConstant)
         {
-            return LiquidExpressionResult.Success(new BooleanValue(arrayValue.ArrValue.Any(IsEqual(expressionConstant))));
+            return LiquidExpressionResult.Success(new BooleanValue(arrayValue.Any(IsEqual(expressionConstant))));
         }
 
         private LiquidExpressionResult Contains(DictionaryValue dictValue, IExpressionConstant expressionConstant)

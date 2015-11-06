@@ -39,7 +39,7 @@ namespace Liquid.NET.Filters.Array
             {
                 return LiquidExpressionResult.Error("Array is nil");
             }
-            var positionFilter = new PositionFilter(NumericValue.Create(liquidArrayExpression.ArrValue.Count - 1));
+            var positionFilter = new PositionFilter(NumericValue.Create(liquidArrayExpression.Count - 1));
             return positionFilter.ApplyTo(ctx, liquidArrayExpression);
         }
 

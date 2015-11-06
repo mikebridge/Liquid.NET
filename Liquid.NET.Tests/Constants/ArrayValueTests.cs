@@ -12,32 +12,29 @@ namespace Liquid.NET.Tests.Constants
         {
 
             // Arrange
-            IList<IExpressionConstant> objlist = new List<IExpressionConstant>
-            {
+            ArrayValue arrayValue = new ArrayValue {
                 new StringValue("a string"), 
                 NumericValue.Create(123), 
                 NumericValue.Create(456m),
                 new BooleanValue(false)
             };
-            ArrayValue arrayValue = new ArrayValue(objlist);
 
             // Assert
             var valueAt = arrayValue.ValueAt(0);
-            Assert.That(valueAt.Value, Is.EqualTo(objlist[0].Value));
+            Assert.That(valueAt.Value, Is.EqualTo("a string"));
         }
 
         [Test]
         public void It_Should_Access_Size_Property_Of_An_Array()
         {
             // Arrange
-            IList<IExpressionConstant> objlist = new List<IExpressionConstant>
+            ArrayValue arrayValue = new ArrayValue
             {
-                new StringValue("a string"), 
-                NumericValue.Create(123), 
+                new StringValue("a string"),
+                NumericValue.Create(123),
                 NumericValue.Create(456m),
                 new BooleanValue(false)
             };
-            ArrayValue arrayValue = new ArrayValue(objlist);
             var ctx = new TemplateContext().WithAllFilters();
             ctx.DefineLocalVariable("myarray", arrayValue);
             // Act
@@ -54,7 +51,7 @@ namespace Liquid.NET.Tests.Constants
             // Arrange
 
             var expected = "Hello";
-            ArrayValue arrayValue = new ArrayValue(new List<IExpressionConstant>());
+            ArrayValue arrayValue = new ArrayValue();
 
             // Act
             arrayValue.MetaData["test"] = expected;

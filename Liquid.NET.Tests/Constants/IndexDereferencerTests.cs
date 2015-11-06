@@ -133,14 +133,12 @@ namespace Liquid.NET.Tests.Constants
         public ArrayValue CreateArrayOfDicts()
         {
             // Arrange
-            IList<IExpressionConstant> objlist = new List<IExpressionConstant>
-            {
+            return new ArrayValue{
                 DataFixtures.CreateDictionary(1, "Value 1 A", "Value 1 B"), 
                 DataFixtures.CreateDictionary(2, "Value 2 A", "Value 2 B"), 
                 DataFixtures.CreateDictionary(3, "Value 3 A", "Value 3 B"), 
                 DataFixtures.CreateDictionary(4, "Value 4 A", "Value 4 B"),
             };
-            return new ArrayValue(objlist);
 
         }
 

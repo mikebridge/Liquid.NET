@@ -119,7 +119,7 @@ namespace Liquid.NET.Tests.Tags
             // Act
             var templateContext = new TemplateContext()
                 .WithAllFilters()
-                .DefineLocalVariable("array", new ArrayValue(new List<IExpressionConstant>{NumericValue.Create(10),NumericValue.Create(11)} ))
+                .DefineLocalVariable("array", new ArrayValue{NumericValue.Create(10),NumericValue.Create(11)} )
                 .WithCustomTagBlockRenderer<ForLikeBlockTag>("forcustom");
             var result = RenderingHelper.RenderTemplate("Result : {% forcustom \"item\" array %}{{item}}{% endforcustom %}", templateContext);
 

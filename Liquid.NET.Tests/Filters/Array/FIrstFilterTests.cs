@@ -13,21 +13,20 @@ namespace Liquid.NET.Tests.Filters.Array
         public void It_Should_Return_The_First_Element()
         {
             // Arrange
-            IList<IExpressionConstant> objlist = new List<IExpressionConstant>
-            {
+
+            ArrayValue arrayValue = new ArrayValue{
                 new StringValue("a string"), 
                 NumericValue.Create(123), 
                 NumericValue.Create(456m),
                 new BooleanValue(false)
             };
-            ArrayValue arrayValue = new ArrayValue(objlist);
             var filter = new FirstFilter();
 
             // Act
             var result = filter.Apply(new TemplateContext(), arrayValue).SuccessValue<StringValue>();
 
             // Assert
-            Assert.That(result, Is.EqualTo(objlist[0]));
+            Assert.That(result, Is.EqualTo(arrayValue[0]));
 
         }
 
@@ -49,7 +48,7 @@ namespace Liquid.NET.Tests.Filters.Array
         public void It_Should_Return_An_Error_If_Array_Is_Empty() // TODO: Check if this is the case
         {
             // Arrange
-            ArrayValue arrayValue = new ArrayValue(new List<IExpressionConstant>());
+            ArrayValue arrayValue = new ArrayValue();
             var filter = new FirstFilter();
 
             // Act

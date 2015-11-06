@@ -80,7 +80,7 @@ namespace Liquid.NET.Tests.Constants
         public void It_Should_Format_An_Array_By_Concatenating_Each_Elements_STring_Value()
         {
             // Arrange
-            var num = new ArrayValue(new List<IExpressionConstant> { new StringValue("a"), new StringValue("b"), new StringValue("c") });
+            var num = new ArrayValue{ new StringValue("a"), new StringValue("b"), new StringValue("c") };
 
             // Act
             var result1 = ValueCaster.Cast<ArrayValue, StringValue>(num);
@@ -96,7 +96,7 @@ namespace Liquid.NET.Tests.Constants
         public void It_Should_Return_The_Same_Object_If_Src_And_Dest_Are_Arrays()
         {
             // Arrange
-            var original = new ArrayValue(new List<IExpressionConstant>{NumericValue.Create(123.4m), NumericValue.Create(5)});
+            var original = new ArrayValue{NumericValue.Create(123.4m), NumericValue.Create(5)};
 
             // Act
             var result = ValueCaster.Cast<ArrayValue, ArrayValue>(original).SuccessValue<ArrayValue>();
@@ -122,7 +122,7 @@ namespace Liquid.NET.Tests.Constants
         public void It_Should_Return_The_Same_Object_If_Dest_Is_An_ExpressionConstant()
         {
             // Arrange
-            var original = new ArrayValue(new List<IExpressionConstant> { NumericValue.Create(123.4m), NumericValue.Create(5) });
+            var original = new ArrayValue { NumericValue.Create(123.4m), NumericValue.Create(5) };
 
             // Act
             var result = ValueCaster.Cast<ArrayValue, ExpressionConstant>(original).SuccessValue<ArrayValue>();
@@ -258,7 +258,7 @@ namespace Liquid.NET.Tests.Constants
             Assert.That(arrayResult.IsError, Is.False);
 
             // Assert
-            var arrValue = arrayResult.SuccessValue<ArrayValue>().ArrValue;
+            var arrValue = arrayResult.SuccessValue<ArrayValue>();
             Assert.That(arrValue.Count, Is.EqualTo(1));
             Assert.That(arrValue[0].Value, Is.EqualTo("Hello"));
 
@@ -282,7 +282,7 @@ namespace Liquid.NET.Tests.Constants
 
             // Assert
 
-            Assert.That(result.ArrValue.Count, Is.EqualTo(4));
+            Assert.That(result.Count, Is.EqualTo(4));
 
         }
 
@@ -388,7 +388,7 @@ namespace Liquid.NET.Tests.Constants
         [Test]
         public void It_Should_Convert_An_Array()
         {
-            var result = ValueCaster.Cast<ArrayValue, StringValue>(new ArrayValue(new List<IExpressionConstant>{new StringValue("test")}));
+            var result = ValueCaster.Cast<ArrayValue, StringValue>(new ArrayValue{new StringValue("test")});
             Assert.That(result.IsSuccess, Is.True);
             Assert.That(result.SuccessResult.HasValue, Is.True);
             Assert.That(result.SuccessValue<StringValue>().StringVal, Is.EqualTo("test"));
@@ -445,7 +445,7 @@ namespace Liquid.NET.Tests.Constants
         public void It_Should_Not_Cast_Array_To_Numeric()
         {
             // Arrange
-            var result = ValueCaster.Cast<ArrayValue, NumericValue>(new ArrayValue(new List<IExpressionConstant> { new StringValue("test") }));
+            var result = ValueCaster.Cast<ArrayValue, NumericValue>(new ArrayValue { new StringValue("test") });
             Assert.That(result.IsSuccess, Is.False);
         }
 

@@ -27,7 +27,7 @@ namespace Liquid.NET.Filters.Array
             //Console.WriteLine("Array is " + liquidArrayExpression.ArrValue.Count);
             //Console.WriteLine("Index is " + _index.IntValue);
             
-            if (liquidArrayExpression.ArrValue.Count > 0 && liquidArrayExpression.ArrValue.Count >= _index.IntValue + 1)
+            if (liquidArrayExpression.Count > 0 && liquidArrayExpression.Count >= _index.IntValue + 1)
             {
                 return LiquidExpressionResult.Success(liquidArrayExpression.ValueAt(_index.IntValue));
             }

@@ -1,24 +1,25 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+
 using System.Linq;
 using Liquid.NET.Utils;
 
 namespace Liquid.NET.Constants
 {
 
-    public class ArrayValue : ExpressionConstant, IEnumerable<Option<IExpressionConstant>>
+    public class ArrayValue : ExpressionConstant, IList<Option<IExpressionConstant>>
     {
-        private readonly IList<Option<IExpressionConstant>> _values; 
+        private readonly IList<Option<IExpressionConstant>> _values;
+
+        public ArrayValue()
+        {
+            _values = new List<Option<IExpressionConstant>>();
+        }
 
         public ArrayValue(IList<Option<IExpressionConstant>> values)
         {
             _values = values;
-        }
-
-        public ArrayValue(IList<IExpressionConstant> values)
-        {
-            _values = values.Select(x => x == null? new None<IExpressionConstant>() : x.ToOption()).ToList();
         }
 
         public override object Value
@@ -37,7 +38,7 @@ namespace Liquid.NET.Constants
             get { return "collection"; }
         }
 
-        public IList<Option<IExpressionConstant>> ArrValue { get { return _values; } }
+        //public IList<Option<IExpressionConstant>> ArrValue { get { return _values; } }
 
         public Option<IExpressionConstant> ValueAt(int key)
         {
@@ -46,13 +47,40 @@ namespace Liquid.NET.Constants
 
         IEnumerator<Option<IExpressionConstant>> IEnumerable<Option<IExpressionConstant>>.GetEnumerator()
         {
-            return ArrValue.GetEnumerator();
+            return _values.GetEnumerator();
         }
 
+        public void Add(Option<IExpressionConstant> item)
+        {
+            _values.Add(item);
+        }
+
+        public void Clear()
+        {
+            _values.Clear();
+        }
+
+        public bool Contains(Option<IExpressionConstant> item)
+        {
+            return _values.Contains(item);
+        }
+
+        public void CopyTo(Option<IExpressionConstant>[] array, int arrayIndex)
+        {
+            _values.CopyTo(array, arrayIndex);
+        }
+
+        public bool Remove(Option<IExpressionConstant> item)
+        {
+            return _values.Remove(item);
+        }
+
+        public int Count { get { return _values.Count; } }
+        public bool IsReadOnly { get { return _values.IsReadOnly; }}
 
         public IEnumerator GetEnumerator()
         {
-            return ArrValue.GetEnumerator();
+            return _values.GetEnumerator();
         }
 
         public override string ToString()
@@ -63,8 +91,35 @@ namespace Liquid.NET.Constants
             //return "[ " + String.Join(", ", strs) + " ]"; 
 
             // The Concatenated way:
-            var strs = ArrValue.Where(x => x.HasValue).Select(x => x.Value.ToString());
+            var strs = _values.Where(x => x.HasValue).Select(x => x.Value.ToString());
             return String.Join("", strs); 
         }
+
+        public int IndexOf(Option<IExpressionConstant> item)
+        {
+            return _values.IndexOf(item);
+        }
+
+        public void Insert(int index, Option<IExpressionConstant> item)
+        {
+            _values.Insert(index, item);
+        }
+
+        public void RemoveAt(int index)
+        {
+            _values.RemoveAt(index);
+        }
+
+
+        public Option<IExpressionConstant> this[int key]
+        {
+            get
+            {
+                var result = _values[key];
+                return result;
+            }
+            set { _values[key] = value; }
+        }
+
     }
 }

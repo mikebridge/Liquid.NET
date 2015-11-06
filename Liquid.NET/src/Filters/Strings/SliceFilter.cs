@@ -31,14 +31,12 @@ namespace Liquid.NET.Filters.Strings
 
         public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, ArrayValue liquidArrayExpression)
         {
-            var list = liquidArrayExpression.ArrValue;
-
             if (_start == null)
             {
                 return LiquidExpressionResult.Error("Please pass a start parameter.");
             }
 
-            return LiquidExpressionResult.Success(new ArrayValue(SliceList(list)));
+            return LiquidExpressionResult.Success(new ArrayValue(SliceList(liquidArrayExpression)));
         }
 
         public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, StringValue stringValue)

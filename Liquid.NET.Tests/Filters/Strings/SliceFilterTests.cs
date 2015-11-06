@@ -105,15 +105,12 @@ namespace Liquid.NET.Tests.Filters.Strings
 
         public ArrayValue CreateArray()
         {
-            // Arrange
-            IList<IExpressionConstant> objlist = new List<IExpressionConstant>
-            {
+            return new ArrayValue {
                 new StringValue("a string"), 
                 NumericValue.Create(123), 
                 NumericValue.Create(456m),
                 new BooleanValue(false)
             };
-            return new ArrayValue(objlist);
 
         }
 

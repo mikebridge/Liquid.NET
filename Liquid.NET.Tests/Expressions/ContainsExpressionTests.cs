@@ -81,14 +81,12 @@ namespace Liquid.NET.Tests.Expressions
         public ArrayValue CreateArray()
         {
             // Arrange
-            IList<IExpressionConstant> objlist = new List<IExpressionConstant>
-            {
+            return new ArrayValue{
                 new StringValue("1"), 
                 NumericValue.Create(2), 
                 new StringValue("Three"),
                 new BooleanValue(true)
-            };
-            return new ArrayValue(objlist);
+            };;
 
         }
 

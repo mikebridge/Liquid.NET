@@ -37,18 +37,18 @@ namespace Liquid.NET.Filters.Array
         private LiquidExpressionResult SortByProperty(ITemplateContext ctx, ArrayValue val, string sortfield)
         {
             if (ctx.Options.ErrorWhenValueMissing &&
-                val.ArrValue.Any(x => FieldAccessor.TryField(ctx, x.Value, sortfield).IsError))
+                val.Any(x => FieldAccessor.TryField(ctx, x.Value, sortfield).IsError))
             {
                 return LiquidExpressionResult.Error("an array element is missing the field '" + sortfield + "'");
             }
-            var ordered = val.ArrValue.OrderBy(x => AsString(ctx, x, sortfield));
+            var ordered = val.OrderBy(x => AsString(ctx, x, sortfield));
 
             return LiquidExpressionResult.Success(new ArrayValue(ordered.ToList()));
         }
 
         private static ArrayValue SortAsArrayOfStrings(ArrayValue val)
         {
-            var result = val.ArrValue.OrderBy(ValueCaster.RenderAsString);
+            var result = val.OrderBy(ValueCaster.RenderAsString);
             return new ArrayValue(result.ToList());
         }
 

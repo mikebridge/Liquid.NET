@@ -14,14 +14,13 @@ namespace Liquid.NET.Tests.Filters.Array
         public void It_Should_Measure_The_Size_Of_An_Array()
         {
             // Arrange
-            IList<IExpressionConstant> objlist = new List<IExpressionConstant>
-            {
+
+            ArrayValue arrayValue = new ArrayValue{
                 new StringValue("a string"), 
                 NumericValue.Create(123), 
                 NumericValue.Create(456m),
                 new BooleanValue(false)
             };
-            ArrayValue arrayValue = new ArrayValue(objlist);
             var filter = new SizeFilter();
 
             // Act
@@ -36,7 +35,7 @@ namespace Liquid.NET.Tests.Filters.Array
         public void An_Array_With_No_Value_Should_Have_Zero_Length()
         {
             // Arrange
-            ArrayValue arrayValue = new ArrayValue(new List<IExpressionConstant>());
+            ArrayValue arrayValue = new ArrayValue();
             var filter = new SizeFilter();
             
             // Act
@@ -51,20 +50,19 @@ namespace Liquid.NET.Tests.Filters.Array
         public void It_Should_Measure_The_Size_Of_A_Dictionary()
         {
             // Arrange
-            var dict = new Dictionary<String, IExpressionConstant>
-            {
+
+            DictionaryValue dictValue = new DictionaryValue {
                 {"string1", new StringValue("a string")},
                 {"string2", NumericValue.Create(123)},
                 {"string3", NumericValue.Create(456m)}
             };
-            DictionaryValue dictValue = new DictionaryValue(dict);
             SizeFilter sizeFilter = new SizeFilter();
 
             // Act
             var result = sizeFilter.Apply(new TemplateContext(), dictValue).SuccessValue<NumericValue>();
 
             // Assert
-            Assert.That(result.Value, Is.EqualTo(dict.Keys.Count));
+            Assert.That(result.Value, Is.EqualTo(3));
 
         }
 
@@ -72,7 +70,7 @@ namespace Liquid.NET.Tests.Filters.Array
         public void A_Dict_With_No_Value_Should_Have_Zero_Length()
         {
             // Arrange
-            DictionaryValue dictValue = new DictionaryValue(new Dictionary<String,Option<IExpressionConstant>>());
+            DictionaryValue dictValue = new DictionaryValue();
             var filter = new SizeFilter();
 
             // Act

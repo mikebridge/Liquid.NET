@@ -9,7 +9,7 @@ namespace Liquid.NET.Filters.Strings
 
         public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, ArrayValue liquidArrayExpression)
         {
-            ArrayValue arrayValue = new ArrayValue(liquidArrayExpression.ArrValue.Distinct(new EasyOptionComparer()).ToList());
+            ArrayValue arrayValue = new ArrayValue(liquidArrayExpression.Distinct(new EasyOptionComparer()).ToList());
             return LiquidExpressionResult.Success(arrayValue);
         }
     }

@@ -42,7 +42,7 @@ namespace Liquid.NET.Constants
 
         private LiquidExpressionResult DoLookup(ITemplateContext ctx, ArrayValue arrayValue, IExpressionConstant indexProperty)
         {
-            bool errorOnEmpty = ctx.Options.ErrorWhenValueMissing && arrayValue.ArrValue.Count == 0;
+            bool errorOnEmpty = ctx.Options.ErrorWhenValueMissing && arrayValue.Count == 0;
 
                             
 
@@ -62,11 +62,11 @@ namespace Liquid.NET.Constants
                 {
                     return LiquidExpressionResult.Error("cannot dereference empty array");
                 }
-                index = arrayValue.ArrValue.Count - 1;
+                index = arrayValue.Count - 1;
             }
             else if (propertyNameString.ToLower().Equals("size"))
             {
-                return LiquidExpressionResult.Success(NumericValue.Create(arrayValue.ArrValue.Count));
+                return LiquidExpressionResult.Success(NumericValue.Create(arrayValue.Count));
             }
             else
             {
@@ -95,7 +95,7 @@ namespace Liquid.NET.Constants
 //                }
             }
 
-            if (arrayValue.ArrValue.Count == 0)
+            if (arrayValue.Count == 0)
             {
                 return errorOnEmpty ? 
                     LiquidExpressionResult.Error("cannot dereference empty array") : 
@@ -112,7 +112,7 @@ namespace Liquid.NET.Constants
             String propertyNameString = ValueCaster.RenderAsString(indexProperty);
             if (propertyNameString.ToLower().Equals("size"))
             {
-                return LiquidExpressionResult.Success(NumericValue.Create(dictionaryValue.DictValue.Keys.Count));
+                return LiquidExpressionResult.Success(NumericValue.Create(dictionaryValue.Keys.Count));
             }
 
             var valueAt = dictionaryValue.ValueAt(indexProperty.Value.ToString());

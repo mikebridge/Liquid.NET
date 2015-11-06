@@ -130,7 +130,7 @@ namespace Liquid.NET.Tests.Tags
         {
             // Arrange
             var ctx = new TemplateContext();
-            ctx.DefineLocalVariable("payments", new ArrayValue(new List<IExpressionConstant>()));
+            ctx.DefineLocalVariable("payments", new ArrayValue());
 
             const String str = "{% if payments == empty %}This is empty{% endif %}";
 
@@ -147,7 +147,7 @@ namespace Liquid.NET.Tests.Tags
         {
             // Arrange
             var ctx = new TemplateContext();
-            ctx.DefineLocalVariable("payments", new ArrayValue(new List<IExpressionConstant>()));
+            ctx.DefineLocalVariable("payments", new ArrayValue());
 
             const String str = "{% if payments.blank? %}This is empty{% endif %}";
 
@@ -162,17 +162,15 @@ namespace Liquid.NET.Tests.Tags
         private static TemplateContext CreateContextWithDictionary()
         {
             var ctx = new TemplateContext();
-            var payments = new List<IExpressionConstant>
+            var payments = new ArrayValue
             {
                 NumericValue.Create(12.34m),
                 NumericValue.Create(33.45m),
             };
 
-            var dict = new Dictionary<String, IExpressionConstant>
-            {
-                {"payments", new ArrayValue(payments)}
-            };
-            ctx.DefineLocalVariable("user", new DictionaryValue(dict));
+            ctx.DefineLocalVariable("user", new DictionaryValue{
+                {"payments", payments}
+            });
             return ctx;
         }
     }

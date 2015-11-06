@@ -33,7 +33,7 @@ namespace Liquid.NET.Filters
 
         public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, ArrayValue arrayValue)
         {
-            if (arrayValue != null && arrayValue.ArrValue.Count > 0)
+            if (arrayValue != null && arrayValue.Count > 0)
             {
                 return LiquidExpressionResult.Success(arrayValue.ToOption());
             }

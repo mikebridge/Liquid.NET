@@ -14,14 +14,12 @@ namespace Liquid.NET.Tests.Filters.Array
         public void It_Should_Sort_An_Array_By_StringValues()
         {
             // Arrange
-            IList<IExpressionConstant> objlist = new List<IExpressionConstant>
-            {
+            ArrayValue arrayValue = new ArrayValue{
                 new StringValue("a string"), 
                 NumericValue.Create(123), 
                 NumericValue.Create(456m),
                 new BooleanValue(false)
             };
-            ArrayValue arrayValue = new ArrayValue(objlist);
             var filter = new SortFilter(new StringValue(""));
 
             // Act            
@@ -38,12 +36,10 @@ namespace Liquid.NET.Tests.Filters.Array
         public void It_Should_Sort_Dictionaries_By_Field()
         {
             // Arrange
-            IList<IExpressionConstant> objlist = CreateObjList();
-            ArrayValue arrayValue = new ArrayValue(objlist);
             SortFilter sizeFilter = new SortFilter(new StringValue("field1"));
 
             // Act
-            var result = sizeFilter.Apply(new TemplateContext(), arrayValue);
+            var result = sizeFilter.Apply(new TemplateContext(), CreateObjList());
 
             // Assert
             Assert.That(IdAt(result.SuccessValue<ArrayValue>(), 0, "field1").Value, Is.EqualTo("Aa"));
@@ -57,7 +53,7 @@ namespace Liquid.NET.Tests.Filters.Array
         {
             // Arrange            
             ITemplateContext ctx = new TemplateContext()
-                .WithAllFilters().DefineLocalVariable("arr", new ArrayValue(CreateObjList()));
+                .WithAllFilters().DefineLocalVariable("arr", CreateObjList());
 
             // Act
             var result = RenderingHelper.RenderTemplate("Result : {% assign x = arr | sort: \"field1\" %}{{ x | map: \"field1\" }}", ctx);
@@ -71,7 +67,7 @@ namespace Liquid.NET.Tests.Filters.Array
         {
             // Arrange            
             ITemplateContext ctx = new TemplateContext()
-                .WithAllFilters().DefineLocalVariable("arr", new ArrayValue(CreateObjList()));
+                .WithAllFilters().DefineLocalVariable("arr", CreateObjList());
 
             // Act
             var result = RenderingHelper.RenderTemplate("Result : {% assign x = arr | sort: \"test\" %}{{ x | map: \"id\" }}", ctx);
@@ -85,7 +81,7 @@ namespace Liquid.NET.Tests.Filters.Array
         {
             // Arrange            
             ITemplateContext ctx = new TemplateContext().ErrorWhenValueMissing()
-                .WithAllFilters().DefineLocalVariable("arr", new ArrayValue(CreateObjList()));
+                .WithAllFilters().DefineLocalVariable("arr", CreateObjList());
 
             // Act
             var result = RenderingHelper.RenderTemplate("Result : {% assign x = arr | sort: \"test\" %}", ctx);
@@ -95,9 +91,9 @@ namespace Liquid.NET.Tests.Filters.Array
         }
 
 
-        private IList<IExpressionConstant> CreateObjList()
+        private ArrayValue CreateObjList()
         {
-            return new List<IExpressionConstant>
+            return new ArrayValue
             {
                 DataFixtures.CreateDictionary(1, "Aa", "Value 1 B"), 
                 DataFixtures.CreateDictionary(2, "Z", "Value 2 B"), 
@@ -108,7 +104,7 @@ namespace Liquid.NET.Tests.Filters.Array
 
         private static IExpressionConstant IdAt(ArrayValue result, int index, String field)
         {
-            return ((DictionaryValue)result.ArrValue[index].Value).DictValue[field].Value;
+            return ((DictionaryValue)result[index].Value)[field].Value;
         }
     }
 }

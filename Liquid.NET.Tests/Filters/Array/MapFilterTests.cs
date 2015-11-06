@@ -23,9 +23,9 @@ namespace Liquid.NET.Tests.Filters.Array
             var result = mapFilter.Apply(new TemplateContext(), array).SuccessValue<ArrayValue>();
 
             // Assert
-            var dictionaryValues = array.ArrValue.Select(x => x.Value).Cast<DictionaryValue>();
+            var dictionaryValues = array.Select(x => x.Value).Cast<DictionaryValue>();
 
-            IEnumerable<String> expected = dictionaryValues.Select(x => x.DictValue[field].Value.Value.ToString());
+            IEnumerable<String> expected = dictionaryValues.Select(x => x[field].Value.Value.ToString());
             //var expected = array.ArrValue.Cast<DictionaryValue>().Select(x => x.DictValue[field].Value.ToString());
             IEnumerable<String> actual = result.Select(x => x.Value.Value.ToString());
             Assert.That(actual, Is.EquivalentTo(expected));
@@ -38,8 +38,8 @@ namespace Liquid.NET.Tests.Filters.Array
             var array = CreateArray();
             var field = "field2";
 
-            var dictionaryValues = array.ArrValue.Select(x => x.Value).Cast<DictionaryValue>().ToList();
-            dictionaryValues[1].DictValue.Remove(field);
+            var dictionaryValues = array.Select(x => x.Value).Cast<DictionaryValue>().ToList();
+            dictionaryValues[1].Remove(field);
             //array.ArrValue[1].Value.ValueAs<DictionaryValue>().DictValue.Remove(field);
             //((DictionaryValue) array.ArrValue[1]).DictValue.Remove(field);
             var mapFilter = new MapFilter(new StringValue(field));
@@ -55,18 +55,18 @@ namespace Liquid.NET.Tests.Filters.Array
         {
             // Arrange
             var mapFilter = new MapFilter(new StringValue("field1"));
-            IList<IExpressionConstant> objlist = new List<IExpressionConstant>
+            var arrayValue = new ArrayValue
             {
                 NumericValue.Create(123),
                 new StringValue("Test")
             };
             // Act
-            var result = mapFilter.Apply(new TemplateContext(), new ArrayValue(objlist)).SuccessValue<ArrayValue>();
+            var result = mapFilter.Apply(new TemplateContext(), arrayValue).SuccessValue<ArrayValue>();
 
             // Assert
-            Assert.That(result.ArrValue.Count, Is.EqualTo(objlist.Count));
-            Assert.That(result.ArrValue[0].HasValue, Is.False);
-            Assert.That(result.ArrValue[1].HasValue, Is.False);
+            Assert.That(result.Count, Is.EqualTo(arrayValue.Count));
+            Assert.That(result[0].HasValue, Is.False);
+            Assert.That(result[1].HasValue, Is.False);
         }
 
         [Test]
@@ -128,14 +128,12 @@ namespace Liquid.NET.Tests.Filters.Array
         public ArrayValue CreateArray()
         {
             // Arrange
-            IList<IExpressionConstant> objlist = new List<IExpressionConstant>
-            {
+            return new ArrayValue{
                 DataFixtures.CreateDictionary(1, "Value 1 A", "Value 1 B"), 
                 DataFixtures.CreateDictionary(2, "Value 2 A", "Value 2 B"), 
                 DataFixtures.CreateDictionary(3, "Value 3 A", "Value 3 B"), 
                 DataFixtures.CreateDictionary(4, "Value 4 A", "Value 4 B"),
             };
-            return new ArrayValue(objlist);
 
         }
     }

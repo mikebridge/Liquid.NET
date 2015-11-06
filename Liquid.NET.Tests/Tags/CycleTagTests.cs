@@ -140,7 +140,7 @@ namespace Liquid.NET.Tests.Tags
         {
             TemplateContext ctx = new TemplateContext();
             ctx.DefineLocalVariable("var1", new StringValue("ONE"));
-            ctx.DefineLocalVariable("var2", new ArrayValue(new List<IExpressionConstant> {new StringValue("TWO")}));
+            ctx.DefineLocalVariable("var2", new ArrayValue{new StringValue("TWO")});
             ctx.DefineLocalVariable("var3", new BooleanValue(false));
             ctx.DefineLocalVariable("var4", NumericValue.Create(9));
 
@@ -159,7 +159,7 @@ namespace Liquid.NET.Tests.Tags
         {
             TemplateContext ctx = new TemplateContext();
             ctx.DefineLocalVariable("var1", new StringValue("ONE"));
-            ctx.DefineLocalVariable("var2", new ArrayValue(new List<IExpressionConstant> { new StringValue("TWO") }));
+            ctx.DefineLocalVariable("var2", new ArrayValue{ new StringValue("TWO") });
             ctx.DefineLocalVariable("var3", new BooleanValue(false));
             ctx.DefineLocalVariable("var4", NumericValue.Create(9));
 
@@ -201,14 +201,12 @@ namespace Liquid.NET.Tests.Tags
 
         private ArrayValue CreateArrayValues()
         {
-            var list = new List<IExpressionConstant>
-            {
+            return new ArrayValue{
                 new StringValue("a string"),
                 NumericValue.Create(123),
                 NumericValue.Create(456m),
                 new BooleanValue(false)
             };
-            return new ArrayValue(list);
         }
     }
 }

@@ -12,32 +12,29 @@ namespace Liquid.NET.Tests.Constants
         {
 
             // Arrange
-            IList<IExpressionConstant> objlist = new List<IExpressionConstant>
-            {
+            ArrayValue arrayValue = new ArrayValue {
                 new StringValue("a string"), 
                 NumericValue.Create(123), 
                 NumericValue.Create(456m),
                 new BooleanValue(false)
             };
-            ArrayValue arrayValue = new ArrayValue(objlist);
 
             // Assert
             var valueAt = arrayValue.ValueAt(0);
-            Assert.That(valueAt.Value, Is.EqualTo(objlist[0].Value));
+            Assert.That(valueAt.Value, Is.EqualTo("a string"));
         }
 
         [Test]
         public void It_Should_Access_Size_Property_Of_An_Array()
         {
             // Arrange
-            IList<IExpressionConstant> objlist = new List<IExpressionConstant>
+            ArrayValue arrayValue = new ArrayValue
             {
-                new StringValue("a string"), 
-                NumericValue.Create(123), 
+                new StringValue("a string"),
+                NumericValue.Create(123),
                 NumericValue.Create(456m),
                 new BooleanValue(false)
             };
-            ArrayValue arrayValue = new ArrayValue(objlist);
             var ctx = new TemplateContext().WithAllFilters();
             ctx.DefineLocalVariable("myarray", arrayValue);
             // Act
@@ -54,7 +51,7 @@ namespace Liquid.NET.Tests.Constants
             // Arrange
 
             var expected = "Hello";
-            ArrayValue arrayValue = new ArrayValue(new List<IExpressionConstant>());
+            var arrayValue = new ArrayValue();
 
             // Act
             arrayValue.MetaData["test"] = expected;
@@ -65,6 +62,50 @@ namespace Liquid.NET.Tests.Constants
             
         }
 
+        [Test]
+        public void It_Should_Clear_An_Array()
+        {
+            var arrayValue = new ArrayValue{new StringValue("test")};
+            arrayValue.Clear();
+            Assert.That(arrayValue.Count, Is.EqualTo(0));
+        }
 
+
+        [Test]
+        public void It_Should_Remove_An_Element_From_An_Array()
+        {
+            var arrayValue = new ArrayValue { new StringValue("test") };
+            arrayValue.Remove(new StringValue("test"));
+            Assert.That(arrayValue.Count, Is.EqualTo(0));
+        }
+
+        [Test]
+        public void It_Should_Remove_An_Element_At_An_Index_In_An_Array()
+        {
+            var arrayValue = new ArrayValue { new StringValue("test") };
+            arrayValue.RemoveAt(0);
+            Assert.That(arrayValue.Count, Is.EqualTo(0));
+        }
+        [Test]
+        public void It_Should_Find_An_Element_By_Value()
+        {
+            var arrayValue = new ArrayValue { new StringValue("test") };
+            var index = arrayValue.IndexOf(new StringValue("test"));
+            Assert.That(index, Is.EqualTo(0));
+        }
+        [Test]
+        public void It_Should_Insert_An_Element()
+        {
+            var arrayValue = new ArrayValue { new StringValue("test") };
+            arrayValue.Insert(0,new StringValue("test 1"));
+            Assert.That(arrayValue.IndexOf(new StringValue("test 1")), Is.EqualTo(0));
+        }
+        [Test]
+        public void It_Should_Set_An_Element()
+        {
+            var arrayValue = new ArrayValue { new StringValue("test") };
+            arrayValue[0] = new StringValue("test 1");
+            Assert.That(arrayValue.IndexOf(new StringValue("test 1")), Is.EqualTo(0));
+        }
     }
 }

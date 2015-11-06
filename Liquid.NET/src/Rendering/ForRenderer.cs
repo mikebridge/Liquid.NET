@@ -111,7 +111,7 @@ namespace Liquid.NET.Rendering
 
         public static DictionaryValue CreateForLoopDescriptor(String name, int iter, int length, SymbolTableStack stack)
         {
-            return new DictionaryValue(new Dictionary<String, Option<IExpressionConstant>>
+            return new DictionaryValue
             {               
                 {"parentloop", FindParentLoop(stack)}, // see: https://github.com/Shopify/liquid/pull/520
                 {"first", new BooleanValue(iter == 0)},
@@ -122,7 +122,7 @@ namespace Liquid.NET.Rendering
                 {"last", new BooleanValue(length - iter - 1 == 0)},
                 {"length", NumericValue.Create(length) },
                 {"name", new StringValue(name) }
-            });
+            };
 
         }
 

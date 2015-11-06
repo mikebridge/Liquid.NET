@@ -80,7 +80,7 @@ namespace Liquid.NET.Tests.Constants
         public void It_Should_Format_An_Array_By_Concatenating_Each_Elements_STring_Value()
         {
             // Arrange
-            var num = new ArrayValue(new List<IExpressionConstant> { new StringValue("a"), new StringValue("b"), new StringValue("c") });
+            var num = new ArrayValue{ new StringValue("a"), new StringValue("b"), new StringValue("c") };
 
             // Act
             var result1 = ValueCaster.Cast<ArrayValue, StringValue>(num);
@@ -96,7 +96,7 @@ namespace Liquid.NET.Tests.Constants
         public void It_Should_Return_The_Same_Object_If_Src_And_Dest_Are_Arrays()
         {
             // Arrange
-            var original = new ArrayValue(new List<IExpressionConstant>{NumericValue.Create(123.4m), NumericValue.Create(5)});
+            var original = new ArrayValue{NumericValue.Create(123.4m), NumericValue.Create(5)};
 
             // Act
             var result = ValueCaster.Cast<ArrayValue, ArrayValue>(original).SuccessValue<ArrayValue>();
@@ -122,7 +122,7 @@ namespace Liquid.NET.Tests.Constants
         public void It_Should_Return_The_Same_Object_If_Dest_Is_An_ExpressionConstant()
         {
             // Arrange
-            var original = new ArrayValue(new List<IExpressionConstant> { NumericValue.Create(123.4m), NumericValue.Create(5) });
+            var original = new ArrayValue { NumericValue.Create(123.4m), NumericValue.Create(5) };
 
             // Act
             var result = ValueCaster.Cast<ArrayValue, ExpressionConstant>(original).SuccessValue<ArrayValue>();
@@ -258,7 +258,7 @@ namespace Liquid.NET.Tests.Constants
             Assert.That(arrayResult.IsError, Is.False);
 
             // Assert
-            var arrValue = arrayResult.SuccessValue<ArrayValue>().ArrValue;
+            var arrValue = arrayResult.SuccessValue<ArrayValue>();
             Assert.That(arrValue.Count, Is.EqualTo(1));
             Assert.That(arrValue[0].Value, Is.EqualTo("Hello"));
 
@@ -269,22 +269,20 @@ namespace Liquid.NET.Tests.Constants
         public void It_Should_Cast_KV_Pairs_In_A_Dictionary_To_An_Array_Of_Arrays_with_Two_Elements()
         {
             // Arrange
-            var dictValue = new DictionaryValue(
-                new Dictionary<string, IExpressionConstant>
-                {
+            var dictValue = new DictionaryValue {
                     {"one", new StringValue("ONE")},
                     {"two", new StringValue("TWO")},
                     {"three", new StringValue("THREE")},
                     {"four", new StringValue("FOUR")}
 
-                });
+                };
 
             // Act
             var result = ValueCaster.Cast<DictionaryValue, ArrayValue>(dictValue).SuccessValue<ArrayValue>();
 
             // Assert
 
-            Assert.That(result.ArrValue.Count, Is.EqualTo(4));
+            Assert.That(result.Count, Is.EqualTo(4));
 
         }
 
@@ -293,15 +291,13 @@ namespace Liquid.NET.Tests.Constants
         public void It_Should_Not_Quote_Numerics_In_Json_Dict()
         {
             // Arrange
-            var dictValue = new DictionaryValue(
-                new Dictionary<string, IExpressionConstant>
-                {
-                    {"one", NumericValue.Create(1)},
-                    {"two", NumericValue.Create(2L)},
-                    {"three", NumericValue.Create(3m)},
-                    {"four", NumericValue.Create(new BigInteger(4))}
-
-                });
+            var dictValue = new DictionaryValue
+            {
+                {"one", NumericValue.Create(1)},
+                {"two", NumericValue.Create(2L)},
+                {"three", NumericValue.Create(3m)},
+                {"four", NumericValue.Create(new BigInteger(4))}
+            };
 
             // Act
             ITemplateContext ctx = new TemplateContext().DefineLocalVariable("dict1", dictValue);
@@ -318,17 +314,14 @@ namespace Liquid.NET.Tests.Constants
         public void It_Should_Recursively_Render_Dictionaries_in_Json()
         {
             // Arrange     
-            var subDictValue = new DictionaryValue(
-                new Dictionary<string, IExpressionConstant>
-                {
-                    {"abc", new StringValue("def")}
-                });
-            var dictValue = new DictionaryValue(
-                new Dictionary<string, IExpressionConstant>
-                {
+            var subDictValue = new DictionaryValue
+            {
+                {"abc", new StringValue("def")}
+            };
+            var dictValue = new DictionaryValue {
                     {"one", NumericValue.Create(1)},
-                    {"two", subDictValue},
-                });
+                    {"two", subDictValue}
+            };
 
             // Act
             ITemplateContext ctx = new TemplateContext().DefineLocalVariable("dict1", dictValue);
@@ -345,18 +338,16 @@ namespace Liquid.NET.Tests.Constants
         public void It_Should_Render_A_Null_In_A_Dictionary()
         {
             // Arrange     
-            var subDictValue = new DictionaryValue(
-                new Dictionary<string, IExpressionConstant>
-                {
-                    {"abc", new StringValue("def")},
-                    {"ghi", null}
-                });
-            var dictValue = new DictionaryValue(
-                new Dictionary<string, IExpressionConstant>
-                {
-                    {"one", null},
-                    {"two", subDictValue},
-                });
+            var subDictValue = new DictionaryValue
+            {
+                {"abc", new StringValue("def")},
+                {"ghi", null}
+            };
+            var dictValue = new DictionaryValue
+            {
+                {"one", null},
+                {"two", subDictValue},
+            };
 
             // Act
             ITemplateContext ctx = new TemplateContext().DefineLocalVariable("dict1", dictValue);
@@ -365,7 +356,8 @@ namespace Liquid.NET.Tests.Constants
             var result = RenderingHelper.RenderTemplate("Result : {{ dict1 }}", ctx);
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : { \"one\" : null, \"two\" : { \"abc\" : \"def\", \"ghi\" : null } }"));
+            Assert.That(result,
+                Is.EqualTo("Result : { \"one\" : null, \"two\" : { \"abc\" : \"def\", \"ghi\" : null } }"));
 
         }
 
@@ -396,7 +388,7 @@ namespace Liquid.NET.Tests.Constants
         [Test]
         public void It_Should_Convert_An_Array()
         {
-            var result = ValueCaster.Cast<ArrayValue, StringValue>(new ArrayValue(new List<IExpressionConstant>{new StringValue("test")}));
+            var result = ValueCaster.Cast<ArrayValue, StringValue>(new ArrayValue{new StringValue("test")});
             Assert.That(result.IsSuccess, Is.True);
             Assert.That(result.SuccessResult.HasValue, Is.True);
             Assert.That(result.SuccessValue<StringValue>().StringVal, Is.EqualTo("test"));
@@ -445,7 +437,7 @@ namespace Liquid.NET.Tests.Constants
         [Test]
         public void It_Should_Not_Cast_Dict_To_Numeric()
         {
-            var result = ValueCaster.Cast<DictionaryValue, NumericValue>(new DictionaryValue(new Dictionary<string, Option<IExpressionConstant>>()));
+            var result = ValueCaster.Cast<DictionaryValue, NumericValue>(new DictionaryValue());
             Assert.That(result.IsSuccess, Is.False);
         }
 
@@ -453,7 +445,7 @@ namespace Liquid.NET.Tests.Constants
         public void It_Should_Not_Cast_Array_To_Numeric()
         {
             // Arrange
-            var result = ValueCaster.Cast<ArrayValue, NumericValue>(new ArrayValue(new List<IExpressionConstant> { new StringValue("test") }));
+            var result = ValueCaster.Cast<ArrayValue, NumericValue>(new ArrayValue { new StringValue("test") });
             Assert.That(result.IsSuccess, Is.False);
         }
 

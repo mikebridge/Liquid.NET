@@ -30,15 +30,13 @@ namespace Liquid.NET.Tests.Filters.Strings
         public void It_Should_Filter_Out_Unique_Simple_Objects()
         {
             // Arrange
-            IList<IExpressionConstant> objlist = new List<IExpressionConstant>
-            {
+            ArrayValue arrayValue = new ArrayValue{
                 new StringValue("123"), 
                 NumericValue.Create(456m),
                 NumericValue.Create(123), 
                 NumericValue.Create(123), 
                 new BooleanValue(false)
             };
-            ArrayValue arrayValue = new ArrayValue(objlist);
             var filter = new UniqFilter();
 
             // Act

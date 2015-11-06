@@ -12,14 +12,12 @@ namespace Liquid.NET.Tests.Filters.Array
         public void It_Should_Join_An_Array_With_A_String()
         {
             // Arrange
-            IList<IExpressionConstant> objlist = new List<IExpressionConstant>
-            {
+            ArrayValue arrayValue = new ArrayValue {
                 new StringValue("a string"), 
                 NumericValue.Create(123), 
                 NumericValue.Create(456m),
                 new BooleanValue(false)
             };
-            ArrayValue arrayValue = new ArrayValue(objlist);
             var filter = new JoinFilter(new StringValue(", "));
 
             // Act

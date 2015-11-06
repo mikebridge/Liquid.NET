@@ -82,9 +82,13 @@ namespace Liquid.NET.Tests.Tags
             // Arrange
             const string templateString = "Result : {% tablerow i in array cols: x limit: y offset: z %}{{ i }}{% endtablerow %}";
             TemplateContext ctx = new TemplateContext();
-            ctx.DefineLocalVariable("array",
-                new ArrayValue(new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9 }.Select(x => (IExpressionConstant)NumericValue.Create(x)).ToList())
-                );
+            var arr = new ArrayValue();
+            for (int i = 1; i < 10; i++)
+            {
+                arr.Add(NumericValue.Create(i));
+            }
+
+            ctx.DefineLocalVariable("array", arr);
             ctx.DefineLocalVariable("x", NumericValue.Create(2));
             ctx.DefineLocalVariable("y", NumericValue.Create(3));
             ctx.DefineLocalVariable("z", NumericValue.Create(1));

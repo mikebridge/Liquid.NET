@@ -81,28 +81,24 @@ namespace Liquid.NET.Tests.Expressions
         public ArrayValue CreateArray()
         {
             // Arrange
-            IList<IExpressionConstant> objlist = new List<IExpressionConstant>
-            {
+            return new ArrayValue{
                 new StringValue("1"), 
                 NumericValue.Create(2), 
                 new StringValue("Three"),
                 new BooleanValue(true)
-            };
-            return new ArrayValue(objlist);
+            };;
 
         }
 
         public DictionaryValue CreateDictionary()
         {
-            return new DictionaryValue(
-                new Dictionary<string, IExpressionConstant>
-                {
-                    {"one",  new StringValue("1")},
-                    {"two", NumericValue.Create(2)},
-                    {"three", new StringValue("Three")},
-                    {"four", new BooleanValue(true)}
-
-                });
+            return new DictionaryValue
+            {
+                {"one", new StringValue("1")},
+                {"two", NumericValue.Create(2)},
+                {"three", new StringValue("Three")},
+                {"four", new BooleanValue(true)}
+            };
 
         }
 

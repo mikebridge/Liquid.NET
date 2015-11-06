@@ -51,14 +51,13 @@ namespace Liquid.NET.Tests.Tags
 
         private ArrayValue CreateArrayValues()
         {
-            var list = new List<IExpressionConstant>
+            return new ArrayValue
             {
                 new StringValue("a string"),
                 NumericValue.Create(123),
                 NumericValue.Create(456m),
                 new BooleanValue(false)
             };
-            return new ArrayValue(list);
         }
 
     }

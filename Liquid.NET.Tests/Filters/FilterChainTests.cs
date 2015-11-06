@@ -19,7 +19,7 @@ namespace Liquid.NET.Tests.Filters
             var filters = new List<IFilterExpression>
             {
                 new UpCaseFilter(),
-                new PlusFilter(NumericValue.Create(123)),
+                new PlusFilter(LiquidNumeric.Create(123)),
             };
 
             // Act
@@ -27,7 +27,7 @@ namespace Liquid.NET.Tests.Filters
 
             // Assert
             Assert.That(castedFilters.Count, Is.EqualTo(3));
-            Assert.That(castedFilters[1], Is.TypeOf(typeof(CastFilter<StringValue, NumericValue>)));
+            Assert.That(castedFilters[1], Is.TypeOf(typeof(CastFilter<LiquidString, LiquidNumeric>)));
 
         }
 
@@ -35,13 +35,13 @@ namespace Liquid.NET.Tests.Filters
         public void It_Should_Compose_Functions_Together()
         {
             // Arrange
-            var removeFilter = new RemoveFilter(new StringValue("123"));
+            var removeFilter = new RemoveFilter(new LiquidString("123"));
             var upCase = new UpCaseFilter();
             var filterList = new List<IFilterExpression> {removeFilter, upCase};
             var compositeFilterFn = FilterChain.CreateChain(new TemplateContext(), filterList);
 
             // Act
-            var result = compositeFilterFn(new StringValue("test123")).SuccessValue<StringValue>();
+            var result = compositeFilterFn(new LiquidString("test123")).SuccessValue<LiquidString>();
 
             // Assert
             Assert.That(result.Value, Is.EqualTo("TEST"));
@@ -53,7 +53,7 @@ namespace Liquid.NET.Tests.Filters
         {
             // Arrange
             ITemplateContext ctx = new TemplateContext().WithAllFilters();
-            ctx.DefineLocalVariable("bar", NumericValue.Create(3) );
+            ctx.DefineLocalVariable("bar", LiquidNumeric.Create(3) );
             var template = LiquidTemplate.Create("{{ 1 | plus: bar }}");
 
             // Act
@@ -69,7 +69,7 @@ namespace Liquid.NET.Tests.Filters
         {
             // Arrange
             ITemplateContext ctx = new TemplateContext().WithAllFilters();
-            DictionaryValue dict = new DictionaryValue { { "foo", NumericValue.Create(33) } };
+            LiquidHash dict = new LiquidHash { { "foo", LiquidNumeric.Create(33) } };
             ctx.DefineLocalVariable("bar", dict);
             var template = LiquidTemplate.Create("{{ 1 | plus: bar.foo}}");
 
@@ -87,7 +87,7 @@ namespace Liquid.NET.Tests.Filters
             // Arrange
             ITemplateContext ctx =
                 new TemplateContext().WithAllFilters();
-            ArrayValue arr = new ArrayValue { NumericValue.Create(33) };
+            LiquidCollection arr = new LiquidCollection { LiquidNumeric.Create(33) };
             ctx.DefineLocalVariable("bar", arr);
             var template = LiquidTemplate.Create("{{ 1 | plus: bar[0]  }}");
 
@@ -103,14 +103,14 @@ namespace Liquid.NET.Tests.Filters
         public void It_Should_Parse_Two_Filter_Arguments()
         {
             // Arrange
-            DictionaryValue dict = new DictionaryValue{ { "foo", NumericValue.Create(22)}, {"bar", NumericValue.Create(23) } };
+            LiquidHash dict = new LiquidHash{ { "foo", LiquidNumeric.Create(22)}, {"bar", LiquidNumeric.Create(23) } };
 
             ITemplateContext ctx =
                 new TemplateContext().WithAllFilters()
                     .WithFilter<FilterFactoryTests.MockStringToStringFilter>("mockfilter")
                     .DefineLocalVariable("bar", dict)
                     .DefineLocalVariable("foo", dict);
-            //ArrayValue arr = new ArrayValue(new List<IExpressionConstant> { new NumericValue(33) });
+            //LiquidCollection arr = new LiquidCollection(new List<IExpressionConstant> { new LiquidNumeric(33) });
             //ctx.DefineLocalVariable("bar", arr);
             var template = LiquidTemplate.Create("{{ 1 | mockfilter: bar.foo, foo.bar  }}");
 
@@ -128,14 +128,14 @@ namespace Liquid.NET.Tests.Filters
         public void It_Should_Parse_A_Variable_And_A_Value(String liquid, String expected)
         {
             // Arrange
-            DictionaryValue dict = new DictionaryValue { { "foo", NumericValue.Create(22) }, { "bar", NumericValue.Create(23) } };
+            LiquidHash dict = new LiquidHash { { "foo", LiquidNumeric.Create(22) }, { "bar", LiquidNumeric.Create(23) } };
 
             ITemplateContext ctx =
                 new TemplateContext().WithAllFilters()
                     .WithFilter<FilterFactoryTests.MockStringToStringFilter>("mockfilter")
                     .DefineLocalVariable("bar", dict)
                     .DefineLocalVariable("foo", dict);
-            //ArrayValue arr = new ArrayValue(new List<IExpressionConstant> { new NumericValue(33) });
+            //LiquidCollection arr = new LiquidCollection(new List<IExpressionConstant> { new LiquidNumeric(33) });
             //ctx.DefineLocalVariable("bar", arr);
             var template = LiquidTemplate.Create(liquid);
 
@@ -153,7 +153,7 @@ namespace Liquid.NET.Tests.Filters
         {
             // Arrange
             ITemplateContext ctx = new TemplateContext().WithAllFilters();            
-            ctx.DefineLocalVariable("a", new StringValue("HELLO"));
+            ctx.DefineLocalVariable("a", new LiquidString("HELLO"));
             //var template = LiquidTemplate.Create("{% assign x = 1 | plus: bar.foo %} 1 + {{ bar.foo }} = {{ x }}");
             var template = LiquidTemplate.Create("{{ a }} WORLD");
 
@@ -171,7 +171,7 @@ namespace Liquid.NET.Tests.Filters
         {
             // Arrange
             ITemplateContext ctx = new TemplateContext().WithAllFilters();
-            ctx.DefineLocalVariable("a", new ArrayValue{new StringValue("HELLO")});
+            ctx.DefineLocalVariable("a", new LiquidCollection{new LiquidString("HELLO")});
             //var template = LiquidTemplate.Create("{% assign x = 1 | plus: bar.foo %} 1 + {{ bar.foo }} = {{ x }}");
             var template = LiquidTemplate.Create("{{ a[0] }} WORLD");
 
@@ -189,8 +189,8 @@ namespace Liquid.NET.Tests.Filters
         {
             // Arrange
             ITemplateContext ctx = new TemplateContext().WithAllFilters();
-            var arr = new ArrayValue{new StringValue("HELLO")};
-            ctx.DefineLocalVariable("a", new DictionaryValue{{ "b", arr }});
+            var arr = new LiquidCollection{new LiquidString("HELLO")};
+            ctx.DefineLocalVariable("a", new LiquidHash{{ "b", arr }});
             //var template = LiquidTemplate.Create("{% assign x = 1 | plus: bar.foo %} 1 + {{ bar.foo }} = {{ x }}");
             var template = LiquidTemplate.Create("{{ a.b[0] }} WORLD");
 

@@ -13,19 +13,19 @@ namespace Liquid.NET.Tests.Filters.Array
         {
             // Arrange
 
-            ArrayValue arrayValue = new ArrayValue {
-                new StringValue("a string"), 
-                NumericValue.Create(123), 
-                NumericValue.Create(456m),
-                new BooleanValue(false)
+            LiquidCollection liquidCollection = new LiquidCollection {
+                new LiquidString("a string"), 
+                LiquidNumeric.Create(123), 
+                LiquidNumeric.Create(456m),
+                new LiquidBoolean(false)
             };
-            var filter = new PositionFilter(NumericValue.Create(0));
+            var filter = new PositionFilter(LiquidNumeric.Create(0));
            
             // Act
-            var result = filter.Apply(new TemplateContext(), arrayValue).SuccessValue<StringValue>();
+            var result = filter.Apply(new TemplateContext(), liquidCollection).SuccessValue<LiquidString>();
 
             // Assert
-            Assert.That(result, Is.EqualTo(arrayValue[0]));
+            Assert.That(result, Is.EqualTo(liquidCollection[0]));
         }
     }
 }

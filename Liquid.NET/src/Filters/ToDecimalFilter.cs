@@ -4,43 +4,43 @@ using Liquid.NET.Utils;
 
 namespace Liquid.NET.Filters
 {
-    public class ToDecimalFilter : FilterExpression<ExpressionConstant, NumericValue>
+    public class ToDecimalFilter : FilterExpression<LiquidValue, LiquidNumeric>
     {
-        public override LiquidExpressionResult Apply(ITemplateContext ctx, ExpressionConstant liquidExpression)
+        public override LiquidExpressionResult Apply(ITemplateContext ctx, LiquidValue liquidExpression)
         {
             return LiquidExpressionResult.Success(ConvertToDecimal(liquidExpression));
         }
 
-        public static NumericValue ConvertToDecimal(ExpressionConstant liquidExpression)
+        public static LiquidNumeric ConvertToDecimal(LiquidValue liquidExpression)
         {
             
             try
             {
                 if (liquidExpression == null || liquidExpression.Value == null)
                 {
-                    return NumericValue.Create(default(decimal));
+                    return LiquidNumeric.Create(default(decimal));
                 }
-                var dec = liquidExpression as NumericValue;
+                var dec = liquidExpression as LiquidNumeric;
                 if (dec != null)
                 {
-                    return NumericValue.Create(Convert.ToDecimal(dec.DecimalValue));
+                    return LiquidNumeric.Create(Convert.ToDecimal(dec.DecimalValue));
                 }
-                var str = liquidExpression as StringValue;
+                var str = liquidExpression as LiquidString;
                 if (str != null)
                 {
-                    return NumericValue.Create(Convert.ToDecimal(str.StringVal));
+                    return LiquidNumeric.Create(Convert.ToDecimal(str.StringVal));
                 }
-                var bool1 = liquidExpression as BooleanValue;
+                var bool1 = liquidExpression as LiquidBoolean;
                 if (bool1 != null)
                 {
-                    return bool1.BoolValue ? NumericValue.Create(1) : NumericValue.Create(0);
+                    return bool1.BoolValue ? LiquidNumeric.Create(1) : LiquidNumeric.Create(0);
                 }
             }
             catch (Exception)
             {
                 //warningMessage = "unable to convert to a number";
             }
-            var result = NumericValue.Create(default(decimal));
+            var result = LiquidNumeric.Create(default(decimal));
 //            if (warningMessage != null)
 //            {
 //                result.WarningMessage = warningMessage;

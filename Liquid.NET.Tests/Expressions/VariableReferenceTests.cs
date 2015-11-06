@@ -15,10 +15,10 @@ namespace Liquid.NET.Tests.Expressions
             // Arrange
             var variableReference = new VariableReference("myvar");
             var templateContext = new TemplateContext();
-            templateContext.DefineLocalVariable("myvar", new StringValue("HELLO"));
+            templateContext.DefineLocalVariable("myvar", new LiquidString("HELLO"));
 
             // Act
-            var result = variableReference.Eval(templateContext, new List<Option<IExpressionConstant>>()).SuccessValue<StringValue>();
+            var result = variableReference.Eval(templateContext, new List<Option<IExpressionConstant>>()).SuccessValue<LiquidString>();
 
             // Assert
             Assert.That(result.Value, Is.EqualTo("HELLO"));

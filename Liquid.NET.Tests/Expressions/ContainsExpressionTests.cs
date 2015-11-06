@@ -78,26 +78,26 @@ namespace Liquid.NET.Tests.Expressions
             Assert.That(result, Is.StringContaining("FALSE")); // TODO: SHould this be an error?
         }
 
-        public ArrayValue CreateArray()
+        public LiquidCollection CreateArray()
         {
             // Arrange
-            return new ArrayValue{
-                new StringValue("1"), 
-                NumericValue.Create(2), 
-                new StringValue("Three"),
-                new BooleanValue(true)
+            return new LiquidCollection{
+                new LiquidString("1"), 
+                LiquidNumeric.Create(2), 
+                new LiquidString("Three"),
+                new LiquidBoolean(true)
             };;
 
         }
 
-        public DictionaryValue CreateDictionary()
+        public LiquidHash CreateDictionary()
         {
-            return new DictionaryValue
+            return new LiquidHash
             {
-                {"one", new StringValue("1")},
-                {"two", NumericValue.Create(2)},
-                {"three", new StringValue("Three")},
-                {"four", new BooleanValue(true)}
+                {"one", new LiquidString("1")},
+                {"two", LiquidNumeric.Create(2)},
+                {"three", new LiquidString("Three")},
+                {"four", new LiquidBoolean(true)}
             };
 
         }

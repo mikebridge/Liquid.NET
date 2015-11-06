@@ -8,20 +8,20 @@ namespace Liquid.NET.Filters
     /// See: http://www.ruby-doc.org/core/Time.html#method-i-strftime
     /// </summary>
     // ReSharper disable once ClassNeverInstantiated.Global
-    public class DateFilter : FilterExpression<DateValue, StringValue>
+    public class DateFilter : FilterExpression<LiquidDate, LiquidString>
     {
-        private readonly StringValue _format;
+        private readonly LiquidString _format;
 
-        public DateFilter(StringValue format)
+        public DateFilter(LiquidString format)
         {
             _format = format;
         }
 
-        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, DateValue dateValue)
+        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, LiquidDate liquidDate)
         {
-            if (/*dateValue.IsUndefined ||*/ !dateValue.DateTimeValue.HasValue)
+            if (/*dateValue.IsUndefined ||*/ !liquidDate.DateTimeValue.HasValue)
             {
-                return LiquidExpressionResult.Success(new StringValue(""));
+                return LiquidExpressionResult.Success(new LiquidString(""));
             }
             //Console.WriteLine("Formatting " + dateValue.Value + " with format "+_format.StringVal);
             String format = "%m/%d/%Y";
@@ -29,7 +29,7 @@ namespace Liquid.NET.Filters
             {
                 format = _format.StringVal;
             }
-            return LiquidExpressionResult.Success(new StringValue(dateValue.DateTimeValue.Value.ToStrFTime(format)));
+            return LiquidExpressionResult.Success(new LiquidString(liquidDate.DateTimeValue.Value.ToStrFTime(format)));
             
         }
 

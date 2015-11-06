@@ -4,16 +4,16 @@ using Liquid.NET.Utils;
 namespace Liquid.NET.Filters.Math
 {
     // ReSharper disable once ClassNeverInstantiated.Global
-    public class DividedByFilter : FilterExpression<NumericValue, NumericValue>
+    public class DividedByFilter : FilterExpression<LiquidNumeric, LiquidNumeric>
     {        
-        private readonly NumericValue _divisor;
+        private readonly LiquidNumeric _divisor;
 
-        public DividedByFilter(NumericValue divisor)
+        public DividedByFilter(LiquidNumeric divisor)
         {
             _divisor = divisor;
         }
 
-        public override LiquidExpressionResult Apply(ITemplateContext ctx, NumericValue dividend)
+        public override LiquidExpressionResult Apply(ITemplateContext ctx, LiquidNumeric dividend)
         {
             if (dividend == null)
             {
@@ -33,7 +33,7 @@ namespace Liquid.NET.Filters.Math
 
         public override LiquidExpressionResult ApplyToNil(ITemplateContext ctx)
         {
-            return Apply(ctx, NumericValue.Create(0));
+            return Apply(ctx, LiquidNumeric.Create(0));
 
         }
     }

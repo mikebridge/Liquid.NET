@@ -15,13 +15,13 @@ namespace Liquid.NET.Tests
             // Arrange
             const string varname = "hello";
             var templateContext = new TemplateContext();            
-            templateContext.DefineLocalVariable(varname, new StringValue("HELLO"));
+            templateContext.DefineLocalVariable(varname, new LiquidString("HELLO"));
 
             // Act
             var result = templateContext.SymbolTableStack.Reference(varname);
 
             // Assert
-            Assert.That(result.SuccessValue<StringValue>().StringVal, Is.EqualTo("HELLO"));
+            Assert.That(result.SuccessValue<LiquidString>().StringVal, Is.EqualTo("HELLO"));
 
         }
 
@@ -64,14 +64,14 @@ namespace Liquid.NET.Tests
             // Arrange
             const string varname = "hello";
             var templateContext = new TemplateContext().WithLocalVariables(
-                new Dictionary<String, IExpressionConstant> { { varname, new StringValue("TEST") } });
+                new Dictionary<String, IExpressionConstant> { { varname, new LiquidString("TEST") } });
 
 
             // Act
             var val = templateContext.SymbolTableStack.Reference(varname);
 
             // Assert
-            Assert.That(val.SuccessValue<StringValue>().StringVal, Is.EqualTo("TEST"));
+            Assert.That(val.SuccessValue<LiquidString>().StringVal, Is.EqualTo("TEST"));
         }
 
         [Test]

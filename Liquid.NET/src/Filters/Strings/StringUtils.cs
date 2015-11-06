@@ -5,15 +5,15 @@ namespace Liquid.NET.Filters.Strings
 {
     public static class StringUtils
     {
-        public static StringValue Eval(IExpressionConstant liquidExpression, Func<String, String> f)
+        public static LiquidString Eval(IExpressionConstant liquidExpression, Func<String, String> f)
         {
             String before = ValueCaster.RenderAsString(liquidExpression);
 
             if (String.IsNullOrWhiteSpace(before))
             {
-                return new StringValue("");
+                return new LiquidString("");
             }
-            return new StringValue(f(before));
+            return new LiquidString(f(before));
         }
 
         public static String ReplaceFirst(string origStr, String removeStr, String replaceStr)

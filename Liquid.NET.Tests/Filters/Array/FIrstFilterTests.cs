@@ -14,19 +14,19 @@ namespace Liquid.NET.Tests.Filters.Array
         {
             // Arrange
 
-            ArrayValue arrayValue = new ArrayValue{
-                new StringValue("a string"), 
-                NumericValue.Create(123), 
-                NumericValue.Create(456m),
-                new BooleanValue(false)
+            LiquidCollection liquidCollection = new LiquidCollection{
+                new LiquidString("a string"), 
+                LiquidNumeric.Create(123), 
+                LiquidNumeric.Create(456m),
+                new LiquidBoolean(false)
             };
             var filter = new FirstFilter();
 
             // Act
-            var result = filter.Apply(new TemplateContext(), arrayValue).SuccessValue<StringValue>();
+            var result = filter.Apply(new TemplateContext(), liquidCollection).SuccessValue<LiquidString>();
 
             // Assert
-            Assert.That(result, Is.EqualTo(arrayValue[0]));
+            Assert.That(result, Is.EqualTo(liquidCollection[0]));
 
         }
 
@@ -37,7 +37,7 @@ namespace Liquid.NET.Tests.Filters.Array
             var filter = new FirstFilter();
 
             // Act
-            var result = filter.Apply(new TemplateContext(), new StringValue("Hello World")).SuccessValue<StringValue>();
+            var result = filter.Apply(new TemplateContext(), new LiquidString("Hello World")).SuccessValue<LiquidString>();
 
             // Assert
             Assert.That(result.Value, Is.EqualTo("H"));
@@ -48,11 +48,11 @@ namespace Liquid.NET.Tests.Filters.Array
         public void It_Should_Return_An_Error_If_Array_Is_Empty() // TODO: Check if this is the case
         {
             // Arrange
-            ArrayValue arrayValue = new ArrayValue();
+            LiquidCollection liquidCollection = new LiquidCollection();
             var filter = new FirstFilter();
 
             // Act
-            var result = filter.Apply(new TemplateContext(), arrayValue);
+            var result = filter.Apply(new TemplateContext(), liquidCollection);
 
             // Assert
             Assert.That(result.IsError, Is.True);
@@ -66,7 +66,7 @@ namespace Liquid.NET.Tests.Filters.Array
             var filter = new FirstFilter();
 
             // Act
-            var result = filter.Apply(new TemplateContext(), new StringValue(""));
+            var result = filter.Apply(new TemplateContext(), new LiquidString(""));
 
             // Assert
             Assert.That(result.IsError, Is.True);
@@ -80,7 +80,7 @@ namespace Liquid.NET.Tests.Filters.Array
             var filter = new FirstFilter();
 
             // Act
-            var result = filter.Apply(new TemplateContext(), new StringValue(null));
+            var result = filter.Apply(new TemplateContext(), new LiquidString(null));
 
             // Assert
             Assert.That(result.IsError, Is.True);
@@ -94,7 +94,7 @@ namespace Liquid.NET.Tests.Filters.Array
 //            var filter = new FirstFilter();
 //
 //            // Act
-//            var result = filter.Apply(new ArrayValue(null));
+//            var result = filter.Apply(new LiquidCollection(null));
 //
 //            // Assert
 //            Assert.That(result.IsError, Is.True);

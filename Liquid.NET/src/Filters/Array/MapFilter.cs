@@ -8,9 +8,9 @@ namespace Liquid.NET.Filters.Array
 {
     public class MapFilter: FilterExpression<IExpressionConstant , IExpressionConstant>
     {
-        private readonly StringValue _selector;
+        private readonly LiquidString _selector;
 
-        public MapFilter(StringValue selector)
+        public MapFilter(LiquidString selector)
         {
             _selector = selector;
         }
@@ -21,7 +21,7 @@ namespace Liquid.NET.Filters.Array
             return LiquidExpressionResult.Success(new None<IExpressionConstant>());
         }
 
-        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, ArrayValue liquidArrayExpression)
+        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, LiquidCollection liquidArrayExpression)
         {
             var list = liquidArrayExpression.Select(x => x.HasValue
                 ? FieldAccessor.TryField(ctx, x.Value, _selector.StringVal)
@@ -29,14 +29,14 @@ namespace Liquid.NET.Filters.Array
                 //new None<IExpressionConstant>()).ToList();
             return list.Any(x => x.IsError) ? 
                 list.First(x => x.IsError) : 
-                LiquidExpressionResult.Success(new ArrayValue(list.Select(x => x.SuccessResult).ToList()));
+                LiquidExpressionResult.Success(new LiquidCollection(list.Select(x => x.SuccessResult).ToList()));
         }
 
-        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, DictionaryValue liquidDictionaryValue)
+        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, LiquidHash liquidLiquidHash)
         {
             String propertyNameString = ValueCaster.RenderAsString((IExpressionConstant)_selector);
 
-            return LiquidExpressionResult.Success(liquidDictionaryValue.ValueAt(propertyNameString));
+            return LiquidExpressionResult.Success(liquidLiquidHash.ValueAt(propertyNameString));
             
         }
 

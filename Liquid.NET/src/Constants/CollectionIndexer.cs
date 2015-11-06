@@ -3,7 +3,7 @@ using Liquid.NET.Utils;
 
 namespace Liquid.NET.Constants
 {
-    public static class ArrayIndexer
+    public static class CollectionIndexer
     {
         public static Option<IExpressionConstant> ValueAt(IList<Option<IExpressionConstant>> array, int key)
         {

@@ -9,24 +9,24 @@ namespace Liquid.NET.Filters
 {
 
     // ReSharper disable once ClassNeverInstantiated.Global
-    public class DebugFilter : FilterExpression<ExpressionConstant, DictionaryValue>
+    public class DebugFilter : FilterExpression<LiquidValue, LiquidHash>
     {
         public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, IExpressionConstant expr)
         {
 
-            var metaData = new DictionaryValue();
+            var metaData = new LiquidHash();
             foreach (var kvp in expr.MetaData)
             {
                 metaData.Add(kvp.Key, kvp.Value == null
-                    ? Option<IExpressionConstant>.Create(new StringValue(""))
-                    : Option<IExpressionConstant>.Create(new StringValue(kvp.Value.ToString())));
+                    ? Option<IExpressionConstant>.Create(new LiquidString(""))
+                    : Option<IExpressionConstant>.Create(new LiquidString(kvp.Value.ToString())));
             }
 
-            var result = new DictionaryValue
+            var result = new LiquidHash
             {
                 {"metadata", metaData},
                 {"value", Option<IExpressionConstant>.Create(expr)},
-                {"type", new StringValue(expr.LiquidTypeName)}
+                {"type", new LiquidString(expr.LiquidTypeName)}
             };
            
             return LiquidExpressionResult.Success(result);
@@ -34,7 +34,7 @@ namespace Liquid.NET.Filters
 
         public override LiquidExpressionResult ApplyToNil(ITemplateContext ctx)
         {
-            return LiquidExpressionResult.Success(new StringValue("No Debugging Data for nil"));
+            return LiquidExpressionResult.Success(new LiquidString("No Debugging Data for nil"));
         }
     }
 }

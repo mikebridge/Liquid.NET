@@ -3,7 +3,7 @@ using System.Collections;
 
 namespace Liquid.NET.Constants
 {
-    public class StringValue : ExpressionConstant, IEnumerable
+    public class LiquidString : LiquidValue, IEnumerable
     {
         private readonly String _val;
 
@@ -12,7 +12,7 @@ namespace Liquid.NET.Constants
         public String StringVal { get { return _val; } }
 
 
-        public StringValue(String val)
+        public LiquidString(String val)
         {
             _val = val;
         }
@@ -25,13 +25,13 @@ namespace Liquid.NET.Constants
         public override string LiquidTypeName { get { return "string"; } }
 
         /// <summary>
-        /// Return a new StringValue with str appended.
+        /// Return a new LiquidString with str appended.
         /// </summary>
         /// <param name="str"></param>
         /// <returns></returns>
-        public StringValue Join(StringValue str)
+        public LiquidString Join(LiquidString str)
         {
-            return new StringValue(StringVal + str.StringVal);
+            return new LiquidString(StringVal + str.StringVal);
         }
 
         public IEnumerator GetEnumerator()

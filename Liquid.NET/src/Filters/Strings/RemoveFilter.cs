@@ -4,33 +4,33 @@ using Liquid.NET.Utils;
 
 namespace Liquid.NET.Filters.Strings
 {
-    public class RemoveFilter : FilterExpression<StringValue, StringValue>
+    public class RemoveFilter : FilterExpression<LiquidString, LiquidString>
     {
-        private readonly StringValue _replacement;
+        private readonly LiquidString _replacement;
 
-        public RemoveFilter(StringValue replacement)
+        public RemoveFilter(LiquidString replacement)
         {
             _replacement = replacement;
         }
         // TODO: use StringUtils.Eval?
-        public override LiquidExpressionResult Apply(ITemplateContext ctx, StringValue liquidStringExpression)
+        public override LiquidExpressionResult Apply(ITemplateContext ctx, LiquidString liquidLiquidStringExpression)
         {
             // TODO: Return errors
-            //Console.WriteLine("APPLYING REMOVE " + _replacement.Value + "TO " + liquidStringExpression.Value);
+            //Console.WriteLine("APPLYING REMOVE " + _replacement.Value + "TO " + liquidLiquidStringExpression.Value);
             if (_replacement == null || _replacement.Value == null)
             {
                 return LiquidExpressionResult.Error("Please specify a replacement string.");
             }
 
-            return LiquidExpressionResult.Success(Remove((String)liquidStringExpression.Value, _replacement));
+            return LiquidExpressionResult.Success(Remove((String)liquidLiquidStringExpression.Value, _replacement));
 
         }
 
-        private StringValue Remove(String orig, StringValue stringToRemove)
+        private LiquidString Remove(String orig, LiquidString liquidStringToRemove)
         {
-            var result = orig.Replace((String) stringToRemove.Value, "");
+            var result = orig.Replace((String) liquidStringToRemove.Value, "");
             //Console.WriteLine("  REMOVE RESULT : "+result);
-            return new StringValue(result);
+            return new LiquidString(result);
         }
 
     }

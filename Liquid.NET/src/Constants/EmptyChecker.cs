@@ -12,19 +12,19 @@ namespace Liquid.NET.Constants
                 return false;
             }
         
-            var str = val as StringValue;
+            var str = val as LiquidString;
             if (str != null)
             {
                 return CheckIsEmpty(str);
             }
 
-            var arr = val as ArrayValue;
+            var arr = val as LiquidCollection;
             if (arr != null)
             {
                 return CheckIsEmpty(arr);
             }
 
-            var dict = val as DictionaryValue;
+            var dict = val as LiquidHash;
             if (dict != null)
             {
                 return CheckIsEmpty(dict);
@@ -39,18 +39,18 @@ namespace Liquid.NET.Constants
             return false; // the only conditions will have been caught by IsEmpty
         }
 
-        private static bool CheckIsEmpty(StringValue val)
+        private static bool CheckIsEmpty(LiquidString val)
         {
             return String.IsNullOrEmpty(val.StringVal);
         }
 
 
-        private static bool CheckIsEmpty(ArrayValue val)
+        private static bool CheckIsEmpty(LiquidCollection val)
         {
             return !val.Any();
         }
 
-        private static bool CheckIsEmpty(DictionaryValue val)
+        private static bool CheckIsEmpty(LiquidHash val)
         {
             return !val.Any();
         }
@@ -67,17 +67,17 @@ namespace Liquid.NET.Constants
                 return true; // regardless of what shopify liquid + activesupport do
             }
             //return CheckIsBlank((dynamic)val);
-            var str = val as StringValue;
+            var str = val as LiquidString;
             if (str != null)
             {
                 return CheckIsBlank(str);
             }
-            var arr = val as ArrayValue;
+            var arr = val as LiquidCollection;
             if (arr != null)
             {
                 return CheckIsBlank(arr);
             }
-            var dict = val as DictionaryValue;
+            var dict = val as LiquidHash;
             if (dict != null)
             {
                 return CheckIsBlank(dict);
@@ -91,19 +91,19 @@ namespace Liquid.NET.Constants
             return false; // the only conditions will have been caught by IsBlank -- other types are never blank
         }
 
-        private static bool CheckIsBlank(StringValue val)
+        private static bool CheckIsBlank(LiquidString val)
         {
             String stringVal = val.StringVal;
             return String.IsNullOrEmpty(stringVal.Trim());
         }
 
 
-        private static bool CheckIsBlank(ArrayValue val)
+        private static bool CheckIsBlank(LiquidCollection val)
         {
             return !val.Any();
         }
 
-        private static bool CheckIsBlank(DictionaryValue val)
+        private static bool CheckIsBlank(LiquidHash val)
         {
             return !val.Any();
         }

@@ -11,16 +11,16 @@ namespace Liquid.NET.Filters.Array
     /// TODO: specify an expression as a filter to use to sort, instead
     ///  of the default "render as string".
     /// </summary>
-    public class SortFilter : FilterExpression<ArrayValue, ArrayValue>
+    public class SortFilter : FilterExpression<LiquidCollection, LiquidCollection>
     {
-        private readonly StringValue _sortField;
+        private readonly LiquidString _sortField;
 
-        public SortFilter(StringValue sortField)
+        public SortFilter(LiquidString sortField)
         {
             _sortField = sortField;
         }
 
-        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, ArrayValue liquidArrayExpression)
+        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, LiquidCollection liquidArrayExpression)
         {            
             var sortfield = _sortField.StringVal;
 
@@ -34,7 +34,7 @@ namespace Liquid.NET.Filters.Array
             }
         }
 
-        private LiquidExpressionResult SortByProperty(ITemplateContext ctx, ArrayValue val, string sortfield)
+        private LiquidExpressionResult SortByProperty(ITemplateContext ctx, LiquidCollection val, string sortfield)
         {
             if (ctx.Options.ErrorWhenValueMissing &&
                 val.Any(x => FieldAccessor.TryField(ctx, x.Value, sortfield).IsError))
@@ -43,13 +43,13 @@ namespace Liquid.NET.Filters.Array
             }
             var ordered = val.OrderBy(x => AsString(ctx, x, sortfield));
 
-            return LiquidExpressionResult.Success(new ArrayValue(ordered.ToList()));
+            return LiquidExpressionResult.Success(new LiquidCollection(ordered.ToList()));
         }
 
-        private static ArrayValue SortAsArrayOfStrings(ArrayValue val)
+        private static LiquidCollection SortAsArrayOfStrings(LiquidCollection val)
         {
             var result = val.OrderBy(ValueCaster.RenderAsString);
-            return new ArrayValue(result.ToList());
+            return new LiquidCollection(result.ToList());
         }
 
         private String AsString(ITemplateContext ctx, Option<IExpressionConstant> x, string field)

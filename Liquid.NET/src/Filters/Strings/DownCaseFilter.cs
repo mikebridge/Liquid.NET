@@ -7,7 +7,7 @@ namespace Liquid.NET.Filters.Strings
     /// https://docs.shopify.com/themes/liquid-documentation/filters/string-filters#downcase
     /// </summary>
     // ReSharper disable once ClassNeverInstantiated.Global
-    public class DownCaseFilter: FilterExpression<IExpressionConstant, StringValue>
+    public class DownCaseFilter: FilterExpression<IExpressionConstant, LiquidString>
     {
         public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, IExpressionConstant liquidExpression)
         {

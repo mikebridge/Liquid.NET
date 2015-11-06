@@ -36,7 +36,7 @@ namespace Liquid.NET.Tests.Filters
         public void It_Should_Convert_A_Symbol_With_Args_To_A_Filter()
         {
             // Arrange
-            var filter = FilterFactory.InstantiateFilter("remove", typeof(RemoveFilter), new List<Option<IExpressionConstant>>() { new StringValue("test") });
+            var filter = FilterFactory.InstantiateFilter("remove", typeof(RemoveFilter), new List<Option<IExpressionConstant>>() { new LiquidString("test") });
 
             // Act
 
@@ -48,18 +48,18 @@ namespace Liquid.NET.Tests.Filters
         public void It_Should_Cast_Numeric_Args_To_A_String()
         {
             // Arrange
-            var filter = FilterFactory.InstantiateFilter("mockfilter", typeof(MockStringToStringFilter), new List<Option<IExpressionConstant>>() { NumericValue.Create(123) });
+            var filter = FilterFactory.InstantiateFilter("mockfilter", typeof(MockStringToStringFilter), new List<Option<IExpressionConstant>>() { LiquidNumeric.Create(123) });
 
             // Act
 
-            Assert.That((((MockStringToStringFilter) filter.Value).StringArg1.Value), Is.EqualTo("123"));
+            Assert.That((((MockStringToStringFilter) filter.Value).LiquidStringArg1.Value), Is.EqualTo("123"));
         }
 
         [Test]
         public void It_Should_Return_Error_When_Not_Filter_Type()
         {
             // Arrange
-            var filter = FilterFactory.InstantiateFilter("mockfilter", typeof(String), new List<Option<IExpressionConstant>> { NumericValue.Create(123) });
+            var filter = FilterFactory.InstantiateFilter("mockfilter", typeof(String), new List<Option<IExpressionConstant>> { LiquidNumeric.Create(123) });
 
             // Assert
             Assert.That(filter.IsFailure, Is.True);
@@ -70,7 +70,7 @@ namespace Liquid.NET.Tests.Filters
         public void It_Should_Return_Error_When_Null_Type()
         {
             // Arrange
-            var filter = FilterFactory.InstantiateFilter("mockfilter", null, new List<Option<IExpressionConstant>> { NumericValue.Create(123) });
+            var filter = FilterFactory.InstantiateFilter("mockfilter", null, new List<Option<IExpressionConstant>> { LiquidNumeric.Create(123) });
 
             // Assert
             Assert.That(filter.IsFailure, Is.True);
@@ -80,7 +80,7 @@ namespace Liquid.NET.Tests.Filters
         public void It_Should_Return_Error_When_Multiple_Constructors()
         {
             // Arrange
-            var filter = FilterFactory.InstantiateFilter("mockfilter", typeof(TwoConstructorFilter), new List<Option<IExpressionConstant>> { NumericValue.Create(123) });
+            var filter = FilterFactory.InstantiateFilter("mockfilter", typeof(TwoConstructorFilter), new List<Option<IExpressionConstant>> { LiquidNumeric.Create(123) });
 
             // Assert
             Assert.That(filter.IsFailure, Is.True);
@@ -97,47 +97,47 @@ namespace Liquid.NET.Tests.Filters
             Assert.That(result, Is.EqualTo("Result : xy"));
         }
 
-        public class TwoConstructorFilter : FilterExpression<StringValue, StringValue>
+        public class TwoConstructorFilter : FilterExpression<LiquidString, LiquidString>
         {
-            public StringValue StringArg1 { get; set; }
-            public StringValue StringArg2 { get; set; }
+            public LiquidString LiquidStringArg1 { get; set; }
+            public LiquidString LiquidStringArg2 { get; set; }
 
             public String MESSAGE = "The object was {0}, parm1 was {1} and parm2 was {2}.";
 
-            public TwoConstructorFilter(StringValue stringLiteral1, StringValue stringLiteral2)
+            public TwoConstructorFilter(LiquidString liquidStringLiteral1, LiquidString liquidStringLiteral2)
             {
-                StringArg1 = stringLiteral1;
-                StringArg2 = stringLiteral2;
+                LiquidStringArg1 = liquidStringLiteral1;
+                LiquidStringArg2 = liquidStringLiteral2;
             }
 
-            public TwoConstructorFilter(StringValue stringLiteral1)
+            public TwoConstructorFilter(LiquidString liquidStringLiteral1)
             {
-                StringArg1 = stringLiteral1;
+                LiquidStringArg1 = liquidStringLiteral1;
             }
 
         }
 
 
         // ReSharper disable once ClassNeverInstantiated.Global
-        public class MockStringToStringFilter : FilterExpression<StringValue, StringValue>
+        public class MockStringToStringFilter : FilterExpression<LiquidString, LiquidString>
         {
-            public StringValue StringArg1 { get; set; }
-            public StringValue StringArg2 { get; set; }
+            public LiquidString LiquidStringArg1 { get; set; }
+            public LiquidString LiquidStringArg2 { get; set; }
 
             public String MESSAGE = "The object was {0}, parm1 was {1} and parm2 was {2}.";
 
-            public MockStringToStringFilter(StringValue stringLiteral1, StringValue stringLiteral2)
+            public MockStringToStringFilter(LiquidString liquidStringLiteral1, LiquidString liquidStringLiteral2)
             {
-                StringArg1 = stringLiteral1;
-                StringArg2 = stringLiteral2;
+                LiquidStringArg1 = liquidStringLiteral1;
+                LiquidStringArg2 = liquidStringLiteral2;
             }
 
-            public override LiquidExpressionResult Apply(ITemplateContext ctx, StringValue liquidStringExpression)
+            public override LiquidExpressionResult Apply(ITemplateContext ctx, LiquidString liquidLiquidStringExpression)
             {
-                return LiquidExpressionResult.Success(new StringValue(
-                    (liquidStringExpression == null ? "NULL" : liquidStringExpression.StringVal) +" " + 
-                    (StringArg1 == null ? "NULL" : StringArg1.StringVal) + " " +
-                    (StringArg2 == null ? "NULL" : StringArg2.StringVal)));
+                return LiquidExpressionResult.Success(new LiquidString(
+                    (liquidLiquidStringExpression == null ? "NULL" : liquidLiquidStringExpression.StringVal) +" " + 
+                    (LiquidStringArg1 == null ? "NULL" : LiquidStringArg1.StringVal) + " " +
+                    (LiquidStringArg2 == null ? "NULL" : LiquidStringArg2.StringVal)));
             }
         }
 

@@ -70,8 +70,8 @@ namespace Liquid.NET.Tests.Expressions
             var tmpl = @"Result : {% if dict == empty %}EMPTY{% else %}NOT EMPTY{% endif %}";
             ITemplateContext ctx = new TemplateContext();
 
-            ctx.DefineLocalVariable("dict", new DictionaryValue{
-                {"x", new StringValue("a string")}
+            ctx.DefineLocalVariable("dict", new LiquidHash{
+                {"x", new LiquidString("a string")}
             });
 
             // Act
@@ -91,7 +91,7 @@ namespace Liquid.NET.Tests.Expressions
             var tmpl = @"Result : {% if dict == empty %}EMPTY{% else %}NOT EMPTY{% endif %}";
             ITemplateContext ctx = new TemplateContext();
 
-            ctx.DefineLocalVariable("dict", new DictionaryValue());
+            ctx.DefineLocalVariable("dict", new LiquidHash());
 
             // Act
             Logger.Log(tmpl);
@@ -112,8 +112,8 @@ namespace Liquid.NET.Tests.Expressions
             // Act
             var result = expr.Eval(new TemplateContext(), new List<Option<IExpressionConstant>>
             {
-                new BooleanValue(true),
-                new BooleanValue(false)
+                new LiquidBoolean(true),
+                new LiquidBoolean(false)
             });
             Assert.That(result.IsError);
 

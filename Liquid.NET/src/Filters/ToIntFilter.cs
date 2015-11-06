@@ -3,11 +3,11 @@ using Liquid.NET.Utils;
 
 namespace Liquid.NET.Filters
 {
-    public class ToIntFilter : FilterExpression<ExpressionConstant, NumericValue>
+    public class ToIntFilter : FilterExpression<LiquidValue, LiquidNumeric>
     {
-        public override LiquidExpressionResult Apply(ITemplateContext ctx, ExpressionConstant liquidExpression)
+        public override LiquidExpressionResult Apply(ITemplateContext ctx, LiquidValue liquidExpression)
         {
-            return LiquidExpressionResult.Success(NumericValue.Create(ToDecimalFilter.ConvertToDecimal(liquidExpression).IntValue));
+            return LiquidExpressionResult.Success(LiquidNumeric.Create(ToDecimalFilter.ConvertToDecimal(liquidExpression).IntValue));
         }
     }
 }

@@ -15,7 +15,7 @@ namespace Liquid.NET.Tests.Symbols
             // Arrange
             const string str = "This is a test.";
             var templateContext = new TemplateContext();
-            templateContext.DefineLocalVariable("test", new StringValue(str));
+            templateContext.DefineLocalVariable("test", new LiquidString(str));
             var stack = StackHelper.CreateSymbolTableStack(templateContext);
 
             // Act
@@ -23,7 +23,7 @@ namespace Liquid.NET.Tests.Symbols
 
             // Assert
             Assert.That(result, Is.Not.Null);
-            Assert.That(result.SuccessValue<StringValue>().StringVal, Is.EqualTo(str));
+            Assert.That(result.SuccessValue<LiquidString>().StringVal, Is.EqualTo(str));
 
         }
 
@@ -67,16 +67,16 @@ namespace Liquid.NET.Tests.Symbols
         {
             // Arrange
             var stack = StackHelper.CreateSymbolTableStack();
-            stack.Define("hello", new StringValue("HELLO"));
+            stack.Define("hello", new LiquidString("HELLO"));
             var localScope = new SymbolTable();
             stack.Push(localScope);
-            stack.Define("hello", new StringValue("HI"));
+            stack.Define("hello", new LiquidString("HI"));
 
             // Act
             var result = stack.Reference("hello");
 
             // Assert
-            Assert.That(result.SuccessValue<StringValue>().StringVal, Is.EqualTo("HI"));
+            Assert.That(result.SuccessValue<LiquidString>().StringVal, Is.EqualTo("HI"));
 
         }
 
@@ -87,17 +87,17 @@ namespace Liquid.NET.Tests.Symbols
             // Arrange
             const string varname = "hello";
             var stack = StackHelper.CreateSymbolTableStack();
-            stack.Define(varname, new StringValue("HELLO"));
+            stack.Define(varname, new LiquidString("HELLO"));
             var localScope = new SymbolTable();
             stack.Push(localScope);
-            stack.Define(varname, new StringValue("HI"));
+            stack.Define(varname, new LiquidString("HI"));
             stack.Pop();
 
             // Act
             var result = stack.Reference(varname);
 
             // Assert
-            Assert.That(result.SuccessValue<StringValue>().StringVal, Is.EqualTo("HELLO"));
+            Assert.That(result.SuccessValue<LiquidString>().StringVal, Is.EqualTo("HELLO"));
 
         }
 
@@ -106,7 +106,7 @@ namespace Liquid.NET.Tests.Symbols
         {
             // Arrange
             var stack = StackHelper.CreateSymbolTableStack(); 
-            stack.Define("hello", new StringValue("HELLO"));
+            stack.Define("hello", new LiquidString("HELLO"));
             var localScope = new SymbolTable();
             stack.Push(localScope);
 
@@ -114,7 +114,7 @@ namespace Liquid.NET.Tests.Symbols
             var result = stack.Reference("hello");
 
             // Assert
-            Assert.That(result.SuccessValue<StringValue>().StringVal, Is.EqualTo("HELLO"));
+            Assert.That(result.SuccessValue<LiquidString>().StringVal, Is.EqualTo("HELLO"));
 
         }
 
@@ -124,7 +124,7 @@ namespace Liquid.NET.Tests.Symbols
         {
             // Arrange
             var stack = StackHelper.CreateSymbolTableStack();
-            stack.Define("hello", new StringValue("HELLO"));
+            stack.Define("hello", new LiquidString("HELLO"));
 
             bool found = false;
             
@@ -141,7 +141,7 @@ namespace Liquid.NET.Tests.Symbols
         {
             // Arrange
             var stack = StackHelper.CreateSymbolTableStack();
-            stack.Define("hello", new StringValue("HELLO"));
+            stack.Define("hello", new LiquidString("HELLO"));
             var localScope = new SymbolTable();
             stack.Push(localScope);
             bool found = false;

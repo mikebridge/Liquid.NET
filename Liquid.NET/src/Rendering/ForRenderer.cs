@@ -29,7 +29,7 @@ namespace Liquid.NET.Rendering
             {
                 var iterableFactory = forBlockTag.IterableCreator;
 
-                // TODO: the Eval may result in an ArrayValue with no Array
+                // TODO: the Eval may result in an LiquidCollection with no Array
                 // (i.e. it's undefined).  THe ToList therefore fails....
                 // this should use Bind
                 var iterable = iterableFactory.Eval(templateContext).ToList();
@@ -48,18 +48,18 @@ namespace Liquid.NET.Rendering
 
         private void IterateBlock(ForBlockTag forBlockTag, ITemplateContext templateContext, List<IExpressionConstant> iterable)
         {
-            var offset = NumericValue.Create(0);
-            NumericValue limit = null;
+            var offset = LiquidNumeric.Create(0);
+            LiquidNumeric limit = null;
             if (!templateContext.Options.NoForLimit)
             {
-                limit = NumericValue.Create(50); // see: https://docs.shopify.com/themes/liquid-documentation/tags/iteration-tags#for             
+                limit = LiquidNumeric.Create(50); // see: https://docs.shopify.com/themes/liquid-documentation/tags/iteration-tags#for             
             }
             if (forBlockTag.Offset != null)
             {
                 var result = LiquidExpressionEvaluator.Eval(forBlockTag.Offset, templateContext);
                 if (result.IsSuccess)
                 {
-                    offset = result.SuccessValue<NumericValue>();
+                    offset = result.SuccessValue<LiquidNumeric>();
                 }
             }
             if (forBlockTag.Limit != null)
@@ -67,7 +67,7 @@ namespace Liquid.NET.Rendering
                 var result = LiquidExpressionEvaluator.Eval(forBlockTag.Limit, templateContext);
                 if (result.IsSuccess)
                 {
-                    limit = result.SuccessValue<NumericValue>();
+                    limit = result.SuccessValue<LiquidNumeric>();
                 }
             }
 
@@ -109,19 +109,19 @@ namespace Liquid.NET.Rendering
             }
         }
 
-        public static DictionaryValue CreateForLoopDescriptor(String name, int iter, int length, SymbolTableStack stack)
+        public static LiquidHash CreateForLoopDescriptor(String name, int iter, int length, SymbolTableStack stack)
         {
-            return new DictionaryValue
+            return new LiquidHash
             {               
                 {"parentloop", FindParentLoop(stack)}, // see: https://github.com/Shopify/liquid/pull/520
-                {"first", new BooleanValue(iter == 0)},
-                {"index", NumericValue.Create(iter + 1)},
-                {"index0", NumericValue.Create(iter)},
-                {"rindex", NumericValue.Create(length - iter)},
-                {"rindex0", NumericValue.Create(length - iter - 1)},
-                {"last", new BooleanValue(length - iter - 1 == 0)},
-                {"length", NumericValue.Create(length) },
-                {"name", new StringValue(name) }
+                {"first", new LiquidBoolean(iter == 0)},
+                {"index", LiquidNumeric.Create(iter + 1)},
+                {"index0", LiquidNumeric.Create(iter)},
+                {"rindex", LiquidNumeric.Create(length - iter)},
+                {"rindex0", LiquidNumeric.Create(length - iter - 1)},
+                {"last", new LiquidBoolean(length - iter - 1 == 0)},
+                {"length", LiquidNumeric.Create(length) },
+                {"name", new LiquidString(name) }
             };
 
         }
@@ -134,7 +134,7 @@ namespace Liquid.NET.Rendering
             {
                 return new None<IExpressionConstant>();
             }
-            return parentLoop.SuccessValue<DictionaryValue>();
+            return parentLoop.SuccessValue<LiquidHash>();
                 
         }
     }

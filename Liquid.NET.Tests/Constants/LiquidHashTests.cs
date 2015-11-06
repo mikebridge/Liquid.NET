@@ -1,26 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net;
+
 using Liquid.NET.Constants;
-using Liquid.NET.Tests.Filters.Strings;
 using Liquid.NET.Utils;
 using NUnit.Framework;
 
 namespace Liquid.NET.Tests.Constants
 {
     [TestFixture]
-    public class DictionaryValueTests
+    public class LiquidHashTests
     {
         [Test]        
-        public void It_Should_Dereference_A_Dictionary()
+        public void It_Should_Dereference_A_LiquidHash()
         {
 
             // Arrange
-            var dictValue = new DictionaryValue
+            var dictValue = new LiquidHash
             {
-                {"string1", new StringValue("a string")},
-                {"string2", NumericValue.Create(123)},
-                {"string3", NumericValue.Create(456m)}
+                {"string1", new LiquidString("a string")},
+                {"string2", LiquidNumeric.Create(123)},
+                {"string3", LiquidNumeric.Create(456m)}
             };
 
             // Assert
@@ -28,19 +27,19 @@ namespace Liquid.NET.Tests.Constants
         }
 
         [Test]
-        public void It_Should_Dereference_A_Nested_Dictionary()
+        public void It_Should_Dereference_A_Nested_Hash()
         {
 
             // Arrange
-            DictionaryValue dictValue3 = new DictionaryValue  {
-                {"str", new StringValue("Dict 3")},
+            LiquidHash dictValue3 = new LiquidHash  {
+                {"str", new LiquidString("Dict 3")},
             };
 
-            DictionaryValue dictValue2 = new DictionaryValue{
+            LiquidHash dictValue2 = new LiquidHash{
                 {"dict3", dictValue3}
             };
 
-            DictionaryValue dictValue = new DictionaryValue{
+            LiquidHash dictValue = new LiquidHash{
                 {"dict2", dictValue2}        
             };
 
@@ -58,7 +57,7 @@ namespace Liquid.NET.Tests.Constants
         public void It_Should_Fail_When_Dereferencing_A_Missing_Property()
         {
             // Arrange
-            DictionaryValue dictValue = new DictionaryValue();
+            LiquidHash dictValue = new LiquidHash();
 
             // Assert
             Assert.That(dictValue.ValueAt("string1").HasValue, Is.False);
@@ -66,40 +65,40 @@ namespace Liquid.NET.Tests.Constants
         }
 
         [Test]
-        public void It_Should_Initialize_The_DictionaryValue_With_OptionSyntax()
+        public void It_Should_Initialize_The_LiquidHash_With_OptionSyntax()
         {
             // Arrange
-            var dict = new DictionaryValue
+            var dict = new LiquidHash
             {
-                {"key1", Option<IExpressionConstant>.Create(new StringValue("test 1"))},
-                {"key2", Option<IExpressionConstant>.Create(new StringValue("test 2"))},
+                {"key1", Option<IExpressionConstant>.Create(new LiquidString("test 1"))},
+                {"key2", Option<IExpressionConstant>.Create(new LiquidString("test 2"))},
             };
 
             // Assert
-            Assert.That(dict.ValueAt("key1").Value, Is.EqualTo(new StringValue("test 1")));
+            Assert.That(dict.ValueAt("key1").Value, Is.EqualTo(new LiquidString("test 1")));
 
         }
 
         [Test]
-        public void It_Should_Initialize_The_DictionaryValue_With_IExpressionConstant()
+        public void It_Should_Initialize_The_LiquidHash_With_IExpressionConstant()
         {
             // Arrange
-            var dict = new DictionaryValue
+            var dict = new LiquidHash
             {
-                {"key1", new StringValue("test 1")},
-                {"key2", new StringValue("test 2")},
+                {"key1", new LiquidString("test 1")},
+                {"key2", new LiquidString("test 2")},
             };
 
 
             // Assert
-            Assert.That(dict.ValueAt("key1").Value, Is.EqualTo(new StringValue("test 1")));
+            Assert.That(dict.ValueAt("key1").Value, Is.EqualTo(new LiquidString("test 1")));
 
         }
 
         [Test]
-        public void It_Should_Implement_DictionaryFunctions()
+        public void It_Should_Implement_IDictionaryFunctions()
         {
-            var dict = new DictionaryValue();
+            var dict = new LiquidHash();
             Assert.That(dict.IsReadOnly, Is.False);
             Assert.That(dict.GetEnumerator(), Is.Not.Null);
         }
@@ -107,41 +106,41 @@ namespace Liquid.NET.Tests.Constants
         [Test]
         public void It_Should_Set_A_Value()
         {
-            var dict = new DictionaryValue();
-            dict["key"] = new Some<IExpressionConstant>(new StringValue("test"));
-            Assert.That(dict["key"].Value, Is.EqualTo(new StringValue("test")));
+            var dict = new LiquidHash();
+            dict["key"] = new Some<IExpressionConstant>(new LiquidString("test"));
+            Assert.That(dict["key"].Value, Is.EqualTo(new LiquidString("test")));
         }
 
 
         [Test]
         public void It_Should_Set_A_Value_Via_Key_Value_Pair()
         {
-            var val = new Some<IExpressionConstant>(new StringValue("test"));           
+            var val = new Some<IExpressionConstant>(new LiquidString("test"));           
             var kvp = new KeyValuePair<String,Option<IExpressionConstant>>("key", val);
-            var dict = new DictionaryValue {kvp};
-            Assert.That(dict["key"].Value, Is.EqualTo(new StringValue("test")));
+            var dict = new LiquidHash {kvp};
+            Assert.That(dict["key"].Value, Is.EqualTo(new LiquidString("test")));
         }
 
         [Test]
         public void It_Should_Convert_Null_To_None()
         {
             var kvp = new KeyValuePair<String, Option<IExpressionConstant>>("key", null);
-            var dict = new DictionaryValue {kvp};
+            var dict = new LiquidHash {kvp};
             Assert.That(dict["key"].HasValue, Is.False);
         }
 
         [Test]
         public void It_Should_Add_A_Value()
         {
-            var dict = new DictionaryValue();
-            dict.Add("key", new StringValue("test"));
-            Assert.That(dict["key"].Value, Is.EqualTo(new StringValue("test")));
+            var dict = new LiquidHash();
+            dict.Add("key", new LiquidString("test"));
+            Assert.That(dict["key"].Value, Is.EqualTo(new LiquidString("test")));
         }
 
         [Test]
         public void It_Should_Clear_Values()
         {
-            var dict = new DictionaryValue {{"key", new StringValue("test")}};
+            var dict = new LiquidHash {{"key", new LiquidString("test")}};
             dict.Clear();
             Assert.That(dict.Count, Is.EqualTo(0));
         }
@@ -149,7 +148,7 @@ namespace Liquid.NET.Tests.Constants
         [Test]
         public void It_Should_Remove_A_Value()
         {
-            var dict = new DictionaryValue { { "key", new StringValue("test") } };
+            var dict = new LiquidHash { { "key", new LiquidString("test") } };
             dict.Remove("key");
             Assert.That(dict.Count, Is.EqualTo(0));
         }
@@ -157,7 +156,7 @@ namespace Liquid.NET.Tests.Constants
         [Test]
         public void It_Should_Copy_Values()
         {
-            var dict = new DictionaryValue { { "key", new StringValue("test") } };
+            var dict = new LiquidHash { { "key", new LiquidString("test") } };
             var x = new KeyValuePair<string, Option<IExpressionConstant>>[1];
             dict.CopyTo(x, 0);
             Assert.That(x.Length, Is.EqualTo(1));
@@ -166,9 +165,9 @@ namespace Liquid.NET.Tests.Constants
         [Test]
         public void It_Should_Know_If_A_Value_Is_Contained()
         {
-            var val = new Some<IExpressionConstant>(new StringValue("test"));
+            var val = new Some<IExpressionConstant>(new LiquidString("test"));
             var kvp = new KeyValuePair<String, Option<IExpressionConstant>>("key", val);
-            var dict = new DictionaryValue { kvp };
+            var dict = new LiquidHash { kvp };
 
             Assert.That(dict.Contains(kvp));
         }
@@ -176,7 +175,7 @@ namespace Liquid.NET.Tests.Constants
         [Test]
         public void It_Should_Retrieve_Values()
         {
-            var dict = new DictionaryValue {{"key", new StringValue("test")}};
+            var dict = new LiquidHash {{"key", new LiquidString("test")}};
             Assert.That(dict.Values.Count, Is.EqualTo(1));
         }
     }

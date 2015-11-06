@@ -18,13 +18,13 @@ namespace Liquid.NET.Tests.Tags
         {
             // Arrange
             var cycleTag = new CycleTag();
-            cycleTag.CycleList.Add(new TreeNode<LiquidExpression>(new LiquidExpression { Expression = new StringValue("A")}));
-            cycleTag.CycleList.Add(new TreeNode<LiquidExpression>(new LiquidExpression { Expression = new StringValue("B") }));
-            cycleTag.CycleList.Add(new TreeNode<LiquidExpression>(new LiquidExpression { Expression = new StringValue("C") }));
+            cycleTag.CycleList.Add(new TreeNode<LiquidExpression>(new LiquidExpression { Expression = new LiquidString("A")}));
+            cycleTag.CycleList.Add(new TreeNode<LiquidExpression>(new LiquidExpression { Expression = new LiquidString("B") }));
+            cycleTag.CycleList.Add(new TreeNode<LiquidExpression>(new LiquidExpression { Expression = new LiquidString("C") }));
 
             // Assert
-            Assert.That(((StringValue) cycleTag.ElementAt(0).Data.Expression).StringVal, Is.EqualTo("A"));
-            Assert.That(((StringValue) cycleTag.ElementAt(1).Data.Expression).StringVal, Is.EqualTo("B"));
+            Assert.That(((LiquidString) cycleTag.ElementAt(0).Data.Expression).StringVal, Is.EqualTo("A"));
+            Assert.That(((LiquidString) cycleTag.ElementAt(1).Data.Expression).StringVal, Is.EqualTo("B"));
       }
 
         [Test]
@@ -120,10 +120,10 @@ namespace Liquid.NET.Tests.Tags
         public void It_Should_Cycle_Through_Variables()
         {
             TemplateContext ctx = new TemplateContext();
-            ctx.DefineLocalVariable("var1", new StringValue("ONE"));
-            ctx.DefineLocalVariable("var2", new StringValue("TWO"));
-            ctx.DefineLocalVariable("var3", new BooleanValue(false));
-            ctx.DefineLocalVariable("var4", NumericValue.Create(9));
+            ctx.DefineLocalVariable("var1", new LiquidString("ONE"));
+            ctx.DefineLocalVariable("var2", new LiquidString("TWO"));
+            ctx.DefineLocalVariable("var3", new LiquidBoolean(false));
+            ctx.DefineLocalVariable("var4", LiquidNumeric.Create(9));
 
             var template = LiquidTemplate.Create("Result : {% for item in (1..4) %}{% cycle var1, var2, var3, var4 %}{% endfor %}");
 
@@ -139,10 +139,10 @@ namespace Liquid.NET.Tests.Tags
         public void It_Should_Cycle_Through_Vars_And_Non_Vars()
         {
             TemplateContext ctx = new TemplateContext();
-            ctx.DefineLocalVariable("var1", new StringValue("ONE"));
-            ctx.DefineLocalVariable("var2", new ArrayValue{new StringValue("TWO")});
-            ctx.DefineLocalVariable("var3", new BooleanValue(false));
-            ctx.DefineLocalVariable("var4", NumericValue.Create(9));
+            ctx.DefineLocalVariable("var1", new LiquidString("ONE"));
+            ctx.DefineLocalVariable("var2", new LiquidCollection{new LiquidString("TWO")});
+            ctx.DefineLocalVariable("var3", new LiquidBoolean(false));
+            ctx.DefineLocalVariable("var4", LiquidNumeric.Create(9));
 
             var template = LiquidTemplate.Create("Result : {% for item in (1..4) %}{% cycle \"ONE\", var2[0], var3, var4 %}{% endfor %}");
 
@@ -158,10 +158,10 @@ namespace Liquid.NET.Tests.Tags
         public void It_Should_Allow_A_Var_In_Cycle_Group()
         {
             TemplateContext ctx = new TemplateContext();
-            ctx.DefineLocalVariable("var1", new StringValue("ONE"));
-            ctx.DefineLocalVariable("var2", new ArrayValue{ new StringValue("TWO") });
-            ctx.DefineLocalVariable("var3", new BooleanValue(false));
-            ctx.DefineLocalVariable("var4", NumericValue.Create(9));
+            ctx.DefineLocalVariable("var1", new LiquidString("ONE"));
+            ctx.DefineLocalVariable("var2", new LiquidCollection{ new LiquidString("TWO") });
+            ctx.DefineLocalVariable("var3", new LiquidBoolean(false));
+            ctx.DefineLocalVariable("var4", LiquidNumeric.Create(9));
 
             var template = LiquidTemplate.Create("Result : {% for item in (1..4) %}{% cycle var1: \"ONE\", var2[0], var3, var4 %}{% endfor %}");
 
@@ -199,13 +199,13 @@ namespace Liquid.NET.Tests.Tags
         }
 
 
-        private ArrayValue CreateArrayValues()
+        private LiquidCollection CreateArrayValues()
         {
-            return new ArrayValue{
-                new StringValue("a string"),
-                NumericValue.Create(123),
-                NumericValue.Create(456m),
-                new BooleanValue(false)
+            return new LiquidCollection{
+                new LiquidString("a string"),
+                LiquidNumeric.Create(123),
+                LiquidNumeric.Create(456m),
+                new LiquidBoolean(false)
             };
         }
     }

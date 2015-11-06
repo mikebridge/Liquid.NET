@@ -8,7 +8,7 @@ namespace Liquid.NET.Expressions
     {
         public override LiquidExpressionResult Eval(ITemplateContext templateContext, IEnumerable<Option<IExpressionConstant>> expressions)
         {
-            return LiquidExpressionResult.Success(new Some<IExpressionConstant>(new BooleanValue(false)));
+            return LiquidExpressionResult.Success(new Some<IExpressionConstant>(new LiquidBoolean(false)));
         }
     }
 }

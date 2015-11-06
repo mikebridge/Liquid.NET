@@ -5,33 +5,33 @@ using Liquid.NET.Utils;
 
 namespace Liquid.NET.Filters.Array
 {
-    public class JoinFilter : FilterExpression<IExpressionConstant, StringValue>
+    public class JoinFilter : FilterExpression<IExpressionConstant, LiquidString>
     {
-        private readonly StringValue _separator;
+        private readonly LiquidString _separator;
 
-        public JoinFilter(StringValue separator)
+        public JoinFilter(LiquidString separator)
         {
             _separator = separator;
         }
 
-        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, ArrayValue liquidArrayExpression)
+        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, LiquidCollection liquidArrayExpression)
         {
             String separator = _separator == null ? "" : _separator.StringVal;
 
             var vals = liquidArrayExpression.Select(ValueCaster.RenderAsString);
 
-            return LiquidExpressionResult.Success(new StringValue(String.Join(separator, vals)));
+            return LiquidExpressionResult.Success(new LiquidString(String.Join(separator, vals)));
         }
 
-        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, StringValue liquidStringExpression)
+        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, LiquidString liquidLiquidStringExpression)
         {
-            if (String.IsNullOrEmpty(liquidStringExpression.StringVal))
+            if (String.IsNullOrEmpty(liquidLiquidStringExpression.StringVal))
             {
                 return LiquidExpressionResult.Success(Option<IExpressionConstant>.None());
             }
 
-            return LiquidExpressionResult.Success(new StringValue(String.Join(_separator.StringVal,
-                liquidStringExpression.StringVal.ToCharArray().Select(c => c.ToString()))));
+            return LiquidExpressionResult.Success(new LiquidString(String.Join(_separator.StringVal,
+                liquidLiquidStringExpression.StringVal.ToCharArray().Select(c => c.ToString()))));
 
         }
     }

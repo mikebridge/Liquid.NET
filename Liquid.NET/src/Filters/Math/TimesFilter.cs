@@ -4,17 +4,17 @@ using Liquid.NET.Utils;
 namespace Liquid.NET.Filters.Math
 {
     // ReSharper disable once ClassNeverInstantiated.Global
-    public class TimesFilter : FilterExpression<NumericValue, NumericValue>
+    public class TimesFilter : FilterExpression<LiquidNumeric, LiquidNumeric>
     {
-        private readonly NumericValue _addend1;
+        private readonly LiquidNumeric _addend1;
 
-        public TimesFilter(NumericValue addend1)
+        public TimesFilter(LiquidNumeric addend1)
         {
             _addend1 = addend1;
         }
 
 
-        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, NumericValue addend2)
+        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, LiquidNumeric addend2)
         {
             var result = _addend1.DecimalValue * addend2.DecimalValue;
             return MathHelper.GetReturnValue(result, _addend1, addend2);
@@ -22,7 +22,7 @@ namespace Liquid.NET.Filters.Math
 
         public override LiquidExpressionResult ApplyToNil(ITemplateContext ctx)
         {
-            return LiquidExpressionResult.Success(NumericValue.Create(0)); 
+            return LiquidExpressionResult.Success(LiquidNumeric.Create(0)); 
         }
     }
 }

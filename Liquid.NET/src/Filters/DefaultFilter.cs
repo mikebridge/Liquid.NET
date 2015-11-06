@@ -14,7 +14,7 @@ namespace Liquid.NET.Filters
             _defaultValue = defaultValue;
         }
 
-        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, StringValue liquidExpression)
+        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, LiquidString liquidExpression)
         {
             if (liquidExpression.StringVal == null || liquidExpression.StringVal.Equals(""))
             {
@@ -31,11 +31,11 @@ namespace Liquid.NET.Filters
             return LiquidExpressionResult.Success(liquidExpression.ToOption());
         }
 
-        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, ArrayValue arrayValue)
+        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, LiquidCollection liquidCollection)
         {
-            if (arrayValue != null && arrayValue.Count > 0)
+            if (liquidCollection != null && liquidCollection.Count > 0)
             {
-                return LiquidExpressionResult.Success(arrayValue.ToOption());
+                return LiquidExpressionResult.Success(liquidCollection.ToOption());
             }
             else
             {

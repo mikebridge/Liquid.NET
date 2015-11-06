@@ -3,11 +3,11 @@ using Liquid.NET.Utils;
 
 namespace Liquid.NET.Filters.Array
 {
-    public class PositionFilter : FilterExpression<ExpressionConstant, IExpressionConstant>
+    public class PositionFilter : FilterExpression<LiquidValue, IExpressionConstant>
     {
-        private readonly NumericValue _index;
+        private readonly LiquidNumeric _index;
 
-        public PositionFilter(NumericValue index)
+        public PositionFilter(LiquidNumeric index)
         {
             // TODO: Document what happens if htere's no arg passed.  Is this null?  What do we do?
             _index = index;
@@ -18,7 +18,7 @@ namespace Liquid.NET.Filters.Array
             return LiquidExpressionResult.Error("Can't find sub-elements from that object.  It is not an array or a string.");
         }
 
-        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, ArrayValue liquidArrayExpression)
+        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, LiquidCollection liquidArrayExpression)
         {
             if (liquidArrayExpression == null || liquidArrayExpression.Value == null)
             {
@@ -39,28 +39,28 @@ namespace Liquid.NET.Filters.Array
 //            return LiquidExpressionResult.Success(liquidArrayExpression.ArrValue.Count > 0 && 
 //                liquidArrayExpression.ArrValue.Count >= _index.IntValue + 1 ? 
 //                liquidArrayExpression.ValueAt(_index.IntValue) : 
-//                ConstantFactory.CreateError<ArrayValue>("Array has no element at position " + _index.IntValue));
+//                ConstantFactory.CreateError<LiquidCollection>("Array has no element at position " + _index.IntValue));
         }
 
-        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, StringValue liquidStringExpression)
+        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, LiquidString liquidLiquidStringExpression)
         {
-            if (liquidStringExpression == null || liquidStringExpression.Value == null)
+            if (liquidLiquidStringExpression == null || liquidLiquidStringExpression.Value == null)
             {
                 return LiquidExpressionResult.Error("String is nil");
             }
 
-            if (liquidStringExpression.StringVal.Length >= _index.IntValue + 1)
+            if (liquidLiquidStringExpression.StringVal.Length >= _index.IntValue + 1)
             {
-               return LiquidExpressionResult.Success(new StringValue(liquidStringExpression.StringVal[_index.IntValue].ToString()));
+               return LiquidExpressionResult.Success(new LiquidString(liquidLiquidStringExpression.StringVal[_index.IntValue].ToString()));
             }
             else
             {
                 return LiquidExpressionResult.Error("String has no element at position " + _index.IntValue);                
             }
 
-//            return LiquidExpressionResult.Success(liquidStringExpression.StringVal.Length >= _index.IntValue + 1
-//                ? (IExpressionConstant)new StringValue(liquidStringExpression.StringVal[_index.IntValue].ToString())
-//                : ConstantFactory.CreateError<ArrayValue>("String has no element at position " + _index.IntValue));
+//            return LiquidExpressionResult.Success(liquidLiquidStringExpression.StringVal.Length >= _index.IntValue + 1
+//                ? (IExpressionConstant)new LiquidString(liquidLiquidStringExpression.StringVal[_index.IntValue].ToString())
+//                : ConstantFactory.CreateError<LiquidCollection>("String has no element at position " + _index.IntValue));
         }
     }
 }

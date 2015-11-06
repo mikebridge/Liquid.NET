@@ -48,7 +48,7 @@ namespace Liquid.NET.Tests.Ruby
 
         public static IExpressionConstant Transform(JArray arr)
         {
-            var result = new ArrayValue();
+            var result = new LiquidCollection();
             var list = arr.Select(el => Transform((dynamic) el))
                 .Cast<IExpressionConstant>();
             foreach (var item in list)
@@ -60,7 +60,7 @@ namespace Liquid.NET.Tests.Ruby
 
         public static IExpressionConstant Transform(JObject obj)
         {
-            var result =new DictionaryValue();
+            var result =new LiquidHash();
             var dict = obj.Properties().ToDictionary(k => k.Name, v => (IExpressionConstant) Transform((dynamic)v.Value));
             foreach (var kvp in dict)
             {
@@ -77,19 +77,19 @@ namespace Liquid.NET.Tests.Ruby
             //var val = obj.Value;
             if (obj.Type.Equals(JTokenType.Integer)) 
             {
-                return NumericValue.Create(obj.ToObject<int>());
+                return LiquidNumeric.Create(obj.ToObject<int>());
             } 
             else if (obj.Type.Equals(JTokenType.Float))
             {
-                return NumericValue.Create(obj.ToObject<decimal>());
+                return LiquidNumeric.Create(obj.ToObject<decimal>());
             }
             else if (obj.Type.Equals(JTokenType.String))
             {
-                return new StringValue(obj.ToObject<String>());
+                return new LiquidString(obj.ToObject<String>());
             }
             else if (obj.Type.Equals(JTokenType.Boolean))
             {
-                return new BooleanValue(obj.ToObject<bool>());
+                return new LiquidBoolean(obj.ToObject<bool>());
             }
             else if (obj.Type.Equals(JTokenType.Null))
             {

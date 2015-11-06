@@ -111,7 +111,7 @@ namespace Liquid.NET.Tests
         {
             // Arrange
             TemplateContext templateContext = new TemplateContext();
-            templateContext.DefineLocalVariable("myVar", new StringValue("My Variable"));
+            templateContext.DefineLocalVariable("myVar", new LiquidString("My Variable"));
             var ast = _generator.Generate("Result : {% if myVar %}OK{% else %}NOT OK{% endif %}");
 
             // Act
@@ -143,7 +143,7 @@ namespace Liquid.NET.Tests
             // Arrange
             TemplateContext templateContext = new TemplateContext();
             const string val = "My Variable";
-            templateContext.DefineLocalVariable("myVar", new StringValue(val));
+            templateContext.DefineLocalVariable("myVar", new LiquidString(val));
             var ast = _generator.Generate("Result : {{ myVar }}");
             
             // Act
@@ -195,7 +195,7 @@ namespace Liquid.NET.Tests
         {
             // Arrange
             var templateContext = new TemplateContext().WithAllFilters();
-            templateContext.DefineLocalVariable("myvar", new StringValue("hello"));
+            templateContext.DefineLocalVariable("myvar", new LiquidString("hello"));
             var ast = _generator.Generate("Result : {% if myvar | upcase == \"HELLO\" %}TRUE{% else %}FALSE{% endif %}");
 
             // Act
@@ -212,7 +212,7 @@ namespace Liquid.NET.Tests
         {
             // Arrange
             var templateContext = new TemplateContext().WithAllFilters();
-            templateContext.DefineLocalVariable("myvar", new ArrayValue{new StringValue("hello")});
+            templateContext.DefineLocalVariable("myvar", new LiquidCollection{new LiquidString("hello")});
             var ast = _generator.Generate("Result : {% if myvar[0] | upcase == \"HELLO\" %}TRUE{% else %}FALSE{% endif %}");
 
             // Act
@@ -252,7 +252,7 @@ namespace Liquid.NET.Tests
             // Arrange
             TemplateContext templateContext = new TemplateContext();
             
-            templateContext.DefineLocalVariable("mydict", new DictionaryValue{ { "test1", new StringValue("test element") } } );
+            templateContext.DefineLocalVariable("mydict", new LiquidHash{ { "test1", new LiquidString("test element") } } );
 
             // Arrange
             var ast = _generator.Generate("Result : {{ mydict.test1 }}");
@@ -271,9 +271,9 @@ namespace Liquid.NET.Tests
             // Arrange
             TemplateContext templateContext = new TemplateContext();
             
-            var dict3 = new DictionaryValue { { "test2", new StringValue("test element") } };
-            var dict2 = new DictionaryValue { { "test1", dict3 } };
-            var dict1 = new DictionaryValue{ { "test", dict2 } };
+            var dict3 = new LiquidHash { { "test2", new LiquidString("test element") } };
+            var dict2 = new LiquidHash { { "test1", dict3 } };
+            var dict1 = new LiquidHash{ { "test", dict2 } };
 
             templateContext.DefineLocalVariable("mydict", dict1);
 
@@ -295,9 +295,9 @@ namespace Liquid.NET.Tests
             TemplateContext templateContext = new TemplateContext();
 
             //var dict = new Dictionary<String, String> {{"test", "test element"}};
-            var dict3 = new DictionaryValue { { "test2", new StringValue("test element") } };
-            var dict2 = new DictionaryValue { { "test1", dict3 } };
-            var dict1 = new DictionaryValue { { "test", dict2 } };
+            var dict3 = new LiquidHash { { "test2", new LiquidString("test element") } };
+            var dict2 = new LiquidHash { { "test1", dict3 } };
+            var dict1 = new LiquidHash { { "test", dict2 } };
 
             templateContext.DefineLocalVariable("mydict",dict1);
 
@@ -317,8 +317,8 @@ namespace Liquid.NET.Tests
         {
             // Arrange
             TemplateContext templateContext = new TemplateContext();
-            var list = new ArrayValue{ new StringValue("aaa"), NumericValue.Create(123m) };
-            var dict = new DictionaryValue { { "test", list } };
+            var list = new LiquidCollection{ new LiquidString("aaa"), LiquidNumeric.Create(123m) };
+            var dict = new LiquidHash { { "test", list } };
 
             templateContext.DefineLocalVariable("mydict", dict);
 
@@ -339,7 +339,7 @@ namespace Liquid.NET.Tests
         {
             // Arrange
             TemplateContext templateContext = new TemplateContext();
-            var list = new ArrayValue {new StringValue("aaa"), NumericValue.Create(123m)};         
+            var list = new LiquidCollection {new LiquidString("aaa"), LiquidNumeric.Create(123m)};         
             templateContext.DefineLocalVariable("myarray", list);
 
             // Arrange
@@ -360,7 +360,7 @@ namespace Liquid.NET.Tests
         {
             // Arrange
             TemplateContext templateContext = new TemplateContext();
-            var list = new ArrayValue{ new StringValue("aaa"), NumericValue.Create(123m) };
+            var list = new LiquidCollection{ new LiquidString("aaa"), LiquidNumeric.Create(123m) };
 
             templateContext.DefineLocalVariable("myarray", list);
 
@@ -381,8 +381,8 @@ namespace Liquid.NET.Tests
         {
             // Arrange
             TemplateContext templateContext = new TemplateContext();
-            var indexlist = new ArrayValue { NumericValue.Create(0), NumericValue.Create(1) };
-            var list = new ArrayValue { new StringValue("aaa"), new StringValue("bbb") };
+            var indexlist = new LiquidCollection { LiquidNumeric.Create(0), LiquidNumeric.Create(1) };
+            var list = new LiquidCollection { new LiquidString("aaa"), new LiquidString("bbb") };
 
             templateContext.DefineLocalVariable("indexes", indexlist);
             templateContext.DefineLocalVariable("myarray", list);
@@ -404,13 +404,13 @@ namespace Liquid.NET.Tests
         {
             // Arrange
             TemplateContext templateContext = new TemplateContext();
-            var arrayofbool = new ArrayValue { new BooleanValue(true), new BooleanValue(false) };
-            var array1 = new ArrayValue{ arrayofbool };
-            var array2 = new ArrayValue{ array1 };
+            var arrayofbool = new LiquidCollection { new LiquidBoolean(true), new LiquidBoolean(false) };
+            var array1 = new LiquidCollection{ arrayofbool };
+            var array2 = new LiquidCollection{ array1 };
             
 
-            templateContext.DefineLocalVariable("idx1", NumericValue.Create(0));
-            templateContext.DefineLocalVariable("idx2", NumericValue.Create(1));
+            templateContext.DefineLocalVariable("idx1", LiquidNumeric.Create(0));
+            templateContext.DefineLocalVariable("idx2", LiquidNumeric.Create(1));
             templateContext.DefineLocalVariable("array1", array1);
             templateContext.DefineLocalVariable("array2", array2);
             templateContext.DefineLocalVariable("arrayofbool", arrayofbool);
@@ -429,12 +429,12 @@ namespace Liquid.NET.Tests
         {
             // Arrange
             TemplateContext templateContext = new TemplateContext();
-            var arrayofnums = new ArrayValue { NumericValue.Create(0), NumericValue.Create(1) };
-            var array1 = new ArrayValue { arrayofnums };
-            var array2 = new ArrayValue{ array1 };
-            var arrayofstr = new ArrayValue { new StringValue("aaa"), new StringValue("bbb") };
+            var arrayofnums = new LiquidCollection { LiquidNumeric.Create(0), LiquidNumeric.Create(1) };
+            var array1 = new LiquidCollection { arrayofnums };
+            var array2 = new LiquidCollection{ array1 };
+            var arrayofstr = new LiquidCollection { new LiquidString("aaa"), new LiquidString("bbb") };
 
-            //templateContext.Define("arrayofnums", new NumericValue(1));
+            //templateContext.Define("arrayofnums", new LiquidNumeric(1));
             templateContext.DefineLocalVariable("arrayofnums", arrayofnums);
             templateContext.DefineLocalVariable("array1", array1);
             templateContext.DefineLocalVariable("array2", array2);
@@ -457,7 +457,7 @@ namespace Liquid.NET.Tests
         {
             // Arrange
             TemplateContext templateContext = new TemplateContext();
-            var arrayofnums = new ArrayValue { NumericValue.Create(0), NumericValue.Create(1) };
+            var arrayofnums = new LiquidCollection { LiquidNumeric.Create(0), LiquidNumeric.Create(1) };
 
             templateContext.DefineLocalVariable("arrayofnums", arrayofnums);
 
@@ -478,7 +478,7 @@ namespace Liquid.NET.Tests
         {
             // Arrange
             TemplateContext templateContext = new TemplateContext();
-            var arrayofnums = new ArrayValue { NumericValue.Create(0), NumericValue.Create(1) };
+            var arrayofnums = new LiquidCollection { LiquidNumeric.Create(0), LiquidNumeric.Create(1) };
 
             templateContext.DefineLocalVariable("arrayofnums", arrayofnums);
 
@@ -499,10 +499,10 @@ namespace Liquid.NET.Tests
         {
             // Arrange
             TemplateContext templateContext = new TemplateContext();
-            var arrayofnums = new ArrayValue{ NumericValue.Create(0), NumericValue.Create(1) };
+            var arrayofnums = new LiquidCollection{ LiquidNumeric.Create(0), LiquidNumeric.Create(1) };
 
             templateContext.DefineLocalVariable("arrayofnums", arrayofnums);
-            templateContext.DefineLocalVariable("numeric", NumericValue.Create(1));
+            templateContext.DefineLocalVariable("numeric", LiquidNumeric.Create(1));
 
             // Arrange
             var ast = _generator.Generate("Result : {{ arrayofnums[4][numeric[4]] }}");
@@ -551,14 +551,14 @@ namespace Liquid.NET.Tests
             // Arrange
             var templateContext = new TemplateContext();
    
-            ArrayValue arrayValue = new ArrayValue{
+            LiquidCollection liquidCollection = new LiquidCollection{
                 DataFixtures.CreateDictionary(1, "Title 1", "Value 1 B"), 
                 DataFixtures.CreateDictionary(2, "Title 2", "Value 2 B"), 
                 DataFixtures.CreateDictionary(3, "Title 3", "Value 3 B"), 
                 DataFixtures.CreateDictionary(4, "Title 4", "Value 4 B"),
             };
 
-            templateContext.DefineLocalVariable("posts", arrayValue);
+            templateContext.DefineLocalVariable("posts", liquidCollection);
             const string tmpl = @"{%
                for post in posts %}{{
                      post.field1 }}{%

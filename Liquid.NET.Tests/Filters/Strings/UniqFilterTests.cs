@@ -30,17 +30,17 @@ namespace Liquid.NET.Tests.Filters.Strings
         public void It_Should_Filter_Out_Unique_Simple_Objects()
         {
             // Arrange
-            ArrayValue arrayValue = new ArrayValue{
-                new StringValue("123"), 
-                NumericValue.Create(456m),
-                NumericValue.Create(123), 
-                NumericValue.Create(123), 
-                new BooleanValue(false)
+            LiquidCollection liquidCollection = new LiquidCollection{
+                new LiquidString("123"), 
+                LiquidNumeric.Create(456m),
+                LiquidNumeric.Create(123), 
+                LiquidNumeric.Create(123), 
+                new LiquidBoolean(false)
             };
             var filter = new UniqFilter();
 
             // Act
-            var result = filter.Apply(new TemplateContext(), arrayValue).SuccessValue<ArrayValue>();
+            var result = filter.Apply(new TemplateContext(), liquidCollection).SuccessValue<LiquidCollection>();
 
             // Assert
             Assert.That(result.Select(ValueCaster.RenderAsString), Is.EquivalentTo(new List<String>{"123", "456.0", "123", "false"}));

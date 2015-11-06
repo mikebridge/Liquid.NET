@@ -52,7 +52,7 @@ namespace Liquid.NET.Tests.Filters.Strings
         {
             // Arrange
             var ctx = new TemplateContext();
-            ctx.DefineLocalVariable("num", NumericValue.Create(1));
+            ctx.DefineLocalVariable("num", LiquidNumeric.Create(1));
             // Act
             var result = RenderingHelper.RenderTemplate("Result : {{ num | slice : 1,2 }}", ctx);
 
@@ -80,7 +80,7 @@ namespace Liquid.NET.Tests.Filters.Strings
         {
             // Arrange
             var ctx = new TemplateContext();
-            ctx.DefineLocalVariable("str", new StringValue("Test"));
+            ctx.DefineLocalVariable("str", new LiquidString("Test"));
             // Act
             var result = RenderingHelper.RenderTemplate("Result : {{ str | slice }}", ctx);
 
@@ -103,13 +103,13 @@ namespace Liquid.NET.Tests.Filters.Strings
 
         }
 
-        public ArrayValue CreateArray()
+        public LiquidCollection CreateArray()
         {
-            return new ArrayValue {
-                new StringValue("a string"), 
-                NumericValue.Create(123), 
-                NumericValue.Create(456m),
-                new BooleanValue(false)
+            return new LiquidCollection {
+                new LiquidString("a string"), 
+                LiquidNumeric.Create(123), 
+                LiquidNumeric.Create(456m),
+                new LiquidBoolean(false)
             };
 
         }

@@ -67,22 +67,22 @@
       <Link>src\LiquidVisitor.cs</Link>
     </Compile>
     <Compile Include="src\CachingLiquidASTGenerator.cs" />
-    <Compile Include="src\Constants\ArrayIndexer.cs" />
-    <Compile Include="src\Constants\ArrayValue.cs" />
-    <Compile Include="src\Constants\BooleanValue.cs" />
-    <Compile Include="src\Constants\DateValue.cs" />
+    <Compile Include="src\Constants\CollectionIndexer.cs" />
+    <Compile Include="src\Constants\LiquidCollection.cs" />
+    <Compile Include="src\Constants\LiquidBoolean.cs" />
+    <Compile Include="src\Constants\LiquidDate.cs" />
     <Compile Include="src\Constants\IndexDereferencer.cs" />
-    <Compile Include="src\Constants\DictionaryValue.cs" />
+    <Compile Include="src\Constants\LiquidHash.cs" />
     <Compile Include="src\Constants\EasyOptionComparer.cs" />
     <Compile Include="src\Constants\EasyValueComparer.cs" />
     <Compile Include="src\Constants\EmptyChecker.cs" />
-    <Compile Include="src\Constants\ExpressionConstant.cs" />
+    <Compile Include="src\Constants\LiquidValue.cs" />
     <Compile Include="src\Constants\FieldAccessor.cs" />
-    <Compile Include="src\Constants\GeneratorValue.cs" />
+    <Compile Include="src\Constants\LiquidRange.cs" />
     <Compile Include="src\Constants\IExpressionConstant.cs" />
     <Compile Include="src\Constants\MissingValueTest.cs" />
-    <Compile Include="src\Constants\NumericValue.cs" />
-    <Compile Include="src\Constants\StringValue.cs" />
+    <Compile Include="src\Constants\LiquidNumeric.cs" />
+    <Compile Include="src\Constants\LiquidString.cs" />
     <Compile Include="src\Constants\ValueCaster.cs" />
     <Compile Include="src\Expressions\ContainsExpression.cs" />
     <Compile Include="src\Expressions\FalseExpression.cs" />

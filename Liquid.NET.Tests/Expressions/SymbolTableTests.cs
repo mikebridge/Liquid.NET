@@ -14,13 +14,13 @@ namespace Liquid.NET.Tests.Expressions
         {
             // Arrange
             var symbolTable = new SymbolTable();
-            var str = new StringValue("FOO");
+            var str = new LiquidString("FOO");
 
             // Act
             symbolTable.DefineLocalVariable("foo", str);
 
             // Assert
-            Assert.That(symbolTable.ReferenceLocalVariable("foo").SuccessValue<StringValue>(), Is.EqualTo(str));            
+            Assert.That(symbolTable.ReferenceLocalVariable("foo").SuccessValue<LiquidString>(), Is.EqualTo(str));            
 
         }
 
@@ -29,7 +29,7 @@ namespace Liquid.NET.Tests.Expressions
         {
             // Arrange
             var symbolTable = new SymbolTable();
-            //var str = new StringValue("FOO");
+            //var str = new LiquidString("FOO");
 
 
             // Act
@@ -47,26 +47,26 @@ namespace Liquid.NET.Tests.Expressions
 
             // Arrange
             const string varname = "objlist";
-            var arrayValue = CreateArrayValue();
+            var liquidCollection = CreateArrayValue();
             var symbolTable = new SymbolTable();
-            symbolTable.DefineLocalVariable(varname, arrayValue);
+            symbolTable.DefineLocalVariable(varname, liquidCollection);
 
             // Act
-            var arr = symbolTable.ReferenceLocalVariable(varname).SuccessValue<ArrayValue>();
+            var arr = symbolTable.ReferenceLocalVariable(varname).SuccessValue<LiquidCollection>();
 
             // Assert
-            Assert.That(arr, Is.TypeOf<ArrayValue>());
+            Assert.That(arr, Is.TypeOf<LiquidCollection>());
         }
 
  
 
-        private static ArrayValue CreateArrayValue()
+        private static LiquidCollection CreateArrayValue()
         {
-            return new ArrayValue{
-                new StringValue("a string"),
-                NumericValue.Create(123),
-                NumericValue.Create(456m),
-                new BooleanValue(false)
+            return new LiquidCollection{
+                new LiquidString("a string"),
+                LiquidNumeric.Create(123),
+                LiquidNumeric.Create(456m),
+                new LiquidBoolean(false)
             };
         }
     }

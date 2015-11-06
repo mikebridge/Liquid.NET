@@ -11,9 +11,9 @@ namespace Liquid.NET.Tags
 
         public ForBlockTag()
         {
-            //Limit = new NumericValue(50); // as per the Shopify docs
-            Reversed = new BooleanValue(false);
-            //Offset = new NumericValue(0);
+            //Limit = new LiquidNumeric(50); // as per the Shopify docs
+            Reversed = new LiquidBoolean(false);
+            //Offset = new LiquidNumeric(0);
         }
 
         public void Accept(IASTVisitor visitor)
@@ -25,7 +25,7 @@ namespace Liquid.NET.Tags
 
         public TreeNode<LiquidExpression> Offset { get; set; } // zero-indexed
 
-        public BooleanValue Reversed { get; set; }
+        public LiquidBoolean Reversed { get; set; }
 
         public TreeNode<IASTNode> LiquidBlock = new TreeNode<IASTNode>(new RootDocumentNode());
 

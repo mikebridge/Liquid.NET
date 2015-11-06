@@ -119,7 +119,7 @@ namespace Liquid.NET.Tests.Tags
             // Act
             var templateContext = new TemplateContext()
                 .WithAllFilters()
-                .DefineLocalVariable("array", new ArrayValue{NumericValue.Create(10),NumericValue.Create(11)} )
+                .DefineLocalVariable("array", new LiquidCollection{LiquidNumeric.Create(10),LiquidNumeric.Create(11)} )
                 .WithCustomTagBlockRenderer<ForLikeBlockTag>("forcustom");
             var result = RenderingHelper.RenderTemplate("Result : {% forcustom \"item\" array %}{{item}}{% endforcustom %}", templateContext);
 
@@ -147,7 +147,7 @@ namespace Liquid.NET.Tests.Tags
         private class WordReverserBlockTag : ICustomBlockTagRenderer
         {
 
-            public StringValue Render(
+            public LiquidString Render(
                     RenderingVisitor renderingVisitor,
                     ITemplateContext templatecontext,
                     TreeNode<IASTNode> liquidBlock,
@@ -158,11 +158,11 @@ namespace Liquid.NET.Tests.Tags
                 return Reverse(result);
             }
 
-            private static StringValue Reverse(string result)
+            private static LiquidString Reverse(string result)
             {
                 var words = result.Split(new[] {' '}, StringSplitOptions.RemoveEmptyEntries);
 
-                return new StringValue(String.Join(" ",
+                return new LiquidString(String.Join(" ",
                     words.Select(x => new String(x.Reverse().ToArray()))));
             }
 
@@ -186,7 +186,7 @@ namespace Liquid.NET.Tests.Tags
         private class ForLikeBlockTag : ICustomBlockTagRenderer
         {
 
-            public StringValue Render(
+            public LiquidString Render(
                 RenderingVisitor renderingVisitor,
                 ITemplateContext templateContext,
                 TreeNode<IASTNode> liquidBlock,
@@ -194,7 +194,7 @@ namespace Liquid.NET.Tests.Tags
             {
                 var localBlockScope = new SymbolTable();
                 templateContext.SymbolTableStack.Push(localBlockScope);
-                StringValue result;
+                LiquidString result;
 
                 try
                 {
@@ -213,11 +213,11 @@ namespace Liquid.NET.Tests.Tags
                 {
                     templateContext.SymbolTableStack.Pop();
                 }
-                return new StringValue("START CUSTOM FOR LOOP" + result.StringVal + "END CUSTOM FOR LOOP");
+                return new LiquidString("START CUSTOM FOR LOOP" + result.StringVal + "END CUSTOM FOR LOOP");
 
             }
 
-            private StringValue IterateBlock(
+            private LiquidString IterateBlock(
                 RenderingVisitor renderingVisitor,
                 String varname,
                 ITemplateContext templateContext,
@@ -232,7 +232,7 @@ namespace Liquid.NET.Tests.Tags
                     renderingVisitor.StartWalking(liquidBlock);
                 }
                 renderingVisitor.PopTextAccumulator();
-                return new StringValue(result);
+                return new LiquidString(result);
             }
 
         }

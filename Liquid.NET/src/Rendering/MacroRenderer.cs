@@ -10,7 +10,7 @@ namespace Liquid.NET.Rendering
 {
     public class MacroRenderer 
     {
-        public StringValue Render(
+        public LiquidString Render(
             RenderingVisitor renderingVisitor,
             MacroBlockTag macroBlocktag,
             ITemplateContext templateContext, 
@@ -42,7 +42,7 @@ namespace Liquid.NET.Rendering
 //            {
 //                errorAccumulator.Add(error);
 //            }
-            return new StringValue(hiddenText);
+            return new LiquidString(hiddenText);
 
 
 

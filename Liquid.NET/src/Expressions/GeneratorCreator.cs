@@ -18,41 +18,41 @@ namespace Liquid.NET.Expressions
 
     public class StringValueIterableCreator : IIterableCreator
     {
-        private readonly StringValue _stringValue;
+        private readonly LiquidString _liquidString;
 
-        public StringValueIterableCreator(StringValue stringValue)
+        public StringValueIterableCreator(LiquidString liquidString)
         {
-            _stringValue = stringValue;
+            _liquidString = liquidString;
         }
 
         public IEnumerable<IExpressionConstant> Eval(ITemplateContext templateContext)
         {
-//            return _stringValue.StringVal
+//            return _liquidString.StringVal
 //                .ToCharArray()
-//                .Select(x => new StringValue("" + x));
+//                .Select(x => new LiquidString("" + x));
             // In ruby liquid, it will not iterate through a string's characters---it will treat it as an array of one string.
-            return new List<IExpressionConstant>{_stringValue};
+            return new List<IExpressionConstant>{_liquidString};
         }
     }
 
     public class ArrayValueCreator : IIterableCreator
     {
-        private readonly TreeNode<LiquidExpression> _arrayValueExpression;
+        private readonly TreeNode<LiquidExpression> _liquidCollectionExpression;
 
-        public ArrayValueCreator(TreeNode<LiquidExpression> arrayValueExpression)
+        public ArrayValueCreator(TreeNode<LiquidExpression> liquidCollectionExpression)
         {
-            _arrayValueExpression = arrayValueExpression;
+            _liquidCollectionExpression = liquidCollectionExpression;
         }
 
         public IEnumerable<IExpressionConstant> Eval(ITemplateContext templateContext)
         {
-            var expressionConstant = LiquidExpressionEvaluator.Eval(_arrayValueExpression, templateContext);
+            var expressionConstant = LiquidExpressionEvaluator.Eval(_liquidCollectionExpression, templateContext);
 
             if (expressionConstant.IsError || !expressionConstant.SuccessResult.HasValue)
             {
                 return new List<IExpressionConstant>();
             }
-            var castResult = ValueCaster.Cast<IExpressionConstant, ArrayValue>(expressionConstant.SuccessResult.Value);
+            var castResult = ValueCaster.Cast<IExpressionConstant, LiquidCollection>(expressionConstant.SuccessResult.Value);
             if (castResult.IsError)
             {
                 // ??
@@ -60,7 +60,7 @@ namespace Liquid.NET.Expressions
             }
             else
             {
-                return castResult.SuccessValue<ArrayValue>().Select(x => x.HasValue? x.Value : null);
+                return castResult.SuccessValue<LiquidCollection>().Select(x => x.HasValue? x.Value : null);
             }
         }
     }
@@ -103,28 +103,28 @@ namespace Liquid.NET.Expressions
             var startValue = ValueAsNumeric(_startExpression, templateContext);
             var endValue = ValueAsNumeric(_endExpression, templateContext);
             //Console.WriteLine("*** Generating sequence from "+ startValue.IntValue+ " to " +endValue.IntValue);
-            var generatorValue = new GeneratorValue(startValue, endValue);
+            var generatorValue = new LiquidRange(startValue, endValue);
             return generatorValue;
 
         }
 
-        private NumericValue ValueAsNumeric(TreeNode<LiquidExpression> expr, ITemplateContext templateContext)
+        private LiquidNumeric ValueAsNumeric(TreeNode<LiquidExpression> expr, ITemplateContext templateContext)
         {
             var liquidExpressionResult = LiquidExpressionEvaluator.Eval(expr, templateContext);
             if (liquidExpressionResult.IsError)
             {
-                return NumericValue.Create(0);
+                return LiquidNumeric.Create(0);
             }
-            var valueAsNumeric = liquidExpressionResult.SuccessResult.Value as NumericValue;
+            var valueAsNumeric = liquidExpressionResult.SuccessResult.Value as LiquidNumeric;
 
             if (valueAsNumeric == null)
             {
                 var castedValue =
-                    ValueCaster.Cast<IExpressionConstant, NumericValue>(liquidExpressionResult.SuccessResult.Value);
+                    ValueCaster.Cast<IExpressionConstant, LiquidNumeric>(liquidExpressionResult.SuccessResult.Value);
 
                 return liquidExpressionResult.IsSuccess && liquidExpressionResult.SuccessResult.HasValue
-                    ? castedValue.SuccessValue<NumericValue>()
-                    : NumericValue.Create(0);
+                    ? castedValue.SuccessValue<LiquidNumeric>()
+                    : LiquidNumeric.Create(0);
             }
             else
             {

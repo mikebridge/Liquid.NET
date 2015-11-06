@@ -4,22 +4,22 @@ using Liquid.NET.Utils;
 
 namespace Liquid.NET.Filters.Array
 {
-    public class LastFilter : FilterExpression<ExpressionConstant, IExpressionConstant>
+    public class LastFilter : FilterExpression<LiquidValue, IExpressionConstant>
     {
         /// <summary>
         ///  TODO: Update to new structure
         /// </summary>
         /// <returns></returns>
-        public override LiquidExpressionResult Apply(ITemplateContext ctx, ExpressionConstant liquidExpression)
+        public override LiquidExpressionResult Apply(ITemplateContext ctx, LiquidValue liquidExpression)
         {
             //return ApplyTo(ctx, (dynamic)liquidExpression);
-            var arr = liquidExpression as ArrayValue;
+            var arr = liquidExpression as LiquidCollection;
             if (arr != null)
             {
                 return ApplyTo(ctx, arr);
             }
 
-            var str = liquidExpression as StringValue;
+            var str = liquidExpression as LiquidString;
             if (str != null)
             {
                 return ApplyTo(ctx, str);
@@ -33,24 +33,24 @@ namespace Liquid.NET.Filters.Array
 
         }
 
-        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, ArrayValue liquidArrayExpression)
+        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, LiquidCollection liquidArrayExpression)
         {
             if (liquidArrayExpression == null || liquidArrayExpression.Value == null)
             {
                 return LiquidExpressionResult.Error("Array is nil");
             }
-            var positionFilter = new PositionFilter(NumericValue.Create(liquidArrayExpression.Count - 1));
+            var positionFilter = new PositionFilter(LiquidNumeric.Create(liquidArrayExpression.Count - 1));
             return positionFilter.ApplyTo(ctx, liquidArrayExpression);
         }
 
-        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, StringValue liquidStringExpression)
+        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, LiquidString liquidLiquidStringExpression)
         {
-            if (liquidStringExpression == null || String.IsNullOrEmpty(liquidStringExpression.StringVal))
+            if (liquidLiquidStringExpression == null || String.IsNullOrEmpty(liquidLiquidStringExpression.StringVal))
             {
                 return LiquidExpressionResult.Error("String is nil");
             }
-            var positionFilter = new PositionFilter(NumericValue.Create(liquidStringExpression.StringVal.Length - 1));
-            return positionFilter.ApplyTo(ctx, liquidStringExpression);
+            var positionFilter = new PositionFilter(LiquidNumeric.Create(liquidLiquidStringExpression.StringVal.Length - 1));
+            return positionFilter.ApplyTo(ctx, liquidLiquidStringExpression);
         }
     }
 }

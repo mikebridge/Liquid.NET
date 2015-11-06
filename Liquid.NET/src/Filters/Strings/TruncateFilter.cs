@@ -5,15 +5,15 @@ using Liquid.NET.Utils;
 namespace Liquid.NET.Filters.Strings
 {
     // ReSharper disable once ClassNeverInstantiated.Global
-    public class TruncateFilter : FilterExpression<IExpressionConstant, StringValue>
+    public class TruncateFilter : FilterExpression<IExpressionConstant, LiquidString>
     {
-        private readonly NumericValue _length;
-        private readonly StringValue _truncateString;
+        private readonly LiquidNumeric _length;
+        private readonly LiquidString _truncateLiquidString;
 
-        public TruncateFilter(NumericValue length, StringValue truncateString)
+        public TruncateFilter(LiquidNumeric length, LiquidString truncateLiquidString)
         {
             _length = length;
-            _truncateString = truncateString == null || truncateString.Value == null ? new StringValue("...") : truncateString;
+            _truncateLiquidString = truncateLiquidString == null || truncateLiquidString.Value == null ? new LiquidString("...") : truncateLiquidString;
         }
 
         public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, IExpressionConstant liquidExpression)
@@ -24,7 +24,7 @@ namespace Liquid.NET.Filters.Strings
         private string Truncate(string s)
         {
             int requestedLength = _length.IntValue;
-            String ellipsis = _truncateString.StringVal;
+            String ellipsis = _truncateLiquidString.StringVal;
             if (s == null)
             {
                 return "";

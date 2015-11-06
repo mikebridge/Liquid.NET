@@ -21,16 +21,16 @@ namespace Liquid.NET.Expressions
 
             if (!exprList[0].HasValue && !exprList[1].HasValue)
             {
-                return LiquidExpressionResult.Success(new BooleanValue(true));
+                return LiquidExpressionResult.Success(new LiquidBoolean(true));
             }
             if (!exprList[0].HasValue || !exprList[1].HasValue)
             {
-               return LiquidExpressionResult.Success(new BooleanValue(false));
+               return LiquidExpressionResult.Success(new LiquidBoolean(false));
             }           
             if (exprList[0].GetType() == exprList[1].GetType())
             {
                 var isEqual = exprList[0].Value.Equals(exprList[1].Value);
-                return  LiquidExpressionResult.Success(new BooleanValue(isEqual));
+                return  LiquidExpressionResult.Success(new LiquidBoolean(isEqual));
             }
 
             return LiquidExpressionResult.Error("\"Equals\" implementation can't cast that yet"); 

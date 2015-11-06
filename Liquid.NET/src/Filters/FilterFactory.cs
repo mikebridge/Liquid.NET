@@ -57,9 +57,9 @@ namespace Liquid.NET.Filters
                     if (filterList[i].HasValue)
                     {
                         //Console.WriteLine("COMPARING " + filterList[i].Value.GetType() + " TO " + argType);
-                        if (argType == typeof (ExpressionConstant) || argType == typeof (IExpressionConstant)) // most generic type
+                        if (argType == typeof (LiquidValue) || argType == typeof (IExpressionConstant)) // most generic type
                         {
-                            //Console.WriteLine("Skipping ExpressionConstant...");
+                            //Console.WriteLine("Skipping LiquidValue...");
                             result.Add(filterList[i].Value);
                             continue;
                         }
@@ -70,7 +70,7 @@ namespace Liquid.NET.Filters
                     else
                     {
                         // missing args: Shopify liquid seems to pass "0" for requested numbers else nil.
-                        result.Add(argType == typeof (NumericValue) ? NumericValue.Create(0) : null);
+                        result.Add(argType == typeof (LiquidNumeric) ? LiquidNumeric.Create(0) : null);
                     }
 
                 }

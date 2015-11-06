@@ -19,7 +19,7 @@ namespace Liquid.NET.Tests.Filters
             // Arrange
             TemplateContext ctx = new TemplateContext();
             DateTime dateTime = new DateTime(2015, 3, 30, 23, 1, 12);
-            ctx.DefineLocalVariable("mydate", new DateValue(dateTime));
+            ctx.DefineLocalVariable("mydate", new LiquidDate(dateTime));
             // Act
             var result = RenderingHelper.RenderTemplate("Result : {{ mydate | date: \""+format+"\" }}", ctx);
 
@@ -32,7 +32,7 @@ namespace Liquid.NET.Tests.Filters
         {
             // Arrange
             TemplateContext ctx = new TemplateContext();
-            ctx.DefineLocalVariable("mydate", new DateValue(null));
+            ctx.DefineLocalVariable("mydate", new LiquidDate(null));
             // Act
             var result = RenderingHelper.RenderTemplate("Result : {{ mydate | date: \"%y\" }}", ctx);
 
@@ -61,7 +61,7 @@ namespace Liquid.NET.Tests.Filters
             // Arrange
             TemplateContext ctx = new TemplateContext();
             DateTime dateTime = new DateTime(2015, 8, 19, 23, 1, 12);
-            ctx.DefineLocalVariable("mydate", new DateValue(dateTime));
+            ctx.DefineLocalVariable("mydate", new LiquidDate(dateTime));
 
             // Act
             var result = RenderingHelper.RenderTemplate("Result : {{ mydate | date }}", ctx);
@@ -77,7 +77,7 @@ namespace Liquid.NET.Tests.Filters
             // Arrange
             TemplateContext ctx = new TemplateContext();
             DateTime dateTime = new DateTime(2015, 3, 30, 23, 1, 12);
-            ctx.DefineLocalVariable("mydate", new DateValue(dateTime));
+            ctx.DefineLocalVariable("mydate", new LiquidDate(dateTime));
 
             // Act
             var result = RenderingHelper.RenderTemplate("Result : {{ mydate | date : \"%V\" }}", ctx);
@@ -94,7 +94,7 @@ namespace Liquid.NET.Tests.Filters
             // Arrange
             TemplateContext ctx = new TemplateContext();
             DateTime localDateTime = new DateTime(2014, 9, 13, 16, 29, 55, DateTimeKind.Local); //Saturday, September 13, 2014, 4:29:55 PM MDT/MST
-            ctx.DefineLocalVariable("mydate", new DateValue(localDateTime));
+            ctx.DefineLocalVariable("mydate", new LiquidDate(localDateTime));
             String resultString = "HourOfDay24 16, HourOfDay12 04, DayOfYear 256, MonthOfYear 09, Minute 29, Meridian PM, Second 55";
             
             // Act

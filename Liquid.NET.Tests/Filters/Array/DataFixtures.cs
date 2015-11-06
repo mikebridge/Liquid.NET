@@ -5,24 +5,24 @@ namespace Liquid.NET.Tests.Filters.Array
 {
     public static class DataFixtures
     {
-        public static DictionaryValue CreateDictionary(int id, string field1, string field2)
+        public static LiquidHash CreateDictionary(int id, string field1, string field2)
         {
-            return new DictionaryValue
+            return new LiquidHash
             {
-                {"id", NumericValue.Create(id)},
-                {"field1", new StringValue(field1)},
-                {"field2", new StringValue(field2)},
+                {"id", LiquidNumeric.Create(id)},
+                {"field1", new LiquidString(field1)},
+                {"field2", new LiquidString(field2)},
 
             };
         }
 
-        public static ArrayValue CreateArrayValue()
+        public static LiquidCollection CreateArrayValue()
         {
-           return new ArrayValue{
-                new StringValue("a string"), 
-                NumericValue.Create(123), 
-                NumericValue.Create(456m),
-                new BooleanValue(false)
+           return new LiquidCollection{
+                new LiquidString("a string"), 
+                LiquidNumeric.Create(123), 
+                LiquidNumeric.Create(456m),
+                new LiquidBoolean(false)
             };
         }
 

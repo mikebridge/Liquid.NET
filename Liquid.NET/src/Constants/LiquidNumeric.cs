@@ -5,28 +5,28 @@ using Liquid.NET.Utils;
 namespace Liquid.NET.Constants
 {
 
-    public abstract class NumericValue: ExpressionConstant
+    public abstract class LiquidNumeric: LiquidValue
     {
 
 
-        public static NumericValue Create(int val)
+        public static LiquidNumeric Create(int val)
         {
-            return new IntNumericValue(val);
+            return new IntLiquidNumeric(val);
         }
 
-        public static NumericValue Create(long val)
+        public static LiquidNumeric Create(long val)
         {
-            return new LongNumericValue(val);
+            return new LongLiquidNumeric(val);
         }
 
-        public static NumericValue Create(BigInteger val)
+        public static LiquidNumeric Create(BigInteger val)
         {
-            return new BigIntegerNumericValue(val);
+            return new BigIntegerLiquidNumeric(val);
         }
 
-        public static NumericValue Create(decimal val)
+        public static LiquidNumeric Create(decimal val)
         {
-            return new DecimalNumericValue(val);
+            return new DecimalLiquidNumeric(val);
         }
 
         public override bool IsTrue
@@ -47,7 +47,7 @@ namespace Liquid.NET.Constants
         public static LiquidExpressionResult Parse(String str)
         {
 
-            return ValueCaster.Cast<IExpressionConstant, NumericValue>(new StringValue(str));
+            return ValueCaster.Cast<IExpressionConstant, LiquidNumeric>(new LiquidString(str));
 
         }
 
@@ -55,7 +55,7 @@ namespace Liquid.NET.Constants
 
         public override bool Equals(object obj)
         {
-            var nv = obj as NumericValue;
+            var nv = obj as LiquidNumeric;
             return Equals(nv);
         }
 
@@ -69,7 +69,7 @@ namespace Liquid.NET.Constants
             }
         }
 
-        private bool Equals(NumericValue nv)
+        private bool Equals(LiquidNumeric nv)
         {
             return nv != null && nv.DecimalValue == DecimalValue;
         }
@@ -77,11 +77,11 @@ namespace Liquid.NET.Constants
         
     }
 
-    public class IntNumericValue : NumericValue
+    public class IntLiquidNumeric : LiquidNumeric
     {
         private readonly int _val;
 
-        public IntNumericValue(int val)
+        public IntLiquidNumeric(int val)
         {
             _val = val;
         }
@@ -119,11 +119,11 @@ namespace Liquid.NET.Constants
         public override bool IsInt { get { return true; } }
     }
 
-    public class DecimalNumericValue : NumericValue
+    public class DecimalLiquidNumeric : LiquidNumeric
     {
         private readonly decimal _val;
 
-        public DecimalNumericValue(decimal val)
+        public DecimalLiquidNumeric(decimal val)
         {
             _val = val;
         }
@@ -163,11 +163,11 @@ namespace Liquid.NET.Constants
         public override bool IsInt { get { return false; } }
     }
 
-    public class LongNumericValue : NumericValue
+    public class LongLiquidNumeric : LiquidNumeric
     {
         private readonly long _val;
 
-        public LongNumericValue(long val)
+        public LongLiquidNumeric(long val)
         {
             _val = val;
         }
@@ -208,11 +208,11 @@ namespace Liquid.NET.Constants
         public override bool IsInt { get { return true; } }
     }
 
-    public class BigIntegerNumericValue : NumericValue
+    public class BigIntegerLiquidNumeric : LiquidNumeric
     {
         private readonly BigInteger _val;
 
-        public BigIntegerNumericValue(BigInteger val)
+        public BigIntegerLiquidNumeric(BigInteger val)
         {
             _val = val;
         }

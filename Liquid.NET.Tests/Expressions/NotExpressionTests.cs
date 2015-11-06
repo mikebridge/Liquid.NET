@@ -13,11 +13,11 @@ namespace Liquid.NET.Tests.Expressions
         public void It_Should_Negate_An_Argument()
         {
             // Arrange
-            var boolTrue = new BooleanValue(true);
+            var boolTrue = new LiquidBoolean(true);
             var expr = new NotExpression();
 
             // Act
-            var result = expr.Eval(new TemplateContext(), new List<Option<IExpressionConstant>>{boolTrue}).SuccessValue<BooleanValue>();
+            var result = expr.Eval(new TemplateContext(), new List<Option<IExpressionConstant>>{boolTrue}).SuccessValue<LiquidBoolean>();
 
             // Assert
             Assert.That(result.Value, Is.False);
@@ -34,8 +34,8 @@ namespace Liquid.NET.Tests.Expressions
             // Act
             var result = expr.Eval(new TemplateContext(), new List<Option<IExpressionConstant>>
             {
-                new BooleanValue(true),
-                new BooleanValue(false),
+                new LiquidBoolean(true),
+                new LiquidBoolean(false),
             });
 
             Assert.That(result.IsError);

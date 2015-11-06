@@ -4,18 +4,18 @@ using Liquid.NET.Utils;
 namespace Liquid.NET.Filters.Strings
 {
     // ReSharper disable once ClassNeverInstantiated.Global
-    public class RemoveFirstFilter : FilterExpression<IExpressionConstant, StringValue>
+    public class RemoveFirstFilter : FilterExpression<IExpressionConstant, LiquidString>
     {
-        private readonly StringValue _stringToRemove;
+        private readonly LiquidString _liquidStringToRemove;
 
-        public RemoveFirstFilter(StringValue stringToRemove)
+        public RemoveFirstFilter(LiquidString liquidStringToRemove)
         {
-            _stringToRemove = stringToRemove;
+            _liquidStringToRemove = liquidStringToRemove;
         }
 
         public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, IExpressionConstant liquidExpression)
         {
-            return LiquidExpressionResult.Success(StringUtils.Eval(liquidExpression, x => StringUtils.ReplaceFirst(x, _stringToRemove.StringVal, "")));            
+            return LiquidExpressionResult.Success(StringUtils.Eval(liquidExpression, x => StringUtils.ReplaceFirst(x, _liquidStringToRemove.StringVal, "")));            
         }
 
        

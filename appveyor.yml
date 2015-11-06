@@ -54,3 +54,5 @@
     api_key:
       secure:  VupoidE3HdOx3mLhAdrOX/liMBaU122WL+0etvpc1fmlw6/8lE6W3TcLwByCFzhx
       artifact: /.*\.nupkg/
+    on:
+      appveyor_repo_tag: true

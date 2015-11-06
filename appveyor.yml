@@ -1,11 +1,15 @@
 # configuration for "master" branch
 # build in Debug mode and Test
+
 -
   branches:
     only:
     - master
 
-  version: 0.9.3.{build}
+  environment:
+    release_version: '0.9.3'
+
+  version: $(release_version).{build}
 
   configuration: Debug
 
@@ -29,7 +33,10 @@
     only:
     - release
 
-  version: 0.9.3
+  environment:
+    release_version: '0.9.3'
+
+  version: $(release_version).{build}
   configuration: Release
   before_build:
     - nuget restore
@@ -37,9 +44,9 @@
   assembly_info:
     patch: true
     file: '**\AssemblyInfo.*'
-    assembly_version: '{version}'
-    assembly_file_version: '{version}'
-    assembly_informational_version: '{version}'
+    assembly_version: '$(release_version)'
+    assembly_file_version: '$(release_version)'
+    assembly_informational_version: '$(release_version)'
   nuget:
     account_feed: true
     project_feed: true
@@ -54,5 +61,5 @@
     api_key:
       secure:  VupoidE3HdOx3mLhAdrOX/liMBaU122WL+0etvpc1fmlw6/8lE6W3TcLwByCFzhx
       artifact: /.*\.nupkg/
-    on:
-      appveyor_repo_tag: true
+#    on:
+#      appveyor_repo_tag: true

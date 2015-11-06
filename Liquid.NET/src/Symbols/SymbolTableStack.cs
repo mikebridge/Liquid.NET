@@ -39,7 +39,7 @@ namespace Liquid.NET.Symbols
                     return _symbolTables[i].ReferenceLocalVariable(reference);
                 }
             }
-            //return LiquidExpressionResult.Success(new None<IExpressionConstant>());
+            //return LiquidExpressionResult.Success(new None<ILiquidValue>());
             return LiquidExpressionResult.Error(SymbolTable.NotFoundError(reference));
         }
 
@@ -53,11 +53,11 @@ namespace Liquid.NET.Symbols
                     return _symbolTables[i].ReferenceLocalRegistryVariable(reference);
                 }
             }
-            return LiquidExpressionResult.Success(new None<IExpressionConstant>());
+            return LiquidExpressionResult.Success(new None<ILiquidValue>());
         }
 
         public void FindVariable(String reference, 
-            Action<SymbolTable, Option<IExpressionConstant>> ifFoundAction, 
+            Action<SymbolTable, Option<ILiquidValue>> ifFoundAction, 
             Action ifNotFoundAction)
         {
 
@@ -83,7 +83,7 @@ namespace Liquid.NET.Symbols
             
         }
 
-        public void Define(string reference, IExpressionConstant obj)
+        public void Define(string reference, ILiquidValue obj)
         {
             //Console.WriteLine("Adding " + reference + " to current scope");
             _symbolTables.Last().DefineLocalVariable(reference, obj);
@@ -94,7 +94,7 @@ namespace Liquid.NET.Symbols
             _symbolTables.Last().DefineLocalRegistryVariable(reference, obj);
         }
 
-        public void DefineGlobal(string key, IExpressionConstant obj)
+        public void DefineGlobal(string key, ILiquidValue obj)
         {
             _symbolTables[0].DefineLocalVariable(key, obj);
         }

@@ -12,9 +12,9 @@ namespace Liquid.NET.Expressions
 //            expressionDescriptionVisitor.Visit(this);
 //        }
 
-        public override LiquidExpressionResult Eval(ITemplateContext templateContext, IEnumerable<Option<IExpressionConstant>> expressions)
+        public override LiquidExpressionResult Eval(ITemplateContext templateContext, IEnumerable<Option<ILiquidValue>> expressions)
         {
-            IList<Option<IExpressionConstant>> exprList = expressions.ToList();
+            IList<Option<ILiquidValue>> exprList = expressions.ToList();
             if (exprList.Count != 1)
             {
                 return LiquidExpressionResult.Error("\"Not\" is a unary expression but received " + exprList.Count + " arguments.");

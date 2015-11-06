@@ -8,16 +8,16 @@ using Liquid.NET.Utils;
 namespace Liquid.NET.Constants
 {
 
-    public class LiquidCollection : LiquidValue, IList<Option<IExpressionConstant>>
+    public class LiquidCollection : LiquidValue, IList<Option<ILiquidValue>>
     {
-        private readonly IList<Option<IExpressionConstant>> _values;
+        private readonly IList<Option<ILiquidValue>> _values;
 
         public LiquidCollection()
         {
-            _values = new List<Option<IExpressionConstant>>();
+            _values = new List<Option<ILiquidValue>>();
         }
 
-        public LiquidCollection(IList<Option<IExpressionConstant>> values)
+        public LiquidCollection(IList<Option<ILiquidValue>> values)
         {
             _values = values;
         }
@@ -38,19 +38,19 @@ namespace Liquid.NET.Constants
             get { return "collection"; }
         }
 
-        //public IList<Option<IExpressionConstant>> ArrValue { get { return _values; } }
+        //public IList<Option<ILiquidValue>> ArrValue { get { return _values; } }
 
-        public Option<IExpressionConstant> ValueAt(int key)
+        public Option<ILiquidValue> ValueAt(int key)
         {
             return CollectionIndexer.ValueAt(_values, key);
         }
 
-        IEnumerator<Option<IExpressionConstant>> IEnumerable<Option<IExpressionConstant>>.GetEnumerator()
+        IEnumerator<Option<ILiquidValue>> IEnumerable<Option<ILiquidValue>>.GetEnumerator()
         {
             return _values.GetEnumerator();
         }
 
-        public void Add(Option<IExpressionConstant> item)
+        public void Add(Option<ILiquidValue> item)
         {
             if (item == null)
             {
@@ -64,17 +64,17 @@ namespace Liquid.NET.Constants
             _values.Clear();
         }
 
-        public bool Contains(Option<IExpressionConstant> item)
+        public bool Contains(Option<ILiquidValue> item)
         {
             return _values.Contains(item);
         }
 
-        public void CopyTo(Option<IExpressionConstant>[] array, int arrayIndex)
+        public void CopyTo(Option<ILiquidValue>[] array, int arrayIndex)
         {
             _values.CopyTo(array, arrayIndex);
         }
 
-        public bool Remove(Option<IExpressionConstant> item)
+        public bool Remove(Option<ILiquidValue> item)
         {
             return _values.Remove(item);
         }
@@ -99,12 +99,12 @@ namespace Liquid.NET.Constants
             return String.Join("", strs); 
         }
 
-        public int IndexOf(Option<IExpressionConstant> item)
+        public int IndexOf(Option<ILiquidValue> item)
         {
             return _values.IndexOf(item);
         }
 
-        public void Insert(int index, Option<IExpressionConstant> item)
+        public void Insert(int index, Option<ILiquidValue> item)
         {
             _values.Insert(index, item);
         }
@@ -115,7 +115,7 @@ namespace Liquid.NET.Constants
         }
 
 
-        public Option<IExpressionConstant> this[int key]
+        public Option<ILiquidValue> this[int key]
         {
             get
             {

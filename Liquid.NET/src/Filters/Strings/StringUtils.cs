@@ -5,7 +5,7 @@ namespace Liquid.NET.Filters.Strings
 {
     public static class StringUtils
     {
-        public static LiquidString Eval(IExpressionConstant liquidExpression, Func<String, String> f)
+        public static LiquidString Eval(ILiquidValue liquidExpression, Func<String, String> f)
         {
             String before = ValueCaster.RenderAsString(liquidExpression);
 

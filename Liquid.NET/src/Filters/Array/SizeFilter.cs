@@ -7,7 +7,7 @@ namespace Liquid.NET.Filters.Array
     public class SizeFilter : FilterExpression<LiquidValue, LiquidNumeric>
     {
 
-        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, IExpressionConstant liquidExpression)
+        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, ILiquidValue liquidExpression)
         {
             return GetSize(liquidExpression, () => LiquidNumeric.Create(1));// if it's not an enumerable, it must be of length 1.
         }
@@ -40,7 +40,7 @@ namespace Liquid.NET.Filters.Array
             return SizeOfNil(); 
         }
 
-        private static LiquidExpressionResult GetSize(IExpressionConstant liquidExpression, Func<LiquidNumeric> measureSizeFunc)
+        private static LiquidExpressionResult GetSize(ILiquidValue liquidExpression, Func<LiquidNumeric> measureSizeFunc)
         {
             return liquidExpression == null || liquidExpression.Value == null
                 ? SizeOfNil()

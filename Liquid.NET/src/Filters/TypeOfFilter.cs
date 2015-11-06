@@ -6,7 +6,7 @@ namespace Liquid.NET.Filters
     // ReSharper disable once ClassNeverInstantiated.Global
     public class TypeOfFilter : FilterExpression<LiquidValue, LiquidString>
     {
-        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, IExpressionConstant liquidExpression)
+        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, ILiquidValue liquidExpression)
         {
             return LiquidExpressionResult.Success(new LiquidString(liquidExpression.LiquidTypeName));
         }

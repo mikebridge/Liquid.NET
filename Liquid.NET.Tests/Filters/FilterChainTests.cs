@@ -110,7 +110,7 @@ namespace Liquid.NET.Tests.Filters
                     .WithFilter<FilterFactoryTests.MockStringToStringFilter>("mockfilter")
                     .DefineLocalVariable("bar", dict)
                     .DefineLocalVariable("foo", dict);
-            //LiquidCollection arr = new LiquidCollection(new List<IExpressionConstant> { new LiquidNumeric(33) });
+            //LiquidCollection arr = new LiquidCollection(new List<ILiquidValue> { new LiquidNumeric(33) });
             //ctx.DefineLocalVariable("bar", arr);
             var template = LiquidTemplate.Create("{{ 1 | mockfilter: bar.foo, foo.bar  }}");
 
@@ -135,7 +135,7 @@ namespace Liquid.NET.Tests.Filters
                     .WithFilter<FilterFactoryTests.MockStringToStringFilter>("mockfilter")
                     .DefineLocalVariable("bar", dict)
                     .DefineLocalVariable("foo", dict);
-            //LiquidCollection arr = new LiquidCollection(new List<IExpressionConstant> { new LiquidNumeric(33) });
+            //LiquidCollection arr = new LiquidCollection(new List<ILiquidValue> { new LiquidNumeric(33) });
             //ctx.DefineLocalVariable("bar", arr);
             var template = LiquidTemplate.Create(liquid);
 

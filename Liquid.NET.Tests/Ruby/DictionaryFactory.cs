@@ -10,7 +10,7 @@ namespace Liquid.NET.Tests.Ruby
 {
     public static class DictionaryFactory
     {
-        public static IExpressionConstant CreateArrayFromJson(String json)
+        public static ILiquidValue CreateArrayFromJson(String json)
         {
             var result = JsonConvert.DeserializeObject<JArray>(json);
             //var result = JsonConvert.DeserializeObject(json);
@@ -18,11 +18,11 @@ namespace Liquid.NET.Tests.Ruby
             return Transform(result);
         }
 
-        public static IList<Tuple<String, IExpressionConstant>> CreateStringMapFromJson(String json)
+        public static IList<Tuple<String, ILiquidValue>> CreateStringMapFromJson(String json)
         {
             if (String.IsNullOrEmpty(json))
             {
-                return new List<Tuple<String, IExpressionConstant>>();
+                return new List<Tuple<String, ILiquidValue>>();
             }
             var result = JsonConvert.DeserializeObject<JObject>(json);
             //var result = JsonConvert.DeserializeObject(json);
@@ -30,48 +30,48 @@ namespace Liquid.NET.Tests.Ruby
             return TransformRoots(result);
         }
 
-//        public static IList<Tuple<String, IExpressionConstant>> TransformRoots(JArray obj)
+//        public static IList<Tuple<String, ILiquidValue>> TransformRoots(JArray obj)
 //        {
 //            return Transform(obj);
-//            //return obj.Properties().Select(p => new Tuple<String, IExpressionConstant>(p.Name, Transform((dynamic)p.Value))).ToList();
+//            //return obj.Properties().Select(p => new Tuple<String, ILiquidValue>(p.Name, Transform((dynamic)p.Value))).ToList();
 //        }
 
-        public static IList<Tuple<String,IExpressionConstant>> TransformRoots(JObject obj)
+        public static IList<Tuple<String,ILiquidValue>> TransformRoots(JObject obj)
         {
-            return obj.Properties().Select(p => new Tuple<String, IExpressionConstant>(p.Name, Transform((dynamic)p.Value))).ToList();            
+            return obj.Properties().Select(p => new Tuple<String, ILiquidValue>(p.Name, Transform((dynamic)p.Value))).ToList();            
         }
 
-        public static IExpressionConstant Transform(Object obj)
+        public static ILiquidValue Transform(Object obj)
         {
             throw new Exception("Don't know how to transform a "+ obj.GetType()+  " yet:" + obj);
         }
 
-        public static IExpressionConstant Transform(JArray arr)
+        public static ILiquidValue Transform(JArray arr)
         {
             var result = new LiquidCollection();
             var list = arr.Select(el => Transform((dynamic) el))
-                .Cast<IExpressionConstant>();
+                .Cast<ILiquidValue>();
             foreach (var item in list)
             {
-                result.Add(item == null ? Option<IExpressionConstant>.None() : Option<IExpressionConstant>.Create(item));
+                result.Add(item == null ? Option<ILiquidValue>.None() : Option<ILiquidValue>.Create(item));
             }
             return result;
         }
 
-        public static IExpressionConstant Transform(JObject obj)
+        public static ILiquidValue Transform(JObject obj)
         {
             var result =new LiquidHash();
-            var dict = obj.Properties().ToDictionary(k => k.Name, v => (IExpressionConstant) Transform((dynamic)v.Value));
+            var dict = obj.Properties().ToDictionary(k => k.Name, v => (ILiquidValue) Transform((dynamic)v.Value));
             foreach (var kvp in dict)
             {
                 result.Add(kvp.Key,kvp.Value != null? 
-                    (Option<IExpressionConstant>) new Some<IExpressionConstant>(kvp.Value) :
-                    new None<IExpressionConstant>());
+                    (Option<ILiquidValue>) new Some<ILiquidValue>(kvp.Value) :
+                    new None<ILiquidValue>());
             }
             return result;
         }
 
-        public static IExpressionConstant Transform(JValue obj)
+        public static ILiquidValue Transform(JValue obj)
         {
             // TODO: make this do something
             //var val = obj.Value;

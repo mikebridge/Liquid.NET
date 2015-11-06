@@ -16,8 +16,8 @@ namespace Liquid.NET.Constants
         /// <returns></returns>
         public LiquidExpressionResult Lookup(
             ITemplateContext ctx, 
-            IExpressionConstant value,
-            IExpressionConstant indexProperty)
+            ILiquidValue value,
+            ILiquidValue indexProperty)
         {
             var arr = value as LiquidCollection;
             if (arr != null)
@@ -40,7 +40,7 @@ namespace Liquid.NET.Constants
             return LiquidExpressionResult.Error("ERROR : cannot apply an index to a " + value.LiquidTypeName + ".");
         }
 
-        private LiquidExpressionResult DoLookup(ITemplateContext ctx, LiquidCollection liquidCollection, IExpressionConstant indexProperty)
+        private LiquidExpressionResult DoLookup(ITemplateContext ctx, LiquidCollection liquidCollection, ILiquidValue indexProperty)
         {
             bool errorOnEmpty = ctx.Options.ErrorWhenValueMissing && liquidCollection.Count == 0;
 
@@ -71,7 +71,7 @@ namespace Liquid.NET.Constants
             else
             {
                 var success = Int32.TryParse(propertyNameString, out index);
-                //var maybeIndexResult = ValueCaster.Cast<IExpressionConstant, LiquidNumeric>(indexProperty);
+                //var maybeIndexResult = ValueCaster.Cast<ILiquidValue, LiquidNumeric>(indexProperty);
 
                 if (!success)
                 {
@@ -81,7 +81,7 @@ namespace Liquid.NET.Constants
                     }
                     else
                     {
-                        return LiquidExpressionResult.Success(new None<IExpressionConstant>());// liquid seems to return nothing when non-int index.
+                        return LiquidExpressionResult.Success(new None<ILiquidValue>());// liquid seems to return nothing when non-int index.
                     }
                 }
 
@@ -99,14 +99,14 @@ namespace Liquid.NET.Constants
             {
                 return errorOnEmpty ? 
                     LiquidExpressionResult.Error("cannot dereference empty array") : 
-                    LiquidExpressionResult.Success(new None<IExpressionConstant>());
+                    LiquidExpressionResult.Success(new None<ILiquidValue>());
             }
             var result = liquidCollection.ValueAt(index);
 
             return LiquidExpressionResult.Success(result);
         }
 
-        private LiquidExpressionResult DoLookup(ITemplateContext ctx, LiquidHash liquidHash, IExpressionConstant indexProperty)
+        private LiquidExpressionResult DoLookup(ITemplateContext ctx, LiquidHash liquidHash, ILiquidValue indexProperty)
         {
 
             String propertyNameString = ValueCaster.RenderAsString(indexProperty);
@@ -128,7 +128,7 @@ namespace Liquid.NET.Constants
         }
 
         // TODO: this is inefficient and ugly and duplicates much of LiquidCollection
-        private LiquidExpressionResult DoLookup(ITemplateContext ctx, LiquidString str, IExpressionConstant indexProperty)
+        private LiquidExpressionResult DoLookup(ITemplateContext ctx, LiquidString str, ILiquidValue indexProperty)
         {
             var strValues = str.StringVal.ToCharArray().Select(ch => new LiquidString(ch.ToString()).ToOption()).ToList();
             String propertyNameString = ValueCaster.RenderAsString(indexProperty);
@@ -147,7 +147,7 @@ namespace Liquid.NET.Constants
             }
             else
             {
-                var maybeIndexResult = ValueCaster.Cast<IExpressionConstant, LiquidNumeric>(indexProperty);
+                var maybeIndexResult = ValueCaster.Cast<ILiquidValue, LiquidNumeric>(indexProperty);
                 if (maybeIndexResult.IsError || !maybeIndexResult.SuccessResult.HasValue)
                 {
                     return LiquidExpressionResult.Error("invalid array index: " + propertyNameString);
@@ -161,7 +161,7 @@ namespace Liquid.NET.Constants
             if (strValues.Count == 0)
             {
                 //return LiquidExpressionResult.Error("Empty string: " + propertyNameString);
-                return LiquidExpressionResult.Success(new None<IExpressionConstant>()); // not an error in Ruby liquid.
+                return LiquidExpressionResult.Success(new None<ILiquidValue>()); // not an error in Ruby liquid.
             }
             return LiquidExpressionResult.Success(CollectionIndexer.ValueAt(strValues, index));
 

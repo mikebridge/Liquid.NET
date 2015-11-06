@@ -102,7 +102,7 @@ namespace Liquid.NET.Tests.Filters.Array
             };
         }
 
-        private static IExpressionConstant IdAt(LiquidCollection result, int index, String field)
+        private static ILiquidValue IdAt(LiquidCollection result, int index, String field)
         {
             return ((LiquidHash)result[index].Value)[field].Value;
         }

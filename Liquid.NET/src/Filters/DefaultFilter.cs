@@ -5,11 +5,11 @@ namespace Liquid.NET.Filters
 {
 
     // ReSharper disable once ClassNeverInstantiated.Global
-    public class DefaultFilter : FilterExpression<IExpressionConstant, IExpressionConstant>
+    public class DefaultFilter : FilterExpression<ILiquidValue, ILiquidValue>
     {
-        private readonly IExpressionConstant _defaultValue;
+        private readonly ILiquidValue _defaultValue;
 
-        public DefaultFilter(IExpressionConstant defaultValue)
+        public DefaultFilter(ILiquidValue defaultValue)
         {
             _defaultValue = defaultValue;
         }
@@ -26,7 +26,7 @@ namespace Liquid.NET.Filters
             }
         }
 
-        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, IExpressionConstant liquidExpression)
+        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, ILiquidValue liquidExpression)
         {
             return LiquidExpressionResult.Success(liquidExpression.ToOption());
         }
@@ -51,9 +51,9 @@ namespace Liquid.NET.Filters
 
         private LiquidExpressionResult CreateDefaultReturn()
         {
-            Option<IExpressionConstant> result = _defaultValue == null
-                ? (Option<IExpressionConstant>) new None<IExpressionConstant>()
-                : new Some<IExpressionConstant>(_defaultValue);
+            Option<ILiquidValue> result = _defaultValue == null
+                ? (Option<ILiquidValue>) new None<ILiquidValue>()
+                : new Some<ILiquidValue>(_defaultValue);
             return LiquidExpressionResult.Success(result);
         }
     }

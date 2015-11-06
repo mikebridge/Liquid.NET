@@ -13,12 +13,12 @@ namespace Liquid.NET
         ITemplateContext WithShopifyFilters();
         ITemplateContext WithAllFilters();
         ITemplateContext WithFilter<T>(String name) where T : IFilterExpression;
-        ITemplateContext DefineLocalVariable(String name, IExpressionConstant constant);
+        ITemplateContext DefineLocalVariable(String name, ILiquidValue constant);
         ITemplateContext WithCustomTagRenderer<T>(string echoargs) where T: ICustomTagRenderer;
         ITemplateContext WithCustomTagBlockRenderer<T>(string echoargs)  where T: ICustomBlockTagRenderer;
         ITemplateContext WithFileSystem(IFileSystem fileSystem);
         ITemplateContext WithRegisters(IDictionary<String, Object> kv);
-        ITemplateContext WithLocalVariables(IDictionary<String, IExpressionConstant> kv);
+        ITemplateContext WithLocalVariables(IDictionary<String, ILiquidValue> kv);
         ITemplateContext WithNoForLimit();
         ITemplateContext WithASTGenerator(Func<string, LiquidAST> astGeneratorFunc);
 

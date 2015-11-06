@@ -11,7 +11,7 @@ namespace Liquid.NET.Filters
     public class FilterFactory
     {
 
-        public static Try<IFilterExpression> InstantiateFilter(String name, Type filterType, IEnumerable<Option<IExpressionConstant>> filterArgs)
+        public static Try<IFilterExpression> InstantiateFilter(String name, Type filterType, IEnumerable<Option<ILiquidValue>> filterArgs)
         {
            
             if (filterType == null)
@@ -41,7 +41,7 @@ namespace Liquid.NET.Filters
                 : (IFilterExpression) Activator.CreateInstance(filterType, args.ToArray());
         }
 
-        private static IList<object> CreateArguments(IEnumerable<Option<IExpressionConstant>> filterArgs, ConstructorInfo argConstructor)
+        private static IList<object> CreateArguments(IEnumerable<Option<ILiquidValue>> filterArgs, ConstructorInfo argConstructor)
         {
             IList<Object> result = new List<object>();
             int i = -1;
@@ -57,7 +57,7 @@ namespace Liquid.NET.Filters
                     if (filterList[i].HasValue)
                     {
                         //Console.WriteLine("COMPARING " + filterList[i].Value.GetType() + " TO " + argType);
-                        if (argType == typeof (LiquidValue) || argType == typeof (IExpressionConstant)) // most generic type
+                        if (argType == typeof (LiquidValue) || argType == typeof (ILiquidValue)) // most generic type
                         {
                             //Console.WriteLine("Skipping LiquidValue...");
                             result.Add(filterList[i].Value);
@@ -83,7 +83,7 @@ namespace Liquid.NET.Filters
             return result;
         }
 
-        private static LiquidExpressionResult CastParameter(IExpressionConstant filterList, Type parmType)
+        private static LiquidExpressionResult CastParameter(ILiquidValue filterList, Type parmType)
         {
 
             MethodInfo method = typeof (ValueCaster).GetMethod("Cast");

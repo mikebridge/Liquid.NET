@@ -4,7 +4,7 @@ using Liquid.NET.Utils;
 namespace Liquid.NET.Filters.Strings
 {
     // ReSharper disable once ClassNeverInstantiated.Global
-    public class PrependFilter : FilterExpression<IExpressionConstant, LiquidString>
+    public class PrependFilter : FilterExpression<ILiquidValue, LiquidString>
     {
         private readonly LiquidString _prependedStr;
 
@@ -13,7 +13,7 @@ namespace Liquid.NET.Filters.Strings
             _prependedStr = prependedStr;
         }
 
-        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, IExpressionConstant liquidExpression)
+        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, ILiquidValue liquidExpression)
         {
             var strToPrepend = _prependedStr == null ? "" : _prependedStr.StringVal;
             return LiquidExpressionResult.Success(StringUtils.Eval(liquidExpression, x => strToPrepend + x));

@@ -21,7 +21,7 @@ namespace Liquid.NET.Filters.Strings
 
         public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, LiquidNumeric liquidNumeric)
         {
-            String numericString = ValueCaster.RenderAsString((IExpressionConstant) liquidNumeric);
+            String numericString = ValueCaster.RenderAsString((ILiquidValue) liquidNumeric);
             if (_single == null && _plural == null)
             {
                 return LiquidExpressionResult.Success(new LiquidString(numericString));

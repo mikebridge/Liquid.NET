@@ -17,7 +17,7 @@ namespace Liquid.NET.Tests.Filters
 
             // Act
             var result = castFilter.Apply(new TemplateContext(),inputObj).SuccessValue<LiquidNumeric>();
-            //result.Eval(new SymbolTableStack(new TemplateContext()), new List<IExpressionConstant>());
+            //result.Eval(new SymbolTableStack(new TemplateContext()), new List<ILiquidValue>());
 
             // Assert
             Assert.That(result, Is.AssignableTo<LiquidNumeric>());

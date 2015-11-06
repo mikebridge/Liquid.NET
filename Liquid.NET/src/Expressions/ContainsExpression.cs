@@ -9,9 +9,9 @@ namespace Liquid.NET.Expressions
     public class ContainsExpression :ExpressionDescription
     {
 
-        public override LiquidExpressionResult Eval(ITemplateContext templateContext, IEnumerable<Option<IExpressionConstant>> expressions)
+        public override LiquidExpressionResult Eval(ITemplateContext templateContext, IEnumerable<Option<ILiquidValue>> expressions)
         {
-            IList<Option<IExpressionConstant>> exprList = expressions.ToList();
+            IList<Option<ILiquidValue>> exprList = expressions.ToList();
             if (exprList.Count != 2)
             {
                 return LiquidExpressionResult.Error("Contains is a binary expression but received " + exprList.Count + "."); 
@@ -41,39 +41,39 @@ namespace Liquid.NET.Expressions
         }
 
         // ReSharper disable UnusedParameter.Local
-        private LiquidExpressionResult Contains(IExpressionConstant expr, IExpressionConstant expressionConstant)
+        private LiquidExpressionResult Contains(ILiquidValue expr, ILiquidValue liquidValue)
         // ReSharper restore UnusedParameter.Local
         {
             return LiquidExpressionResult.Error("Unable to use 'contains' on this type."); 
         }
 
-        private LiquidExpressionResult Contains(LiquidString liquidString, IExpressionConstant expressionConstant)
+        private LiquidExpressionResult Contains(LiquidString liquidString, ILiquidValue liquidValue)
         {
-            String s = ValueCaster.RenderAsString(expressionConstant);
+            String s = ValueCaster.RenderAsString(liquidValue);
             return LiquidExpressionResult.Success(liquidString.StringVal.Contains(s) ? new LiquidBoolean(true) : new LiquidBoolean(false));
         }
 
-        private LiquidExpressionResult Contains(LiquidCollection liquidCollection, IExpressionConstant expressionConstant)
+        private LiquidExpressionResult Contains(LiquidCollection liquidCollection, ILiquidValue liquidValue)
         {
-            return LiquidExpressionResult.Success(new LiquidBoolean(liquidCollection.Any(IsEqual(expressionConstant))));
+            return LiquidExpressionResult.Success(new LiquidBoolean(liquidCollection.Any(IsEqual(liquidValue))));
         }
 
-        private LiquidExpressionResult Contains(LiquidHash dictValue, IExpressionConstant expressionConstant)
+        private LiquidExpressionResult Contains(LiquidHash dictValue, ILiquidValue liquidValue)
         {
-            return LiquidExpressionResult.Success(new LiquidBoolean(dictValue.Keys.Any(x => x.Equals(expressionConstant.Value))));
+            return LiquidExpressionResult.Success(new LiquidBoolean(dictValue.Keys.Any(x => x.Equals(liquidValue.Value))));
         }
 
-        private static Func<Option<IExpressionConstant>, bool> IsEqual(IExpressionConstant expressionConstant)
+        private static Func<Option<ILiquidValue>, bool> IsEqual(ILiquidValue liquidValue)
         {            
             return x =>
             {
                 if (x.HasValue)
                 {
-                    return x.Value.Value.Equals(expressionConstant.Value);
+                    return x.Value.Value.Equals(liquidValue.Value);
                 }
                 else
                 {
-                    return expressionConstant == null;
+                    return liquidValue == null;
                 }
             };
         }

@@ -15,7 +15,7 @@ namespace Liquid.NET.Tests.Tags
             // Arrange
             var ctx = CreateContext(new Dictionary<String,String>{{"test", "Test Snippet"}});
             
-            //ctx.Define("payments", new LiquidCollection(new List<IExpressionConstant>()));
+            //ctx.Define("payments", new LiquidCollection(new List<ILiquidValue>()));
 
             const String str = "{% include 'test' %}";
 
@@ -33,7 +33,7 @@ namespace Liquid.NET.Tests.Tags
             // Arrange
             var ctx = CreateContext(new Dictionary<String, String> { { "test", "{% if .wefiouhwef %}" } });
 
-            //ctx.Define("payments", new LiquidCollection(new List<IExpressionConstant>()));
+            //ctx.Define("payments", new LiquidCollection(new List<ILiquidValue>()));
 
             const String str = "{% include 'test' %}";
 
@@ -57,7 +57,7 @@ namespace Liquid.NET.Tests.Tags
         {
             // Arrange
             var ctx = CreateContext(new Dictionary<String, String> { { "test", "Test Snippet: {{ test }}" } });
-            //ctx.Define("payments", new LiquidCollection(new List<IExpressionConstant>()));
+            //ctx.Define("payments", new LiquidCollection(new List<ILiquidValue>()));
 
             const String str = "{% include 'test' with 'green' %}";
 
@@ -76,7 +76,7 @@ namespace Liquid.NET.Tests.Tags
             // Arrange
             var ctx = CreateContext(new Dictionary<String, String> { { "test", "Test Snippet: {{ test }} " } });
             ctx.DefineLocalVariable("array",CreateArrayValues());
-            //ctx.Define("payments", new LiquidCollection(new List<IExpressionConstant>()));
+            //ctx.Define("payments", new LiquidCollection(new List<ILiquidValue>()));
 
             const String str = "{% include 'test' for array %}";
 
@@ -94,7 +94,7 @@ namespace Liquid.NET.Tests.Tags
         {
             // Arrange
             var ctx = CreateContext(new Dictionary<String, String>{{"test", "Test Snippet: {{ colour }}"}});
-            //ctx.Define("payments", new LiquidCollection(new List<IExpressionConstant>()));
+            //ctx.Define("payments", new LiquidCollection(new List<ILiquidValue>()));
 
             const String str = "{%assign colour = 'green' %}{% include 'test' with colour %}";
 
@@ -111,7 +111,7 @@ namespace Liquid.NET.Tests.Tags
         {
             // Arrange
             var ctx = CreateContext(new Dictionary<String, String> { { "test", "Colour: {{ colour }}, Width: {{ width }}" } });
-            //ctx.Define("payments", new LiquidCollection(new List<IExpressionConstant>()));
+            //ctx.Define("payments", new LiquidCollection(new List<ILiquidValue>()));
 
             const String str = "{% include 'test' colour: 'Green', width: 10 %}";
 

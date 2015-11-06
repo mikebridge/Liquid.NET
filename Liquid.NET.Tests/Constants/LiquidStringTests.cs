@@ -37,7 +37,7 @@ namespace Liquid.NET.Tests.Constants
         {
             // Arrange
             var stringSymbol = new LiquidString(null);
-            var result = stringSymbol.Eval(new TemplateContext(), new List<Option<IExpressionConstant>>());
+            var result = stringSymbol.Eval(new TemplateContext(), new List<Option<ILiquidValue>>());
 
             // Assert
             Assert.That(result.SuccessValue<LiquidString>(), Is.EqualTo(stringSymbol));

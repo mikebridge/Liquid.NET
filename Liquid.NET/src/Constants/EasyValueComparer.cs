@@ -6,9 +6,9 @@ namespace Liquid.NET.Constants
     /// Compare objects by Value
     /// // SEE: https://msdn.microsoft.com/en-us/library/vstudio/bb338049%28v=vs.100%29.aspx
     /// </summary>
-    public class EasyValueComparer : IEqualityComparer<IExpressionConstant>
+    public class EasyValueComparer : IEqualityComparer<ILiquidValue>
     {
-        public bool Equals(IExpressionConstant x, IExpressionConstant y)
+        public bool Equals(ILiquidValue x, ILiquidValue y)
         {
             //Check whether the compared objects reference the same data.
             if (ReferenceEquals(x, y))
@@ -25,7 +25,7 @@ namespace Liquid.NET.Constants
         }
 
         
-        public int GetHashCode(IExpressionConstant obj)
+        public int GetHashCode(ILiquidValue obj)
         {
             //Console.WriteLine("Hashing " + obj.Value);
             //Check whether the object is null

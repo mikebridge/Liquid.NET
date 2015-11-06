@@ -6,11 +6,11 @@ namespace Liquid.NET.Constants
     {
         public static LiquidExpressionResult TryField(
             ITemplateContext ctx, 
-            IExpressionConstant expressionConstant, 
+            ILiquidValue liquidValue, 
             string index)
         {
 
-            var dict = expressionConstant as LiquidHash;
+            var dict = liquidValue as LiquidHash;
             if (dict == null)
             {
                 return LiquidExpressionResult.ErrorOrNone(ctx, index);

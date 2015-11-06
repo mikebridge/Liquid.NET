@@ -64,7 +64,7 @@ namespace Liquid.NET.Tests.Constants
 //        public void It_Should_Format_An_Array_Like_Json()
 //        {
 //            // Arrange
-//            var num = new LiquidCollection(new List<IExpressionConstant>{new LiquidNumeric(123.4m), new LiquidNumeric(5)});
+//            var num = new LiquidCollection(new List<ILiquidValue>{new LiquidNumeric(123.4m), new LiquidNumeric(5)});
 //
 //            // Act
 //            var stringliteral = ValueCaster.Cast<LiquidCollection, LiquidString>(num)
@@ -156,7 +156,7 @@ namespace Liquid.NET.Tests.Constants
 //            var num = new LiquidNumeric(123.0000m);
 //
 //            // Act
-//            var stringliteral = ValueCaster.RenderAsString((IExpressionConstant) num);
+//            var stringliteral = ValueCaster.RenderAsString((ILiquidValue) num);
 //               
 //            // Assert
 //            Assert.That(stringliteral, Is.EqualTo("123.00"));
@@ -453,7 +453,7 @@ namespace Liquid.NET.Tests.Constants
         public void It_Renders_Null_As_Empty()
         {
             // Arrange
-            var result = ValueCaster.RenderAsString((IExpressionConstant) null);
+            var result = ValueCaster.RenderAsString((ILiquidValue) null);
             Assert.That(result, Is.EqualTo(""));
         }
 

@@ -79,7 +79,7 @@
     <Compile Include="src\Constants\LiquidValue.cs" />
     <Compile Include="src\Constants\FieldAccessor.cs" />
     <Compile Include="src\Constants\LiquidRange.cs" />
-    <Compile Include="src\Constants\IExpressionConstant.cs" />
+    <Compile Include="src\Constants\ILiquidValue.cs" />
     <Compile Include="src\Constants\MissingValueTest.cs" />
     <Compile Include="src\Constants\LiquidNumeric.cs" />
     <Compile Include="src\Constants\LiquidString.cs" />

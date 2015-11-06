@@ -18,7 +18,7 @@ namespace Liquid.NET.Tests.Expressions
             templateContext.DefineLocalVariable("myvar", new LiquidString("HELLO"));
 
             // Act
-            var result = variableReference.Eval(templateContext, new List<Option<IExpressionConstant>>()).SuccessValue<LiquidString>();
+            var result = variableReference.Eval(templateContext, new List<Option<ILiquidValue>>()).SuccessValue<LiquidString>();
 
             // Assert
             Assert.That(result.Value, Is.EqualTo("HELLO"));
@@ -32,7 +32,7 @@ namespace Liquid.NET.Tests.Expressions
             var templateContext = new TemplateContext();
 
             // Act
-            var result = variableReference.Eval(templateContext, new List<Option<IExpressionConstant>>());
+            var result = variableReference.Eval(templateContext, new List<Option<ILiquidValue>>());
 
             // Assert
             Assert.That(result.SuccessResult.HasValue, Is.False);

@@ -8,9 +8,9 @@ namespace Liquid.NET.Expressions
     public class EqualsExpression :ExpressionDescription
     {
 
-        public override LiquidExpressionResult Eval(ITemplateContext templateContext, IEnumerable<Option<IExpressionConstant>> expressions)
+        public override LiquidExpressionResult Eval(ITemplateContext templateContext, IEnumerable<Option<ILiquidValue>> expressions)
         {
-            IList<Option<IExpressionConstant>> exprList = expressions.ToList();
+            IList<Option<ILiquidValue>> exprList = expressions.ToList();
 
             
             if (exprList.Count != 2)

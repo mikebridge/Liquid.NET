@@ -9,10 +9,10 @@ namespace Liquid.NET.Filters.Strings
     /// https://docs.shopify.com/themes/liquid-documentation/filters/string-filters#handle
     /// </summary>
     // ReSharper disable once ClassNeverInstantiated.Global
-    public class HandleizeFilter : FilterExpression<IExpressionConstant, LiquidString>
+    public class HandleizeFilter : FilterExpression<ILiquidValue, LiquidString>
     {
 
-        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, IExpressionConstant liquidExpression)
+        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, ILiquidValue liquidExpression)
         {
             var strArray = ValueCaster.RenderAsString(liquidExpression).Split();
             // TODO: add ability to toggle lower-case on/off

@@ -48,7 +48,7 @@ namespace Liquid.NET
         }        
 
 
-        public ITemplateContext DefineLocalVariable(String name, IExpressionConstant constant)
+        public ITemplateContext DefineLocalVariable(String name, ILiquidValue constant)
         {
             _globalSymbolTable.DefineLocalVariable(name, constant);
             return this;
@@ -88,7 +88,7 @@ namespace Liquid.NET
             return this;
         }
 
-        public ITemplateContext WithLocalVariables(IDictionary<string, IExpressionConstant> dict)
+        public ITemplateContext WithLocalVariables(IDictionary<string, ILiquidValue> dict)
         {
             foreach (var kv in dict)
             {

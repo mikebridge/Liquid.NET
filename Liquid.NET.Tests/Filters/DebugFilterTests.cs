@@ -39,7 +39,7 @@ namespace Liquid.NET.Tests.Filters
             // Arrange
             var ctx = CreateContext(new Dictionary<String, String> { { "test", "Result {% assign x = 123 %}{{ x | debug }}" } });
 
-            //ctx.Define("payments", new LiquidCollection(new List<IExpressionConstant>()));
+            //ctx.Define("payments", new LiquidCollection(new List<ILiquidValue>()));
 
             const String str = "{% include 'test' %}";
 
@@ -62,7 +62,7 @@ namespace Liquid.NET.Tests.Filters
                 { "test2", "{% assign x = 456 %}" }
             });
 
-            //ctx.Define("payments", new LiquidCollection(new List<IExpressionConstant>()));
+            //ctx.Define("payments", new LiquidCollection(new List<ILiquidValue>()));
 
             const String str = "{% include 'test' %}{% include 'test2' %}{{ x | debug }}";
 

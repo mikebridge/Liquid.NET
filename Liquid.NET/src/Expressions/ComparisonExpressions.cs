@@ -11,7 +11,7 @@ namespace Liquid.NET.Expressions
     {
 
         public override LiquidExpressionResult Eval(ITemplateContext templateContext,
-            IEnumerable<Option<IExpressionConstant>> expressions)
+            IEnumerable<Option<ILiquidValue>> expressions)
         {
             var expressionList = expressions.ToList();
             if (expressionList.Any(x => !x.HasValue))
@@ -26,7 +26,7 @@ namespace Liquid.NET.Expressions
     {
 
         public override LiquidExpressionResult Eval(ITemplateContext templateContext,
-            IEnumerable<Option<IExpressionConstant>> expressions)
+            IEnumerable<Option<ILiquidValue>> expressions)
         {
             var expressionList = expressions.ToList();
             if (expressionList.Any(x => !x.HasValue))
@@ -40,7 +40,7 @@ namespace Liquid.NET.Expressions
     public class GreaterThanOrEqualsExpression : ExpressionDescription
     {
         public override LiquidExpressionResult Eval(ITemplateContext templateContext,
-            IEnumerable<Option<IExpressionConstant>> expressions)
+            IEnumerable<Option<ILiquidValue>> expressions)
         {
             var expressionList = expressions.ToList();
             if (expressionList.Any(x => !x.HasValue))
@@ -55,7 +55,7 @@ namespace Liquid.NET.Expressions
     {
 
         public override LiquidExpressionResult Eval(ITemplateContext templateContext,
-            IEnumerable<Option<IExpressionConstant>> expressions)
+            IEnumerable<Option<ILiquidValue>> expressions)
         {
             var expressionList = expressions.ToList();
             if (expressionList.Any(x => !x.HasValue))
@@ -73,12 +73,12 @@ namespace Liquid.NET.Expressions
 
     public static class ComparisonExpressions
     {
-        public static LiquidBoolean Compare(IExpressionConstant x, IExpressionConstant y,
+        public static LiquidBoolean Compare(ILiquidValue x, ILiquidValue y,
             Func<decimal, decimal, bool> func)
         {
 
-            var numericValueResult1 = ValueCaster.Cast<IExpressionConstant, LiquidNumeric>(x);
-            var numericValueResult2 = ValueCaster.Cast<IExpressionConstant, LiquidNumeric>(y);
+            var numericValueResult1 = ValueCaster.Cast<ILiquidValue, LiquidNumeric>(x);
+            var numericValueResult2 = ValueCaster.Cast<ILiquidValue, LiquidNumeric>(y);
 
             if (numericValueResult2.IsError || numericValueResult1.IsError)
             {

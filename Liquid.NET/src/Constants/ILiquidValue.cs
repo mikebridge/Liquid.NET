@@ -5,7 +5,7 @@ using Liquid.NET.Utils;
 
 namespace Liquid.NET.Constants
 {
-    public interface IExpressionConstant : IExpressionDescription
+    public interface ILiquidValue : IExpressionDescription
     {
         Object Value { get; }
 
@@ -13,7 +13,7 @@ namespace Liquid.NET.Constants
 
         String LiquidTypeName { get; }
 
-        Option<IExpressionConstant> ToOption();
+        Option<ILiquidValue> ToOption();
 
         IDictionary<String, Object> MetaData { get; }
 

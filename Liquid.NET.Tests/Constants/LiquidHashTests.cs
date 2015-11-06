@@ -70,8 +70,8 @@ namespace Liquid.NET.Tests.Constants
             // Arrange
             var dict = new LiquidHash
             {
-                {"key1", Option<IExpressionConstant>.Create(new LiquidString("test 1"))},
-                {"key2", Option<IExpressionConstant>.Create(new LiquidString("test 2"))},
+                {"key1", Option<ILiquidValue>.Create(new LiquidString("test 1"))},
+                {"key2", Option<ILiquidValue>.Create(new LiquidString("test 2"))},
             };
 
             // Assert
@@ -107,7 +107,7 @@ namespace Liquid.NET.Tests.Constants
         public void It_Should_Set_A_Value()
         {
             var dict = new LiquidHash();
-            dict["key"] = new Some<IExpressionConstant>(new LiquidString("test"));
+            dict["key"] = new Some<ILiquidValue>(new LiquidString("test"));
             Assert.That(dict["key"].Value, Is.EqualTo(new LiquidString("test")));
         }
 
@@ -115,8 +115,8 @@ namespace Liquid.NET.Tests.Constants
         [Test]
         public void It_Should_Set_A_Value_Via_Key_Value_Pair()
         {
-            var val = new Some<IExpressionConstant>(new LiquidString("test"));           
-            var kvp = new KeyValuePair<String,Option<IExpressionConstant>>("key", val);
+            var val = new Some<ILiquidValue>(new LiquidString("test"));           
+            var kvp = new KeyValuePair<String,Option<ILiquidValue>>("key", val);
             var dict = new LiquidHash {kvp};
             Assert.That(dict["key"].Value, Is.EqualTo(new LiquidString("test")));
         }
@@ -124,7 +124,7 @@ namespace Liquid.NET.Tests.Constants
         [Test]
         public void It_Should_Convert_Null_To_None()
         {
-            var kvp = new KeyValuePair<String, Option<IExpressionConstant>>("key", null);
+            var kvp = new KeyValuePair<String, Option<ILiquidValue>>("key", null);
             var dict = new LiquidHash {kvp};
             Assert.That(dict["key"].HasValue, Is.False);
         }
@@ -157,7 +157,7 @@ namespace Liquid.NET.Tests.Constants
         public void It_Should_Copy_Values()
         {
             var dict = new LiquidHash { { "key", new LiquidString("test") } };
-            var x = new KeyValuePair<string, Option<IExpressionConstant>>[1];
+            var x = new KeyValuePair<string, Option<ILiquidValue>>[1];
             dict.CopyTo(x, 0);
             Assert.That(x.Length, Is.EqualTo(1));
         }
@@ -165,8 +165,8 @@ namespace Liquid.NET.Tests.Constants
         [Test]
         public void It_Should_Know_If_A_Value_Is_Contained()
         {
-            var val = new Some<IExpressionConstant>(new LiquidString("test"));
-            var kvp = new KeyValuePair<String, Option<IExpressionConstant>>("key", val);
+            var val = new Some<ILiquidValue>(new LiquidString("test"));
+            var kvp = new KeyValuePair<String, Option<ILiquidValue>>("key", val);
             var dict = new LiquidHash { kvp };
 
             Assert.That(dict.Contains(kvp));

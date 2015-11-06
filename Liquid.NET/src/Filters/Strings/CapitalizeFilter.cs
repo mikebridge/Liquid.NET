@@ -8,9 +8,9 @@ namespace Liquid.NET.Filters.Strings
     /// https://docs.shopify.com/themes/liquid-documentation/filters/string-filters#capitalize
     /// </summary>
     // ReSharper disable once ClassNeverInstantiated.Global
-    public class CapitalizeFilter : FilterExpression<IExpressionConstant, LiquidString>
+    public class CapitalizeFilter : FilterExpression<ILiquidValue, LiquidString>
     {
-        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, IExpressionConstant liquidExpression)
+        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, ILiquidValue liquidExpression)
         {
             String before = ValueCaster.RenderAsString(liquidExpression);
             if (String.IsNullOrWhiteSpace(before))

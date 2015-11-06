@@ -5,7 +5,7 @@ namespace Liquid.NET.Constants
 {
     public static class EmptyChecker
     {
-        public static bool IsEmpty(IExpressionConstant val)
+        public static bool IsEmpty(ILiquidValue val)
         {
             if (val == null)
             {
@@ -34,7 +34,7 @@ namespace Liquid.NET.Constants
         }
 
         // ReSharper disable once UnusedParameter.Local
-        private static bool CheckIsEmpty(IExpressionConstant _)
+        private static bool CheckIsEmpty(ILiquidValue _)
         {
             return false; // the only conditions will have been caught by IsEmpty
         }
@@ -60,7 +60,7 @@ namespace Liquid.NET.Constants
 
     public static class BlankChecker
     {
-        public static bool IsBlank(IExpressionConstant val)
+        public static bool IsBlank(ILiquidValue val)
         {
             if (val == null)
             {
@@ -86,7 +86,7 @@ namespace Liquid.NET.Constants
         }
 
         // ReSharper disable once UnusedParameter.Local
-        private static bool CheckIsBlank(IExpressionConstant _)
+        private static bool CheckIsBlank(ILiquidValue _)
         {
             return false; // the only conditions will have been caught by IsBlank -- other types are never blank
         }

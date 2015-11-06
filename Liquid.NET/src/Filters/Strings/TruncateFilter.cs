@@ -5,7 +5,7 @@ using Liquid.NET.Utils;
 namespace Liquid.NET.Filters.Strings
 {
     // ReSharper disable once ClassNeverInstantiated.Global
-    public class TruncateFilter : FilterExpression<IExpressionConstant, LiquidString>
+    public class TruncateFilter : FilterExpression<ILiquidValue, LiquidString>
     {
         private readonly LiquidNumeric _length;
         private readonly LiquidString _truncateLiquidString;
@@ -16,7 +16,7 @@ namespace Liquid.NET.Filters.Strings
             _truncateLiquidString = truncateLiquidString == null || truncateLiquidString.Value == null ? new LiquidString("...") : truncateLiquidString;
         }
 
-        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, IExpressionConstant liquidExpression)
+        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, ILiquidValue liquidExpression)
         {
             return LiquidExpressionResult.Success(StringUtils.Eval(liquidExpression, Truncate));
         }

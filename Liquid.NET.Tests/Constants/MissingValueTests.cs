@@ -22,7 +22,7 @@ namespace Liquid.NET.Tests.Constants
 
             ITemplateContext ctx = new TemplateContext()                              
                 .ErrorWhenValueMissing();
-            //ctx.DefineLocalVariable("e", new LiquidCollection(new List<IExpressionConstant>()));
+            //ctx.DefineLocalVariable("e", new LiquidCollection(new List<ILiquidValue>()));
             ctx.DefineLocalVariable("d", new LiquidHash());
            
             // Act

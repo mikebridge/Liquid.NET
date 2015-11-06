@@ -21,7 +21,7 @@ namespace Liquid.NET.Expressions
 //            throw new NotImplementedException("");
 //        }
 
-        public LiquidExpressionResult Eval(ITemplateContext templateContext, IEnumerable<Option<IExpressionConstant>> childresults)
+        public LiquidExpressionResult Eval(ITemplateContext templateContext, IEnumerable<Option<ILiquidValue>> childresults)
         {
             return EvalExpression(templateContext, this, childresults);
         }
@@ -29,9 +29,9 @@ namespace Liquid.NET.Expressions
         private LiquidExpressionResult EvalExpression(
             ITemplateContext templateContext, 
             VariableReferenceTree o,
-            IEnumerable<Option<IExpressionConstant>> childresults)
+            IEnumerable<Option<ILiquidValue>> childresults)
         {
-            var childResultsList = childresults as IList<Option<IExpressionConstant>> ?? childresults.ToList();
+            var childResultsList = childresults as IList<Option<ILiquidValue>> ?? childresults.ToList();
             var valueResult = o.Value.Eval(templateContext, childResultsList);
             if (valueResult.IsError)
             {
@@ -52,12 +52,12 @@ namespace Liquid.NET.Expressions
             }
             if (!valueResult.SuccessResult.HasValue)
             {
-                return LiquidExpressionResult.Success(new None<IExpressionConstant>());
+                return LiquidExpressionResult.Success(new None<ILiquidValue>());
                 //return LiquidExpressionResult.Error(SymbolTable.NotFoundError(valueResult));
             }
             if (!indexResult.SuccessResult.HasValue)
             {
-                return LiquidExpressionResult.Success(new None<IExpressionConstant>());
+                return LiquidExpressionResult.Success(new None<ILiquidValue>());
                 //return LiquidExpressionResult.Error("ERROR: the index for "+valueResult.SuccessResult.Value+" has no value");
             }
             return new IndexDereferencer().Lookup(templateContext, valueResult.SuccessResult.Value, indexResult.SuccessResult.Value);

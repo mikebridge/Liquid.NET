@@ -47,7 +47,7 @@ namespace Liquid.NET.Constants
         public static LiquidExpressionResult Parse(String str)
         {
 
-            return ValueCaster.Cast<IExpressionConstant, LiquidNumeric>(new LiquidString(str));
+            return ValueCaster.Cast<ILiquidValue, LiquidNumeric>(new LiquidString(str));
 
         }
 

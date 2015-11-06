@@ -13,12 +13,12 @@ namespace Liquid.NET.Expressions
 //            expressionDescriptionVisitor.Visit(this);
 //        }
 
-        //public IExpressionConstant Eval(SymbolTableStack symbolTableStack, IEnumerable<IExpressionConstant> expressions)
-        public override LiquidExpressionResult Eval(ITemplateContext templateContext, IEnumerable<Option<IExpressionConstant>> expressions)
+        //public ILiquidValue Eval(SymbolTableStack symbolTableStack, IEnumerable<ILiquidValue> expressions)
+        public override LiquidExpressionResult Eval(ITemplateContext templateContext, IEnumerable<Option<ILiquidValue>> expressions)
         {
 
-            //IList<IExpressionConstant> exprList = expressions.ToList();
-            IList<Option<IExpressionConstant>> exprList = expressions.ToList();
+            //IList<ILiquidValue> exprList = expressions.ToList();
+            IList<Option<ILiquidValue>> exprList = expressions.ToList();
 
             //Console.WriteLine("EqualsExpression is Eval-ing expressions ");
             if (exprList.Count != 2)

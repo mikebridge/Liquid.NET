@@ -11,7 +11,7 @@ namespace Liquid.NET.Filters
         Type SourceType { get; }
         Type ResultType { get; }        
 
-        LiquidExpressionResult Apply(ITemplateContext ctx, IExpressionConstant liquidExpression);
+        LiquidExpressionResult Apply(ITemplateContext ctx, ILiquidValue liquidExpression);
 
         LiquidExpressionResult ApplyToNil(ITemplateContext ctx);
 
@@ -23,7 +23,7 @@ namespace Liquid.NET.Filters
         public virtual String Name { get; set; }
         public abstract Type SourceType { get; }
         public abstract Type ResultType { get; }
-        public abstract LiquidExpressionResult Apply(ITemplateContext ctx, IExpressionConstant liquidExpression);
+        public abstract LiquidExpressionResult Apply(ITemplateContext ctx, ILiquidValue liquidExpression);
         
 
         public LiquidExpressionResult BindFilter(ITemplateContext ctx, LiquidExpressionResult current)
@@ -39,56 +39,56 @@ namespace Liquid.NET.Filters
         }
 
         /* override some or all of these ApplyTo functions */
-        public virtual LiquidExpressionResult ApplyTo(ITemplateContext _, IExpressionConstant liquidExpression)
+        public virtual LiquidExpressionResult ApplyTo(ITemplateContext _, ILiquidValue liquidExpression)
         {
             throw new NotImplementedException();
         }
         public virtual LiquidExpressionResult ApplyTo(ITemplateContext ctx, LiquidNumeric val)
         {
-            return ApplyTo(ctx, (IExpressionConstant)val);
+            return ApplyTo(ctx, (ILiquidValue)val);
         }
 
         public virtual LiquidExpressionResult ApplyTo(ITemplateContext ctx, LiquidString val)
         {
-            return ApplyTo(ctx, (IExpressionConstant)val);
+            return ApplyTo(ctx, (ILiquidValue)val);
         }
 
         public virtual LiquidExpressionResult ApplyTo(ITemplateContext ctx, LiquidHash val)
         {
-            return ApplyTo(ctx, (IExpressionConstant)val);
+            return ApplyTo(ctx, (ILiquidValue)val);
         }
         public virtual LiquidExpressionResult ApplyTo(ITemplateContext ctx, LiquidCollection val)
         {
-            return ApplyTo(ctx, (IExpressionConstant)val);
+            return ApplyTo(ctx, (ILiquidValue)val);
         }
 
         public virtual LiquidExpressionResult ApplyTo(ITemplateContext ctx, LiquidBoolean val)
         {
-            return ApplyTo(ctx, (IExpressionConstant) val);
+            return ApplyTo(ctx, (ILiquidValue) val);
         }
 
         public virtual LiquidExpressionResult ApplyTo(ITemplateContext ctx, LiquidDate val)
         {
-            return ApplyTo(ctx, (IExpressionConstant) val);
+            return ApplyTo(ctx, (ILiquidValue) val);
         }
 
 
         public virtual LiquidExpressionResult ApplyTo(ITemplateContext ctx, LiquidRange val)
         {
             //throw new Exception("Need to figure out how to do this part");
-            return ApplyTo(ctx, (IExpressionConstant)val);
+            return ApplyTo(ctx, (ILiquidValue)val);
         }
 
         public virtual LiquidExpressionResult ApplyToNil(ITemplateContext ctx)
         {
-            return LiquidExpressionResult.Success(new None<IExpressionConstant>());
+            return LiquidExpressionResult.Success(new None<ILiquidValue>());
         }
 
     }
 
     public abstract class FilterExpression<TSource, TResult> : FilterExpression
-        where TSource : IExpressionConstant
-        where TResult : IExpressionConstant
+        where TSource : ILiquidValue
+        where TResult : ILiquidValue
     {
 
 
@@ -133,7 +133,7 @@ namespace Liquid.NET.Filters
             return ApplyTo(ctx, expr);
         }
 
-        public override LiquidExpressionResult Apply(ITemplateContext ctx, IExpressionConstant liquidExpression)
+        public override LiquidExpressionResult Apply(ITemplateContext ctx, ILiquidValue liquidExpression)
         {
             return Apply(ctx, (TSource)liquidExpression);
         }

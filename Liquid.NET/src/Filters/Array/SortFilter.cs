@@ -52,7 +52,7 @@ namespace Liquid.NET.Filters.Array
             return new LiquidCollection(result.ToList());
         }
 
-        private String AsString(ITemplateContext ctx, Option<IExpressionConstant> x, string field)
+        private String AsString(ITemplateContext ctx, Option<ILiquidValue> x, string field)
         {
             if (!x.HasValue)
             {

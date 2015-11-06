@@ -46,7 +46,7 @@ namespace Liquid.NET.Rendering
             }
         }
 
-        private void IterateBlock(ForBlockTag forBlockTag, ITemplateContext templateContext, List<IExpressionConstant> iterable)
+        private void IterateBlock(ForBlockTag forBlockTag, ITemplateContext templateContext, List<ILiquidValue> iterable)
         {
             var offset = LiquidNumeric.Create(0);
             LiquidNumeric limit = null;
@@ -126,13 +126,13 @@ namespace Liquid.NET.Rendering
 
         }
 
-        private static Option<IExpressionConstant> FindParentLoop(SymbolTableStack stack)
+        private static Option<ILiquidValue> FindParentLoop(SymbolTableStack stack)
         {
             var parentLoop = stack.Reference("forloop", skiplevels:1 );
 
             if (parentLoop.IsError || !parentLoop.SuccessResult.HasValue)
             {
-                return new None<IExpressionConstant>();
+                return new None<ILiquidValue>();
             }
             return parentLoop.SuccessValue<LiquidHash>();
                 

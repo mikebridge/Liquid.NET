@@ -22,7 +22,7 @@ namespace Liquid.NET.Tags.Custom
                     RenderingVisitor renderingVisitor,
                     ITemplateContext templateContext,
                     TreeNode<IASTNode> liquidBlock,
-                    IList<Option<IExpressionConstant>> args);
+                    IList<Option<ILiquidValue>> args);
 
     }
 }

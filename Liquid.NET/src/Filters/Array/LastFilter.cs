@@ -4,7 +4,7 @@ using Liquid.NET.Utils;
 
 namespace Liquid.NET.Filters.Array
 {
-    public class LastFilter : FilterExpression<LiquidValue, IExpressionConstant>
+    public class LastFilter : FilterExpression<LiquidValue, ILiquidValue>
     {
         /// <summary>
         ///  TODO: Update to new structure
@@ -27,7 +27,7 @@ namespace Liquid.NET.Filters.Array
             return ApplyTo(ctx, liquidExpression);
         }
 
-        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, IExpressionConstant liquidExpression)
+        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, ILiquidValue liquidExpression)
         {
             return LiquidExpressionResult.Error("Can't ask for an element at that index.  This is not an array or a string.");
 

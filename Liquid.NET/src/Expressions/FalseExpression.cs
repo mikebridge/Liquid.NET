@@ -6,9 +6,9 @@ namespace Liquid.NET.Expressions
 {
     public class FalseExpression : ExpressionDescription
     {
-        public override LiquidExpressionResult Eval(ITemplateContext templateContext, IEnumerable<Option<IExpressionConstant>> expressions)
+        public override LiquidExpressionResult Eval(ITemplateContext templateContext, IEnumerable<Option<ILiquidValue>> expressions)
         {
-            return LiquidExpressionResult.Success(new Some<IExpressionConstant>(new LiquidBoolean(false)));
+            return LiquidExpressionResult.Success(new Some<ILiquidValue>(new LiquidBoolean(false)));
         }
     }
 }

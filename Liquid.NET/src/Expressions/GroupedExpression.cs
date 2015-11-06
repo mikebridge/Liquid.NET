@@ -7,7 +7,7 @@ namespace Liquid.NET.Expressions
 {
     public class GroupedExpression : ExpressionDescription
     {
-        public override LiquidExpressionResult Eval(ITemplateContext templateContext, IEnumerable<Option<IExpressionConstant>> expressions)
+        public override LiquidExpressionResult Eval(ITemplateContext templateContext, IEnumerable<Option<ILiquidValue>> expressions)
         {
             var childExpressions = expressions.ToList();
 

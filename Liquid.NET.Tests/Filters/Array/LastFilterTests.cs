@@ -92,7 +92,7 @@ namespace Liquid.NET.Tests.Filters.Array
 //            var filter = new LastFilter();
 //
 //            // Act
-//            var result = filter.Apply(new LiquidCollection(new Option<IExpressionConstant>(null)));
+//            var result = filter.Apply(new LiquidCollection(new Option<ILiquidValue>(null)));
 //
 //            // Assert
 //            Assert.That(result.IsError, Is.True);

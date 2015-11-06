@@ -13,7 +13,7 @@ namespace Liquid.NET.Filters.Strings
     /// Verified in liquid.
     /// </summary>
     // ReSharper disable once ClassNeverInstantiated.Global
-    public class SliceFilter : FilterExpression<IExpressionConstant, IExpressionConstant>
+    public class SliceFilter : FilterExpression<ILiquidValue, ILiquidValue>
     {
         private readonly LiquidNumeric _start;
         private readonly LiquidNumeric _length;
@@ -24,7 +24,7 @@ namespace Liquid.NET.Filters.Strings
             _length = length;
         }
 
-        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, IExpressionConstant liquidExpression)
+        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, ILiquidValue liquidExpression)
         {
             return LiquidExpressionResult.Error("Can't slice a object of type '"+liquidExpression.LiquidTypeName+"'.  It is not an array or a string.");
         }

@@ -10,19 +10,19 @@ namespace Liquid.NET.Constants
     public static class ValueCaster
     {
         public static LiquidExpressionResult Cast<TSource, TDest>(TSource src)
-            where TDest : IExpressionConstant
-            where TSource : IExpressionConstant
+            where TDest : ILiquidValue
+            where TSource : ILiquidValue
         {
             if (src == null)
             {
-                return LiquidExpressionResult.Success(new None<IExpressionConstant>());
+                return LiquidExpressionResult.Success(new None<ILiquidValue>());
             }
             if (src is TDest)
             {
                 //var result = (TDest) ((dynamic) src);                
-                //IExpressionConstant success = (TDest)((dynamic)src);
-                IExpressionConstant success = (TDest) (object) src;
-                return LiquidExpressionResult.Success(new Some<IExpressionConstant>(success));
+                //ILiquidValue success = (TDest)((dynamic)src);
+                ILiquidValue success = (TDest) (object) src;
+                return LiquidExpressionResult.Success(new Some<ILiquidValue>(success));
             }
             if (typeof (TDest) == typeof (LiquidString))
             {
@@ -71,22 +71,22 @@ namespace Liquid.NET.Constants
         /// <typeparam name="TDest"></typeparam>
         /// <returns></returns>
         public static LiquidExpressionResult ConvertFromNull<TDest>()
-            where TDest : IExpressionConstant
+            where TDest : ILiquidValue
         {
             var destType = typeof(TDest);
             if (destType == typeof(LiquidNumeric))
             {
-                return LiquidExpressionResult.Success(new Some<IExpressionConstant>(LiquidNumeric.Create(0)));
+                return LiquidExpressionResult.Success(new Some<ILiquidValue>(LiquidNumeric.Create(0)));
             }
             if (destType == typeof(LiquidString))
             {
-                return LiquidExpressionResult.Success(new Some<IExpressionConstant>(new LiquidString(String.Empty)));
+                return LiquidExpressionResult.Success(new Some<ILiquidValue>(new LiquidString(String.Empty)));
             }
-            return LiquidExpressionResult.Success(new None<IExpressionConstant>());
+            return LiquidExpressionResult.Success(new None<ILiquidValue>());
         }
 
         private static LiquidExpressionResult Convert<TDest>(LiquidNumeric num)
-            where TDest : IExpressionConstant
+            where TDest : ILiquidValue
         {
             var destType = typeof (TDest);
             if (destType == typeof (LiquidDate))
@@ -101,7 +101,7 @@ namespace Liquid.NET.Constants
         }
 
         private static LiquidExpressionResult Convert<TDest>(LiquidBoolean liquidBoolean)
-            where TDest : IExpressionConstant
+            where TDest : ILiquidValue
         {
             var destType = typeof (TDest);
 //            if (destType == typeof (LiquidBoolean))
@@ -115,7 +115,7 @@ namespace Liquid.NET.Constants
 
         // ReSharper disable once UnusedParameter.Local
         private static LiquidExpressionResult Convert<TDest>(LiquidDate liquidDate)
-             where TDest : IExpressionConstant
+             where TDest : ILiquidValue
         {
             var destType = typeof(TDest);
             if (destType == typeof(LiquidNumeric))
@@ -137,7 +137,7 @@ namespace Liquid.NET.Constants
         }
 
         private static LiquidExpressionResult Convert<TDest>(LiquidHash liquidHash)
-           where TDest : IExpressionConstant
+           where TDest : ILiquidValue
         {
             var destType = typeof(TDest);
 
@@ -147,8 +147,8 @@ namespace Liquid.NET.Constants
             {
                 var newArray = new LiquidCollection();
                 var dictarray = liquidHash.Keys.Select(
-                    k => (Option<IExpressionConstant>) new Some<IExpressionConstant>(new LiquidCollection {
-                            new Some<IExpressionConstant>(new LiquidString(k)),
+                    k => (Option<ILiquidValue>) new Some<ILiquidValue>(new LiquidCollection {
+                            new Some<ILiquidValue>(new LiquidString(k)),
                             liquidHash[k]
                     })).ToList();
                 foreach (var item in dictarray)
@@ -163,7 +163,7 @@ namespace Liquid.NET.Constants
 
         // ReSharper disable once UnusedParameter.Local
         private static LiquidExpressionResult Convert<TDest>(LiquidCollection liquidCollection)
-              where TDest : IExpressionConstant
+              where TDest : ILiquidValue
         {
             //Console.WriteLine("Rendering array");
             var destType = typeof(TDest);
@@ -175,7 +175,7 @@ namespace Liquid.NET.Constants
         
 
         private static LiquidExpressionResult Convert<TDest>(LiquidString str)
-            where TDest : IExpressionConstant
+            where TDest : ILiquidValue
         {
             var destType = typeof (TDest);
 //            if (destType == typeof (LiquidString))
@@ -224,9 +224,9 @@ namespace Liquid.NET.Constants
 
             if (destType == typeof (LiquidCollection))
             {
-                var expressionConstants = new Some<IExpressionConstant>(str);
+                var expressionConstants = new Some<ILiquidValue>(str);
                 // IN liquid, it doesn't seem to cast a string to an array of chars---it casts to an array of one element.
-                //var expressionConstants = str.StringVal.Select(x => (Option<IExpressionConstant>) new Some<IExpressionConstant>(new LiquidString(x.ToString())));
+                //var expressionConstants = str.StringVal.Select(x => (Option<ILiquidValue>) new Some<ILiquidValue>(new LiquidString(x.ToString())));
                 return LiquidExpressionResult.Success(new LiquidCollection{expressionConstants});
             }
             return LiquidExpressionResult.Error("Can't convert from string to " + destType);
@@ -239,8 +239,8 @@ namespace Liquid.NET.Constants
         }
 
 
-//        private static LiquidExpressionResult Convert<TDest>(IExpressionConstant source)
-//            where TDest : IExpressionConstant
+//        private static LiquidExpressionResult Convert<TDest>(ILiquidValue source)
+//            where TDest : ILiquidValue
 //        {
 //            var destType = typeof (TDest);
 //            if (destType == typeof (LiquidString))
@@ -275,14 +275,14 @@ namespace Liquid.NET.Constants
             return new BigInteger(Math.Round(val, MidpointRounding.AwayFromZero));
         }
 
-        public static string RenderAsString(Option<IExpressionConstant> val)
+        public static string RenderAsString(Option<ILiquidValue> val)
         {
 
             return val.HasValue ? RenderAsString(val.Value) : "";
 
         }
 
-        public static string RenderAsString(IExpressionConstant val)
+        public static string RenderAsString(ILiquidValue val)
         {
 
             if (val == null)

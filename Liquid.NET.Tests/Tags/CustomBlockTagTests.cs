@@ -151,7 +151,7 @@ namespace Liquid.NET.Tests.Tags
                     RenderingVisitor renderingVisitor,
                     ITemplateContext templatecontext,
                     TreeNode<IASTNode> liquidBlock,
-                    IList<Option<IExpressionConstant>> args)
+                    IList<Option<ILiquidValue>> args)
             {
                 var result = EvalLiquidBlock(renderingVisitor, liquidBlock);
 
@@ -190,7 +190,7 @@ namespace Liquid.NET.Tests.Tags
                 RenderingVisitor renderingVisitor,
                 ITemplateContext templateContext,
                 TreeNode<IASTNode> liquidBlock,
-                IList<Option<IExpressionConstant>> args)
+                IList<Option<ILiquidValue>> args)
             {
                 var localBlockScope = new SymbolTable();
                 templateContext.SymbolTableStack.Push(localBlockScope);
@@ -221,7 +221,7 @@ namespace Liquid.NET.Tests.Tags
                 RenderingVisitor renderingVisitor,
                 String varname,
                 ITemplateContext templateContext,
-                List<IExpressionConstant> iterable,
+                List<ILiquidValue> iterable,
                 TreeNode<IASTNode> liquidBlock)
             {
                 String result = "";

@@ -3,7 +3,7 @@ using Liquid.NET.Utils;
 
 namespace Liquid.NET.Filters.Array
 {
-    public class PositionFilter : FilterExpression<LiquidValue, IExpressionConstant>
+    public class PositionFilter : FilterExpression<LiquidValue, ILiquidValue>
     {
         private readonly LiquidNumeric _index;
 
@@ -13,7 +13,7 @@ namespace Liquid.NET.Filters.Array
             _index = index;
         }
 
-        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, IExpressionConstant liquidExpression)
+        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, ILiquidValue liquidExpression)
         {
             return LiquidExpressionResult.Error("Can't find sub-elements from that object.  It is not an array or a string.");
         }
@@ -59,7 +59,7 @@ namespace Liquid.NET.Filters.Array
             }
 
 //            return LiquidExpressionResult.Success(liquidLiquidStringExpression.StringVal.Length >= _index.IntValue + 1
-//                ? (IExpressionConstant)new LiquidString(liquidLiquidStringExpression.StringVal[_index.IntValue].ToString())
+//                ? (ILiquidValue)new LiquidString(liquidLiquidStringExpression.StringVal[_index.IntValue].ToString())
 //                : ConstantFactory.CreateError<LiquidCollection>("String has no element at position " + _index.IntValue));
         }
     }

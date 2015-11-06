@@ -22,7 +22,7 @@ namespace Liquid.NET.Tests.Expressions
             var expr = new AndExpression();
 
             // Act
-            var result = expr.Eval(new TemplateContext(), new List<Option<IExpressionConstant>>
+            var result = expr.Eval(new TemplateContext(), new List<Option<ILiquidValue>>
             {
                 new LiquidBoolean(expr1),
                 new LiquidBoolean(expr2)
@@ -42,7 +42,7 @@ namespace Liquid.NET.Tests.Expressions
 
             // Act
             // ReSharper disable once UnusedVariable
-            var result = expr.Eval(new TemplateContext(), new List<Option<IExpressionConstant>>
+            var result = expr.Eval(new TemplateContext(), new List<Option<ILiquidValue>>
             {
                 new LiquidBoolean(true),
                 new LiquidBoolean(false),

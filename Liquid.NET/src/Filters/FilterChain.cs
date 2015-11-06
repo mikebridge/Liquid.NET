@@ -14,7 +14,7 @@ namespace Liquid.NET.Filters
         /// return a T, a casting function will be interpolated into the chain.
         /// </summary>
         /// <returns></returns>
-        public static Func<Option<IExpressionConstant>, LiquidExpressionResult> CreateChain(
+        public static Func<Option<ILiquidValue>, LiquidExpressionResult> CreateChain(
             Type objExprType,
             ITemplateContext ctx,
             IEnumerable<IFilterExpression> filterExpressions)
@@ -31,12 +31,12 @@ namespace Liquid.NET.Filters
 
         }
 
-        private static Func<IExpressionConstant, LiquidExpressionResult> InitialCast(
+        private static Func<ILiquidValue, LiquidExpressionResult> InitialCast(
             ITemplateContext ctx, IFilterExpression initialExpression)
         {
             return expressionConstant => expressionConstant != null
                 ? CreateCastFilter(expressionConstant.GetType(), initialExpression.SourceType).Apply(ctx, expressionConstant)
-                : LiquidExpressionResult.Success(new None<IExpressionConstant>());
+                : LiquidExpressionResult.Success(new None<ILiquidValue>());
         }
 
         /// <summary>
@@ -46,20 +46,20 @@ namespace Liquid.NET.Filters
         /// <param name="optionExpression"></param>
         /// <returns></returns>
         private static LiquidExpressionResult CreateUnwrapFunction(
-            Func<IExpressionConstant, LiquidExpressionResult> castFn, 
-            Option<IExpressionConstant> optionExpression)
+            Func<ILiquidValue, LiquidExpressionResult> castFn, 
+            Option<ILiquidValue> optionExpression)
         {
             return castFn(optionExpression.HasValue ? optionExpression.Value : null);
         }
 
-        public static Func<Option<IExpressionConstant>, LiquidExpressionResult> CreateChain(
+        public static Func<Option<ILiquidValue>, LiquidExpressionResult> CreateChain(
             ITemplateContext ctx,
             IEnumerable<IFilterExpression> filterExpressions)
         {
             return x => BindAll(ctx, InterpolateCastFilters(filterExpressions))(x);
         }
 
-        private static Func<Option<IExpressionConstant>, LiquidExpressionResult> BindAll(
+        private static Func<Option<ILiquidValue>, LiquidExpressionResult> BindAll(
             ITemplateContext ctx,
             IEnumerable<IFilterExpression> filterExpressions)
         {

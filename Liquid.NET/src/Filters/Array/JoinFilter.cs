@@ -5,7 +5,7 @@ using Liquid.NET.Utils;
 
 namespace Liquid.NET.Filters.Array
 {
-    public class JoinFilter : FilterExpression<IExpressionConstant, LiquidString>
+    public class JoinFilter : FilterExpression<ILiquidValue, LiquidString>
     {
         private readonly LiquidString _separator;
 
@@ -27,7 +27,7 @@ namespace Liquid.NET.Filters.Array
         {
             if (String.IsNullOrEmpty(liquidLiquidStringExpression.StringVal))
             {
-                return LiquidExpressionResult.Success(Option<IExpressionConstant>.None());
+                return LiquidExpressionResult.Success(Option<ILiquidValue>.None());
             }
 
             return LiquidExpressionResult.Success(new LiquidString(String.Join(_separator.StringVal,

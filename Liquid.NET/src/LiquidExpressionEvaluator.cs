@@ -7,7 +7,7 @@ using Liquid.NET.Filters;
 using Liquid.NET.Symbols;
 using Liquid.NET.Utils;
 
-//using ExpressionResult = Liquid.NET.Utils.Either<Liquid.NET.LiquidError, Liquid.NET.Utils.Option<Liquid.NET.Constants.IExpressionConstant>>;
+//using ExpressionResult = Liquid.NET.Utils.Either<Liquid.NET.LiquidError, Liquid.NET.Utils.Option<Liquid.NET.Constants.ILiquidValue>>;
 
 namespace Liquid.NET
 {
@@ -26,7 +26,7 @@ namespace Liquid.NET
             {
                 return leaves.First(x => x.IsError); // TODO: maybe aggregate tehse
             }
-            return Eval(expr.Data, leaves.Select(x => x == null ? new None<IExpressionConstant>() : x.SuccessResult), templateContext);
+            return Eval(expr.Data, leaves.Select(x => x == null ? new None<ILiquidValue>() : x.SuccessResult), templateContext);
         }
 
         public static LiquidExpressionResult Eval(
@@ -45,12 +45,12 @@ namespace Liquid.NET
 
         public static LiquidExpressionResult Eval(
             LiquidExpression expression,
-            IEnumerable<Option<IExpressionConstant>> leaves, 
+            IEnumerable<Option<ILiquidValue>> leaves, 
             ITemplateContext templateContext)
         {
             // calculate the first part of the expression
             var objResult = expression.Expression == null ? 
-                LiquidExpressionResult.Success(new None<IExpressionConstant>()) : 
+                LiquidExpressionResult.Success(new None<ILiquidValue>()) : 
                 expression.Expression.Eval(templateContext, leaves);
 
             if (objResult.IsError)

@@ -127,10 +127,10 @@ namespace Liquid.NET
             Errors.Add(new LiquidError{Message = message});
         }
 
-        private string RenderMacro(MacroBlockTag macroBlockTag, IEnumerable<Option<IExpressionConstant>> args)
+        private string RenderMacro(MacroBlockTag macroBlockTag, IEnumerable<Option<ILiquidValue>> args)
         {
             var macroRenderer = new MacroRenderer();
-            var expressionConstant = (IExpressionConstant)macroRenderer.Render(this, macroBlockTag, _templateContext, args.ToList());
+            var expressionConstant = (ILiquidValue)macroRenderer.Render(this, macroBlockTag, _templateContext, args.ToList());
             return ValueCaster.RenderAsString(expressionConstant);
         }
 
@@ -395,7 +395,7 @@ namespace Liquid.NET
 
 //        public void Visit(VariableReference variableReference)
 //        {
-//            variableReference.Eval(_templateContext, new List<Option<IExpressionConstant>>());
+//            variableReference.Eval(_templateContext, new List<Option<ILiquidValue>>());
 //        }
 
         public void Visit(LiquidString liquidString)
@@ -410,7 +410,7 @@ namespace Liquid.NET
         public void Visit(LiquidExpression liquidExpression)
         {
             //Console.WriteLine("Visiting Object Expression ");
-            LiquidExpressionEvaluator.Eval(liquidExpression, new List<Option<IExpressionConstant>>(), _templateContext)
+            LiquidExpressionEvaluator.Eval(liquidExpression, new List<Option<ILiquidValue>>(), _templateContext)
                 .WhenSuccess(x => x.WhenSome(some => AppendTextToCurrentAccumulator(Render(x.Value)))
                                    .WhenNone(() => AppendTextToCurrentAccumulator("")))
                 .WhenError(RenderError);
@@ -423,14 +423,14 @@ namespace Liquid.NET
                 .WhenError(RenderError);
         }
 
-        public String Render(IExpressionConstant result)
+        public String Render(ILiquidValue result)
         {
             return ValueCaster.RenderAsString(result);
         }
 
         public void EvalExpressions(
             IEnumerable<TreeNode<LiquidExpression>> expressionTrees,
-            Action<IEnumerable<Option<IExpressionConstant>>> successAction = null,
+            Action<IEnumerable<Option<ILiquidValue>>> successAction = null,
             Action<IEnumerable<LiquidError>> failureAction = null)
         {
             var evaledArgs = expressionTrees.Select(x => LiquidExpressionEvaluator.Eval(x, _templateContext)).ToList();

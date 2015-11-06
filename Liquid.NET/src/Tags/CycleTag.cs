@@ -10,7 +10,7 @@ namespace Liquid.NET.Tags
         {
             CycleList = new List<TreeNode<LiquidExpression>>();
         }
-        //public IList<IExpressionConstant> CycleList = new List<IExpressionConstant>();
+        //public IList<ILiquidValue> CycleList = new List<ILiquidValue>();
         public  IList<TreeNode<LiquidExpression>> CycleList { get; set; }
 
         //public String Group = "";

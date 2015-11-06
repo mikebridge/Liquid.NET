@@ -3,7 +3,7 @@ using Liquid.NET.Utils;
 
 namespace Liquid.NET.Filters.Array
 {
-    public class FirstFilter : FilterExpression<LiquidValue, IExpressionConstant>
+    public class FirstFilter : FilterExpression<LiquidValue, ILiquidValue>
     {
         private readonly PositionFilter _positionFilter;
 

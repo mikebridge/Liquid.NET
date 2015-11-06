@@ -64,7 +64,7 @@ namespace Liquid.NET.Tests
             // Arrange
             const string varname = "hello";
             var templateContext = new TemplateContext().WithLocalVariables(
-                new Dictionary<String, IExpressionConstant> { { varname, new LiquidString("TEST") } });
+                new Dictionary<String, ILiquidValue> { { varname, new LiquidString("TEST") } });
 
 
             // Act

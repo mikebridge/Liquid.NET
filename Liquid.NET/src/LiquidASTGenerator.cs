@@ -597,7 +597,7 @@ namespace Liquid.NET
             var cycleTag = new CycleTag
             {                     
                 CycleList = cycleList
-                //CycleList = context.cycle_string().Select(str => (IExpressionConstant) GenerateStringSymbol(str.GetText())).ToList()
+                //CycleList = context.cycle_string().Select(str => (ILiquidValue) GenerateStringSymbol(str.GetText())).ToList()
             };
             if (context.cycle_group() != null)
             {

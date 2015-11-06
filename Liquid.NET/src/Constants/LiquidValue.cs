@@ -4,7 +4,7 @@ using Liquid.NET.Utils;
 
 namespace Liquid.NET.Constants
 {
-    public abstract class LiquidValue : ExpressionDescription, IExpressionConstant
+    public abstract class LiquidValue : ExpressionDescription, ILiquidValue
     {
         protected LiquidValue()
         {
@@ -28,29 +28,29 @@ namespace Liquid.NET.Constants
 
         public abstract string LiquidTypeName { get; }
 
-        public Option<IExpressionConstant> ToOption()
+        public Option<ILiquidValue> ToOption()
         {
             if (Value != null)
             {
-                return new Some<IExpressionConstant>(this);
+                return new Some<ILiquidValue>(this);
             }
             else
             {
-                return new None<IExpressionConstant>();
+                return new None<ILiquidValue>();
             }
         }
 
         public IDictionary<string, object> MetaData { get; private set; }
 
-        public static implicit operator Option<IExpressionConstant>(LiquidValue t)
+        public static implicit operator Option<ILiquidValue>(LiquidValue t)
         {
             if (t == null)
             {
-                return new None<IExpressionConstant>();
+                return new None<ILiquidValue>();
             }
             else
             {
-                return new Some<IExpressionConstant>(t);
+                return new Some<ILiquidValue>(t);
             }
         }
 
@@ -82,7 +82,7 @@ namespace Liquid.NET.Constants
 
         public override LiquidExpressionResult Eval(
             ITemplateContext templateContext,
-            IEnumerable<Option<IExpressionConstant>> childresults)
+            IEnumerable<Option<ILiquidValue>> childresults)
         {
             return LiquidExpressionResult.Success(this);
         }

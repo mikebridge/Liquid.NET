@@ -7,13 +7,13 @@ using Liquid.NET.Utils;
 
 namespace Liquid.NET.Constants
 {
-    public class LiquidHash : LiquidValue, IDictionary<String,Option<IExpressionConstant>>
+    public class LiquidHash : LiquidValue, IDictionary<String,Option<ILiquidValue>>
     {
-        private readonly IDictionary<String, Option<IExpressionConstant>> _value;
+        private readonly IDictionary<String, Option<ILiquidValue>> _value;
 
         public LiquidHash()
         {
-            _value = new Dictionary<String, Option<IExpressionConstant>>();
+            _value = new Dictionary<String, Option<ILiquidValue>>();
         }
 
         public override object Value
@@ -36,19 +36,19 @@ namespace Liquid.NET.Constants
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        public Option<IExpressionConstant> ValueAt(String key)
+        public Option<ILiquidValue> ValueAt(String key)
         {
-            return ContainsKey(key) ? _value[key] : new None<IExpressionConstant>();
+            return ContainsKey(key) ? _value[key] : new None<ILiquidValue>();
         }
 
 
-        public void Add(String key, Option<IExpressionConstant> val)
+        public void Add(String key, Option<ILiquidValue> val)
         {
             if (ReferenceEquals(val, null))
             {
-                // The implicit conversion from IExpressionConstant
-                // to Option<IExpressionConstant> won't happen if this value is null.
-                val = new None<IExpressionConstant>();
+                // The implicit conversion from ILiquidValue
+                // to Option<ILiquidValue> won't happen if this value is null.
+                val = new None<ILiquidValue>();
             }
             _value.Add(key, val);
         }
@@ -58,12 +58,12 @@ namespace Liquid.NET.Constants
             return _value.Remove(key);
         }
 
-        public bool TryGetValue(string key, out Option<IExpressionConstant> value)
+        public bool TryGetValue(string key, out Option<ILiquidValue> value)
         {
             return _value.TryGetValue(key, out value);
         }
 
-        public Option<IExpressionConstant> this[string key]
+        public Option<ILiquidValue> this[string key]
         {
             get { 
                 var result= _value[key];
@@ -74,18 +74,18 @@ namespace Liquid.NET.Constants
 
         public ICollection<string> Keys { get { return _value.Keys; } }
 
-        public ICollection<Option<IExpressionConstant>> Values
+        public ICollection<Option<ILiquidValue>> Values
         {
             get { return _value.Values; }
         }
 
-        public void Add(KeyValuePair<String,Option<IExpressionConstant>> kvp)
+        public void Add(KeyValuePair<String,Option<ILiquidValue>> kvp)
         {
             var val = kvp.Value;
             if (ReferenceEquals(val, null)) // if the value is null, it may not get implicitly cast.
             {
                 //throw new ArgumentException("value must not be null.");
-               val = Option<IExpressionConstant>.None(); 
+               val = Option<ILiquidValue>.None(); 
             }
             _value.Add(kvp.Key, val);
         }
@@ -95,17 +95,17 @@ namespace Liquid.NET.Constants
             _value.Clear();
         }
 
-        public bool Contains(KeyValuePair<string, Option<IExpressionConstant>> item)
+        public bool Contains(KeyValuePair<string, Option<ILiquidValue>> item)
         {
             return _value.Contains(item);
         }
 
-        public void CopyTo(KeyValuePair<string, Option<IExpressionConstant>>[] array, int arrayIndex)
+        public void CopyTo(KeyValuePair<string, Option<ILiquidValue>>[] array, int arrayIndex)
         {
             _value.CopyTo(array, arrayIndex);
         }
 
-        public bool Remove(KeyValuePair<string, Option<IExpressionConstant>> item)
+        public bool Remove(KeyValuePair<string, Option<ILiquidValue>> item)
         {
             return _value.Remove(item);
         }
@@ -119,7 +119,7 @@ namespace Liquid.NET.Constants
             return _value.ContainsKey(key);
         }
 
-        IEnumerator<KeyValuePair<string, Option<IExpressionConstant>>> IEnumerable<KeyValuePair<string, Option<IExpressionConstant>>>.GetEnumerator()
+        IEnumerator<KeyValuePair<string, Option<ILiquidValue>>> IEnumerable<KeyValuePair<string, Option<ILiquidValue>>>.GetEnumerator()
         {
             return _value.GetEnumerator();
         }
@@ -139,7 +139,7 @@ namespace Liquid.NET.Constants
         }
 
 
-        private static String FormatKvPair(string key, Option<IExpressionConstant> expressionConstant)
+        private static String FormatKvPair(string key, Option<ILiquidValue> expressionConstant)
         {
             Type wrappedType = GetWrappedType(expressionConstant);
             String exprConstantAsString = expressionConstant.HasValue ? expressionConstant.Value.ToString() : "null";
@@ -147,7 +147,7 @@ namespace Liquid.NET.Constants
         }
 
         private static Type GetWrappedType<T>(Option<T> expressionConstant)
-            where T : IExpressionConstant
+            where T : ILiquidValue
         {
             return expressionConstant.HasValue ? expressionConstant.Value.GetType() : null;
         }

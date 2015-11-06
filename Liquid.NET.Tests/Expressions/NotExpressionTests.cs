@@ -17,7 +17,7 @@ namespace Liquid.NET.Tests.Expressions
             var expr = new NotExpression();
 
             // Act
-            var result = expr.Eval(new TemplateContext(), new List<Option<IExpressionConstant>>{boolTrue}).SuccessValue<LiquidBoolean>();
+            var result = expr.Eval(new TemplateContext(), new List<Option<ILiquidValue>>{boolTrue}).SuccessValue<LiquidBoolean>();
 
             // Assert
             Assert.That(result.Value, Is.False);
@@ -32,7 +32,7 @@ namespace Liquid.NET.Tests.Expressions
             var expr = new NotExpression();
 
             // Act
-            var result = expr.Eval(new TemplateContext(), new List<Option<IExpressionConstant>>
+            var result = expr.Eval(new TemplateContext(), new List<Option<ILiquidValue>>
             {
                 new LiquidBoolean(true),
                 new LiquidBoolean(false),

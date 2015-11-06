@@ -13,7 +13,7 @@ namespace Liquid.NET.Expressions
     /// 
     public interface IIterableCreator
     {
-        IEnumerable<IExpressionConstant> Eval(ITemplateContext templateContext);
+        IEnumerable<ILiquidValue> Eval(ITemplateContext templateContext);
     }
 
     public class StringValueIterableCreator : IIterableCreator
@@ -25,13 +25,13 @@ namespace Liquid.NET.Expressions
             _liquidString = liquidString;
         }
 
-        public IEnumerable<IExpressionConstant> Eval(ITemplateContext templateContext)
+        public IEnumerable<ILiquidValue> Eval(ITemplateContext templateContext)
         {
 //            return _liquidString.StringVal
 //                .ToCharArray()
 //                .Select(x => new LiquidString("" + x));
             // In ruby liquid, it will not iterate through a string's characters---it will treat it as an array of one string.
-            return new List<IExpressionConstant>{_liquidString};
+            return new List<ILiquidValue>{_liquidString};
         }
     }
 
@@ -44,19 +44,19 @@ namespace Liquid.NET.Expressions
             _liquidCollectionExpression = liquidCollectionExpression;
         }
 
-        public IEnumerable<IExpressionConstant> Eval(ITemplateContext templateContext)
+        public IEnumerable<ILiquidValue> Eval(ITemplateContext templateContext)
         {
             var expressionConstant = LiquidExpressionEvaluator.Eval(_liquidCollectionExpression, templateContext);
 
             if (expressionConstant.IsError || !expressionConstant.SuccessResult.HasValue)
             {
-                return new List<IExpressionConstant>();
+                return new List<ILiquidValue>();
             }
-            var castResult = ValueCaster.Cast<IExpressionConstant, LiquidCollection>(expressionConstant.SuccessResult.Value);
+            var castResult = ValueCaster.Cast<ILiquidValue, LiquidCollection>(expressionConstant.SuccessResult.Value);
             if (castResult.IsError)
             {
                 // ??
-                return new List<IExpressionConstant>();
+                return new List<ILiquidValue>();
             }
             else
             {
@@ -88,7 +88,7 @@ namespace Liquid.NET.Expressions
             set { _endExpression = value; }
         }
 
-        public IEnumerable<IExpressionConstant> Eval(ITemplateContext templateContext)
+        public IEnumerable<ILiquidValue> Eval(ITemplateContext templateContext)
         {
             if (_startExpression == null)
             {
@@ -120,7 +120,7 @@ namespace Liquid.NET.Expressions
             if (valueAsNumeric == null)
             {
                 var castedValue =
-                    ValueCaster.Cast<IExpressionConstant, LiquidNumeric>(liquidExpressionResult.SuccessResult.Value);
+                    ValueCaster.Cast<ILiquidValue, LiquidNumeric>(liquidExpressionResult.SuccessResult.Value);
 
                 return liquidExpressionResult.IsSuccess && liquidExpressionResult.SuccessResult.HasValue
                     ? castedValue.SuccessValue<LiquidNumeric>()

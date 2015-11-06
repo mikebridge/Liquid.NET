@@ -17,7 +17,7 @@ namespace Liquid.NET.Tests.Filters
         public void It_Should_Instantiate_A_Filter()
         {
             // Act
-            var filterResult = FilterFactory.InstantiateFilter("upcase", typeof(UpCaseFilter), new List<Option<IExpressionConstant>>());
+            var filterResult = FilterFactory.InstantiateFilter("upcase", typeof(UpCaseFilter), new List<Option<ILiquidValue>>());
         
             // Assert
             Assert.That(filterResult.Value, Is.TypeOf(typeof (UpCaseFilter)));
@@ -28,7 +28,7 @@ namespace Liquid.NET.Tests.Filters
         public void It_Should_Return_An_Error_If_Type_Isnt_A_Filter()
         {
             // Act
-            var result = FilterFactory.InstantiateFilter("string", typeof(String), new List<Option<IExpressionConstant>>());
+            var result = FilterFactory.InstantiateFilter("string", typeof(String), new List<Option<ILiquidValue>>());
             Assert.That(result.IsFailure, Is.True);
         }
 
@@ -36,7 +36,7 @@ namespace Liquid.NET.Tests.Filters
         public void It_Should_Convert_A_Symbol_With_Args_To_A_Filter()
         {
             // Arrange
-            var filter = FilterFactory.InstantiateFilter("remove", typeof(RemoveFilter), new List<Option<IExpressionConstant>>() { new LiquidString("test") });
+            var filter = FilterFactory.InstantiateFilter("remove", typeof(RemoveFilter), new List<Option<ILiquidValue>>() { new LiquidString("test") });
 
             // Act
 
@@ -48,7 +48,7 @@ namespace Liquid.NET.Tests.Filters
         public void It_Should_Cast_Numeric_Args_To_A_String()
         {
             // Arrange
-            var filter = FilterFactory.InstantiateFilter("mockfilter", typeof(MockStringToStringFilter), new List<Option<IExpressionConstant>>() { LiquidNumeric.Create(123) });
+            var filter = FilterFactory.InstantiateFilter("mockfilter", typeof(MockStringToStringFilter), new List<Option<ILiquidValue>>() { LiquidNumeric.Create(123) });
 
             // Act
 
@@ -59,7 +59,7 @@ namespace Liquid.NET.Tests.Filters
         public void It_Should_Return_Error_When_Not_Filter_Type()
         {
             // Arrange
-            var filter = FilterFactory.InstantiateFilter("mockfilter", typeof(String), new List<Option<IExpressionConstant>> { LiquidNumeric.Create(123) });
+            var filter = FilterFactory.InstantiateFilter("mockfilter", typeof(String), new List<Option<ILiquidValue>> { LiquidNumeric.Create(123) });
 
             // Assert
             Assert.That(filter.IsFailure, Is.True);
@@ -70,7 +70,7 @@ namespace Liquid.NET.Tests.Filters
         public void It_Should_Return_Error_When_Null_Type()
         {
             // Arrange
-            var filter = FilterFactory.InstantiateFilter("mockfilter", null, new List<Option<IExpressionConstant>> { LiquidNumeric.Create(123) });
+            var filter = FilterFactory.InstantiateFilter("mockfilter", null, new List<Option<ILiquidValue>> { LiquidNumeric.Create(123) });
 
             // Assert
             Assert.That(filter.IsFailure, Is.True);
@@ -80,7 +80,7 @@ namespace Liquid.NET.Tests.Filters
         public void It_Should_Return_Error_When_Multiple_Constructors()
         {
             // Arrange
-            var filter = FilterFactory.InstantiateFilter("mockfilter", typeof(TwoConstructorFilter), new List<Option<IExpressionConstant>> { LiquidNumeric.Create(123) });
+            var filter = FilterFactory.InstantiateFilter("mockfilter", typeof(TwoConstructorFilter), new List<Option<ILiquidValue>> { LiquidNumeric.Create(123) });
 
             // Assert
             Assert.That(filter.IsFailure, Is.True);

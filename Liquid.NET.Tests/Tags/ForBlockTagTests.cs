@@ -176,10 +176,10 @@ namespace Liquid.NET.Tests.Tags
             TemplateContext ctx = new TemplateContext();
             var liquidCollection = new LiquidCollection();
 
-            var numericValues = Enumerable.Range(0, 3).Select(x => (IExpressionConstant) LiquidNumeric.Create(x)).ToList();
+            var numericValues = Enumerable.Range(0, 3).Select(x => (ILiquidValue) LiquidNumeric.Create(x)).ToList();
             foreach (var item in numericValues)
             {
-                liquidCollection.Add(item == null? Option<IExpressionConstant>.None() : Option<IExpressionConstant>.Create(item));
+                liquidCollection.Add(item == null? Option<ILiquidValue>.None() : Option<ILiquidValue>.Create(item));
             }
             //var array1 = Enumerable.Range(0, 3).Select(x => new LiquidCollection(array2);
             var array1 = new LiquidCollection { liquidCollection, liquidCollection, liquidCollection };
@@ -288,7 +288,7 @@ namespace Liquid.NET.Tests.Tags
         {
             
             TemplateContext ctx = new TemplateContext();
-            //ctx.Define("outer", new LiquidCollection(new List<IExpressionConstant> { new LiquidNumeric(1), new LiquidNumeric(1), new LiquidNumeric(1) }));
+            //ctx.Define("outer", new LiquidCollection(new List<ILiquidValue> { new LiquidNumeric(1), new LiquidNumeric(1), new LiquidNumeric(1) }));
             ctx.DefineLocalVariable("outer", DictionaryFactory.CreateArrayFromJson("[[1, 1, 1], [1, 1, 1]]"));
 
             var template = LiquidTemplate.Create("Result :{% for inner in outer %}{% for k in inner %} {{ forloop.parentloop.index }}.{{ forloop.index }}{% endfor %}{% endfor %}");
@@ -521,11 +521,11 @@ namespace Liquid.NET.Tests.Tags
             var items = 
                 Enumerable.Range(1, 100)
                 .Select(LiquidNumeric.Create)
-                .Cast<IExpressionConstant>().ToList();
+                .Cast<ILiquidValue>().ToList();
             foreach (var item in items)
             {
-                //list.Add((Option<IExpressionConstant>)item);
-                list.Add(item == null? Option<IExpressionConstant>.None() : Option<IExpressionConstant>.Create(item));
+                //list.Add((Option<ILiquidValue>)item);
+                list.Add(item == null? Option<ILiquidValue>.None() : Option<ILiquidValue>.Create(item));
             }
 
             ctx.DefineLocalVariable("array", list);

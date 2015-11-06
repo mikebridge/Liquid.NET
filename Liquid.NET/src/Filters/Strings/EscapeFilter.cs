@@ -8,9 +8,9 @@ namespace Liquid.NET.Filters.Strings
     /// https://docs.shopify.com/themes/liquid-documentation/filters/string-filters#escape
     /// </summary>
     // ReSharper disable once ClassNeverInstantiated.Global
-    public class EscapeFilter : FilterExpression<IExpressionConstant, LiquidString>
+    public class EscapeFilter : FilterExpression<ILiquidValue, LiquidString>
     {
-        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, IExpressionConstant liquidExpression)
+        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, ILiquidValue liquidExpression)
         {
             return LiquidExpressionResult.Success(StringUtils.Eval(liquidExpression, WebUtility.HtmlEncode));
         }

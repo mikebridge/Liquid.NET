@@ -5,11 +5,11 @@ namespace Liquid.NET.Constants
 {
     public static class CollectionIndexer
     {
-        public static Option<IExpressionConstant> ValueAt(IList<Option<IExpressionConstant>> array, int key)
+        public static Option<ILiquidValue> ValueAt(IList<Option<ILiquidValue>> array, int key)
         {
             if (key >= array.Count || key < -array.Count)
             {
-                return new None<IExpressionConstant>();
+                return new None<ILiquidValue>();
             }
             key = WrapMod(key, array.Count);
 

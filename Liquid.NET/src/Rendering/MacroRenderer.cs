@@ -14,7 +14,7 @@ namespace Liquid.NET.Rendering
             RenderingVisitor renderingVisitor,
             MacroBlockTag macroBlocktag,
             ITemplateContext templateContext, 
-            IList<Option<IExpressionConstant>> args)
+            IList<Option<ILiquidValue>> args)
         {
             var macroScope = new SymbolTable();
 

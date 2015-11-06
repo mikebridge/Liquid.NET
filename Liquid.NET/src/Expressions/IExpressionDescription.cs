@@ -8,7 +8,7 @@ namespace Liquid.NET.Expressions
     {
         //void Accept(IExpressionDescriptionVisitor expressionDescriptionVisitor);
 
-        LiquidExpressionResult Eval(ITemplateContext symbolTableStack, IEnumerable<Option<IExpressionConstant>> childresults);
+        LiquidExpressionResult Eval(ITemplateContext symbolTableStack, IEnumerable<Option<ILiquidValue>> childresults);
 
     }
 }

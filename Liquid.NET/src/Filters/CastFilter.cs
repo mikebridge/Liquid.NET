@@ -4,8 +4,8 @@ using Liquid.NET.Utils;
 namespace Liquid.NET.Filters
 {
     public class CastFilter<TSource, TResult> : FilterExpression<TSource, TResult>
-        where TSource : IExpressionConstant
-        where TResult : IExpressionConstant
+        where TSource : ILiquidValue
+        where TResult : ILiquidValue
     {
 
         public override LiquidExpressionResult Apply(ITemplateContext ctx, TSource liquidExpression)

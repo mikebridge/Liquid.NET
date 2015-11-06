@@ -35,7 +35,7 @@ namespace Liquid.NET.Tests.Ruby
             String json = "{\"array\": [1,2,3]}";
 
             // Act
-            IList<Tuple<String, IExpressionConstant>> result = DictionaryFactory.CreateStringMapFromJson(json);
+            IList<Tuple<String, ILiquidValue>> result = DictionaryFactory.CreateStringMapFromJson(json);
 
             // Assert
             //Logger.Log(result);

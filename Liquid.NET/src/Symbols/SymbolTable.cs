@@ -14,12 +14,12 @@ namespace Liquid.NET.Symbols
         private readonly FilterRegistry _filterRegistry;
         private readonly Registry<ICustomTagRenderer> _customTagRendererRegistry;
         private readonly Registry<ICustomBlockTagRenderer> _customBlockTagRendererRegistry;
-        private readonly IDictionary<String, IExpressionConstant> _variableDictionary;
+        private readonly IDictionary<String, ILiquidValue> _variableDictionary;
         private readonly IDictionary<String, Object> _localRegistry; // available to tags & filters only
         private readonly IDictionary<String, MacroBlockTag> _macroRegistry;
 
         public SymbolTable(
-            IDictionary<string, IExpressionConstant> variableDictionary = null, 
+            IDictionary<string, ILiquidValue> variableDictionary = null, 
             FilterRegistry filterRegistry = null, 
             Registry<ICustomTagRenderer> customTagRendererRegistry = null,
             Registry<ICustomBlockTagRenderer> customBlockTagRendererRegistry = null,
@@ -27,7 +27,7 @@ namespace Liquid.NET.Symbols
         {
             _customBlockTagRendererRegistry = customBlockTagRendererRegistry ?? new Registry<ICustomBlockTagRenderer>();
             _customTagRendererRegistry = customTagRendererRegistry ?? new Registry<ICustomTagRenderer>();
-            _variableDictionary = variableDictionary ?? new Dictionary<string, IExpressionConstant>();
+            _variableDictionary = variableDictionary ?? new Dictionary<string, ILiquidValue>();
             _localRegistry = localRegistry ?? new Dictionary<string, Object>();
             _filterRegistry = filterRegistry ?? new FilterRegistry();
             _macroRegistry = new Dictionary<string, MacroBlockTag>();
@@ -51,7 +51,7 @@ namespace Liquid.NET.Symbols
             _customBlockTagRendererRegistry.Register<T>(name);
         }
 
-        public void DefineLocalVariable(String key, IExpressionConstant obj)
+        public void DefineLocalVariable(String key, ILiquidValue obj)
         {
 
             if (_variableDictionary.ContainsKey(key))
@@ -66,7 +66,7 @@ namespace Liquid.NET.Symbols
             }
         }
 
-        private void SaveIncludeWhereReDefined(IExpressionConstant obj)
+        private void SaveIncludeWhereReDefined(ILiquidValue obj)
         {
             if (HasLocalRegistryVariableReference(IncludeRenderer.LOCALREGISTRY_FILE_KEY))
             {
@@ -77,7 +77,7 @@ namespace Liquid.NET.Symbols
             }
         }
 
-        private void SaveIncludeWhereDefined(IExpressionConstant obj)
+        private void SaveIncludeWhereDefined(ILiquidValue obj)
         {
             if (HasLocalRegistryVariableReference(IncludeRenderer.LOCALREGISTRY_FILE_KEY))
             {
@@ -174,13 +174,13 @@ namespace Liquid.NET.Symbols
         {
             if (HasVariableReference(key))
             {
-                var expressionConstant = _variableDictionary[key] == null ? new None<IExpressionConstant>() : _variableDictionary[key].ToOption();
+                var expressionConstant = _variableDictionary[key] == null ? new None<ILiquidValue>() : _variableDictionary[key].ToOption();
 
                 return LiquidExpressionResult.Success(expressionConstant);
             }
             else
             {
-                //return LiquidExpressionResult.Success(new None<IExpressionConstant>());
+                //return LiquidExpressionResult.Success(new None<ILiquidValue>());
                 return LiquidExpressionResult.Error(NotFoundError(key));
             }
         }

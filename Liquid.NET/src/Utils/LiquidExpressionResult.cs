@@ -4,13 +4,13 @@ using Liquid.NET.Symbols;
 
 namespace Liquid.NET.Utils
 {
-    public class LiquidExpressionResult: Either<LiquidError, Option<IExpressionConstant>>
+    public class LiquidExpressionResult: Either<LiquidError, Option<ILiquidValue>>
     {
         internal LiquidExpressionResult(LiquidError err) : base(err)
         {
         }
 
-        internal LiquidExpressionResult(Option<IExpressionConstant> success)
+        internal LiquidExpressionResult(Option<ILiquidValue> success)
             : base(success)
         {
         }
@@ -23,7 +23,7 @@ namespace Liquid.NET.Utils
             }
             else
             {
-                return Success(new None<IExpressionConstant>());
+                return Success(new None<ILiquidValue>());
             }
         }
 
@@ -35,7 +35,7 @@ namespace Liquid.NET.Utils
             }
             return this;
         }
-        public LiquidExpressionResult WhenSuccess(Action<Option<IExpressionConstant>> fn)
+        public LiquidExpressionResult WhenSuccess(Action<Option<ILiquidValue>> fn)
         {
             if (IsRight)
             {
@@ -44,19 +44,19 @@ namespace Liquid.NET.Utils
             return this;
         }
 
-        public Option<IExpressionConstant> SuccessResult
+        public Option<ILiquidValue> SuccessResult
         {
             get { return Right; }
         }
 
         public T SuccessValue<T>()
-            where T: IExpressionConstant
+            where T: ILiquidValue
         {
             return (T) Right.Value;
         }
 
         public Option<T> SuccessOption<T>()
-            where T : IExpressionConstant
+            where T : ILiquidValue
         {
             return (Option<T>)((object)Right);
         }
@@ -76,7 +76,7 @@ namespace Liquid.NET.Utils
             return new LiquidExpressionResult(new LiquidError { Message = msg });
         }
 
-        public static LiquidExpressionResult Success(Option<IExpressionConstant> success)
+        public static LiquidExpressionResult Success(Option<ILiquidValue> success)
         {
             return new LiquidExpressionResult(success);
         }
@@ -92,7 +92,7 @@ namespace Liquid.NET.Utils
     {
 
         public static LiquidExpressionResult Bind<T>(this LiquidExpressionResult self, Func<Option<T>, LiquidExpressionResult> f)
-            where T: IExpressionConstant
+            where T: ILiquidValue
         {
             if (f == null) throw new ArgumentNullException("f");
 

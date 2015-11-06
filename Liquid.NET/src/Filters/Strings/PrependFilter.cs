@@ -4,11 +4,11 @@ using Liquid.NET.Utils;
 namespace Liquid.NET.Filters.Strings
 {
     // ReSharper disable once ClassNeverInstantiated.Global
-    public class PrependFilter : FilterExpression<IExpressionConstant, StringValue>
+    public class PrependFilter : FilterExpression<IExpressionConstant, LiquidString>
     {
-        private readonly StringValue _prependedStr;
+        private readonly LiquidString _prependedStr;
 
-        public PrependFilter(StringValue prependedStr)
+        public PrependFilter(LiquidString prependedStr)
         {
             _prependedStr = prependedStr;
         }

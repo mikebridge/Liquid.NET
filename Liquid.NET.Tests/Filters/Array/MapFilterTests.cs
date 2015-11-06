@@ -17,16 +17,16 @@ namespace Liquid.NET.Tests.Filters.Array
             // Arrange
             var array = CreateArray();
             var field = "field1";
-            var mapFilter = new MapFilter(new StringValue(field));
+            var mapFilter = new MapFilter(new LiquidString(field));
 
             // Act
-            var result = mapFilter.Apply(new TemplateContext(), array).SuccessValue<ArrayValue>();
+            var result = mapFilter.Apply(new TemplateContext(), array).SuccessValue<LiquidCollection>();
 
             // Assert
-            var dictionaryValues = array.Select(x => x.Value).Cast<DictionaryValue>();
+            var dictionaryValues = array.Select(x => x.Value).Cast<LiquidHash>();
 
             IEnumerable<String> expected = dictionaryValues.Select(x => x[field].Value.Value.ToString());
-            //var expected = array.ArrValue.Cast<DictionaryValue>().Select(x => x.DictValue[field].Value.ToString());
+            //var expected = array.ArrValue.Cast<LiquidHash>().Select(x => x.DictValue[field].Value.ToString());
             IEnumerable<String> actual = result.Select(x => x.Value.Value.ToString());
             Assert.That(actual, Is.EquivalentTo(expected));
         }
@@ -38,14 +38,14 @@ namespace Liquid.NET.Tests.Filters.Array
             var array = CreateArray();
             var field = "field2";
 
-            var dictionaryValues = array.Select(x => x.Value).Cast<DictionaryValue>().ToList();
+            var dictionaryValues = array.Select(x => x.Value).Cast<LiquidHash>().ToList();
             dictionaryValues[1].Remove(field);
-            //array.ArrValue[1].Value.ValueAs<DictionaryValue>().DictValue.Remove(field);
-            //((DictionaryValue) array.ArrValue[1]).DictValue.Remove(field);
-            var mapFilter = new MapFilter(new StringValue(field));
+            //array.ArrValue[1].Value.ValueAs<LiquidHash>().DictValue.Remove(field);
+            //((LiquidHash) array.ArrValue[1]).DictValue.Remove(field);
+            var mapFilter = new MapFilter(new LiquidString(field));
 
             // Act
-            var result = (mapFilter.Apply(new TemplateContext(), array).SuccessValue<ArrayValue>()).ToList();
+            var result = (mapFilter.Apply(new TemplateContext(), array).SuccessValue<LiquidCollection>()).ToList();
             Assert.That(result.Count(x => !x.HasValue), Is.EqualTo(1));
 
         }
@@ -54,17 +54,17 @@ namespace Liquid.NET.Tests.Filters.Array
         public void It_Should_Return_An_Error_When_Trying_To_Map_A_Non_Dictionary()
         {
             // Arrange
-            var mapFilter = new MapFilter(new StringValue("field1"));
-            var arrayValue = new ArrayValue
+            var mapFilter = new MapFilter(new LiquidString("field1"));
+            var liquidCollection = new LiquidCollection
             {
-                NumericValue.Create(123),
-                new StringValue("Test")
+                LiquidNumeric.Create(123),
+                new LiquidString("Test")
             };
             // Act
-            var result = mapFilter.Apply(new TemplateContext(), arrayValue).SuccessValue<ArrayValue>();
+            var result = mapFilter.Apply(new TemplateContext(), liquidCollection).SuccessValue<LiquidCollection>();
 
             // Assert
-            Assert.That(result.Count, Is.EqualTo(arrayValue.Count));
+            Assert.That(result.Count, Is.EqualTo(liquidCollection.Count));
             Assert.That(result[0].HasValue, Is.False);
             Assert.That(result[1].HasValue, Is.False);
         }
@@ -75,10 +75,10 @@ namespace Liquid.NET.Tests.Filters.Array
             // Arrange
             var dict = DataFixtures.CreateDictionary(1, "Value 1 A", "Value 1 B");
             var field = "field1";
-            var mapFilter = new MapFilter(new StringValue(field));
+            var mapFilter = new MapFilter(new LiquidString(field));
 
             // Act
-            var result = mapFilter.Apply(new TemplateContext(), dict).SuccessValue<StringValue>();
+            var result = mapFilter.Apply(new TemplateContext(), dict).SuccessValue<LiquidString>();
 
             // Assert
             Assert.That(result, Is.EquivalentTo("Value 1 A"));
@@ -125,10 +125,10 @@ namespace Liquid.NET.Tests.Filters.Array
             Assert.That(result, Is.StringContaining("missing is undefined"));
         }
 
-        public ArrayValue CreateArray()
+        public LiquidCollection CreateArray()
         {
             // Arrange
-            return new ArrayValue{
+            return new LiquidCollection{
                 DataFixtures.CreateDictionary(1, "Value 1 A", "Value 1 B"), 
                 DataFixtures.CreateDictionary(2, "Value 2 A", "Value 2 B"), 
                 DataFixtures.CreateDictionary(3, "Value 3 A", "Value 3 B"), 

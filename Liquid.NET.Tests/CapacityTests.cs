@@ -91,20 +91,20 @@ namespace Liquid.NET.Tests
             return "{% for i in (1..10) %}{{ array[i] }}{% endfor %}";
         }
 
-        private ArrayValue CreateArrayValues()
+        private LiquidCollection CreateArrayValues()
         {
-            return new ArrayValue
+            return new LiquidCollection
             {
-                new StringValue("a string"),
-                NumericValue.Create(123),
-                NumericValue.Create(456m),
-                new BooleanValue(false),
-                new StringValue("a string 2"),
-                NumericValue.Create(999999.0m ),
-                NumericValue.Create(456m),
-                new BooleanValue(true),
-                new ArrayValue{NumericValue.Create(1), NumericValue.Create(2), NumericValue.Create(3)},
-                new DictionaryValue{{"1", NumericValue.Create(1)}, {"2", NumericValue.Create(2)}}
+                new LiquidString("a string"),
+                LiquidNumeric.Create(123),
+                LiquidNumeric.Create(456m),
+                new LiquidBoolean(false),
+                new LiquidString("a string 2"),
+                LiquidNumeric.Create(999999.0m ),
+                LiquidNumeric.Create(456m),
+                new LiquidBoolean(true),
+                new LiquidCollection{LiquidNumeric.Create(1), LiquidNumeric.Create(2), LiquidNumeric.Create(3)},
+                new LiquidHash{{"1", LiquidNumeric.Create(1)}, {"2", LiquidNumeric.Create(2)}}
             };
         }
 

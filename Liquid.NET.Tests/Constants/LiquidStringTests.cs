@@ -6,13 +6,13 @@ using NUnit.Framework;
 namespace Liquid.NET.Tests.Constants
 {
     [TestFixture]
-    public class StringValueTests
+    public class LiquidStringTests
     {
         [Test]
         public void It_Should_Store_The_Value()
         {
             // Arrange
-            var stringSymbol = new StringValue("String Test");
+            var stringSymbol = new LiquidString("String Test");
             var result = stringSymbol.Value;
 
             // Assert
@@ -24,7 +24,7 @@ namespace Liquid.NET.Tests.Constants
         public void It_Should_Store_Null_As_Null()
         {
             // Arrange
-            var stringSymbol = new StringValue(null);
+            var stringSymbol = new LiquidString(null);
             var result = stringSymbol.Value;
 
             // Assert
@@ -36,11 +36,11 @@ namespace Liquid.NET.Tests.Constants
         public void It_Should_Eval_A_Null_Value()
         {
             // Arrange
-            var stringSymbol = new StringValue(null);
+            var stringSymbol = new LiquidString(null);
             var result = stringSymbol.Eval(new TemplateContext(), new List<Option<IExpressionConstant>>());
 
             // Assert
-            Assert.That(result.SuccessValue<StringValue>(), Is.EqualTo(stringSymbol));
+            Assert.That(result.SuccessValue<LiquidString>(), Is.EqualTo(stringSymbol));
 
         }
 
@@ -48,10 +48,10 @@ namespace Liquid.NET.Tests.Constants
         public void It_ShouldJ_Join_Two_Values()
         {
             // Arrange
-            var stringSymbol = new StringValue("Hello");
+            var stringSymbol = new LiquidString("Hello");
             
             // Act
-            StringValue result = stringSymbol.Join(new StringValue("World"));
+            LiquidString result = stringSymbol.Join(new LiquidString("World"));
 
             // Assert
             Assert.That(result.StringVal, Is.EqualTo("HelloWorld"));

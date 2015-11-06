@@ -130,9 +130,9 @@ namespace Liquid.NET.Tests
             _result += variableReference.ToString();
         }
 
-        public void Visit(StringValue stringValue)
+        public void Visit(LiquidString liquidString)
         {
-            _result += stringValue.ToString();
+            _result += liquidString.ToString();
         }
 
         public String Result()

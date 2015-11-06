@@ -6,19 +6,19 @@ using Liquid.NET.Utils;
 namespace Liquid.NET.Filters.Strings
 {
     // ReSharper disable once ClassNeverInstantiated.Global
-    public class TruncateWordsFilter : FilterExpression<StringValue, StringValue>
+    public class TruncateWordsFilter : FilterExpression<LiquidString, LiquidString>
     {
-        private NumericValue _length;
-        private readonly StringValue _truncateString;
+        private LiquidNumeric _length;
+        private readonly LiquidString _truncateLiquidString;
 
-        public TruncateWordsFilter(NumericValue length, StringValue truncateString)
+        public TruncateWordsFilter(LiquidNumeric length, LiquidString truncateLiquidString)
         {
             _length = length;
-            _truncateString = truncateString == null || truncateString.Value == null ? new StringValue("...") : truncateString;
+            _truncateLiquidString = truncateLiquidString == null || truncateLiquidString.Value == null ? new LiquidString("...") : truncateLiquidString;
         }
-        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, StringValue liquidStringExpression)
+        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, LiquidString liquidLiquidStringExpression)
         {
-            return LiquidExpressionResult.Success(StringUtils.Eval(liquidStringExpression, TruncateWords));
+            return LiquidExpressionResult.Success(StringUtils.Eval(liquidLiquidStringExpression, TruncateWords));
             
         }
 
@@ -30,7 +30,7 @@ namespace Liquid.NET.Filters.Strings
             }
             if (_length == null)
             {
-                _length = NumericValue.Create(15);
+                _length = LiquidNumeric.Create(15);
             }
             var words = s.Split(new [] {' ', '\t'}, StringSplitOptions.RemoveEmptyEntries);
             if (words.Length <= _length.IntValue)
@@ -38,7 +38,7 @@ namespace Liquid.NET.Filters.Strings
                 return s;
             }
             // this removes rendundant spaces.
-            return String.Join(" ", words.Take(_length.IntValue)) + _truncateString.StringVal;
+            return String.Join(" ", words.Take(_length.IntValue)) + _truncateLiquidString.StringVal;
         }
     }
 }

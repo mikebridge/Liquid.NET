@@ -9,7 +9,7 @@ namespace Liquid.NET.Filters.Strings
     /// https://docs.shopify.com/themes/liquid-documentation/filters/string-filters#handle
     /// </summary>
     // ReSharper disable once ClassNeverInstantiated.Global
-    public class HandleizeFilter : FilterExpression<IExpressionConstant, StringValue>
+    public class HandleizeFilter : FilterExpression<IExpressionConstant, LiquidString>
     {
 
         public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, IExpressionConstant liquidExpression)

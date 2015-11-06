@@ -43,37 +43,37 @@ namespace Liquid.NET.Filters
         {
             throw new NotImplementedException();
         }
-        public virtual LiquidExpressionResult ApplyTo(ITemplateContext ctx, NumericValue val)
+        public virtual LiquidExpressionResult ApplyTo(ITemplateContext ctx, LiquidNumeric val)
         {
             return ApplyTo(ctx, (IExpressionConstant)val);
         }
 
-        public virtual LiquidExpressionResult ApplyTo(ITemplateContext ctx, StringValue val)
+        public virtual LiquidExpressionResult ApplyTo(ITemplateContext ctx, LiquidString val)
         {
             return ApplyTo(ctx, (IExpressionConstant)val);
         }
 
-        public virtual LiquidExpressionResult ApplyTo(ITemplateContext ctx, DictionaryValue val)
+        public virtual LiquidExpressionResult ApplyTo(ITemplateContext ctx, LiquidHash val)
         {
             return ApplyTo(ctx, (IExpressionConstant)val);
         }
-        public virtual LiquidExpressionResult ApplyTo(ITemplateContext ctx, ArrayValue val)
+        public virtual LiquidExpressionResult ApplyTo(ITemplateContext ctx, LiquidCollection val)
         {
             return ApplyTo(ctx, (IExpressionConstant)val);
         }
 
-        public virtual LiquidExpressionResult ApplyTo(ITemplateContext ctx, BooleanValue val)
+        public virtual LiquidExpressionResult ApplyTo(ITemplateContext ctx, LiquidBoolean val)
         {
             return ApplyTo(ctx, (IExpressionConstant) val);
         }
 
-        public virtual LiquidExpressionResult ApplyTo(ITemplateContext ctx, DateValue val)
+        public virtual LiquidExpressionResult ApplyTo(ITemplateContext ctx, LiquidDate val)
         {
             return ApplyTo(ctx, (IExpressionConstant) val);
         }
 
 
-        public virtual LiquidExpressionResult ApplyTo(ITemplateContext ctx, GeneratorValue val)
+        public virtual LiquidExpressionResult ApplyTo(ITemplateContext ctx, LiquidRange val)
         {
             //throw new Exception("Need to figure out how to do this part");
             return ApplyTo(ctx, (IExpressionConstant)val);
@@ -95,37 +95,37 @@ namespace Liquid.NET.Filters
         public virtual LiquidExpressionResult Apply(ITemplateContext ctx, TSource expr)
         {
             //return ApplyTo(ctx, (dynamic)expr);
-            var str = expr as StringValue;
+            var str = expr as LiquidString;
             if (str!=null)
             {
                 return ApplyTo(ctx, str);
             }
-            var num = expr as NumericValue;
+            var num = expr as LiquidNumeric;
             if (num != null)
             {
                 return ApplyTo(ctx, num);
             }
-            var boo = expr as BooleanValue;
+            var boo = expr as LiquidBoolean;
             if (boo != null)
             {
                 return ApplyTo(ctx, boo);
             }
-            var dict = expr as DictionaryValue;
+            var dict = expr as LiquidHash;
             if (dict != null)
             {
                 return ApplyTo(ctx, dict);
             }
-            var arr = expr as ArrayValue;
+            var arr = expr as LiquidCollection;
             if (arr != null)
             {
                 return ApplyTo(ctx, arr);
             }
-            var date = expr as DateValue;
+            var date = expr as LiquidDate;
             if (date != null)
             {
                 return ApplyTo(ctx, date);
             }
-            var gen = expr as GeneratorValue;
+            var gen = expr as LiquidRange;
             if (gen != null)
             {
                 return ApplyTo(ctx, gen);

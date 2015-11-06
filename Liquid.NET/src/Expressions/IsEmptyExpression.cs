@@ -23,9 +23,9 @@ namespace Liquid.NET.Expressions
             }
             if (!list[0].HasValue)
             {
-                return LiquidExpressionResult.Success(new BooleanValue(true)); // nulls are empty.
+                return LiquidExpressionResult.Success(new LiquidBoolean(true)); // nulls are empty.
             }
-            return LiquidExpressionResult.Success(new BooleanValue(EmptyChecker.IsEmpty(list[0].Value)));
+            return LiquidExpressionResult.Success(new LiquidBoolean(EmptyChecker.IsEmpty(list[0].Value)));
         }
         
     }

@@ -8,16 +8,16 @@ using Liquid.NET.Utils;
 namespace Liquid.NET.Constants
 {
 
-    public class ArrayValue : ExpressionConstant, IList<Option<IExpressionConstant>>
+    public class LiquidCollection : LiquidValue, IList<Option<IExpressionConstant>>
     {
         private readonly IList<Option<IExpressionConstant>> _values;
 
-        public ArrayValue()
+        public LiquidCollection()
         {
             _values = new List<Option<IExpressionConstant>>();
         }
 
-        public ArrayValue(IList<Option<IExpressionConstant>> values)
+        public LiquidCollection(IList<Option<IExpressionConstant>> values)
         {
             _values = values;
         }
@@ -42,7 +42,7 @@ namespace Liquid.NET.Constants
 
         public Option<IExpressionConstant> ValueAt(int key)
         {
-            return ArrayIndexer.ValueAt(_values, key);
+            return CollectionIndexer.ValueAt(_values, key);
         }
 
         IEnumerator<Option<IExpressionConstant>> IEnumerable<Option<IExpressionConstant>>.GetEnumerator()
@@ -91,7 +91,7 @@ namespace Liquid.NET.Constants
         {
 
             // The JSON way:
-            //var strs = arrayValue.ArrValue.Select(x => Quote(GetWrappedType(x), RenderAsString(x)));
+            //var strs = liquidCollection.ArrValue.Select(x => Quote(GetWrappedType(x), RenderAsString(x)));
             //return "[ " + String.Join(", ", strs) + " ]"; 
 
             // The Concatenated way:

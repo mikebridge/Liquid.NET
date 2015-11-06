@@ -82,7 +82,7 @@ namespace Liquid.NET
             if (erroringFilternames.Any())
             {
                 //throw new Exception("Missing filters..."); 
-                //return ConstantFactory.CreateError<StringValue>();
+                //return ConstantFactory.CreateError<LiquidString>();
                 return LiquidExpressionResult.Error("Missing filters: " + String.Join(", ", erroringFilternames.Select(x => x.Name)));
             }
 

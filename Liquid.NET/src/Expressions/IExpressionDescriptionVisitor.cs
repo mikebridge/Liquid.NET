@@ -6,13 +6,13 @@ namespace Liquid.NET.Expressions
     {
         void Visit(VariableReference variableReference);
 
-        void Visit(StringValue stringValue);
+        void Visit(LiquidString liquidString);
 
-        void Visit(BooleanValue booleanValue);
+        void Visit(LiquidBoolean liquidBoolean);
 
-        void Visit(NumericValue numericValue);
+        void Visit(LiquidNumeric liquidNumeric);
 
-        void Visit(DateValue dateValue);
+        void Visit(LiquidDate liquidDate);
 
         void Visit(AndExpression expressionDescription);
         

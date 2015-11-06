@@ -239,12 +239,12 @@ namespace Liquid.NET.Tests
             var expressionSymbolTree = ifTagSymbol.LiquidExpressionTree;
             Assert.That(expressionSymbolTree.Data.Expression, Is.TypeOf<AndExpression>());
             Assert.That(expressionSymbolTree.Children.Count, Is.EqualTo(2));
-            Assert.That(expressionSymbolTree[0].Data.Expression, Is.TypeOf<BooleanValue>());
+            Assert.That(expressionSymbolTree[0].Data.Expression, Is.TypeOf<LiquidBoolean>());
             Assert.That(expressionSymbolTree[1].Data.Expression, Is.TypeOf<GroupedExpression>());
             Assert.That(expressionSymbolTree[1].Children.Count, Is.EqualTo(1));
             Assert.That(expressionSymbolTree[1][0].Data.Expression, Is.TypeOf<OrExpression>());
-            Assert.That(expressionSymbolTree[1][0][0].Data.Expression, Is.TypeOf<BooleanValue>());
-            Assert.That(expressionSymbolTree[1][0][1].Data.Expression, Is.TypeOf<BooleanValue>());
+            Assert.That(expressionSymbolTree[1][0][0].Data.Expression, Is.TypeOf<LiquidBoolean>());
+            Assert.That(expressionSymbolTree[1][0][1].Data.Expression, Is.TypeOf<LiquidBoolean>());
             //Assert.That(ifThenElseTag.IfElseClauses[0].LiquidExpression[2].Data, Is.TypeOf<GroupedExpression>());
             
             //Assert.That(liquidExpressions, Is.Not.Null);
@@ -287,7 +287,7 @@ namespace Liquid.NET.Tests
             
             // Act
             String result = template.Render(new TemplateContext()
-                .DefineLocalVariable("v", NumericValue.Create(3))
+                .DefineLocalVariable("v", LiquidNumeric.Create(3))
                 .WithAllFilters());
         
             // Assert

@@ -9,7 +9,7 @@ namespace Liquid.NET.Filters.Strings
     /// https://docs.shopify.com/themes/liquid-documentation/filters/string-filters#newline_to_br
     /// </summary>
     // ReSharper disable once ClassNeverInstantiated.Global
-    public class NewlineToBrFilter : FilterExpression<IExpressionConstant, StringValue>
+    public class NewlineToBrFilter : FilterExpression<IExpressionConstant, LiquidString>
     {
         public const String BR = "<br />\r\n";
 

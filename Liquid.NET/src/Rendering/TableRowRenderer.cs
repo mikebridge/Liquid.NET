@@ -19,15 +19,15 @@ namespace Liquid.NET.Rendering
 
         public void Render(TableRowBlockTag tableRowBlockTag, ITemplateContext templateContext, Action<String> appender)
         {
-            var offset = NumericValue.Create(0);
-            var  limit = NumericValue.Create(50);
-            var cols = NumericValue.Create(5); // TODO: What is the default? https://github.com/Shopify/liquid/blob/master/lib/liquid/tags/table_row.rb
+            var offset = LiquidNumeric.Create(0);
+            var  limit = LiquidNumeric.Create(50);
+            var cols = LiquidNumeric.Create(5); // TODO: What is the default? https://github.com/Shopify/liquid/blob/master/lib/liquid/tags/table_row.rb
             if (tableRowBlockTag.Offset != null)
             {
                 var result = LiquidExpressionEvaluator.Eval(tableRowBlockTag.Offset, templateContext);
                 if (result.IsSuccess)
                 {
-                    offset = result.SuccessValue<NumericValue>();
+                    offset = result.SuccessValue<LiquidNumeric>();
                 }
             }
             if (tableRowBlockTag.Limit != null)
@@ -35,7 +35,7 @@ namespace Liquid.NET.Rendering
                 var result = LiquidExpressionEvaluator.Eval(tableRowBlockTag.Limit, templateContext);
                 if (result.IsSuccess)
                 {
-                    limit = result.SuccessValue<NumericValue>();
+                    limit = result.SuccessValue<LiquidNumeric>();
                 }
             }
             if (tableRowBlockTag.Cols != null)
@@ -43,7 +43,7 @@ namespace Liquid.NET.Rendering
                 var result = LiquidExpressionEvaluator.Eval(tableRowBlockTag.Cols, templateContext);
                 if (result.IsSuccess)
                 {
-                    cols = result.SuccessValue<NumericValue>();
+                    cols = result.SuccessValue<LiquidNumeric>();
                 }
             }
             var localBlockScope = new SymbolTable();
@@ -52,7 +52,7 @@ namespace Liquid.NET.Rendering
             {
                 var iterableFactory = tableRowBlockTag.IterableCreator;
 
-                // TODO: the Eval may result in an ArrayValue with no Array
+                // TODO: the Eval may result in an LiquidCollection with no Array
                 // (i.e. it's undefined).  THe ToList therefore fails....
                 // this should use Bind
                 var iterable = iterableFactory.Eval(templateContext).ToList();
@@ -122,24 +122,24 @@ namespace Liquid.NET.Rendering
             }
         }
 
-        public static DictionaryValue CreateForLoopDescriptor(String name, int iter, int length, int col, int maxcol, int row, SymbolTableStack stack)
+        public static LiquidHash CreateForLoopDescriptor(String name, int iter, int length, int col, int maxcol, int row, SymbolTableStack stack)
         {
-            return new DictionaryValue
+            return new LiquidHash
             {               
-                {"first", new BooleanValue(iter == 0)},
-                {"index", NumericValue.Create(iter + 1)},
-                {"col" , NumericValue.Create(col + 1)},
-                {"row" , NumericValue.Create(row + 1)},
-                {"row0" , NumericValue.Create(row)},
-                {"col0" , NumericValue.Create(col)},
-                {"col_first" , new BooleanValue(col == 0)},
-                {"col_last" , new BooleanValue(col == maxcol)},
-                {"index0", NumericValue.Create(iter)},
-                {"rindex", NumericValue.Create(length - iter)},
-                {"rindex0", NumericValue.Create(length - iter - 1)},
-                {"last", new BooleanValue(length - iter - 1 == 0)},
-                {"length", NumericValue.Create(length) },
-                {"name", new StringValue(name) }
+                {"first", new LiquidBoolean(iter == 0)},
+                {"index", LiquidNumeric.Create(iter + 1)},
+                {"col" , LiquidNumeric.Create(col + 1)},
+                {"row" , LiquidNumeric.Create(row + 1)},
+                {"row0" , LiquidNumeric.Create(row)},
+                {"col0" , LiquidNumeric.Create(col)},
+                {"col_first" , new LiquidBoolean(col == 0)},
+                {"col_last" , new LiquidBoolean(col == maxcol)},
+                {"index0", LiquidNumeric.Create(iter)},
+                {"rindex", LiquidNumeric.Create(length - iter)},
+                {"rindex0", LiquidNumeric.Create(length - iter - 1)},
+                {"last", new LiquidBoolean(length - iter - 1 == 0)},
+                {"length", LiquidNumeric.Create(length) },
+                {"name", new LiquidString(name) }
             };
 
         }

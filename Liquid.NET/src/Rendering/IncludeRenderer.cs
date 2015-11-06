@@ -63,7 +63,7 @@ namespace Liquid.NET.Rendering
                     _renderingVisitor.Errors.Add(forExpressionOption.ErrorResult);
                     return;
                 }
-                if (forExpressionOption.SuccessResult.Value is DictionaryValue) // it seems to render as a single element if it's a dictionary.
+                if (forExpressionOption.SuccessResult.Value is LiquidHash) // it seems to render as a single element if it's a dictionary.
                 {
                     var localBlockScope = new SymbolTable();
                     DefineLocalVariables(templateContext, localBlockScope, includeTag.Definitions);
@@ -75,8 +75,8 @@ namespace Liquid.NET.Rendering
                 }
                 else
                 {
-                    //ArrayValue array = ValueCaster.Cast<IExpressionConstant, ArrayValue>(forExpressionOption.SuccessResult.Value);
-                    var arrayResult = ValueCaster.Cast<IExpressionConstant, ArrayValue>(forExpressionOption.SuccessResult.Value);
+                    //LiquidCollection array = ValueCaster.Cast<IExpressionConstant, LiquidCollection>(forExpressionOption.SuccessResult.Value);
+                    var arrayResult = ValueCaster.Cast<IExpressionConstant, LiquidCollection>(forExpressionOption.SuccessResult.Value);
                     if (arrayResult.IsError)
                     {
                         _renderingVisitor.Errors.Add(arrayResult.ErrorResult);
@@ -88,7 +88,7 @@ namespace Liquid.NET.Rendering
 //                        _renderingVisitor.Errors.Add(new LiquidError {Message = array.ErrorMessage});
 //                        return;
 //                    }
-                    foreach (Option<IExpressionConstant> val in arrayResult.SuccessValue<ArrayValue>())
+                    foreach (Option<IExpressionConstant> val in arrayResult.SuccessValue<LiquidCollection>())
                     {
                         var localBlockScope = new SymbolTable();
                         DefineLocalVariables(templateContext, localBlockScope, includeTag.Definitions);

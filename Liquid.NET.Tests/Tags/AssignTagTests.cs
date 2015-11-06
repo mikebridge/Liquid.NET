@@ -105,7 +105,7 @@ namespace Liquid.NET.Tests.Tags
         public void It_Should_Assign_A_Bool_Value()
         {
             ITemplateContext ctx = new TemplateContext().WithDebuggingFilters();
-            ctx.DefineLocalVariable("show", new BooleanValue(true));
+            ctx.DefineLocalVariable("show", new LiquidBoolean(true));
 
             var template = LiquidTemplate.Create("{% assign show1 = show %}{{ show1 }}");
 
@@ -129,14 +129,14 @@ namespace Liquid.NET.Tests.Tags
         }
 
 
-        private ArrayValue CreateArrayValues()
+        private LiquidCollection CreateArrayValues()
         {
-            return new ArrayValue
+            return new LiquidCollection
             {
-                new StringValue("a string"),
-                NumericValue.Create(123),
-                NumericValue.Create(456m),
-                new BooleanValue(false)
+                new LiquidString("a string"),
+                LiquidNumeric.Create(123),
+                LiquidNumeric.Create(456m),
+                new LiquidBoolean(false)
             };
         }
 

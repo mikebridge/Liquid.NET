@@ -7,24 +7,24 @@ namespace Liquid.NET.Filters.Strings
     /// https://docs.shopify.com/themes/liquid-documentation/filters/string-filters#append
     /// </summary>
     // ReSharper disable once ClassNeverInstantiated.Global
-    public class AppendFilter : FilterExpression<StringValue, StringValue>
+    public class AppendFilter : FilterExpression<LiquidString, LiquidString>
     {
-        private readonly StringValue _strToAppend;
+        private readonly LiquidString _strToAppend;
 
-        public AppendFilter(StringValue strToAppend)
+        public AppendFilter(LiquidString strToAppend)
         {
             _strToAppend = strToAppend;
         }
 
-        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, StringValue liquidExpression)
+        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, LiquidString liquidExpression)
         {
             var strToAppend = _strToAppend == null ? "" : _strToAppend.StringVal;
-            return LiquidExpressionResult.Success(new StringValue(liquidExpression.StringVal + strToAppend));
+            return LiquidExpressionResult.Success(new LiquidString(liquidExpression.StringVal + strToAppend));
         }
 
         public override LiquidExpressionResult ApplyToNil(ITemplateContext ctx)
         {
-            return ApplyTo(ctx, new StringValue(""));
+            return ApplyTo(ctx, new LiquidString(""));
         }
 
     }

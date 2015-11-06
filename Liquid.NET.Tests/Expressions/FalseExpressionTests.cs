@@ -15,7 +15,7 @@ namespace Liquid.NET.Tests.Expressions
             var expr = new FalseExpression();
             var result = expr.Eval(new TemplateContext(), new List<Option<IExpressionConstant>>());
             Assert.That(result.IsSuccess);
-            Assert.That(result.SuccessValue<BooleanValue>().BoolValue, Is.False);
+            Assert.That(result.SuccessValue<LiquidBoolean>().BoolValue, Is.False);
         }
 
     }

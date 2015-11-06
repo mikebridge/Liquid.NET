@@ -5,7 +5,7 @@ using Liquid.NET.Utils;
 namespace Liquid.NET.Filters.Strings
 {
     // ReSharper disable once ClassNeverInstantiated.Global
-    public class StripNewlinesFilter : FilterExpression<IExpressionConstant, StringValue>
+    public class StripNewlinesFilter : FilterExpression<IExpressionConstant, LiquidString>
     {
 
         public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, IExpressionConstant liquidExpression)

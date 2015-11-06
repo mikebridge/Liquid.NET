@@ -16,7 +16,7 @@ namespace Liquid.NET.Expressions
         public override LiquidExpressionResult Eval(ITemplateContext templateContext, IEnumerable<Option<IExpressionConstant>> expressions)
         {
             var exprList = expressions.ToList();
-            return LiquidExpressionResult.Success(new BooleanValue(exprList.Any(x => x.HasValue && x.Value.IsTrue)));
+            return LiquidExpressionResult.Success(new LiquidBoolean(exprList.Any(x => x.HasValue && x.Value.IsTrue)));
         }
     }
 }

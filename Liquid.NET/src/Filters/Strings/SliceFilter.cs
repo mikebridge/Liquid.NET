@@ -15,10 +15,10 @@ namespace Liquid.NET.Filters.Strings
     // ReSharper disable once ClassNeverInstantiated.Global
     public class SliceFilter : FilterExpression<IExpressionConstant, IExpressionConstant>
     {
-        private readonly NumericValue _start;
-        private readonly NumericValue _length;
+        private readonly LiquidNumeric _start;
+        private readonly LiquidNumeric _length;
 
-        public SliceFilter(NumericValue start, NumericValue length)
+        public SliceFilter(LiquidNumeric start, LiquidNumeric length)
         {
             _start = start;
             _length = length;
@@ -29,26 +29,26 @@ namespace Liquid.NET.Filters.Strings
             return LiquidExpressionResult.Error("Can't slice a object of type '"+liquidExpression.LiquidTypeName+"'.  It is not an array or a string.");
         }
 
-        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, ArrayValue liquidArrayExpression)
+        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, LiquidCollection liquidArrayExpression)
         {
             if (_start == null)
             {
                 return LiquidExpressionResult.Error("Please pass a start parameter.");
             }
 
-            return LiquidExpressionResult.Success(new ArrayValue(SliceList(liquidArrayExpression)));
+            return LiquidExpressionResult.Success(new LiquidCollection(SliceList(liquidArrayExpression)));
         }
 
-        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, StringValue stringValue)
+        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, LiquidString liquidString)
         {
-            var list = stringValue.StringVal.ToCharArray().ToList();
+            var list = liquidString.StringVal.ToCharArray().ToList();
 
             if (_start == null)
             {
                 return LiquidExpressionResult.Error("Please pass a start parameter.");
             }
 
-            return LiquidExpressionResult.Success(new StringValue(String.Concat(SliceList(list))));
+            return LiquidExpressionResult.Success(new LiquidString(String.Concat(SliceList(list))));
         }
 
         private IList<T> SliceList<T>(IList<T> list)

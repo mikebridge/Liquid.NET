@@ -28,15 +28,15 @@ namespace Liquid.NET.Tests.Filters
         {
             // Arrange
             TemplateContext ctx = new TemplateContext();
-            var arrayValue = DataFixtures.CreateArrayValue();
-            ctx.DefineLocalVariable("myarray", arrayValue);
+            var liquidCollection = DataFixtures.CreateArrayValue();
+            ctx.DefineLocalVariable("myarray", liquidCollection);
             String tmpl = "{{ myarray | " + LOOKUP + ": "+index+" }}";
 
             // Act
             var result = RenderingHelper.RenderTemplate(tmpl, ctx);
 
             // Assert
-            //var expected = ValueCaster.RenderAsString(arrayValue.ArrValue[3]);
+            //var expected = ValueCaster.RenderAsString(liquidCollection.ArrValue[3]);
             Assert.That(result, Is.EqualTo(expected));          
         }
 
@@ -85,8 +85,8 @@ namespace Liquid.NET.Tests.Filters
         {
             // Arrange
             TemplateContext ctx = new TemplateContext();
-            var arrayValue = DataFixtures.CreateArrayValue();
-            ctx.DefineLocalVariable("myarray", arrayValue);
+            var liquidCollection = DataFixtures.CreateArrayValue();
+            ctx.DefineLocalVariable("myarray", liquidCollection);
             String tmpl = "{{ myarray."+property+" }}";
 
             // Act

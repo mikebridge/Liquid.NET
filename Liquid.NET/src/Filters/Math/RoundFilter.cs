@@ -5,12 +5,12 @@ using Liquid.NET.Utils;
 namespace Liquid.NET.Filters.Math
 {
     // ReSharper disable once ClassNeverInstantiated.Global
-    public class RoundFilter : FilterExpression<NumericValue, NumericValue>
+    public class RoundFilter : FilterExpression<LiquidNumeric, LiquidNumeric>
     {
         // ReSharper disable once RedundantDefaultMemberInitializer
         readonly int _decimalPlaces = 0;
 
-        public RoundFilter(NumericValue val)
+        public RoundFilter(LiquidNumeric val)
         {
             if (val != null && val.IntValue > 0)
             {
@@ -18,15 +18,15 @@ namespace Liquid.NET.Filters.Math
             }
         }
 
-        public override LiquidExpressionResult Apply(ITemplateContext ctx, NumericValue val)
+        public override LiquidExpressionResult Apply(ITemplateContext ctx, LiquidNumeric val)
         {            
             var round = System.Math.Round(val.DecimalValue, _decimalPlaces, MidpointRounding.AwayFromZero);
-            return LiquidExpressionResult.Success(_decimalPlaces == 0 ? NumericValue.Create((int) round) : NumericValue.Create(round));
+            return LiquidExpressionResult.Success(_decimalPlaces == 0 ? LiquidNumeric.Create((int) round) : LiquidNumeric.Create(round));
         }
 
         public override LiquidExpressionResult ApplyToNil(ITemplateContext ctx)
         {
-            return Apply(ctx, NumericValue.Create(0));
+            return Apply(ctx, LiquidNumeric.Create(0));
         }
     }
 }

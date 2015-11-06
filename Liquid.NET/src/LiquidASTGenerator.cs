@@ -358,7 +358,7 @@ namespace Liquid.NET
 
             if (context.PARAM_REVERSED() != null)
             {
-                forBlock.Reversed = new BooleanValue(true);
+                forBlock.Reversed = new LiquidBoolean(true);
             }
             if (context.for_param_limit() != null)
             {
@@ -560,7 +560,7 @@ namespace Liquid.NET
             {
                 if (obj.BOOLEAN() != null)
                 {
-                    cycleList.Add(CreateObjectSimpleExpressionNode(new BooleanValue(Convert.ToBoolean(obj.GetText()))));
+                    cycleList.Add(CreateObjectSimpleExpressionNode(new LiquidBoolean(Convert.ToBoolean(obj.GetText()))));
                 }
                 if (obj.STRING() != null)
                 {
@@ -586,7 +586,7 @@ namespace Liquid.NET
                 if (obj.NULL() != null)
                 {
                     //throw new Exception("Null not implemented yet");
-                    cycleList.Add(CreateObjectSimpleExpressionNode(new StringValue("")));
+                    cycleList.Add(CreateObjectSimpleExpressionNode(new LiquidString("")));
                 }   
             }
             while (varsToCapture.Count > 0) // eval the queued variable captures.
@@ -604,7 +604,7 @@ namespace Liquid.NET
                 if (context.cycle_group().STRING() != null)
                 {
                     cycleTag.GroupNameExpressionTree =
-                        CreateObjectSimpleExpressionNode(new StringValue(context.cycle_group().STRING().GetText()));
+                        CreateObjectSimpleExpressionNode(new LiquidString(context.cycle_group().STRING().GetText()));
                 }
                 if (context.cycle_group().NUMBER() != null)
                 {
@@ -968,7 +968,7 @@ namespace Liquid.NET
 
             CurrentBuilderContext.IfThenElseBlockStack.Peek()
                 .IfElseClauses.Last()
-                .LiquidExpressionTree = CreateObjectSimpleExpressionNode(new BooleanValue(true));
+                .LiquidExpressionTree = CreateObjectSimpleExpressionNode(new LiquidBoolean(true));
 
         }
 
@@ -1407,9 +1407,9 @@ namespace Liquid.NET
         /// <summary>
         /// TODO: Strip the quotes in the parser/lexer.  Until then, we'll do it here.
         /// </summary>
-        private StringValue GenerateStringSymbol(String text)
+        private LiquidString GenerateStringSymbol(String text)
         {
-            return new StringValue(StripQuotes(text));
+            return new LiquidString(StripQuotes(text));
         }
 
         private static string StripQuotes(String str)
@@ -1420,17 +1420,17 @@ namespace Liquid.NET
 
 
 
-        private static NumericValue CreateIntNumericValueFromString(string intstring)
+        private static LiquidNumeric CreateIntNumericValueFromString(string intstring)
         {
-            return NumericValue.Create(Convert.ToInt32(intstring));
+            return LiquidNumeric.Create(Convert.ToInt32(intstring));
         }
 
         public override void EnterNumberObject(LiquidParser.NumberObjectContext context)
         {
             base.EnterNumberObject(context);
-            NumericValue.Parse(context.GetText())
+            LiquidNumeric.Parse(context.GetText())
                 .WhenError(_ => { throw new Exception("Unable to parse " + context.GetText());  }) // if the lexer is correct this shouldn't occur
-                .WhenSuccess(result => AddExpressionToCurrentExpressionBuilder((NumericValue) result.Value));
+                .WhenSuccess(result => AddExpressionToCurrentExpressionBuilder((LiquidNumeric) result.Value));
         }
 
         public override void ExitNumberObject(LiquidParser.NumberObjectContext context)
@@ -1443,7 +1443,7 @@ namespace Liquid.NET
         public override void EnterBooleanObject(LiquidParser.BooleanObjectContext context)
         {
             base.EnterBooleanObject(context);
-            AddExpressionToCurrentExpressionBuilder(new BooleanValue(Convert.ToBoolean(context.GetText())));
+            AddExpressionToCurrentExpressionBuilder(new LiquidBoolean(Convert.ToBoolean(context.GetText())));
         }
 
         public override void ExitBooleanObject(LiquidParser.BooleanObjectContext context)
@@ -1497,18 +1497,18 @@ namespace Liquid.NET
         public override void EnterNumberFilterArg(LiquidParser.NumberFilterArgContext context)
         {
             base.EnterNumberFilterArg(context);
-            NumericValue.Parse(context.GetText())
+            LiquidNumeric.Parse(context.GetText())
                 .WhenError(_ => { throw new Exception("Unable to parse " + context.GetText()); }) // if the lexer is correct this shouldn't occur
                 .WhenSuccess(
                     result => CurrentBuilderContext.LiquidExpressionBuilder.AddFilterArgToLastExpressionsFilter(
-                        CreateObjectSimpleExpressionNode((NumericValue) result.Value)));
+                        CreateObjectSimpleExpressionNode((LiquidNumeric) result.Value)));
         }
 
         public override void EnterBooleanFilterArg(LiquidParser.BooleanFilterArgContext context)
         {
             base.EnterBooleanFilterArg(context);
             CurrentBuilderContext.LiquidExpressionBuilder.AddFilterArgToLastExpressionsFilter(
-                CreateObjectSimpleExpressionNode(new BooleanValue(Convert.ToBoolean(context.GetText()))));
+                CreateObjectSimpleExpressionNode(new LiquidBoolean(Convert.ToBoolean(context.GetText()))));
         }
 
         public override void EnterVariableFilterArg(LiquidParser.VariableFilterArgContext context)
@@ -1899,13 +1899,13 @@ namespace Liquid.NET
             public void AddIntIndex(int index)
             {
                 Log(Indent() + "# VariableReferenceTreeBuilder.AddIntIndex(" + index+ ")");
-                _current.Value = NumericValue.Create(index);
+                _current.Value = LiquidNumeric.Create(index);
             }
 
             public void AddStringIndex(String index)
             {
                 Log(Indent() + "# VariableReferenceTreeBuilder.AddStringIndex(" + index + ")");
-                _current.Value = new StringValue(index);
+                _current.Value = new LiquidString(index);
 
             }
 

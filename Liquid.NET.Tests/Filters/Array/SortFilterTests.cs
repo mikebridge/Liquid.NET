@@ -14,17 +14,17 @@ namespace Liquid.NET.Tests.Filters.Array
         public void It_Should_Sort_An_Array_By_StringValues()
         {
             // Arrange
-            ArrayValue arrayValue = new ArrayValue{
-                new StringValue("a string"), 
-                NumericValue.Create(123), 
-                NumericValue.Create(456m),
-                new BooleanValue(false)
+            LiquidCollection liquidCollection = new LiquidCollection{
+                new LiquidString("a string"), 
+                LiquidNumeric.Create(123), 
+                LiquidNumeric.Create(456m),
+                new LiquidBoolean(false)
             };
-            var filter = new SortFilter(new StringValue(""));
+            var filter = new SortFilter(new LiquidString(""));
 
             // Act            
-            var result = filter.Apply(new TemplateContext(), arrayValue);
-            var resultStrings = result.SuccessValue<ArrayValue>().Select(ValueCaster.RenderAsString);
+            var result = filter.Apply(new TemplateContext(), liquidCollection);
+            var resultStrings = result.SuccessValue<LiquidCollection>().Select(ValueCaster.RenderAsString);
             
             // Assert
             Assert.That(resultStrings, Is.EqualTo(new List<String>{"123", "456.0", "a string", "false"}));
@@ -36,16 +36,16 @@ namespace Liquid.NET.Tests.Filters.Array
         public void It_Should_Sort_Dictionaries_By_Field()
         {
             // Arrange
-            SortFilter sizeFilter = new SortFilter(new StringValue("field1"));
+            SortFilter sizeFilter = new SortFilter(new LiquidString("field1"));
 
             // Act
             var result = sizeFilter.Apply(new TemplateContext(), CreateObjList());
 
             // Assert
-            Assert.That(IdAt(result.SuccessValue<ArrayValue>(), 0, "field1").Value, Is.EqualTo("Aa"));
-            Assert.That(IdAt(result.SuccessValue<ArrayValue>(), 1, "field1").Value, Is.EqualTo("ab"));
-            Assert.That(IdAt(result.SuccessValue<ArrayValue>(), 2, "field1").Value, Is.EqualTo("b"));
-            Assert.That(IdAt(result.SuccessValue<ArrayValue>(), 3, "field1").Value, Is.EqualTo("Z"));
+            Assert.That(IdAt(result.SuccessValue<LiquidCollection>(), 0, "field1").Value, Is.EqualTo("Aa"));
+            Assert.That(IdAt(result.SuccessValue<LiquidCollection>(), 1, "field1").Value, Is.EqualTo("ab"));
+            Assert.That(IdAt(result.SuccessValue<LiquidCollection>(), 2, "field1").Value, Is.EqualTo("b"));
+            Assert.That(IdAt(result.SuccessValue<LiquidCollection>(), 3, "field1").Value, Is.EqualTo("Z"));
         }
 
         [Test]
@@ -91,9 +91,9 @@ namespace Liquid.NET.Tests.Filters.Array
         }
 
 
-        private ArrayValue CreateObjList()
+        private LiquidCollection CreateObjList()
         {
-            return new ArrayValue
+            return new LiquidCollection
             {
                 DataFixtures.CreateDictionary(1, "Aa", "Value 1 B"), 
                 DataFixtures.CreateDictionary(2, "Z", "Value 2 B"), 
@@ -102,9 +102,9 @@ namespace Liquid.NET.Tests.Filters.Array
             };
         }
 
-        private static IExpressionConstant IdAt(ArrayValue result, int index, String field)
+        private static IExpressionConstant IdAt(LiquidCollection result, int index, String field)
         {
-            return ((DictionaryValue)result[index].Value)[field].Value;
+            return ((LiquidHash)result[index].Value)[field].Value;
         }
     }
 }

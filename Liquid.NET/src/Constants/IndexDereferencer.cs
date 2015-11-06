@@ -19,19 +19,19 @@ namespace Liquid.NET.Constants
             IExpressionConstant value,
             IExpressionConstant indexProperty)
         {
-            var arr = value as ArrayValue;
+            var arr = value as LiquidCollection;
             if (arr != null)
             {
                 return DoLookup(ctx, arr, indexProperty);
             }
 
-            var dict = value as DictionaryValue;
+            var dict = value as LiquidHash;
             if (dict != null)
             {
                 return DoLookup(ctx, dict, indexProperty);
             }
 
-            var str = value as StringValue;
+            var str = value as LiquidString;
             if (str != null)
             {
                 return DoLookup(ctx, str, indexProperty);
@@ -40,9 +40,9 @@ namespace Liquid.NET.Constants
             return LiquidExpressionResult.Error("ERROR : cannot apply an index to a " + value.LiquidTypeName + ".");
         }
 
-        private LiquidExpressionResult DoLookup(ITemplateContext ctx, ArrayValue arrayValue, IExpressionConstant indexProperty)
+        private LiquidExpressionResult DoLookup(ITemplateContext ctx, LiquidCollection liquidCollection, IExpressionConstant indexProperty)
         {
-            bool errorOnEmpty = ctx.Options.ErrorWhenValueMissing && arrayValue.Count == 0;
+            bool errorOnEmpty = ctx.Options.ErrorWhenValueMissing && liquidCollection.Count == 0;
 
                             
 
@@ -62,16 +62,16 @@ namespace Liquid.NET.Constants
                 {
                     return LiquidExpressionResult.Error("cannot dereference empty array");
                 }
-                index = arrayValue.Count - 1;
+                index = liquidCollection.Count - 1;
             }
             else if (propertyNameString.ToLower().Equals("size"))
             {
-                return LiquidExpressionResult.Success(NumericValue.Create(arrayValue.Count));
+                return LiquidExpressionResult.Success(LiquidNumeric.Create(liquidCollection.Count));
             }
             else
             {
                 var success = Int32.TryParse(propertyNameString, out index);
-                //var maybeIndexResult = ValueCaster.Cast<IExpressionConstant, NumericValue>(indexProperty);
+                //var maybeIndexResult = ValueCaster.Cast<IExpressionConstant, LiquidNumeric>(indexProperty);
 
                 if (!success)
                 {
@@ -91,31 +91,31 @@ namespace Liquid.NET.Constants
 //                }
 //                else
 //                {
-//                    index = maybeIndexResult.SuccessValue<NumericValue>().IntValue;
+//                    index = maybeIndexResult.SuccessValue<LiquidNumeric>().IntValue;
 //                }
             }
 
-            if (arrayValue.Count == 0)
+            if (liquidCollection.Count == 0)
             {
                 return errorOnEmpty ? 
                     LiquidExpressionResult.Error("cannot dereference empty array") : 
                     LiquidExpressionResult.Success(new None<IExpressionConstant>());
             }
-            var result = arrayValue.ValueAt(index);
+            var result = liquidCollection.ValueAt(index);
 
             return LiquidExpressionResult.Success(result);
         }
 
-        private LiquidExpressionResult DoLookup(ITemplateContext ctx, DictionaryValue dictionaryValue, IExpressionConstant indexProperty)
+        private LiquidExpressionResult DoLookup(ITemplateContext ctx, LiquidHash liquidHash, IExpressionConstant indexProperty)
         {
 
             String propertyNameString = ValueCaster.RenderAsString(indexProperty);
             if (propertyNameString.ToLower().Equals("size"))
             {
-                return LiquidExpressionResult.Success(NumericValue.Create(dictionaryValue.Keys.Count));
+                return LiquidExpressionResult.Success(LiquidNumeric.Create(liquidHash.Keys.Count));
             }
 
-            var valueAt = dictionaryValue.ValueAt(indexProperty.Value.ToString());
+            var valueAt = liquidHash.ValueAt(indexProperty.Value.ToString());
             if (valueAt.HasValue)
             {
                 return LiquidExpressionResult.Success(valueAt);
@@ -127,10 +127,10 @@ namespace Liquid.NET.Constants
             }
         }
 
-        // TODO: this is inefficient and ugly and duplicates much of ArrayValue
-        private LiquidExpressionResult DoLookup(ITemplateContext ctx, StringValue strValue, IExpressionConstant indexProperty)
+        // TODO: this is inefficient and ugly and duplicates much of LiquidCollection
+        private LiquidExpressionResult DoLookup(ITemplateContext ctx, LiquidString str, IExpressionConstant indexProperty)
         {
-            var strValues = strValue.StringVal.ToCharArray().Select(ch => new StringValue(ch.ToString()).ToOption()).ToList();
+            var strValues = str.StringVal.ToCharArray().Select(ch => new LiquidString(ch.ToString()).ToOption()).ToList();
             String propertyNameString = ValueCaster.RenderAsString(indexProperty);
             int index;
             if (propertyNameString.ToLower().Equals("first"))
@@ -143,18 +143,18 @@ namespace Liquid.NET.Constants
             }
             else if (propertyNameString.ToLower().Equals("size"))
             {
-                return LiquidExpressionResult.Success(NumericValue.Create(strValues.Count));
+                return LiquidExpressionResult.Success(LiquidNumeric.Create(strValues.Count));
             }
             else
             {
-                var maybeIndexResult = ValueCaster.Cast<IExpressionConstant, NumericValue>(indexProperty);
+                var maybeIndexResult = ValueCaster.Cast<IExpressionConstant, LiquidNumeric>(indexProperty);
                 if (maybeIndexResult.IsError || !maybeIndexResult.SuccessResult.HasValue)
                 {
                     return LiquidExpressionResult.Error("invalid array index: " + propertyNameString);
                 }
                 else
                 {
-                    index = maybeIndexResult.SuccessValue<NumericValue>().IntValue;
+                    index = maybeIndexResult.SuccessValue<LiquidNumeric>().IntValue;
                 }
             }
 
@@ -163,7 +163,7 @@ namespace Liquid.NET.Constants
                 //return LiquidExpressionResult.Error("Empty string: " + propertyNameString);
                 return LiquidExpressionResult.Success(new None<IExpressionConstant>()); // not an error in Ruby liquid.
             }
-            return LiquidExpressionResult.Success(ArrayIndexer.ValueAt(strValues, index));
+            return LiquidExpressionResult.Success(CollectionIndexer.ValueAt(strValues, index));
 
         }
 

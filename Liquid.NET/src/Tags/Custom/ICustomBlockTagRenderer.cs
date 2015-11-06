@@ -18,7 +18,7 @@ namespace Liquid.NET.Tags.Custom
     public interface ICustomBlockTagRenderer
     {
 
-        StringValue Render(
+        LiquidString Render(
                     RenderingVisitor renderingVisitor,
                     ITemplateContext templateContext,
                     TreeNode<IASTNode> liquidBlock,

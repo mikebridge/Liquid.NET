@@ -29,16 +29,16 @@ namespace Liquid.NET.Expressions
 
             if (exprList.All(x => !x.HasValue)) // both null
             {
-                return LiquidExpressionResult.Success(new BooleanValue(false));
+                return LiquidExpressionResult.Success(new LiquidBoolean(false));
             }
             if (exprList.Any(x => !x.HasValue)) // one null
             {
-                return LiquidExpressionResult.Success(new BooleanValue(true));
+                return LiquidExpressionResult.Success(new LiquidBoolean(true));
             }
            
             if (exprList[0].GetType() == exprList[1].GetType())
             {
-                return LiquidExpressionResult.Success(new BooleanValue(! exprList[0].Value.Equals(exprList[1].Value)));
+                return LiquidExpressionResult.Success(new LiquidBoolean(! exprList[0].Value.Equals(exprList[1].Value)));
 
             }
 

@@ -295,12 +295,12 @@ namespace Liquid.NET.Tests
                 return result;
             }
 
-            private static String AsString(NumericValue ex)
+            private static String AsString(LiquidNumeric ex)
             {
                 return ex.ToString();
             }
 
-            private static String AsString(StringValue ex)
+            private static String AsString(LiquidString ex)
             {
                 return "\"" + ex + "\"";
             }

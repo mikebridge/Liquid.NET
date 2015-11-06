@@ -13,7 +13,7 @@ namespace Liquid.NET.Tests.Filters.Strings
         {
             // Arrange
             TemplateContext ctx = new TemplateContext();
-            ctx.DefineLocalVariable("input", NumericValue.Create(input));
+            ctx.DefineLocalVariable("input", LiquidNumeric.Create(input));
             var result = RenderingHelper.RenderTemplate("Result : {{ input | pluralize: 'thing', 'things' }}", ctx);
 
             // Assert
@@ -29,7 +29,7 @@ namespace Liquid.NET.Tests.Filters.Strings
         {
             // Arrange
             TemplateContext ctx = new TemplateContext();
-            ctx.DefineLocalVariable("input", NumericValue.Create(input));
+            ctx.DefineLocalVariable("input", LiquidNumeric.Create(input));
             var result = RenderingHelper.RenderTemplate("Result : {{ input | pluralize: 'thing', 'things' }}", ctx);
 
             // Assert
@@ -47,7 +47,7 @@ namespace Liquid.NET.Tests.Filters.Strings
         {
             // Arrange
             TemplateContext ctx = new TemplateContext();
-            ctx.DefineLocalVariable("input", new StringValue(input));
+            ctx.DefineLocalVariable("input", new LiquidString(input));
             var result = RenderingHelper.RenderTemplate("Result : {{ input | pluralize: 'thing', 'things' }}", ctx);
 
             // Assert
@@ -60,7 +60,7 @@ namespace Liquid.NET.Tests.Filters.Strings
         {
             // Arrange
             TemplateContext ctx = new TemplateContext();
-            ctx.DefineLocalVariable("input", new StringValue("1"));
+            ctx.DefineLocalVariable("input", new LiquidString("1"));
             var result = RenderingHelper.RenderTemplate("Result : {{ input | pluralize }}", ctx);
 
             // Assert
@@ -73,7 +73,7 @@ namespace Liquid.NET.Tests.Filters.Strings
         {
             // Arrange
             TemplateContext ctx = new TemplateContext();
-            ctx.DefineLocalVariable("input", new StringValue("1"));
+            ctx.DefineLocalVariable("input", new LiquidString("1"));
             var result = RenderingHelper.RenderTemplate("Result : {{ input | pluralize: 'thing' }}", ctx);
 
             // Assert

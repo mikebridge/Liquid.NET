@@ -24,9 +24,9 @@ namespace Liquid.NET.Tests.Expressions
             // Act
             var result = expr.Eval(new TemplateContext(), new List<Option<IExpressionConstant>>
             {
-                new BooleanValue(expr1),
-                new BooleanValue(expr2)
-            }).SuccessValue<BooleanValue>().BoolValue;
+                new LiquidBoolean(expr1),
+                new LiquidBoolean(expr2)
+            }).SuccessValue<LiquidBoolean>().BoolValue;
 
             // Assert
             Assert.That(result, Is.EqualTo(expected));
@@ -44,9 +44,9 @@ namespace Liquid.NET.Tests.Expressions
             // ReSharper disable once UnusedVariable
             var result = expr.Eval(new TemplateContext(), new List<Option<IExpressionConstant>>
             {
-                new BooleanValue(true),
-                new BooleanValue(false),
-                new BooleanValue(false)
+                new LiquidBoolean(true),
+                new LiquidBoolean(false),
+                new LiquidBoolean(false)
             });
         }
 

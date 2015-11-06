@@ -21,9 +21,9 @@ namespace Liquid.NET.Tests.Ruby
 
             // Assert
             //Logger.Log(result.ToString());
-            Assert.That(result, Is.TypeOf<ArrayValue>());
+            Assert.That(result, Is.TypeOf<LiquidCollection>());
             
-            Assert.That(((ArrayValue) result).Select(x => x.Value.Value), Is.EquivalentTo(new List<int> {1,2,3}));            
+            Assert.That(((LiquidCollection) result).Select(x => x.Value.Value), Is.EquivalentTo(new List<int> {1,2,3}));            
 
 
         }
@@ -42,8 +42,8 @@ namespace Liquid.NET.Tests.Ruby
             
 
             Assert.That(result[0].Item1, Is.EqualTo("array"));
-            Assert.That(result[0].Item2, Is.TypeOf<ArrayValue>());
-            var array = (ArrayValue)result[0].Item2;
+            Assert.That(result[0].Item2, Is.TypeOf<LiquidCollection>());
+            var array = (LiquidCollection)result[0].Item2;
             Assert.That(array.Select(x => x.Value.Value), Is.EquivalentTo(new List<int> {1,2,3}));
 
 

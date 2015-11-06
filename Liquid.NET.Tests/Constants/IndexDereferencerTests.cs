@@ -23,15 +23,15 @@ namespace Liquid.NET.Tests.Constants
         {
             // Arrange
             TemplateContext ctx = new TemplateContext();
-            var arrayValue = DataFixtures.CreateArrayValue();
-            ctx.DefineLocalVariable("myarray", arrayValue);
+            var liquidCollection = DataFixtures.CreateArrayValue();
+            ctx.DefineLocalVariable("myarray", liquidCollection);
             String tmpl = "{{ myarray["+index+"] }}";
 
             // Act
             var result = RenderingHelper.RenderTemplate(tmpl, ctx);
 
             // Assert
-            //var expected = ValueCaster.RenderAsString(arrayValue.ArrValue[3]);
+            //var expected = ValueCaster.RenderAsString(liquidCollection.ArrValue[3]);
             Assert.That(result, Is.EqualTo(expected));
         }
 
@@ -82,8 +82,8 @@ namespace Liquid.NET.Tests.Constants
         {
             // Arrange
             TemplateContext ctx = new TemplateContext();
-            var arrayValue = DataFixtures.CreateArrayValue();
-            ctx.DefineLocalVariable("myarray", arrayValue);
+            var liquidCollection = DataFixtures.CreateArrayValue();
+            ctx.DefineLocalVariable("myarray", liquidCollection);
             String tmpl = "{{ myarray." + property + " }}";
 
             // Act
@@ -101,8 +101,8 @@ namespace Liquid.NET.Tests.Constants
         {
             // Arrange
             TemplateContext ctx = new TemplateContext();
-            //var arrayValue = DataFixtures.CreateArrayValue();
-            ctx.DefineLocalVariable("mystr", new StringValue("abcdefg"));
+            //var liquidCollection = DataFixtures.CreateArrayValue();
+            ctx.DefineLocalVariable("mystr", new LiquidString("abcdefg"));
             String tmpl = "{{ mystr." + property + " }}";
 
             // Act
@@ -130,10 +130,10 @@ namespace Liquid.NET.Tests.Constants
             Assert.That(result, Is.EqualTo(dictValue.Count.ToString()));
         }
 
-        public ArrayValue CreateArrayOfDicts()
+        public LiquidCollection CreateArrayOfDicts()
         {
             // Arrange
-            return new ArrayValue{
+            return new LiquidCollection{
                 DataFixtures.CreateDictionary(1, "Value 1 A", "Value 1 B"), 
                 DataFixtures.CreateDictionary(2, "Value 2 A", "Value 2 B"), 
                 DataFixtures.CreateDictionary(3, "Value 3 A", "Value 3 B"), 

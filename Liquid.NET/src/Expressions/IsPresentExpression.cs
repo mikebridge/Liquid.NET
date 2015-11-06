@@ -22,9 +22,9 @@ namespace Liquid.NET.Expressions
             }
             if (!list[0].HasValue)
             {
-                return LiquidExpressionResult.Success(new BooleanValue(false)); // null is not present.
+                return LiquidExpressionResult.Success(new LiquidBoolean(false)); // null is not present.
             }
-            return LiquidExpressionResult.Success(new BooleanValue(!BlankChecker.IsBlank(list[0].Value)));
+            return LiquidExpressionResult.Success(new LiquidBoolean(!BlankChecker.IsBlank(list[0].Value)));
         }
     }
 }

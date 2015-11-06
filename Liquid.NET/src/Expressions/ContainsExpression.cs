@@ -18,21 +18,21 @@ namespace Liquid.NET.Expressions
             }
             if (!exprList[0].HasValue || !exprList[1].HasValue)
             {
-                return LiquidExpressionResult.Success(new BooleanValue(false));
+                return LiquidExpressionResult.Success(new LiquidBoolean(false));
             }
 
             //return Contains((dynamic) exprList[0].Value, exprList[1].Value);
-            var arr = exprList[0].Value as ArrayValue;
+            var arr = exprList[0].Value as LiquidCollection;
             if (arr != null)
             {
                 return Contains(arr, exprList[1].Value);
             }
-            var dict = exprList[0].Value as DictionaryValue;
+            var dict = exprList[0].Value as LiquidHash;
             if (dict != null)
             {
                 return Contains(dict, exprList[1].Value);
             }
-            var str = exprList[0].Value as StringValue;
+            var str = exprList[0].Value as LiquidString;
             if (str != null)
             {
                 return Contains(str, exprList[1].Value);
@@ -47,20 +47,20 @@ namespace Liquid.NET.Expressions
             return LiquidExpressionResult.Error("Unable to use 'contains' on this type."); 
         }
 
-        private LiquidExpressionResult Contains(StringValue stringValue, IExpressionConstant expressionConstant)
+        private LiquidExpressionResult Contains(LiquidString liquidString, IExpressionConstant expressionConstant)
         {
             String s = ValueCaster.RenderAsString(expressionConstant);
-            return LiquidExpressionResult.Success(stringValue.StringVal.Contains(s) ? new BooleanValue(true) : new BooleanValue(false));
+            return LiquidExpressionResult.Success(liquidString.StringVal.Contains(s) ? new LiquidBoolean(true) : new LiquidBoolean(false));
         }
 
-        private LiquidExpressionResult Contains(ArrayValue arrayValue, IExpressionConstant expressionConstant)
+        private LiquidExpressionResult Contains(LiquidCollection liquidCollection, IExpressionConstant expressionConstant)
         {
-            return LiquidExpressionResult.Success(new BooleanValue(arrayValue.Any(IsEqual(expressionConstant))));
+            return LiquidExpressionResult.Success(new LiquidBoolean(liquidCollection.Any(IsEqual(expressionConstant))));
         }
 
-        private LiquidExpressionResult Contains(DictionaryValue dictValue, IExpressionConstant expressionConstant)
+        private LiquidExpressionResult Contains(LiquidHash dictValue, IExpressionConstant expressionConstant)
         {
-            return LiquidExpressionResult.Success(new BooleanValue(dictValue.Keys.Any(x => x.Equals(expressionConstant.Value))));
+            return LiquidExpressionResult.Success(new LiquidBoolean(dictValue.Keys.Any(x => x.Equals(expressionConstant.Value))));
         }
 
         private static Func<Option<IExpressionConstant>, bool> IsEqual(IExpressionConstant expressionConstant)

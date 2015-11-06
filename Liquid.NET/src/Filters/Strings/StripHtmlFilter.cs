@@ -8,13 +8,13 @@ using Liquid.NET.Utils;
 namespace Liquid.NET.Filters.Strings
 {
     // ReSharper disable once ClassNeverInstantiated.Global
-    public class StripHtmlFilter : FilterExpression<StringValue, StringValue>
+    public class StripHtmlFilter : FilterExpression<LiquidString, LiquidString>
     {
 
-        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, StringValue liquidStringExpression)
+        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, LiquidString liquidLiquidStringExpression)
         {
             //input.to_s.gsub(/<script.*?<\/script>/m, empty).gsub(/<!--.*?-->/m, empty).gsub(/<style.*?<\/style>/m, empty).gsub(/<.*?>/m, empty)
-            return LiquidExpressionResult.Success(StringUtils.Eval(liquidStringExpression, UnHtml));
+            return LiquidExpressionResult.Success(StringUtils.Eval(liquidLiquidStringExpression, UnHtml));
         }
 
 

@@ -5,12 +5,12 @@ using System.Linq;
 
 namespace Liquid.NET.Constants
 {
-    public class GeneratorValue : ExpressionConstant, IEnumerable<ExpressionConstant>
+    public class LiquidRange : LiquidValue, IEnumerable<LiquidValue>
     {
-        private readonly NumericValue _start;
-        private readonly NumericValue _end;
+        private readonly LiquidNumeric _start;
+        private readonly LiquidNumeric _end;
 
-        public GeneratorValue(NumericValue start, NumericValue end)
+        public LiquidRange(LiquidNumeric start, LiquidNumeric end)
         {
             _start = start;
             _end = end;
@@ -39,7 +39,7 @@ namespace Liquid.NET.Constants
             }
         }
 
-        public IEnumerator<ExpressionConstant> GetEnumerator()
+        public IEnumerator<LiquidValue> GetEnumerator()
         {
             var start = _start.IntValue;
             var end = _end.IntValue;
@@ -50,11 +50,11 @@ namespace Liquid.NET.Constants
 
         }
 
-        private IEnumerable<NumericValue> CreateEnumerable(int start, int end)
+        private IEnumerable<LiquidNumeric> CreateEnumerable(int start, int end)
         {
             var length = end - start + 1;
             return Enumerable.Range(start, length)
-                .Select(NumericValue.Create);
+                .Select(LiquidNumeric.Create);
         }
 
         IEnumerator IEnumerable.GetEnumerator()

@@ -6,19 +6,19 @@ using Liquid.NET.Utils;
 namespace Liquid.NET.Filters.Strings
 {
     // ReSharper disable once ClassNeverInstantiated.Global
-    public class SplitFilter : FilterExpression<StringValue, ArrayValue>
+    public class SplitFilter : FilterExpression<LiquidString, LiquidCollection>
     {
-        private readonly StringValue _delimiter;
+        private readonly LiquidString _delimiter;
 
-        public SplitFilter(StringValue delimiter)
+        public SplitFilter(LiquidString delimiter)
         {
             _delimiter = delimiter;
         }
 
-        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, StringValue liquidStringExpression)
+        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, LiquidString liquidLiquidStringExpression)
         {
-            var strings = liquidStringExpression.StringVal.Split(new[] { _delimiter.StringVal }, StringSplitOptions.RemoveEmptyEntries);
-            return LiquidExpressionResult.Success(new ArrayValue(strings.Select(s => new StringValue(s).ToOption()).ToList()));
+            var strings = liquidLiquidStringExpression.StringVal.Split(new[] { _delimiter.StringVal }, StringSplitOptions.RemoveEmptyEntries);
+            return LiquidExpressionResult.Success(new LiquidCollection(strings.Select(s => new LiquidString(s).ToOption()).ToList()));
         }
 
     }

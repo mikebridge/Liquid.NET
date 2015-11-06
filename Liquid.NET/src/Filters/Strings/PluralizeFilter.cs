@@ -8,35 +8,35 @@ namespace Liquid.NET.Filters.Strings
     /// https://docs.shopify.com/themes/liquid-documentation/filters/string-filters#pluralize
     /// </summary>
     // ReSharper disable once ClassNeverInstantiated.Global
-    public class PluralizeFilter : FilterExpression<NumericValue, StringValue>
+    public class PluralizeFilter : FilterExpression<LiquidNumeric, LiquidString>
     {
-        private readonly StringValue _single;
-        private StringValue _plural;
+        private readonly LiquidString _single;
+        private LiquidString _plural;
 
-        public PluralizeFilter(StringValue single, StringValue plural)
+        public PluralizeFilter(LiquidString single, LiquidString plural)
         {
             _single = single;
             _plural = plural;
         }
 
-        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, NumericValue numericValue)
+        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, LiquidNumeric liquidNumeric)
         {
-            String numericString = ValueCaster.RenderAsString((IExpressionConstant) numericValue);
+            String numericString = ValueCaster.RenderAsString((IExpressionConstant) liquidNumeric);
             if (_single == null && _plural == null)
             {
-                return LiquidExpressionResult.Success(new StringValue(numericString));
+                return LiquidExpressionResult.Success(new LiquidString(numericString));
             }
             if (_plural == null)
             {
-                _plural = new StringValue("");
+                _plural = new LiquidString("");
             }
-            var str = new StringValue(numericString+" ");
-            return LiquidExpressionResult.Success(str.Join(numericValue.DecimalValue == 1 ? _single : _plural));
+            var str = new LiquidString(numericString+" ");
+            return LiquidExpressionResult.Success(str.Join(liquidNumeric.DecimalValue == 1 ? _single : _plural));
         }
 
         public override LiquidExpressionResult ApplyToNil(ITemplateContext ctx)
         {
-            return ApplyTo(ctx, NumericValue.Create(0));
+            return ApplyTo(ctx, LiquidNumeric.Create(0));
         }
     }
 }

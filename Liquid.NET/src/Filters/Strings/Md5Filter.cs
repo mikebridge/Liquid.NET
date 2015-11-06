@@ -8,7 +8,7 @@ using Liquid.NET.Utils;
 namespace Liquid.NET.Filters.Strings
 {
     // ReSharper disable once ClassNeverInstantiated.Global
-    public class Md5Filter : FilterExpression<IExpressionConstant, StringValue>
+    public class Md5Filter : FilterExpression<IExpressionConstant, LiquidString>
     {
 
         public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, IExpressionConstant liquidExpression)

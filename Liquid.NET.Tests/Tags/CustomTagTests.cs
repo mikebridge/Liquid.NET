@@ -44,10 +44,10 @@ namespace Liquid.NET.Tests.Tags
                 get { return new List<string>(); }
             }
 
-            public StringValue Render(ITemplateContext templateContext, IList<Option<IExpressionConstant>> args)
+            public LiquidString Render(ITemplateContext templateContext, IList<Option<IExpressionConstant>> args)
             {
                 var argsAsString = String.Join(", ", args.Select(x => x.Value.LiquidTypeName+":"+ValueCaster.RenderAsString(x)));
-                return new StringValue("I heard " + argsAsString);
+                return new LiquidString("I heard " + argsAsString);
             }
         }
 

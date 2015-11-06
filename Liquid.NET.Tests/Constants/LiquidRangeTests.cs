@@ -6,7 +6,7 @@ using NUnit.Framework;
 namespace Liquid.NET.Tests.Constants
 {
     [TestFixture]
-    public class GeneratorValueTests
+    public class LiquidRangeTests
     {
         [Test]
         [TestCase(3, 7, new []{3,4,5,6,7})]
@@ -15,7 +15,7 @@ namespace Liquid.NET.Tests.Constants
         public void It_Should_Generate_Some_Values(int start, int end, int[] expected )
         {
             // Arrange
-            var generatorValue = new GeneratorValue(NumericValue.Create(start), NumericValue.Create(end));
+            var generatorValue = new LiquidRange(LiquidNumeric.Create(start), LiquidNumeric.Create(end));
 
             // Act
             var result = generatorValue.AsEnumerable();
@@ -29,7 +29,7 @@ namespace Liquid.NET.Tests.Constants
         public void It_Should_Generate_Some_Values_Descending()
         {
             // Arrange
-            var generatorValue = new GeneratorValue(NumericValue.Create(5), NumericValue.Create(2));
+            var generatorValue = new LiquidRange(LiquidNumeric.Create(5), LiquidNumeric.Create(2));
 
             // Act
             var result = generatorValue.AsEnumerable();
@@ -43,7 +43,7 @@ namespace Liquid.NET.Tests.Constants
         public void It_Should_Determine_The_Length_Of_a_Generator()
         {
             // Arrange
-            var generatorValue = new GeneratorValue(NumericValue.Create(2), NumericValue.Create(5));
+            var generatorValue = new LiquidRange(LiquidNumeric.Create(2), LiquidNumeric.Create(5));
 
             // Assert
             Assert.That(generatorValue.Length, Is.EqualTo(4));
@@ -54,7 +54,7 @@ namespace Liquid.NET.Tests.Constants
         public void It_Should_Determine_The_Length_Of_a_Descending_Generator()
         {
             // Arrange
-            var generatorValue = new GeneratorValue(NumericValue.Create(5), NumericValue.Create(2));
+            var generatorValue = new LiquidRange(LiquidNumeric.Create(5), LiquidNumeric.Create(2));
             
             // Assert
             Assert.That(generatorValue.Length, Is.EqualTo(4));

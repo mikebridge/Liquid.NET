@@ -19,7 +19,7 @@ namespace Liquid.NET.Expressions
             {
                 return LiquidExpressionResult.Error("\"Not\" is a unary expression but received " + exprList.Count + " arguments.");
             }
-            return LiquidExpressionResult.Success(new BooleanValue(!exprList[0].HasValue || !exprList[0].Value.IsTrue));
+            return LiquidExpressionResult.Success(new LiquidBoolean(!exprList[0].HasValue || !exprList[0].Value.IsTrue));
         }
     }
 }

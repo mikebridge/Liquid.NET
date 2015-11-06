@@ -4,16 +4,16 @@ using Liquid.NET.Utils;
 namespace Liquid.NET.Filters.Math
 {
     // ReSharper disable once ClassNeverInstantiated.Global
-    public class MinusFilter : FilterExpression<NumericValue, NumericValue>
+    public class MinusFilter : FilterExpression<LiquidNumeric, LiquidNumeric>
     {
-        private readonly NumericValue _operand;
+        private readonly LiquidNumeric _operand;
 
-        public MinusFilter(NumericValue operand)
+        public MinusFilter(LiquidNumeric operand)
         {
             _operand = operand;
         }
 
-        public override LiquidExpressionResult Apply(ITemplateContext ctx, NumericValue liquidExpression)
+        public override LiquidExpressionResult Apply(ITemplateContext ctx, LiquidNumeric liquidExpression)
         {
             if (_operand == null)
             {
@@ -26,7 +26,7 @@ namespace Liquid.NET.Filters.Math
         public override LiquidExpressionResult ApplyToNil(ITemplateContext ctx)
         {
             var dec = _operand == null ? 0m : _operand.DecimalValue;
-            return MathHelper.GetReturnValue(- dec, NumericValue.Create(0), _operand);
+            return MathHelper.GetReturnValue(- dec, LiquidNumeric.Create(0), _operand);
         }
 
     }

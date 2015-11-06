@@ -10,7 +10,7 @@ namespace Liquid.NET.Constants
             string index)
         {
 
-            var dict = expressionConstant as DictionaryValue;
+            var dict = expressionConstant as LiquidHash;
             if (dict == null)
             {
                 return LiquidExpressionResult.ErrorOrNone(ctx, index);

@@ -26,7 +26,7 @@ namespace Liquid.NET.Expressions
             var list = expressions.ToList();
             if (!list.Any())
             {
-                return LiquidExpressionResult.Success(new BooleanValue(true));
+                return LiquidExpressionResult.Success(new LiquidBoolean(true));
             }
             if (list.Count != 1)
             {
@@ -35,9 +35,9 @@ namespace Liquid.NET.Expressions
            
             if (!list[0].HasValue)
             {
-                return LiquidExpressionResult.Success(new BooleanValue(true)); // null is blank.
+                return LiquidExpressionResult.Success(new LiquidBoolean(true)); // null is blank.
             }
-            return LiquidExpressionResult.Success(new BooleanValue(BlankChecker.IsBlank(list[0].Value)));
+            return LiquidExpressionResult.Success(new LiquidBoolean(BlankChecker.IsBlank(list[0].Value)));
         }
 
          

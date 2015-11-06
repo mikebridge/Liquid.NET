@@ -7,11 +7,11 @@ using Liquid.NET.Utils;
 
 namespace Liquid.NET.Constants
 {
-    public class DictionaryValue : ExpressionConstant, IDictionary<String,Option<IExpressionConstant>>
+    public class LiquidHash : LiquidValue, IDictionary<String,Option<IExpressionConstant>>
     {
         private readonly IDictionary<String, Option<IExpressionConstant>> _value;
 
-        public DictionaryValue()
+        public LiquidHash()
         {
             _value = new Dictionary<String, Option<IExpressionConstant>>();
         }
@@ -143,7 +143,7 @@ namespace Liquid.NET.Constants
         {
             Type wrappedType = GetWrappedType(expressionConstant);
             String exprConstantAsString = expressionConstant.HasValue ? expressionConstant.Value.ToString() : "null";
-            return Quote(typeof(StringValue), key) + " : " + Quote(wrappedType, exprConstantAsString);
+            return Quote(typeof(LiquidString), key) + " : " + Quote(wrappedType, exprConstantAsString);
         }
 
         private static Type GetWrappedType<T>(Option<T> expressionConstant)
@@ -166,7 +166,7 @@ namespace Liquid.NET.Constants
 
         private static bool TypeNeedsQuotes(Type origType)
         {
-            return typeof (StringValue).IsAssignableFrom(origType) || typeof (DateValue).IsAssignableFrom(origType);
+            return typeof (LiquidString).IsAssignableFrom(origType) || typeof (LiquidDate).IsAssignableFrom(origType);
         }
     }
 }

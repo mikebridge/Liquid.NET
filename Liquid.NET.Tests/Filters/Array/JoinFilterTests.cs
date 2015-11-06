@@ -12,16 +12,16 @@ namespace Liquid.NET.Tests.Filters.Array
         public void It_Should_Join_An_Array_With_A_String()
         {
             // Arrange
-            ArrayValue arrayValue = new ArrayValue {
-                new StringValue("a string"), 
-                NumericValue.Create(123), 
-                NumericValue.Create(456m),
-                new BooleanValue(false)
+            LiquidCollection liquidCollection = new LiquidCollection {
+                new LiquidString("a string"), 
+                LiquidNumeric.Create(123), 
+                LiquidNumeric.Create(456m),
+                new LiquidBoolean(false)
             };
-            var filter = new JoinFilter(new StringValue(", "));
+            var filter = new JoinFilter(new LiquidString(", "));
 
             // Act
-            var result = filter.Apply(new TemplateContext(), arrayValue).SuccessValue<StringValue>();
+            var result = filter.Apply(new TemplateContext(), liquidCollection).SuccessValue<LiquidString>();
             //Logger.Log(result.ToString());
 
             // Assert
@@ -34,10 +34,10 @@ namespace Liquid.NET.Tests.Filters.Array
         {
             // Arrange
                 
-            var filter = new JoinFilter(new StringValue(", "));
+            var filter = new JoinFilter(new LiquidString(", "));
 
             // Act
-            var result = filter.Apply(new TemplateContext(), new StringValue("Hello World")).SuccessValue<StringValue>();
+            var result = filter.Apply(new TemplateContext(), new LiquidString("Hello World")).SuccessValue<LiquidString>();
 
             // Assert
             Assert.That(result.Value, Is.EqualTo("H, e, l, l, o,  , W, o, r, l, d"));

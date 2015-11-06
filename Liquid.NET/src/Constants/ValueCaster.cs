@@ -24,38 +24,38 @@ namespace Liquid.NET.Constants
                 IExpressionConstant success = (TDest) (object) src;
                 return LiquidExpressionResult.Success(new Some<IExpressionConstant>(success));
             }
-            if (typeof (TDest) == typeof (StringValue))
+            if (typeof (TDest) == typeof (LiquidString))
             {
                 //Console.WriteLine(src);
-                return LiquidExpressionResult.Success(new StringValue(src.ToString()));
+                return LiquidExpressionResult.Success(new LiquidString(src.ToString()));
             }
             //return Convert<TDest>((dynamic)src);
-            var str = src as StringValue;
+            var str = src as LiquidString;
             if (str != null)
             {
                 return Convert<TDest>(str);
             }
-            var num = src as NumericValue;
+            var num = src as LiquidNumeric;
             if (num != null)
             {
                 return Convert<TDest>(num);
             }
-            var boo = src as BooleanValue;
+            var boo = src as LiquidBoolean;
             if (boo != null)
             {
                 return Convert<TDest>(boo);
             }
-            var dict = src as DictionaryValue;
+            var dict = src as LiquidHash;
             if (dict != null)
             {
                 return Convert<TDest>(dict);
             }
-            var arr = src as ArrayValue;
+            var arr = src as LiquidCollection;
             if (arr != null)
             {
                 return Convert<TDest>(arr);
             }
-            var date = src as DateValue;
+            var date = src as LiquidDate;
             if (date != null)
             {
                 return Convert<TDest>(date);
@@ -65,8 +65,8 @@ namespace Liquid.NET.Constants
         }
 
         /// <summary>
-        /// This applies the liquid casting rules, e.g. "null is zero when NumericValue" or 
-        /// "null is empty string when StringValue".
+        /// This applies the liquid casting rules, e.g. "null is zero when LiquidNumeric" or 
+        /// "null is empty string when LiquidString".
         /// </summary>
         /// <typeparam name="TDest"></typeparam>
         /// <returns></returns>
@@ -74,37 +74,37 @@ namespace Liquid.NET.Constants
             where TDest : IExpressionConstant
         {
             var destType = typeof(TDest);
-            if (destType == typeof(NumericValue))
+            if (destType == typeof(LiquidNumeric))
             {
-                return LiquidExpressionResult.Success(new Some<IExpressionConstant>(NumericValue.Create(0)));
+                return LiquidExpressionResult.Success(new Some<IExpressionConstant>(LiquidNumeric.Create(0)));
             }
-            if (destType == typeof(StringValue))
+            if (destType == typeof(LiquidString))
             {
-                return LiquidExpressionResult.Success(new Some<IExpressionConstant>(new StringValue(String.Empty)));
+                return LiquidExpressionResult.Success(new Some<IExpressionConstant>(new LiquidString(String.Empty)));
             }
             return LiquidExpressionResult.Success(new None<IExpressionConstant>());
         }
 
-        private static LiquidExpressionResult Convert<TDest>(NumericValue num)
+        private static LiquidExpressionResult Convert<TDest>(LiquidNumeric num)
             where TDest : IExpressionConstant
         {
             var destType = typeof (TDest);
-            if (destType == typeof (DateValue))
+            if (destType == typeof (LiquidDate))
             {
                 var longVal = num.LongValue;
                 var dateTime = new DateTime(longVal);
-                return LiquidExpressionResult.Success(new DateValue(dateTime));
+                return LiquidExpressionResult.Success(new LiquidDate(dateTime));
             }
 
-            return LiquidExpressionResult.Success(NumericValue.Create(0)); // Liquid seems to convert unknowns to numeric.
+            return LiquidExpressionResult.Success(LiquidNumeric.Create(0)); // Liquid seems to convert unknowns to numeric.
            
         }
 
-        private static LiquidExpressionResult Convert<TDest>(BooleanValue boolean)
+        private static LiquidExpressionResult Convert<TDest>(LiquidBoolean liquidBoolean)
             where TDest : IExpressionConstant
         {
             var destType = typeof (TDest);
-//            if (destType == typeof (BooleanValue))
+//            if (destType == typeof (LiquidBoolean))
 //            {
 //                return LiquidExpressionResult.Success(boolean);
 //            }
@@ -114,20 +114,20 @@ namespace Liquid.NET.Constants
         }
 
         // ReSharper disable once UnusedParameter.Local
-        private static LiquidExpressionResult Convert<TDest>(DateValue date)
+        private static LiquidExpressionResult Convert<TDest>(LiquidDate liquidDate)
              where TDest : IExpressionConstant
         {
             var destType = typeof(TDest);
-            if (destType == typeof(NumericValue))
+            if (destType == typeof(LiquidNumeric))
             {
-                NumericValue ticks;
-                if (date == null || !date.DateTimeValue.HasValue)
+                LiquidNumeric ticks;
+                if (liquidDate == null || !liquidDate.DateTimeValue.HasValue)
                 {
-                    ticks = NumericValue.Create(0L);
+                    ticks = LiquidNumeric.Create(0L);
                 }
                 else
                 {
-                    ticks = NumericValue.Create(date.DateTimeValue.Value.Ticks);
+                    ticks = LiquidNumeric.Create(liquidDate.DateTimeValue.Value.Ticks);
                 }
                 return LiquidExpressionResult.Success(ticks);
             }
@@ -136,20 +136,20 @@ namespace Liquid.NET.Constants
 
         }
 
-        private static LiquidExpressionResult Convert<TDest>(DictionaryValue dictionaryValue)
+        private static LiquidExpressionResult Convert<TDest>(LiquidHash liquidHash)
            where TDest : IExpressionConstant
         {
             var destType = typeof(TDest);
 
             // So, according to https://github.com/Shopify/liquid/wiki/Liquid-for-Designers, a hash value will be iterated
             // as an array with two indices.
-            if (destType == typeof (ArrayValue))
+            if (destType == typeof (LiquidCollection))
             {
-                var newArray = new ArrayValue();
-                var dictarray = dictionaryValue.Keys.Select(
-                    k => (Option<IExpressionConstant>) new Some<IExpressionConstant>(new ArrayValue {
-                            new Some<IExpressionConstant>(new StringValue(k)),
-                            dictionaryValue[k]
+                var newArray = new LiquidCollection();
+                var dictarray = liquidHash.Keys.Select(
+                    k => (Option<IExpressionConstant>) new Some<IExpressionConstant>(new LiquidCollection {
+                            new Some<IExpressionConstant>(new LiquidString(k)),
+                            liquidHash[k]
                     })).ToList();
                 foreach (var item in dictarray)
                 {
@@ -158,58 +158,58 @@ namespace Liquid.NET.Constants
                 return LiquidExpressionResult.Success(newArray);
             }
             // TODO: Should this return the default value for whatever TDest is requested?
-            return LiquidExpressionResult.Error("Can't convert from a DictionaryValue to " + destType);
+            return LiquidExpressionResult.Error("Can't convert from a LiquidHash to " + destType);
         }
 
         // ReSharper disable once UnusedParameter.Local
-        private static LiquidExpressionResult Convert<TDest>(ArrayValue arrayValue)
+        private static LiquidExpressionResult Convert<TDest>(LiquidCollection liquidCollection)
               where TDest : IExpressionConstant
         {
             //Console.WriteLine("Rendering array");
             var destType = typeof(TDest);
 
             // TODO: Should this return the default value for whatever TDest is requested?
-            return LiquidExpressionResult.Error("Can't convert from an ArrayValue to " + destType);
+            return LiquidExpressionResult.Error("Can't convert from an LiquidCollection to " + destType);
         }
 
         
 
-        private static LiquidExpressionResult Convert<TDest>(StringValue str)
+        private static LiquidExpressionResult Convert<TDest>(LiquidString str)
             where TDest : IExpressionConstant
         {
             var destType = typeof (TDest);
-//            if (destType == typeof (StringValue))
+//            if (destType == typeof (LiquidString))
 //            {
 //                return LiquidExpressionResult.Success(str);
 //            }
 
-            if (destType == typeof (NumericValue))
+            if (destType == typeof (LiquidNumeric))
             {
                 try
                 {
                     var stringVal = str.StringVal;
                     if (stringVal == null)
                     {
-                        return LiquidExpressionResult.Success(NumericValue.Create(0));  // liquid to_numeric seems to convert these to 0.
+                        return LiquidExpressionResult.Success(LiquidNumeric.Create(0));  // liquid to_numeric seems to convert these to 0.
                     }
                     if (stringVal.Contains("."))
                     {
                         var val = ToDecimalCultureInvariant(stringVal);
 
-                        return LiquidExpressionResult.Success(NumericValue.Create(val));
+                        return LiquidExpressionResult.Success(LiquidNumeric.Create(val));
                     }
                     else
                     {
                         try
                         {
                             var val = int.Parse(stringVal);
-                            return LiquidExpressionResult.Success(NumericValue.Create(val));
+                            return LiquidExpressionResult.Success(LiquidNumeric.Create(val));
                         }
                         catch (OverflowException)
                         {
                             var val = ToDecimalCultureInvariant(stringVal);
 
-                            return LiquidExpressionResult.Success(NumericValue.Create(val));
+                            return LiquidExpressionResult.Success(LiquidNumeric.Create(val));
                         }
                     }
                    
@@ -218,16 +218,16 @@ namespace Liquid.NET.Constants
                 catch
                 {
                     // https://github.com/Shopify/liquid/blob/master/lib/liquid/standardfilters.rb
-                    return LiquidExpressionResult.Success(NumericValue.Create(0));  // liquid to_numeric seems to convert these to 0.
+                    return LiquidExpressionResult.Success(LiquidNumeric.Create(0));  // liquid to_numeric seems to convert these to 0.
                 }
             }
 
-            if (destType == typeof (ArrayValue))
+            if (destType == typeof (LiquidCollection))
             {
                 var expressionConstants = new Some<IExpressionConstant>(str);
                 // IN liquid, it doesn't seem to cast a string to an array of chars---it casts to an array of one element.
-                //var expressionConstants = str.StringVal.Select(x => (Option<IExpressionConstant>) new Some<IExpressionConstant>(new StringValue(x.ToString())));
-                return LiquidExpressionResult.Success(new ArrayValue{expressionConstants});
+                //var expressionConstants = str.StringVal.Select(x => (Option<IExpressionConstant>) new Some<IExpressionConstant>(new LiquidString(x.ToString())));
+                return LiquidExpressionResult.Success(new LiquidCollection{expressionConstants});
             }
             return LiquidExpressionResult.Error("Can't convert from string to " + destType);
            
@@ -243,13 +243,13 @@ namespace Liquid.NET.Constants
 //            where TDest : IExpressionConstant
 //        {
 //            var destType = typeof (TDest);
-//            if (destType == typeof (StringValue))
+//            if (destType == typeof (LiquidString))
 //            {
-//                return LiquidExpressionResult.Success(new StringValue(source.ToString()));
+//                return LiquidExpressionResult.Success(new LiquidString(source.ToString()));
 //            }
-//            if (destType == typeof (NumericValue))
+//            if (destType == typeof (LiquidNumeric))
 //            {
-//                return LiquidExpressionResult.Success(NumericValue.Create(0));
+//                return LiquidExpressionResult.Success(LiquidNumeric.Create(0));
 //            }
 //            return LiquidExpressionResult.Error("Can't convert from " + source.GetType() + " to " + destType);
 //

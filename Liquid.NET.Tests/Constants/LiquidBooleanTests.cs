@@ -4,7 +4,7 @@ using NUnit.Framework;
 namespace Liquid.NET.Tests.Constants
 {
     [TestFixture]
-    public class BooleanValueTests
+    public class LiquidBooleanTests
     {
         [Test]
         [TestCase(false)]
@@ -12,7 +12,7 @@ namespace Liquid.NET.Tests.Constants
         public void It_Should_Store_The_Value(bool val)
         {
             // Arrange
-            var booleanSymbol = new BooleanValue(val);
+            var booleanSymbol = new LiquidBoolean(val);
             var result = booleanSymbol.Value;
 
             // Assert

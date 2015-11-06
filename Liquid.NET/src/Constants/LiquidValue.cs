@@ -1,13 +1,12 @@
 ﻿using System.Collections.Generic;
 using Liquid.NET.Expressions;
 using Liquid.NET.Utils;
-using ExpressionResult = Liquid.NET.Utils.Either<Liquid.NET.LiquidError, Liquid.NET.Utils.Option<Liquid.NET.Constants.IExpressionConstant>>;
 
 namespace Liquid.NET.Constants
 {
-    public abstract class ExpressionConstant : ExpressionDescription, IExpressionConstant
+    public abstract class LiquidValue : ExpressionDescription, IExpressionConstant
     {
-        protected ExpressionConstant()
+        protected LiquidValue()
         {
             MetaData = new Dictionary<string, object>();
         }
@@ -43,7 +42,7 @@ namespace Liquid.NET.Constants
 
         public IDictionary<string, object> MetaData { get; private set; }
 
-        public static implicit operator Option<IExpressionConstant>(ExpressionConstant t)
+        public static implicit operator Option<IExpressionConstant>(LiquidValue t)
         {
             if (t == null)
             {
@@ -63,7 +62,7 @@ namespace Liquid.NET.Constants
             }
             else
             {
-                var exprConstant = otherObj as ExpressionConstant;
+                var exprConstant = otherObj as LiquidValue;
                 if (exprConstant != null)
                 {
                     return exprConstant.Value.Equals(Value);

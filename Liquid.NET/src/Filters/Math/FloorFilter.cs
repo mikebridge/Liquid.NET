@@ -4,18 +4,18 @@ using Liquid.NET.Utils;
 namespace Liquid.NET.Filters.Math
 {
     // ReSharper disable once ClassNeverInstantiated.Global
-    public class FloorFilter : FilterExpression<NumericValue, NumericValue>
+    public class FloorFilter : FilterExpression<LiquidNumeric, LiquidNumeric>
     {
 
-        public override LiquidExpressionResult Apply(ITemplateContext ctx, NumericValue val)
+        public override LiquidExpressionResult Apply(ITemplateContext ctx, LiquidNumeric val)
         {
             var floor = (int) System.Math.Floor(val.DecimalValue);
-            return LiquidExpressionResult.Success(NumericValue.Create(floor));
+            return LiquidExpressionResult.Success(LiquidNumeric.Create(floor));
         }
 
         public override LiquidExpressionResult ApplyToNil(ITemplateContext ctx)
         {
-            return LiquidExpressionResult.Success(NumericValue.Create(0));
+            return LiquidExpressionResult.Success(LiquidNumeric.Create(0));
         }
     }
 }

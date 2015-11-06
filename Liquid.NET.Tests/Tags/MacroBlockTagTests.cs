@@ -144,14 +144,14 @@ namespace Liquid.NET.Tests.Tags
 
         }
 
-        private ArrayValue CreateArrayValues()
+        private LiquidCollection CreateArrayValues()
         {
-            return new ArrayValue
+            return new LiquidCollection
             {
-                new StringValue("a string"),
-                NumericValue.Create(123),
-                NumericValue.Create(456m),
-                new BooleanValue(false)
+                new LiquidString("a string"),
+                LiquidNumeric.Create(123),
+                LiquidNumeric.Create(456m),
+                new LiquidBoolean(false)
             };
         }
 

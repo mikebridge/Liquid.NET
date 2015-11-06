@@ -237,7 +237,7 @@ namespace Liquid.NET
             //var hiddenVisitor = new RenderingVisitor(_astRenderer, _templateContext, str => capturedText += str);
             PushTextAccumulator(str => capturedText += str);
             StartWalking(captureBlockTag.RootContentNode);            
-            _templateContext.SymbolTableStack.DefineGlobal(captureBlockTag.VarName, new StringValue(capturedText) );
+            _templateContext.SymbolTableStack.DefineGlobal(captureBlockTag.VarName, new LiquidString(capturedText) );
             PopTextAccumulator();
         }
 
@@ -398,9 +398,9 @@ namespace Liquid.NET
 //            variableReference.Eval(_templateContext, new List<Option<IExpressionConstant>>());
 //        }
 
-        public void Visit(StringValue stringValue)
+        public void Visit(LiquidString liquidString)
         {          
-           AppendTextToCurrentAccumulator(Render(stringValue)); 
+           AppendTextToCurrentAccumulator(Render(liquidString)); 
         }
 
         /// <summary>

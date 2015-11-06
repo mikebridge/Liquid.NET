@@ -22,8 +22,8 @@ namespace Liquid.NET.Tests.Constants
 
             ITemplateContext ctx = new TemplateContext()                              
                 .ErrorWhenValueMissing();
-            //ctx.DefineLocalVariable("e", new ArrayValue(new List<IExpressionConstant>()));
-            ctx.DefineLocalVariable("d", new DictionaryValue());
+            //ctx.DefineLocalVariable("e", new LiquidCollection(new List<IExpressionConstant>()));
+            ctx.DefineLocalVariable("d", new LiquidHash());
            
             // Act
             var result = RenderingHelper.RenderTemplate("Result : {{ "+varname+" }}", ctx);
@@ -42,7 +42,7 @@ namespace Liquid.NET.Tests.Constants
             // Arrange
             ITemplateContext ctx = new TemplateContext()
                 .ErrorWhenValueMissing();
-            ctx.DefineLocalVariable("e", new ArrayValue());
+            ctx.DefineLocalVariable("e", new LiquidCollection());
 
             // Act
             var result = RenderingHelper.RenderTemplate("Result : {{ " + varname + " }}", ctx);
@@ -58,7 +58,7 @@ namespace Liquid.NET.Tests.Constants
             // Arrange
             ITemplateContext ctx = new TemplateContext()
                 .ErrorWhenValueMissing();
-            ctx.DefineLocalVariable("e", new ArrayValue());
+            ctx.DefineLocalVariable("e", new LiquidCollection());
 
             // Act
             var result = RenderingHelper.RenderTemplate("Result : {{ e.x }}", ctx);
@@ -80,8 +80,8 @@ namespace Liquid.NET.Tests.Constants
             // Arrange
             Console.WriteLine(varname);
             TemplateContext ctx = new TemplateContext();
-            ctx.DefineLocalVariable("e", new ArrayValue());
-            ctx.DefineLocalVariable("d", new DictionaryValue());
+            ctx.DefineLocalVariable("e", new LiquidCollection());
+            ctx.DefineLocalVariable("d", new LiquidHash());
 
             // Act
             var result = RenderingHelper.RenderTemplate("Result : {{ " + varname + " }}", ctx);

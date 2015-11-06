@@ -112,7 +112,7 @@ namespace Liquid.NET.Constants
             String propertyNameString = ValueCaster.RenderAsString(indexProperty);
             if (propertyNameString.ToLower().Equals("size"))
             {
-                return LiquidExpressionResult.Success(NumericValue.Create(dictionaryValue.DictValue.Keys.Count));
+                return LiquidExpressionResult.Success(NumericValue.Create(dictionaryValue.Keys.Count));
             }
 
             var valueAt = dictionaryValue.ValueAt(indexProperty.Value.ToString());

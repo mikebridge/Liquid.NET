@@ -52,7 +52,7 @@ namespace Liquid.NET.Constants
 
         private static bool CheckIsEmpty(DictionaryValue val)
         {
-            return !val.DictValue.Any();
+            return !val.Any();
         }
 
 
@@ -105,7 +105,7 @@ namespace Liquid.NET.Constants
 
         private static bool CheckIsBlank(DictionaryValue val)
         {
-            return !val.DictValue.Any();
+            return !val.Any();
         }
 
 

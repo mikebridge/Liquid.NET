@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Runtime.Remoting.Messaging;
 using Liquid.NET.Constants;
 using Liquid.NET.Utils;
 
@@ -12,20 +14,21 @@ namespace Liquid.NET.Filters
         public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, IExpressionConstant expr)
         {
 
-            var metaData = new DictionaryValue(expr.MetaData.ToDictionary(
-                k => k.Key,
-                v => v.Value == null
-                    ? (IExpressionConstant) new StringValue("")
-                    : (IExpressionConstant) new StringValue(v.Value.ToString())));
+            var metaData = new DictionaryValue();
+            foreach (var kvp in expr.MetaData)
+            {
+                metaData.Add(kvp.Key, kvp.Value == null
+                    ? Option<IExpressionConstant>.Create(new StringValue(""))
+                    : Option<IExpressionConstant>.Create(new StringValue(kvp.Value.ToString())));
+            }
 
-            var result = new DictionaryValue(
-                new Dictionary<string, IExpressionConstant>
-                {
-                    {"metadata", metaData},
-                    {"value", expr},
-                    {"type", new StringValue(expr.LiquidTypeName)}
-                });
-        
+            var result = new DictionaryValue
+            {
+                {"metadata", metaData},
+                {"value", Option<IExpressionConstant>.Create(expr)},
+                {"type", new StringValue(expr.LiquidTypeName)}
+            };
+           
             return LiquidExpressionResult.Success(result);
         }
 

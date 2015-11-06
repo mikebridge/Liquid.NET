@@ -252,10 +252,7 @@ namespace Liquid.NET.Tests
             // Arrange
             TemplateContext templateContext = new TemplateContext();
             
-            //var dict = new Dictionary<String, String> {{"test", "test element"}};
-            var dict = new Dictionary<String, IExpressionConstant> { { "test1", new StringValue("test element") } };
-
-            templateContext.DefineLocalVariable("mydict", new DictionaryValue(dict) );
+            templateContext.DefineLocalVariable("mydict", new DictionaryValue{ { "test1", new StringValue("test element") } } );
 
             // Arrange
             var ast = _generator.Generate("Result : {{ mydict.test1 }}");
@@ -273,13 +270,12 @@ namespace Liquid.NET.Tests
         {
             // Arrange
             TemplateContext templateContext = new TemplateContext();
+            
+            var dict3 = new DictionaryValue { { "test2", new StringValue("test element") } };
+            var dict2 = new DictionaryValue { { "test1", dict3 } };
+            var dict1 = new DictionaryValue{ { "test", dict2 } };
 
-            //var dict = new Dictionary<String, String> {{"test", "test element"}};
-            var dict3 = new Dictionary<String, IExpressionConstant> { { "test2", new StringValue("test element") } };
-            var dict2 = new Dictionary<String, IExpressionConstant> { { "test1", new DictionaryValue(dict3) } };
-            var dict1 = new Dictionary<String, IExpressionConstant> { { "test", new DictionaryValue(dict2) } };
-
-            templateContext.DefineLocalVariable("mydict", new DictionaryValue(dict1));
+            templateContext.DefineLocalVariable("mydict", dict1);
 
             // Arrange
             var ast = _generator.Generate("Result : {{ mydict.test.test1.test2 }}");
@@ -299,11 +295,11 @@ namespace Liquid.NET.Tests
             TemplateContext templateContext = new TemplateContext();
 
             //var dict = new Dictionary<String, String> {{"test", "test element"}};
-            var dict3 = new Dictionary<String, IExpressionConstant> { { "test2", new StringValue("test element") } };
-            var dict2 = new Dictionary<String, IExpressionConstant> { { "test1", new DictionaryValue(dict3) } };
-            var dict1 = new Dictionary<String, IExpressionConstant> { { "test", new DictionaryValue(dict2) } };
+            var dict3 = new DictionaryValue { { "test2", new StringValue("test element") } };
+            var dict2 = new DictionaryValue { { "test1", dict3 } };
+            var dict1 = new DictionaryValue { { "test", dict2 } };
 
-            templateContext.DefineLocalVariable("mydict", new DictionaryValue(dict1));
+            templateContext.DefineLocalVariable("mydict",dict1);
 
             // Arrange
             var ast = _generator.Generate("Result : {{ mydict.zzz.test1.test2 }}");
@@ -322,9 +318,9 @@ namespace Liquid.NET.Tests
             // Arrange
             TemplateContext templateContext = new TemplateContext();
             var list = new ArrayValue(new List<IExpressionConstant>{ new StringValue("aaa"), NumericValue.Create(123m) } );
-            var dict = new Dictionary<String, IExpressionConstant> { { "test", list } };
+            var dict = new DictionaryValue { { "test", list } };
 
-            templateContext.DefineLocalVariable("mydict", new DictionaryValue(dict));
+            templateContext.DefineLocalVariable("mydict", dict);
 
             // Arrange
             var ast = _generator.Generate("Result : {{ mydict.test[0] }}");

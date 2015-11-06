@@ -108,7 +108,7 @@ namespace Liquid.NET.Tests.Filters.Array
 
         private static IExpressionConstant IdAt(ArrayValue result, int index, String field)
         {
-            return ((DictionaryValue)result.ArrValue[index].Value).DictValue[field].Value;
+            return ((DictionaryValue)result.ArrValue[index].Value)[field].Value;
         }
     }
 }

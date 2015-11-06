@@ -104,7 +104,7 @@ namespace Liquid.NET.Tests
                 NumericValue.Create(456m),
                 new BooleanValue(true),
                 new ArrayValue(new List<IExpressionConstant>{NumericValue.Create(1), NumericValue.Create(2), NumericValue.Create(3)}),
-                new DictionaryValue(new Dictionary<String,IExpressionConstant>{{"1", NumericValue.Create(1)}, {"2", NumericValue.Create(2)}})
+                new DictionaryValue{{"1", NumericValue.Create(1)}, {"2", NumericValue.Create(2)}}
             };
             return new ArrayValue(list);
         }

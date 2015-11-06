@@ -23,7 +23,7 @@ namespace Liquid.NET.Tests.Constants
             ITemplateContext ctx = new TemplateContext()                              
                 .ErrorWhenValueMissing();
             //ctx.DefineLocalVariable("e", new ArrayValue(new List<IExpressionConstant>()));
-            ctx.DefineLocalVariable("d", new DictionaryValue(new Dictionary<String,IExpressionConstant>()));
+            ctx.DefineLocalVariable("d", new DictionaryValue());
            
             // Act
             var result = RenderingHelper.RenderTemplate("Result : {{ "+varname+" }}", ctx);
@@ -81,7 +81,7 @@ namespace Liquid.NET.Tests.Constants
             Console.WriteLine(varname);
             TemplateContext ctx = new TemplateContext();
             ctx.DefineLocalVariable("e", new ArrayValue(new List<IExpressionConstant>()));
-            ctx.DefineLocalVariable("d", new DictionaryValue(new Dictionary<String, IExpressionConstant>()));
+            ctx.DefineLocalVariable("d", new DictionaryValue());
 
             // Act
             var result = RenderingHelper.RenderTemplate("Result : {{ " + varname + " }}", ctx);

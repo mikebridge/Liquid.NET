@@ -25,7 +25,7 @@ namespace Liquid.NET.Tests.Filters.Array
             // Assert
             var dictionaryValues = array.ArrValue.Select(x => x.Value).Cast<DictionaryValue>();
 
-            IEnumerable<String> expected = dictionaryValues.Select(x => x.DictValue[field].Value.Value.ToString());
+            IEnumerable<String> expected = dictionaryValues.Select(x => x[field].Value.Value.ToString());
             //var expected = array.ArrValue.Cast<DictionaryValue>().Select(x => x.DictValue[field].Value.ToString());
             IEnumerable<String> actual = result.Select(x => x.Value.Value.ToString());
             Assert.That(actual, Is.EquivalentTo(expected));
@@ -39,7 +39,7 @@ namespace Liquid.NET.Tests.Filters.Array
             var field = "field2";
 
             var dictionaryValues = array.ArrValue.Select(x => x.Value).Cast<DictionaryValue>().ToList();
-            dictionaryValues[1].DictValue.Remove(field);
+            dictionaryValues[1].Remove(field);
             //array.ArrValue[1].Value.ValueAs<DictionaryValue>().DictValue.Remove(field);
             //((DictionaryValue) array.ArrValue[1]).DictValue.Remove(field);
             var mapFilter = new MapFilter(new StringValue(field));

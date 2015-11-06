@@ -168,11 +168,9 @@ namespace Liquid.NET.Tests.Tags
                 NumericValue.Create(33.45m),
             };
 
-            var dict = new Dictionary<String, IExpressionConstant>
-            {
+            ctx.DefineLocalVariable("user", new DictionaryValue{
                 {"payments", new ArrayValue(payments)}
-            };
-            ctx.DefineLocalVariable("user", new DictionaryValue(dict));
+            });
             return ctx;
         }
     }

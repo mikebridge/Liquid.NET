@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Liquid.NET.Constants;
+using Liquid.NET.Utils;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -54,9 +55,15 @@ namespace Liquid.NET.Tests.Ruby
 
         public static IExpressionConstant Transform(JObject obj)
         {
+            var result =new DictionaryValue();
             var dict = obj.Properties().ToDictionary(k => k.Name, v => (IExpressionConstant) Transform((dynamic)v.Value));
-
-            return new DictionaryValue(dict);
+            foreach (var kvp in dict)
+            {
+                result.Add(kvp.Key,kvp.Value != null? 
+                    (Option<IExpressionConstant>) new Some<IExpressionConstant>(kvp.Value) :
+                    new None<IExpressionConstant>());
+            }
+            return result;
         }
 
         public static IExpressionConstant Transform(JValue obj)

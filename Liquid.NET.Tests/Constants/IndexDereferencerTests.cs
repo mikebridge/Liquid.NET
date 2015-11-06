@@ -127,7 +127,7 @@ namespace Liquid.NET.Tests.Constants
             var result = RenderingHelper.RenderTemplate(tmpl, ctx);
 
             // Assert
-            Assert.That(result, Is.EqualTo(dictValue.DictValue.Count.ToString()));
+            Assert.That(result, Is.EqualTo(dictValue.Count.ToString()));
         }
 
         public ArrayValue CreateArrayOfDicts()

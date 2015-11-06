@@ -60,7 +60,7 @@ namespace Liquid.NET.Expressions
 
         private LiquidExpressionResult Contains(DictionaryValue dictValue, IExpressionConstant expressionConstant)
         {
-            return LiquidExpressionResult.Success(new BooleanValue(dictValue.DictValue.Keys.Any(x => x.Equals(expressionConstant.Value))));
+            return LiquidExpressionResult.Success(new BooleanValue(dictValue.Keys.Any(x => x.Equals(expressionConstant.Value))));
         }
 
         private static Func<Option<IExpressionConstant>, bool> IsEqual(IExpressionConstant expressionConstant)

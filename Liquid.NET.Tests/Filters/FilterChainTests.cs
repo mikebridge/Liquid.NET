@@ -69,7 +69,7 @@ namespace Liquid.NET.Tests.Filters
         {
             // Arrange
             ITemplateContext ctx = new TemplateContext().WithAllFilters();
-            DictionaryValue dict = new DictionaryValue(new Dictionary<String, IExpressionConstant> { { "foo", NumericValue.Create(33) } });
+            DictionaryValue dict = new DictionaryValue { { "foo", NumericValue.Create(33) } };
             ctx.DefineLocalVariable("bar", dict);
             var template = LiquidTemplate.Create("{{ 1 | plus: bar.foo}}");
 
@@ -103,7 +103,7 @@ namespace Liquid.NET.Tests.Filters
         public void It_Should_Parse_Two_Filter_Arguments()
         {
             // Arrange
-            DictionaryValue dict = new DictionaryValue(new Dictionary<String, IExpressionConstant> { { "foo", NumericValue.Create(22)}, {"bar", NumericValue.Create(23) } });
+            DictionaryValue dict = new DictionaryValue{ { "foo", NumericValue.Create(22)}, {"bar", NumericValue.Create(23) } };
 
             ITemplateContext ctx =
                 new TemplateContext().WithAllFilters()
@@ -128,7 +128,7 @@ namespace Liquid.NET.Tests.Filters
         public void It_Should_Parse_A_Variable_And_A_Value(String liquid, String expected)
         {
             // Arrange
-            DictionaryValue dict = new DictionaryValue(new Dictionary<String, IExpressionConstant> { { "foo", NumericValue.Create(22) }, { "bar", NumericValue.Create(23) } });
+            DictionaryValue dict = new DictionaryValue { { "foo", NumericValue.Create(22) }, { "bar", NumericValue.Create(23) } };
 
             ITemplateContext ctx =
                 new TemplateContext().WithAllFilters()
@@ -190,7 +190,7 @@ namespace Liquid.NET.Tests.Filters
             // Arrange
             ITemplateContext ctx = new TemplateContext().WithAllFilters();
             var arr = new ArrayValue(new List<IExpressionConstant> {new StringValue("HELLO")});
-            ctx.DefineLocalVariable("a", new DictionaryValue(new Dictionary<String, IExpressionConstant> {{ "b", arr }}));
+            ctx.DefineLocalVariable("a", new DictionaryValue{{ "b", arr }});
             //var template = LiquidTemplate.Create("{% assign x = 1 | plus: bar.foo %} 1 + {{ bar.foo }} = {{ x }}");
             var template = LiquidTemplate.Create("{{ a.b[0] }} WORLD");
 

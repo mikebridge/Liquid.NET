@@ -389,12 +389,11 @@ namespace Liquid.NET.Tests.Tags
         {
             // Arrange
             TemplateContext ctx = new TemplateContext();
-            ctx.DefineLocalVariable("dict", new DictionaryValue(
-                new Dictionary<string, IExpressionConstant>
-                {
-                    {"start", NumericValue.Create(1)},
-                    {"end", NumericValue.Create(5)}
-                }));
+            ctx.DefineLocalVariable("dict", new DictionaryValue
+            {
+                {"start", NumericValue.Create(1)},
+                {"end", NumericValue.Create(5)}
+            });
             var template = LiquidTemplate.Create("Result : {% for item in " + generator + " %}{{ item }}{% endfor %}");
 
             // Act
@@ -417,16 +416,17 @@ namespace Liquid.NET.Tests.Tags
 
             // Arrange
             TemplateContext ctx = new TemplateContext();
-            ctx.DefineLocalVariable("dict", new DictionaryValue(
-                new Dictionary<string, IExpressionConstant>
-                {
-                    {"one", new StringValue("ONE")},
-                    {"two", new StringValue("TWO")},
-                    {"three", new StringValue("THREE")},
-                    {"four", new StringValue("FOUR")}
+            ctx.DefineLocalVariable("dict", new DictionaryValue
+            {
+                {"one", new StringValue("ONE")},
+                {"two", new StringValue("TWO")},
+                {"three", new StringValue("THREE")},
+                {"four", new StringValue("FOUR")}
 
-                }));
-            var template = LiquidTemplate.Create("Result : {% for item in dict %}<li>{{ item[0] }} : {{ item[1] }}</li>{% endfor %}");
+            });
+            var template =
+                LiquidTemplate.Create(
+                    "Result : {% for item in dict %}<li>{{ item[0] }} : {{ item[1] }}</li>{% endfor %}");
 
 
             // Act

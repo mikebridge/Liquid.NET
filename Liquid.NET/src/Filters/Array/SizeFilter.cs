@@ -24,7 +24,7 @@ namespace Liquid.NET.Filters.Array
 
         public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, DictionaryValue liquidDictionaryExpression)
         {
-            return GetSize(liquidDictionaryExpression, () => NumericValue.Create(liquidDictionaryExpression.DictValue.Keys.Count));
+            return GetSize(liquidDictionaryExpression, () => NumericValue.Create(liquidDictionaryExpression.Keys.Count));
         }
 
         public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, GeneratorValue liquidGeneratorExpression)

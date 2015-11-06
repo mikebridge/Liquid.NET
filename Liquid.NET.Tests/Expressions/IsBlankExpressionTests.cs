@@ -119,12 +119,11 @@ namespace Liquid.NET.Tests.Expressions
             // Arrange
             var tmpl = @"Result : {% if dict == blank %}BLANK{% else %}NOT BLANK{% endif %}";
             ITemplateContext ctx = new TemplateContext();
-            var dict = new Dictionary<String, IExpressionConstant>
+
+            ctx.DefineLocalVariable("dict", new DictionaryValue
             {
                 {"x", new StringValue("a string")}
-            };
-
-            ctx.DefineLocalVariable("dict", new DictionaryValue(dict));
+            });
 
             // Act
             Logger.Log(tmpl);
@@ -142,9 +141,8 @@ namespace Liquid.NET.Tests.Expressions
             // Arrange
             var tmpl = @"Result : {% if dict == BLANK %}BLANK{% else %}NOT BLANK{% endif %}";
             ITemplateContext ctx = new TemplateContext();
-            var dict = new Dictionary<String, IExpressionConstant>();
 
-            ctx.DefineLocalVariable("dict", new DictionaryValue(dict));
+            ctx.DefineLocalVariable("dict", new DictionaryValue());
 
             // Act
             Logger.Log(tmpl);

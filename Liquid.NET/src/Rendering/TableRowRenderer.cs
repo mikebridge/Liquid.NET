@@ -124,7 +124,7 @@ namespace Liquid.NET.Rendering
 
         public static DictionaryValue CreateForLoopDescriptor(String name, int iter, int length, int col, int maxcol, int row, SymbolTableStack stack)
         {
-            return new DictionaryValue(new Dictionary<String, Option<IExpressionConstant>>
+            return new DictionaryValue
             {               
                 {"first", new BooleanValue(iter == 0)},
                 {"index", NumericValue.Create(iter + 1)},
@@ -140,7 +140,7 @@ namespace Liquid.NET.Rendering
                 {"last", new BooleanValue(length - iter - 1 == 0)},
                 {"length", NumericValue.Create(length) },
                 {"name", new StringValue(name) }
-            });
+            };
 
         }
 

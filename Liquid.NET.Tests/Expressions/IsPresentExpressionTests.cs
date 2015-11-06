@@ -68,12 +68,10 @@ namespace Liquid.NET.Tests.Expressions
             // Arrange
             var tmpl = @"Result : {% if dict == present %}PRESENT{% else %}NOT PRESENT{% endif %}";
             ITemplateContext ctx = new TemplateContext();
-            var dict = new Dictionary<String, IExpressionConstant>
-            {
-                {"x", new StringValue("a string")}
-            };
 
-            ctx.DefineLocalVariable("dict", new DictionaryValue(dict));
+            ctx.DefineLocalVariable("dict", new DictionaryValue {
+                {"x", new StringValue("a string")}
+            });
 
             // Act
             Logger.Log(tmpl);
@@ -91,9 +89,8 @@ namespace Liquid.NET.Tests.Expressions
             // Arrange
             var tmpl = @"Result : {% if dict == present %}PRESENT{% else %}NOT PRESENT{% endif %}";
             ITemplateContext ctx = new TemplateContext();
-            var dict = new Dictionary<String, IExpressionConstant>();
 
-            ctx.DefineLocalVariable("dict", new DictionaryValue(dict));
+            ctx.DefineLocalVariable("dict", new DictionaryValue());
 
             // Act
             Logger.Log(tmpl);

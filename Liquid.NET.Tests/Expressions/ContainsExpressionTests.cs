@@ -94,15 +94,13 @@ namespace Liquid.NET.Tests.Expressions
 
         public DictionaryValue CreateDictionary()
         {
-            return new DictionaryValue(
-                new Dictionary<string, IExpressionConstant>
-                {
-                    {"one",  new StringValue("1")},
-                    {"two", NumericValue.Create(2)},
-                    {"three", new StringValue("Three")},
-                    {"four", new BooleanValue(true)}
-
-                });
+            return new DictionaryValue
+            {
+                {"one", new StringValue("1")},
+                {"two", NumericValue.Create(2)},
+                {"three", new StringValue("Three")},
+                {"four", new BooleanValue(true)}
+            };
 
         }
 

@@ -17,8 +17,8 @@ namespace Liquid.NET.Constants
                           
             }
 
-            return dict.DictValue.ContainsKey(index)
-                ? LiquidExpressionResult.Success(dict.DictValue[index])
+            return dict.ContainsKey(index)
+                ? LiquidExpressionResult.Success(dict[index])
                 : LiquidExpressionResult.ErrorOrNone(ctx, index);
         }
     }

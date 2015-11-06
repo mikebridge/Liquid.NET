@@ -145,9 +145,9 @@ namespace Liquid.NET.Constants
             // as an array with two indices.
             if (destType == typeof (ArrayValue))
             {
-                var dictarray = dictionaryValue.DictValue.Keys.Select(k =>
+                var dictarray = dictionaryValue.Keys.Select(k =>
                 {
-                    var list = new List<Option<IExpressionConstant>> { new Some<IExpressionConstant>(new StringValue(k)), dictionaryValue.DictValue[k] };
+                    var list = new List<Option<IExpressionConstant>> { new Some<IExpressionConstant>(new StringValue(k)), dictionaryValue[k] };
                     return (Option<IExpressionConstant>) new Some<IExpressionConstant>(new ArrayValue(list));
                 }).ToList();
                 return LiquidExpressionResult.Success(new ArrayValue(dictarray));

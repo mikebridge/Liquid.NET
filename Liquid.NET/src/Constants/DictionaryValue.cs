@@ -1,31 +1,25 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+
 using Liquid.NET.Utils;
 
 namespace Liquid.NET.Constants
 {
-    // TODO: determine whether the keys should be case insensitive or not.
-    public class DictionaryValue : ExpressionConstant
+    public class DictionaryValue : ExpressionConstant, IDictionary<String,Option<IExpressionConstant>>
     {
         private readonly IDictionary<String, Option<IExpressionConstant>> _value;
 
-        public DictionaryValue(IDictionary<String, Option<IExpressionConstant>> dictionary)
+        public DictionaryValue()
         {
-            _value = dictionary;
-        }
-
-        public DictionaryValue(IDictionary<String, IExpressionConstant> dictionary)
-        {
-            _value = dictionary.ToDictionary(kv => kv.Key, v => v.Value == null? Option<IExpressionConstant>.None() : v.Value.ToOption());
+            _value = new Dictionary<String, Option<IExpressionConstant>>();
         }
 
         public override object Value
         {
             get { return _value; }
         }
-
-        public IDictionary<String, Option<IExpressionConstant>> DictValue { get { return _value; } }
 
         public override bool IsTrue
         {
@@ -47,18 +41,104 @@ namespace Liquid.NET.Constants
             return ContainsKey(key) ? _value[key] : new None<IExpressionConstant>();
         }
 
+
+        public void Add(String key, Option<IExpressionConstant> val)
+        {
+            if (ReferenceEquals(val, null))
+            {
+                // The implicit conversion from IExpressionConstant
+                // to Option<IExpressionConstant> won't happen if this value is null.
+                val = new None<IExpressionConstant>();
+            }
+            _value.Add(key, val);
+        }
+
+        public bool Remove(string key)
+        {
+            return _value.Remove(key);
+        }
+
+        public bool TryGetValue(string key, out Option<IExpressionConstant> value)
+        {
+            return _value.TryGetValue(key, out value);
+        }
+
+        public Option<IExpressionConstant> this[string key]
+        {
+            get { 
+                var result= _value[key];
+                return result;
+            }
+            set { _value[key] = value; }
+        }
+
+        public ICollection<string> Keys { get { return _value.Keys; } }
+
+        public ICollection<Option<IExpressionConstant>> Values
+        {
+            get { return _value.Values; }
+        }
+
+//        public void Add(String key, IExpressionConstant val)
+//        {
+//            _value.Add(key, val == null ? new None<IExpressionConstant>() : Option<IExpressionConstant>.Create(val));
+//        }
+
+        public void Add(KeyValuePair<String,Option<IExpressionConstant>> kvp)
+        {
+            if (kvp.Value == null)
+            {
+                throw new ArgumentException("value must not be null.");
+            }
+            _value.Add(kvp.Key, kvp.Value);
+        }
+
+        public void Clear()
+        {
+            _value.Clear();
+        }
+
+        public bool Contains(KeyValuePair<string, Option<IExpressionConstant>> item)
+        {
+            return _value.Contains(item);
+        }
+
+        public void CopyTo(KeyValuePair<string, Option<IExpressionConstant>>[] array, int arrayIndex)
+        {
+            _value.CopyTo(array, arrayIndex);
+        }
+
+        public bool Remove(KeyValuePair<string, Option<IExpressionConstant>> item)
+        {
+            return _value.Remove(item);
+        }
+
+        public int Count { get { return _value.Count;  } }
+
+        public bool IsReadOnly { get { return _value.IsReadOnly; }}
+
         public bool ContainsKey(string key)
         {
             return _value.ContainsKey(key);
         }
 
+        IEnumerator<KeyValuePair<string, Option<IExpressionConstant>>> IEnumerable<KeyValuePair<string, Option<IExpressionConstant>>>.GetEnumerator()
+        {
+            return _value.GetEnumerator();
+        }
+
         public override string ToString()
         {
             return "{ " +
-                   String.Join(", ", DictValue
+                   String.Join(", ", _value
                        .Keys
-                       .Select(key => FormatKvPair(key, DictValue[key]))
+                       .Select(key => FormatKvPair(key, _value[key]))
                        ) + " }";
+        }
+
+        public IEnumerator GetEnumerator()
+        {
+            return _value.GetEnumerator();
         }
 
 

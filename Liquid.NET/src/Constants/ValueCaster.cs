@@ -60,8 +60,8 @@ namespace Liquid.NET.Constants
             {
                 return Convert<TDest>(date);
             }
-            return Convert<TDest>(src);
-           
+            //return Convert<TDest>(src);
+            throw new ApplicationException("Unknown type: "+ src.GetType());
         }
 
         /// <summary>
@@ -239,21 +239,21 @@ namespace Liquid.NET.Constants
         }
 
 
-        private static LiquidExpressionResult Convert<TDest>(IExpressionConstant source)
-            where TDest : IExpressionConstant
-        {
-            var destType = typeof (TDest);
-            if (destType == typeof (StringValue))
-            {
-                return LiquidExpressionResult.Success(new StringValue(source.ToString()));
-            }
-            if (destType == typeof (NumericValue))
-            {
-                return LiquidExpressionResult.Success(NumericValue.Create(0));
-            }
-            return LiquidExpressionResult.Error("Can't convert from " + source.GetType() + " to " + destType);
-
-        }
+//        private static LiquidExpressionResult Convert<TDest>(IExpressionConstant source)
+//            where TDest : IExpressionConstant
+//        {
+//            var destType = typeof (TDest);
+//            if (destType == typeof (StringValue))
+//            {
+//                return LiquidExpressionResult.Success(new StringValue(source.ToString()));
+//            }
+//            if (destType == typeof (NumericValue))
+//            {
+//                return LiquidExpressionResult.Success(NumericValue.Create(0));
+//            }
+//            return LiquidExpressionResult.Error("Can't convert from " + source.GetType() + " to " + destType);
+//
+//        }
 
         /// <summary>
         /// Use instead of Convert.ToInt32.

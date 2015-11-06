@@ -79,18 +79,15 @@ namespace Liquid.NET.Constants
             get { return _value.Values; }
         }
 
-//        public void Add(String key, IExpressionConstant val)
-//        {
-//            _value.Add(key, val == null ? new None<IExpressionConstant>() : Option<IExpressionConstant>.Create(val));
-//        }
-
         public void Add(KeyValuePair<String,Option<IExpressionConstant>> kvp)
         {
-            if (kvp.Value == null)
+            var val = kvp.Value;
+            if (ReferenceEquals(val, null)) // if the value is null, it may not get implicitly cast.
             {
-                throw new ArgumentException("value must not be null.");
+                //throw new ArgumentException("value must not be null.");
+               val = Option<IExpressionConstant>.None(); 
             }
-            _value.Add(kvp.Key, kvp.Value);
+            _value.Add(kvp.Key, val);
         }
 
         public void Clear()

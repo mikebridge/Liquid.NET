@@ -52,6 +52,10 @@ namespace Liquid.NET.Constants
 
         public void Add(Option<IExpressionConstant> item)
         {
+            if (item == null)
+            {
+                throw new ArgumentNullException("item");
+            }
             _values.Add(item);
         }
 

@@ -179,7 +179,7 @@ namespace Liquid.NET.Tests.Tags
             var numericValues = Enumerable.Range(0, 3).Select(x => (ILiquidValue) LiquidNumeric.Create(x)).ToList();
             foreach (var item in numericValues)
             {
-                liquidCollection.Add(item == null? Option<ILiquidValue>.None() : Option<ILiquidValue>.Create(item));
+                liquidCollection.Add(Option<ILiquidValue>.Create(item));
             }
             //var array1 = Enumerable.Range(0, 3).Select(x => new LiquidCollection(array2);
             var array1 = new LiquidCollection { liquidCollection, liquidCollection, liquidCollection };
@@ -525,7 +525,7 @@ namespace Liquid.NET.Tests.Tags
             foreach (var item in items)
             {
                 //list.Add((Option<ILiquidValue>)item);
-                list.Add(item == null? Option<ILiquidValue>.None() : Option<ILiquidValue>.Create(item));
+                list.Add(Option<ILiquidValue>.Create(item));
             }
 
             ctx.DefineLocalVariable("array", list);

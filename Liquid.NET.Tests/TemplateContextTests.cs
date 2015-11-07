@@ -75,6 +75,18 @@ namespace Liquid.NET.Tests
             Assert.That(val.SuccessValue<LiquidString>().StringVal, Is.EqualTo("TEST"));
         }
 
+
+        [Test]
+       
+        public void It_Should_Implicitly_Cast_A_Null_LocalVariable_To_None()
+        {
+            // Arrange
+            var templateContext = new TemplateContext().DefineLocalVariable("test", null);
+
+            Assert.That(templateContext.SymbolTableStack.Reference("test"), Is.EqualTo(LiquidValue.None));
+        }
+
+
         [Test]
         [ExpectedException(typeof(ArgumentNullException))]
         public void It_Should_THrow_Error_When_No_ASTGenerator()

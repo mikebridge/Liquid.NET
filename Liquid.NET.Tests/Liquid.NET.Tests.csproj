@@ -68,6 +68,7 @@
     <Compile Include="Constants\LiquidNumericTests.cs" />
     <Compile Include="Constants\LiquidStringTests.cs" />
     <Compile Include="Constants\ValueCasterTests.cs" />
+    <Compile Include="Examples\ExampleTests.cs" />
     <Compile Include="Expressions\AndExpressionTests.cs" />
     <Compile Include="Expressions\ComparisonExpressionTests.cs" />
     <Compile Include="Expressions\ContainsExpressionTests.cs" />

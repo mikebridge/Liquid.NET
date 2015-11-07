@@ -20,7 +20,7 @@ namespace Liquid.NET.Filters.Array
 
             var vals = liquidArrayExpression.Select(ValueCaster.RenderAsString);
 
-            return LiquidExpressionResult.Success(new LiquidString(String.Join(separator, vals)));
+            return LiquidExpressionResult.Success(LiquidString.Create(String.Join(separator, vals)));
         }
 
         public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, LiquidString liquidLiquidStringExpression)
@@ -30,7 +30,7 @@ namespace Liquid.NET.Filters.Array
                 return LiquidExpressionResult.Success(Option<ILiquidValue>.None());
             }
 
-            return LiquidExpressionResult.Success(new LiquidString(String.Join(_separator.StringVal,
+            return LiquidExpressionResult.Success(LiquidString.Create(String.Join(_separator.StringVal,
                 liquidLiquidStringExpression.StringVal.ToCharArray().Select(c => c.ToString()))));
 
         }

@@ -102,7 +102,7 @@ namespace Liquid.NET.Tests.Constants
             // Arrange
             TemplateContext ctx = new TemplateContext();
             //var liquidCollection = DataFixtures.CreateArrayValue();
-            ctx.DefineLocalVariable("mystr", new LiquidString("abcdefg"));
+            ctx.DefineLocalVariable("mystr", LiquidString.Create("abcdefg"));
             String tmpl = "{{ mystr." + property + " }}";
 
             // Act

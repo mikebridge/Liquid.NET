@@ -18,15 +18,15 @@ namespace Liquid.NET.Filters
             foreach (var kvp in expr.MetaData)
             {
                 metaData.Add(kvp.Key, kvp.Value == null
-                    ? Option<ILiquidValue>.Create(new LiquidString(""))
-                    : Option<ILiquidValue>.Create(new LiquidString(kvp.Value.ToString())));
+                    ? Option<ILiquidValue>.Create(LiquidString.Create(""))
+                    : Option<ILiquidValue>.Create(LiquidString.Create(kvp.Value.ToString())));
             }
 
             var result = new LiquidHash
             {
                 {"metadata", metaData},
                 {"value", Option<ILiquidValue>.Create(expr)},
-                {"type", new LiquidString(expr.LiquidTypeName)}
+                {"type", LiquidString.Create(expr.LiquidTypeName)}
             };
            
             return LiquidExpressionResult.Success(result);
@@ -34,7 +34,7 @@ namespace Liquid.NET.Filters
 
         public override LiquidExpressionResult ApplyToNil(ITemplateContext ctx)
         {
-            return LiquidExpressionResult.Success(new LiquidString("No Debugging Data for nil"));
+            return LiquidExpressionResult.Success(LiquidString.Create("No Debugging Data for nil"));
         }
     }
 }

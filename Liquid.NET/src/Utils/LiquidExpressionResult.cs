@@ -83,7 +83,7 @@ namespace Liquid.NET.Utils
 
         public static LiquidExpressionResult Success(String successString)
         {
-            return Success(new LiquidString(successString));
+            return Success(LiquidString.Create(successString));
         }
 
     }

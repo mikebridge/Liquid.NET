@@ -31,7 +31,7 @@ namespace Liquid.NET.Tests.Filters.Strings
         {
             // Arrange
             LiquidCollection liquidCollection = new LiquidCollection{
-                new LiquidString("123"), 
+                LiquidString.Create("123"), 
                 LiquidNumeric.Create(456m),
                 LiquidNumeric.Create(123), 
                 LiquidNumeric.Create(123), 

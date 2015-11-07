@@ -42,7 +42,7 @@ namespace Liquid.NET.Rendering
 //            {
 //                errorAccumulator.Add(error);
 //            }
-            return new LiquidString(hiddenText);
+            return LiquidString.Create(hiddenText);
 
 
 

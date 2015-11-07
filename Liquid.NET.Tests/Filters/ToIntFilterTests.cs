@@ -24,7 +24,7 @@ namespace Liquid.NET.Tests.Filters
             var toIntFilter = new ToIntFilter();
 
             // Act
-            var result = toIntFilter.Apply(new TemplateContext(), new LiquidString(input)).SuccessValue<LiquidNumeric>();
+            var result = toIntFilter.Apply(new TemplateContext(), LiquidString.Create(input)).SuccessValue<LiquidNumeric>();
 
             // Assert
             Assert.That(result.DecimalValue, Is.EqualTo((decimal) expected));

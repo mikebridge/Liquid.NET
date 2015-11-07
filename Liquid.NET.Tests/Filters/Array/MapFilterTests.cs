@@ -17,7 +17,7 @@ namespace Liquid.NET.Tests.Filters.Array
             // Arrange
             var array = CreateArray();
             var field = "field1";
-            var mapFilter = new MapFilter(new LiquidString(field));
+            var mapFilter = new MapFilter(LiquidString.Create(field));
 
             // Act
             var result = mapFilter.Apply(new TemplateContext(), array).SuccessValue<LiquidCollection>();
@@ -42,7 +42,7 @@ namespace Liquid.NET.Tests.Filters.Array
             dictionaryValues[1].Remove(field);
             //array.ArrValue[1].Value.ValueAs<LiquidHash>().DictValue.Remove(field);
             //((LiquidHash) array.ArrValue[1]).DictValue.Remove(field);
-            var mapFilter = new MapFilter(new LiquidString(field));
+            var mapFilter = new MapFilter(LiquidString.Create(field));
 
             // Act
             var result = (mapFilter.Apply(new TemplateContext(), array).SuccessValue<LiquidCollection>()).ToList();
@@ -54,11 +54,11 @@ namespace Liquid.NET.Tests.Filters.Array
         public void It_Should_Return_An_Error_When_Trying_To_Map_A_Non_Dictionary()
         {
             // Arrange
-            var mapFilter = new MapFilter(new LiquidString("field1"));
+            var mapFilter = new MapFilter(LiquidString.Create("field1"));
             var liquidCollection = new LiquidCollection
             {
                 LiquidNumeric.Create(123),
-                new LiquidString("Test")
+                LiquidString.Create("Test")
             };
             // Act
             var result = mapFilter.Apply(new TemplateContext(), liquidCollection).SuccessValue<LiquidCollection>();
@@ -75,7 +75,7 @@ namespace Liquid.NET.Tests.Filters.Array
             // Arrange
             var dict = DataFixtures.CreateDictionary(1, "Value 1 A", "Value 1 B");
             var field = "field1";
-            var mapFilter = new MapFilter(new LiquidString(field));
+            var mapFilter = new MapFilter(LiquidString.Create(field));
 
             // Act
             var result = mapFilter.Apply(new TemplateContext(), dict).SuccessValue<LiquidString>();

@@ -237,7 +237,7 @@ namespace Liquid.NET
             //var hiddenVisitor = new RenderingVisitor(_astRenderer, _templateContext, str => capturedText += str);
             PushTextAccumulator(str => capturedText += str);
             StartWalking(captureBlockTag.RootContentNode);            
-            _templateContext.SymbolTableStack.DefineGlobal(captureBlockTag.VarName, new LiquidString(capturedText) );
+            _templateContext.SymbolTableStack.DefineGlobal(captureBlockTag.VarName, LiquidString.Create(capturedText) );
             PopTextAccumulator();
         }
 

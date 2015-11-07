@@ -11,9 +11,9 @@ namespace Liquid.NET.Filters.Strings
 
             if (String.IsNullOrWhiteSpace(before))
             {
-                return new LiquidString("");
+                return LiquidString.Create("");
             }
-            return new LiquidString(f(before));
+            return LiquidString.Create(f(before));
         }
 
         public static String ReplaceFirst(string origStr, String removeStr, String replaceStr)

@@ -18,9 +18,9 @@ namespace Liquid.NET.Tests.Tags
         {
             // Arrange
             var cycleTag = new CycleTag();
-            cycleTag.CycleList.Add(new TreeNode<LiquidExpression>(new LiquidExpression { Expression = new LiquidString("A")}));
-            cycleTag.CycleList.Add(new TreeNode<LiquidExpression>(new LiquidExpression { Expression = new LiquidString("B") }));
-            cycleTag.CycleList.Add(new TreeNode<LiquidExpression>(new LiquidExpression { Expression = new LiquidString("C") }));
+            cycleTag.CycleList.Add(new TreeNode<LiquidExpression>(new LiquidExpression { Expression = LiquidString.Create("A")}));
+            cycleTag.CycleList.Add(new TreeNode<LiquidExpression>(new LiquidExpression { Expression = LiquidString.Create("B") }));
+            cycleTag.CycleList.Add(new TreeNode<LiquidExpression>(new LiquidExpression { Expression = LiquidString.Create("C") }));
 
             // Assert
             Assert.That(((LiquidString) cycleTag.ElementAt(0).Data.Expression).StringVal, Is.EqualTo("A"));
@@ -120,8 +120,8 @@ namespace Liquid.NET.Tests.Tags
         public void It_Should_Cycle_Through_Variables()
         {
             TemplateContext ctx = new TemplateContext();
-            ctx.DefineLocalVariable("var1", new LiquidString("ONE"));
-            ctx.DefineLocalVariable("var2", new LiquidString("TWO"));
+            ctx.DefineLocalVariable("var1", LiquidString.Create("ONE"));
+            ctx.DefineLocalVariable("var2", LiquidString.Create("TWO"));
             ctx.DefineLocalVariable("var3", new LiquidBoolean(false));
             ctx.DefineLocalVariable("var4", LiquidNumeric.Create(9));
 
@@ -139,8 +139,8 @@ namespace Liquid.NET.Tests.Tags
         public void It_Should_Cycle_Through_Vars_And_Non_Vars()
         {
             TemplateContext ctx = new TemplateContext();
-            ctx.DefineLocalVariable("var1", new LiquidString("ONE"));
-            ctx.DefineLocalVariable("var2", new LiquidCollection{new LiquidString("TWO")});
+            ctx.DefineLocalVariable("var1", LiquidString.Create("ONE"));
+            ctx.DefineLocalVariable("var2", new LiquidCollection{LiquidString.Create("TWO")});
             ctx.DefineLocalVariable("var3", new LiquidBoolean(false));
             ctx.DefineLocalVariable("var4", LiquidNumeric.Create(9));
 
@@ -158,8 +158,8 @@ namespace Liquid.NET.Tests.Tags
         public void It_Should_Allow_A_Var_In_Cycle_Group()
         {
             TemplateContext ctx = new TemplateContext();
-            ctx.DefineLocalVariable("var1", new LiquidString("ONE"));
-            ctx.DefineLocalVariable("var2", new LiquidCollection{ new LiquidString("TWO") });
+            ctx.DefineLocalVariable("var1", LiquidString.Create("ONE"));
+            ctx.DefineLocalVariable("var2", new LiquidCollection{ LiquidString.Create("TWO") });
             ctx.DefineLocalVariable("var3", new LiquidBoolean(false));
             ctx.DefineLocalVariable("var4", LiquidNumeric.Create(9));
 
@@ -202,7 +202,7 @@ namespace Liquid.NET.Tests.Tags
         private LiquidCollection CreateArrayValues()
         {
             return new LiquidCollection{
-                new LiquidString("a string"),
+                LiquidString.Create("a string"),
                 LiquidNumeric.Create(123),
                 LiquidNumeric.Create(456m),
                 new LiquidBoolean(false)

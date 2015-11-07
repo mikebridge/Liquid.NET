@@ -15,12 +15,12 @@ namespace Liquid.NET.Tests.Filters.Array
         {
             // Arrange
             LiquidCollection liquidCollection = new LiquidCollection{
-                new LiquidString("a string"), 
+                LiquidString.Create("a string"), 
                 LiquidNumeric.Create(123), 
                 LiquidNumeric.Create(456m),
                 new LiquidBoolean(false)
             };
-            var filter = new SortFilter(new LiquidString(""));
+            var filter = new SortFilter(LiquidString.Create(""));
 
             // Act            
             var result = filter.Apply(new TemplateContext(), liquidCollection);
@@ -36,7 +36,7 @@ namespace Liquid.NET.Tests.Filters.Array
         public void It_Should_Sort_Dictionaries_By_Field()
         {
             // Arrange
-            SortFilter sizeFilter = new SortFilter(new LiquidString("field1"));
+            SortFilter sizeFilter = new SortFilter(LiquidString.Create("field1"));
 
             // Act
             var result = sizeFilter.Apply(new TemplateContext(), CreateObjList());

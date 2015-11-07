@@ -51,7 +51,7 @@ namespace Liquid.NET.Filters.Array
 
             if (liquidLiquidStringExpression.StringVal.Length >= _index.IntValue + 1)
             {
-               return LiquidExpressionResult.Success(new LiquidString(liquidLiquidStringExpression.StringVal[_index.IntValue].ToString()));
+               return LiquidExpressionResult.Success(LiquidString.Create(liquidLiquidStringExpression.StringVal[_index.IntValue].ToString()));
             }
             else
             {
@@ -59,7 +59,7 @@ namespace Liquid.NET.Filters.Array
             }
 
 //            return LiquidExpressionResult.Success(liquidLiquidStringExpression.StringVal.Length >= _index.IntValue + 1
-//                ? (ILiquidValue)new LiquidString(liquidLiquidStringExpression.StringVal[_index.IntValue].ToString())
+//                ? (ILiquidValue)LiquidString.Create(liquidLiquidStringExpression.StringVal[_index.IntValue].ToString())
 //                : ConstantFactory.CreateError<LiquidCollection>("String has no element at position " + _index.IntValue));
         }
     }

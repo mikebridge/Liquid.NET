@@ -21,7 +21,7 @@ namespace Liquid.NET.Filters
         {
             if (/*dateValue.IsUndefined ||*/ !liquidDate.DateTimeValue.HasValue)
             {
-                return LiquidExpressionResult.Success(new LiquidString(""));
+                return LiquidExpressionResult.Success(LiquidString.Create(""));
             }
             //Console.WriteLine("Formatting " + dateValue.Value + " with format "+_format.StringVal);
             String format = "%m/%d/%Y";
@@ -29,7 +29,7 @@ namespace Liquid.NET.Filters
             {
                 format = _format.StringVal;
             }
-            return LiquidExpressionResult.Success(new LiquidString(liquidDate.DateTimeValue.Value.ToStrFTime(format)));
+            return LiquidExpressionResult.Success(LiquidString.Create(liquidDate.DateTimeValue.Value.ToStrFTime(format)));
             
         }
 

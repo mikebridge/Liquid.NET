@@ -14,7 +14,7 @@ namespace Liquid.NET.Tests.Expressions
         {
             // Arrange
             var symbolTable = new SymbolTable();
-            var str = new LiquidString("FOO");
+            var str = LiquidString.Create("FOO");
 
             // Act
             symbolTable.DefineLocalVariable("foo", str);
@@ -29,7 +29,7 @@ namespace Liquid.NET.Tests.Expressions
         {
             // Arrange
             var symbolTable = new SymbolTable();
-            //var str = new LiquidString("FOO");
+            //var str = LiquidString.Create("FOO");
 
 
             // Act
@@ -63,7 +63,7 @@ namespace Liquid.NET.Tests.Expressions
         private static LiquidCollection CreateArrayValue()
         {
             return new LiquidCollection{
-                new LiquidString("a string"),
+                LiquidString.Create("a string"),
                 LiquidNumeric.Create(123),
                 LiquidNumeric.Create(456m),
                 new LiquidBoolean(false)

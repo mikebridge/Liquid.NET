@@ -29,7 +29,7 @@ namespace Liquid.NET.Expressions
         {
 //            return _liquidString.StringVal
 //                .ToCharArray()
-//                .Select(x => new LiquidString("" + x));
+//                .Select(x => LiquidString.Create("" + x));
             // In ruby liquid, it will not iterate through a string's characters---it will treat it as an array of one string.
             return new List<ILiquidValue>{_liquidString};
         }

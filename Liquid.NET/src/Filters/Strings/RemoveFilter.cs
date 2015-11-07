@@ -30,7 +30,7 @@ namespace Liquid.NET.Filters.Strings
         {
             var result = orig.Replace((String) liquidStringToRemove.Value, "");
             //Console.WriteLine("  REMOVE RESULT : "+result);
-            return new LiquidString(result);
+            return LiquidString.Create(result);
         }
 
     }

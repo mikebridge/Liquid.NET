@@ -10,8 +10,8 @@ namespace Liquid.NET.Tests.Filters.Array
             return new LiquidHash
             {
                 {"id", LiquidNumeric.Create(id)},
-                {"field1", new LiquidString(field1)},
-                {"field2", new LiquidString(field2)},
+                {"field1", LiquidString.Create(field1)},
+                {"field2", LiquidString.Create(field2)},
 
             };
         }
@@ -19,7 +19,7 @@ namespace Liquid.NET.Tests.Filters.Array
         public static LiquidCollection CreateArrayValue()
         {
            return new LiquidCollection{
-                new LiquidString("a string"), 
+                LiquidString.Create("a string"), 
                 LiquidNumeric.Create(123), 
                 LiquidNumeric.Create(456m),
                 new LiquidBoolean(false)

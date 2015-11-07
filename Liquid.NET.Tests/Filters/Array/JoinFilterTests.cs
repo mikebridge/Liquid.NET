@@ -13,12 +13,12 @@ namespace Liquid.NET.Tests.Filters.Array
         {
             // Arrange
             LiquidCollection liquidCollection = new LiquidCollection {
-                new LiquidString("a string"), 
+                LiquidString.Create("a string"), 
                 LiquidNumeric.Create(123), 
                 LiquidNumeric.Create(456m),
                 new LiquidBoolean(false)
             };
-            var filter = new JoinFilter(new LiquidString(", "));
+            var filter = new JoinFilter(LiquidString.Create(", "));
 
             // Act
             var result = filter.Apply(new TemplateContext(), liquidCollection).SuccessValue<LiquidString>();
@@ -34,10 +34,10 @@ namespace Liquid.NET.Tests.Filters.Array
         {
             // Arrange
                 
-            var filter = new JoinFilter(new LiquidString(", "));
+            var filter = new JoinFilter(LiquidString.Create(", "));
 
             // Act
-            var result = filter.Apply(new TemplateContext(), new LiquidString("Hello World")).SuccessValue<LiquidString>();
+            var result = filter.Apply(new TemplateContext(), LiquidString.Create("Hello World")).SuccessValue<LiquidString>();
 
             // Assert
             Assert.That(result.Value, Is.EqualTo("H, e, l, l, o,  , W, o, r, l, d"));

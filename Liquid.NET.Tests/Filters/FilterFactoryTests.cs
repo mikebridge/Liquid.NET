@@ -36,7 +36,7 @@ namespace Liquid.NET.Tests.Filters
         public void It_Should_Convert_A_Symbol_With_Args_To_A_Filter()
         {
             // Arrange
-            var filter = FilterFactory.InstantiateFilter("remove", typeof(RemoveFilter), new List<Option<ILiquidValue>>() { new LiquidString("test") });
+            var filter = FilterFactory.InstantiateFilter("remove", typeof(RemoveFilter), new List<Option<ILiquidValue>>() { LiquidString.Create("test") });
 
             // Act
 
@@ -134,7 +134,7 @@ namespace Liquid.NET.Tests.Filters
 
             public override LiquidExpressionResult Apply(ITemplateContext ctx, LiquidString liquidLiquidStringExpression)
             {
-                return LiquidExpressionResult.Success(new LiquidString(
+                return LiquidExpressionResult.Success(LiquidString.Create(
                     (liquidLiquidStringExpression == null ? "NULL" : liquidLiquidStringExpression.StringVal) +" " + 
                     (LiquidStringArg1 == null ? "NULL" : LiquidStringArg1.StringVal) + " " +
                     (LiquidStringArg2 == null ? "NULL" : LiquidStringArg2.StringVal)));

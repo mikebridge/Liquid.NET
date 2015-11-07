@@ -98,7 +98,7 @@ namespace Liquid.NET.Tests.Constants
 
           //private Func<LiquidNumeric, LiquidNumeric, LiquidNumeric> Add = (x, y) => new LiquidNumeric((decimal)x.Value + (Decimal)y.Value);
 
-          //private readonly Func<LiquidNumeric, LiquidString> _testToString = num => new LiquidString(num.Value.ToString());
+          //private readonly Func<LiquidNumeric, LiquidString> _testToString = num => LiquidString.Create(num.Value.ToString());
 
 
     }

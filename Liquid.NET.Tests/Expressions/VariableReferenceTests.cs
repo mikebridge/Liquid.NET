@@ -15,7 +15,7 @@ namespace Liquid.NET.Tests.Expressions
             // Arrange
             var variableReference = new VariableReference("myvar");
             var templateContext = new TemplateContext();
-            templateContext.DefineLocalVariable("myvar", new LiquidString("HELLO"));
+            templateContext.DefineLocalVariable("myvar", LiquidString.Create("HELLO"));
 
             // Act
             var result = variableReference.Eval(templateContext, new List<Option<ILiquidValue>>()).SuccessValue<LiquidString>();

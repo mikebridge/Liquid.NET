@@ -121,7 +121,7 @@ namespace Liquid.NET.Rendering
                 {"rindex0", LiquidNumeric.Create(length - iter - 1)},
                 {"last", new LiquidBoolean(length - iter - 1 == 0)},
                 {"length", LiquidNumeric.Create(length) },
-                {"name", new LiquidString(name) }
+                {"name", LiquidString.Create(name) }
             };
 
         }

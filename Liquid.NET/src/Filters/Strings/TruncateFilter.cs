@@ -13,7 +13,7 @@ namespace Liquid.NET.Filters.Strings
         public TruncateFilter(LiquidNumeric length, LiquidString truncateLiquidString)
         {
             _length = length;
-            _truncateLiquidString = truncateLiquidString == null || truncateLiquidString.Value == null ? new LiquidString("...") : truncateLiquidString;
+            _truncateLiquidString = truncateLiquidString == null || truncateLiquidString.Value == null ? LiquidString.Create("...") : truncateLiquidString;
         }
 
         public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, ILiquidValue liquidExpression)

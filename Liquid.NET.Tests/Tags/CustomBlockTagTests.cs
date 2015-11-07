@@ -228,7 +228,7 @@ namespace Liquid.NET.Tests.Tags
                 renderingVisitor.PushTextAccumulator(str => result += str);
                 foreach (var item in iterable)
                 {
-                    templateContext.SymbolTableStack.Define(varname, item);
+                    templateContext.SymbolTableStack.Define(varname, item.ToOption());
                     renderingVisitor.StartWalking(liquidBlock);
                 }
                 renderingVisitor.PopTextAccumulator();

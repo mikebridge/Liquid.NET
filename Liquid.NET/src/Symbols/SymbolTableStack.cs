@@ -83,7 +83,7 @@ namespace Liquid.NET.Symbols
             
         }
 
-        public void Define(string reference, ILiquidValue obj)
+        public void Define(string reference, Option<ILiquidValue> obj)
         {
             //Console.WriteLine("Adding " + reference + " to current scope");
             _symbolTables.Last().DefineLocalVariable(reference, obj);
@@ -94,7 +94,7 @@ namespace Liquid.NET.Symbols
             _symbolTables.Last().DefineLocalRegistryVariable(reference, obj);
         }
 
-        public void DefineGlobal(string key, ILiquidValue obj)
+        public void DefineGlobal(string key, Option<ILiquidValue> obj)
         {
             _symbolTables[0].DefineLocalVariable(key, obj);
         }

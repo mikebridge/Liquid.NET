@@ -9,6 +9,7 @@ using Liquid.NET.Filters.Math;
 using Liquid.NET.Filters.Strings;
 using Liquid.NET.Symbols;
 using Liquid.NET.Tags.Custom;
+using Liquid.NET.Utils;
 
 namespace Liquid.NET
 {
@@ -48,8 +49,12 @@ namespace Liquid.NET
         }        
 
 
-        public ITemplateContext DefineLocalVariable(String name, ILiquidValue constant)
+        public ITemplateContext DefineLocalVariable(String name, Option<ILiquidValue> constant)
         {
+            if (constant == null)
+            {
+                throw new ArgumentNullException("constant");
+            }
             _globalSymbolTable.DefineLocalVariable(name, constant);
             return this;
         }
@@ -88,7 +93,7 @@ namespace Liquid.NET
             return this;
         }
 
-        public ITemplateContext WithLocalVariables(IDictionary<string, ILiquidValue> dict)
+        public ITemplateContext WithLocalVariables(IDictionary<string, Option<ILiquidValue>> dict)
         {
             foreach (var kv in dict)
             {

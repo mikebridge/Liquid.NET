@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Numerics;
 using Liquid.NET.Constants;
+using Liquid.NET.Utils;
 using NUnit.Framework;
 
 namespace Liquid.NET.Tests
@@ -64,7 +65,7 @@ namespace Liquid.NET.Tests
             // Arrange
             const string varname = "hello";
             var templateContext = new TemplateContext().WithLocalVariables(
-                new Dictionary<String, ILiquidValue> { { varname, new LiquidString("TEST") } });
+                new Dictionary<String,Option<ILiquidValue>> { { varname, new LiquidString("TEST") } });
 
 
             // Act

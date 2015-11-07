@@ -69,7 +69,7 @@ namespace Liquid.NET.Rendering
                     DefineLocalVariables(templateContext, localBlockScope, includeTag.Definitions);
 
                     var exprValue = LiquidExpressionEvaluator.Eval(includeTag.ForExpression, templateContext);
-                    localBlockScope.DefineLocalVariable(virtualFileName, exprValue.SuccessResult.Value);
+                    localBlockScope.DefineLocalVariable(virtualFileName, exprValue.SuccessResult);
 
                     RenderWithLocalScope(templateContext, localBlockScope, snippetAst.RootNode);
                 }
@@ -92,7 +92,7 @@ namespace Liquid.NET.Rendering
                     {
                         var localBlockScope = new SymbolTable();
                         DefineLocalVariables(templateContext, localBlockScope, includeTag.Definitions);
-                        localBlockScope.DefineLocalVariable(virtualFileName, val.HasValue ? val.Value : null);
+                        localBlockScope.DefineLocalVariable(virtualFileName, val);
                         RenderWithLocalScope(templateContext, localBlockScope, snippetAst.RootNode);
                     }
                 }
@@ -104,7 +104,7 @@ namespace Liquid.NET.Rendering
                 if (includeTag.WithExpression != null)
                 {
                     var withExpression = LiquidExpressionEvaluator.Eval(includeTag.WithExpression, templateContext);
-                    localBlockScope.DefineLocalVariable(virtualFileName, withExpression.SuccessResult.Value);
+                    localBlockScope.DefineLocalVariable(virtualFileName, withExpression.SuccessResult);
                 }
                 RenderWithLocalScope(templateContext, localBlockScope, snippetAst.RootNode);
             }
@@ -138,9 +138,7 @@ namespace Liquid.NET.Rendering
                     // TODO: check if this should ignore this or not.
                 }
                 localBlockScope.DefineLocalVariable(def.Key,
-                    liquidExpressionREsult.SuccessResult.HasValue
-                        ? liquidExpressionREsult.SuccessResult.Value
-                        : null);
+                    liquidExpressionREsult.SuccessResult);
             }
         }
     }

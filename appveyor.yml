@@ -33,7 +33,7 @@
     assembly_informational_version: '{version}'
 
   nuget:
-	project_feed: true
+    project_feed: true
 
 # configuration for "release" branch
 # build in Debug mode and Test

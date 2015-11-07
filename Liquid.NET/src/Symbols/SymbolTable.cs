@@ -14,12 +14,12 @@ namespace Liquid.NET.Symbols
         private readonly FilterRegistry _filterRegistry;
         private readonly Registry<ICustomTagRenderer> _customTagRendererRegistry;
         private readonly Registry<ICustomBlockTagRenderer> _customBlockTagRendererRegistry;
-        private readonly IDictionary<String, ILiquidValue> _variableDictionary;
+        private readonly IDictionary<String, Option<ILiquidValue>> _variableDictionary;
         private readonly IDictionary<String, Object> _localRegistry; // available to tags & filters only
         private readonly IDictionary<String, MacroBlockTag> _macroRegistry;
 
         public SymbolTable(
-            IDictionary<string, ILiquidValue> variableDictionary = null, 
+            IDictionary<string, Option<ILiquidValue>> variableDictionary = null, 
             FilterRegistry filterRegistry = null, 
             Registry<ICustomTagRenderer> customTagRendererRegistry = null,
             Registry<ICustomBlockTagRenderer> customBlockTagRendererRegistry = null,
@@ -27,7 +27,7 @@ namespace Liquid.NET.Symbols
         {
             _customBlockTagRendererRegistry = customBlockTagRendererRegistry ?? new Registry<ICustomBlockTagRenderer>();
             _customTagRendererRegistry = customTagRendererRegistry ?? new Registry<ICustomTagRenderer>();
-            _variableDictionary = variableDictionary ?? new Dictionary<string, ILiquidValue>();
+            _variableDictionary = variableDictionary ?? new Dictionary<string, Option<ILiquidValue>>();
             _localRegistry = localRegistry ?? new Dictionary<string, Object>();
             _filterRegistry = filterRegistry ?? new FilterRegistry();
             _macroRegistry = new Dictionary<string, MacroBlockTag>();
@@ -51,9 +51,12 @@ namespace Liquid.NET.Symbols
             _customBlockTagRendererRegistry.Register<T>(name);
         }
 
-        public void DefineLocalVariable(String key, ILiquidValue obj)
+        public void DefineLocalVariable(String key, Option<ILiquidValue> obj)
         {
-
+            if (obj == null)
+            {
+                throw new ArgumentNullException("obj");
+            }
             if (_variableDictionary.ContainsKey(key))
             {
                 _variableDictionary[key] = obj;
@@ -66,24 +69,24 @@ namespace Liquid.NET.Symbols
             }
         }
 
-        private void SaveIncludeWhereReDefined(ILiquidValue obj)
+        private void SaveIncludeWhereReDefined(Option<ILiquidValue> obj)
         {
             if (HasLocalRegistryVariableReference(IncludeRenderer.LOCALREGISTRY_FILE_KEY))
             {
-                if (obj != null && obj.MetaData!= null && !obj.MetaData.ContainsKey("reassigned"))
+                if (obj.HasValue && obj.Value.MetaData!= null && !obj.Value.MetaData.ContainsKey("reassigned"))
                 {
-                    obj.MetaData.Add("reassigned", ReferenceLocalRegistryVariable(IncludeRenderer.LOCALREGISTRY_FILE_KEY));
+                    obj.Value.MetaData.Add("reassigned", ReferenceLocalRegistryVariable(IncludeRenderer.LOCALREGISTRY_FILE_KEY));
                 }
             }
         }
 
-        private void SaveIncludeWhereDefined(ILiquidValue obj)
+        private void SaveIncludeWhereDefined(Option<ILiquidValue> obj)
         {
             if (HasLocalRegistryVariableReference(IncludeRenderer.LOCALREGISTRY_FILE_KEY))
             {
-                if (obj != null && obj.MetaData != null && !obj.MetaData.ContainsKey("assigned"))
+                if (obj.HasValue && obj.Value.MetaData != null && !obj.Value.MetaData.ContainsKey("assigned"))
                 {
-                    obj.MetaData.Add("assigned", ReferenceLocalRegistryVariable(IncludeRenderer.LOCALREGISTRY_FILE_KEY));
+                    obj.Value.MetaData.Add("assigned", ReferenceLocalRegistryVariable(IncludeRenderer.LOCALREGISTRY_FILE_KEY));
                 }
             }
         }
@@ -174,9 +177,9 @@ namespace Liquid.NET.Symbols
         {
             if (HasVariableReference(key))
             {
-                var expressionConstant = _variableDictionary[key] == null ? new None<ILiquidValue>() : _variableDictionary[key].ToOption();
+                //var expressionConstant = _variableDictionary[key] == null ? new None<ILiquidValue>() : _variableDictionary[key].ToOption();
 
-                return LiquidExpressionResult.Success(expressionConstant);
+                return LiquidExpressionResult.Success(_variableDictionary[key]);
             }
             else
             {

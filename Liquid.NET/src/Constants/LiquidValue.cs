@@ -6,6 +6,8 @@ namespace Liquid.NET.Constants
 {
     public abstract class LiquidValue : ExpressionDescription, ILiquidValue
     {
+        public static readonly Option<ILiquidValue> None = new None<ILiquidValue>();
+
         protected LiquidValue()
         {
             MetaData = new Dictionary<string, object>();
@@ -44,7 +46,7 @@ namespace Liquid.NET.Constants
 
         public static implicit operator Option<ILiquidValue>(LiquidValue t)
         {
-            if (t == null)
+            if (ReferenceEquals(t,null))
             {
                 return new None<ILiquidValue>();
             }

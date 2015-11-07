@@ -71,7 +71,7 @@ namespace Liquid.NET.Rendering
                 int iter = 0;
                 foreach (var item in iterable.Skip(offset.IntValue).Take(limit.IntValue))
                 {
-                    templateContext.DefineLocalVariable(tableRowBlockTag.LocalVariable, item);
+                    templateContext.DefineLocalVariable(tableRowBlockTag.LocalVariable, Option<ILiquidValue>.Create(item));
                     String typename = item == null ? "null" : item.LiquidTypeName;
                     templateContext.DefineLocalVariable("tablerowloop", CreateForLoopDescriptor(
                         tableRowBlockTag.LocalVariable + "-" + typename, 

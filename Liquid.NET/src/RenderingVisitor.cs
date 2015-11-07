@@ -223,9 +223,9 @@ namespace Liquid.NET
         {
 
             LiquidExpressionEvaluator.Eval(assignTag.LiquidExpressionTree, _templateContext)
-                .WhenSuccess(
-                    x => x.WhenSome(some => _templateContext.SymbolTableStack.DefineGlobal(assignTag.VarName, some))
-                        .WhenNone(() => _templateContext.SymbolTableStack.DefineGlobal(assignTag.VarName, null)))
+                .WhenSuccess(x => _templateContext.SymbolTableStack.DefineGlobal(assignTag.VarName, x))
+//                    x => x.WhenSome(some => _templateContext.SymbolTableStack.DefineGlobal(assignTag.VarName, some))
+//                        .WhenNone(() => _templateContext.SymbolTableStack.DefineGlobal(assignTag.VarName, null)))
                 .WhenError(RenderError);
 
 

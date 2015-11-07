@@ -85,7 +85,7 @@ namespace Liquid.NET.Constants
             if (ReferenceEquals(val, null)) // if the value is null, it may not get implicitly cast.
             {
                 //throw new ArgumentException("value must not be null.");
-               val = Option<ILiquidValue>.None(); 
+               val = None; 
             }
             _value.Add(kvp.Key, val);
         }

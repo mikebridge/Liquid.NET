@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Numerics;
 using Liquid.NET.Constants;
+using Liquid.NET.Utils;
 using NUnit.Framework;
 
 namespace Liquid.NET.Tests
@@ -64,7 +65,7 @@ namespace Liquid.NET.Tests
             // Arrange
             const string varname = "hello";
             var templateContext = new TemplateContext().WithLocalVariables(
-                new Dictionary<String, ILiquidValue> { { varname, new LiquidString("TEST") } });
+                new Dictionary<String,Option<ILiquidValue>> { { varname, new LiquidString("TEST") } });
 
 
             // Act
@@ -73,6 +74,18 @@ namespace Liquid.NET.Tests
             // Assert
             Assert.That(val.SuccessValue<LiquidString>().StringVal, Is.EqualTo("TEST"));
         }
+
+
+        [Test]
+       
+        public void It_Should_Implicitly_Cast_A_Null_LocalVariable_To_None()
+        {
+            // Arrange
+            var templateContext = new TemplateContext().DefineLocalVariable("test", null);
+
+            Assert.That(templateContext.SymbolTableStack.Reference("test"), Is.EqualTo(LiquidValue.None));
+        }
+
 
         [Test]
         [ExpectedException(typeof(ArgumentNullException))]

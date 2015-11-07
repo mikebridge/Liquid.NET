@@ -4,6 +4,7 @@ using Liquid.NET.Constants;
 using Liquid.NET.Filters;
 using Liquid.NET.Symbols;
 using Liquid.NET.Tags.Custom;
+using Liquid.NET.Utils;
 
 namespace Liquid.NET
 {
@@ -13,12 +14,12 @@ namespace Liquid.NET
         ITemplateContext WithShopifyFilters();
         ITemplateContext WithAllFilters();
         ITemplateContext WithFilter<T>(String name) where T : IFilterExpression;
-        ITemplateContext DefineLocalVariable(String name, ILiquidValue constant);
+        ITemplateContext DefineLocalVariable(String name, Option<ILiquidValue> constant);
         ITemplateContext WithCustomTagRenderer<T>(string echoargs) where T: ICustomTagRenderer;
         ITemplateContext WithCustomTagBlockRenderer<T>(string echoargs)  where T: ICustomBlockTagRenderer;
         ITemplateContext WithFileSystem(IFileSystem fileSystem);
         ITemplateContext WithRegisters(IDictionary<String, Object> kv);
-        ITemplateContext WithLocalVariables(IDictionary<String, ILiquidValue> kv);
+        ITemplateContext WithLocalVariables(IDictionary<String, Option<ILiquidValue>> kv);
         ITemplateContext WithNoForLimit();
         ITemplateContext WithASTGenerator(Func<string, LiquidAST> astGeneratorFunc);
 

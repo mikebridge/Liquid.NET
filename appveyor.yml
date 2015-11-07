@@ -7,7 +7,7 @@
     - master
 
   environment:
-    release_version: '0.9.3'
+    release_version: '0.9.4'
 
   version: $(release_version).{build}
 
@@ -15,6 +15,9 @@
 
   build:
     project: Liquid.NET.sln
+
+  nuget:
+    project_feed: true
 
   before_build:
   - nuget restore

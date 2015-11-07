@@ -1,5 +1,6 @@
 ﻿using System;
 using Liquid.NET.Constants;
+using Liquid.NET.Utils;
 using NUnit.Framework;
 
 namespace Liquid.NET.Tests.Filters.Strings
@@ -86,7 +87,7 @@ namespace Liquid.NET.Tests.Filters.Strings
         {
             // Arrange
             TemplateContext ctx = new TemplateContext();
-            ctx.DefineLocalVariable("input", null);
+            ctx.DefineLocalVariable("input", Option<ILiquidValue>.None());
             var result = RenderingHelper.RenderTemplate("Result : {{ input | pluralize: 'thing', 'things' }}", ctx);
 
             // Assert

@@ -91,7 +91,7 @@ namespace Liquid.NET.Rendering
                 String typename = item == null ? "null" : item.LiquidTypeName;
                 templateContext.SymbolTableStack.Define("forloop", CreateForLoopDescriptor(
                     forBlockTag.LocalVariable + "-" + typename, iter, length, templateContext.SymbolTableStack));
-                templateContext.SymbolTableStack.Define(forBlockTag.LocalVariable, item);
+                templateContext.SymbolTableStack.Define(forBlockTag.LocalVariable, Option<ILiquidValue>.Create(item));
 
                 try
                 {

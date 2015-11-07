@@ -85,7 +85,7 @@ namespace Liquid.NET.Tests.Ruby
             }
             else if (obj.Type.Equals(JTokenType.String))
             {
-                return new LiquidString(obj.ToObject<String>());
+                return LiquidString.Create(obj.ToObject<String>());
             }
             else if (obj.Type.Equals(JTokenType.Boolean))
             {

@@ -202,7 +202,7 @@ namespace Liquid.NET.Tests.Tags
             const string templateString = "Result : {% for item in array[1] %}<li>{{ item }}</li>{% endfor %}";
             Logger.Log(templateString);
             TemplateContext ctx = new TemplateContext();
-            ctx.DefineLocalVariable("array", new LiquidCollection{new LiquidString("HELLO"), CreateArrayValues()});
+            ctx.DefineLocalVariable("array", new LiquidCollection{LiquidString.Create("HELLO"), CreateArrayValues()});
             var template = LiquidTemplate.Create(templateString);
 
             // Act
@@ -327,7 +327,7 @@ namespace Liquid.NET.Tests.Tags
             String input = @"{%for val in string%}{{forloop.name}}-{{forloop.index}}-{{forloop.length}}-{{forloop.index0}}-{{forloop.rindex}}-{{forloop.rindex0}}-{{forloop.first}}-{{forloop.last}}-{{val}}{%endfor%}";
             ITemplateContext ctx = new TemplateContext();
 
-            ctx.DefineLocalVariable("string", new LiquidString("test string"));
+            ctx.DefineLocalVariable("string", LiquidString.Create("test string"));
             var template = LiquidTemplate.Create(input);
 
             // Act
@@ -345,7 +345,7 @@ namespace Liquid.NET.Tests.Tags
             String input = @"{% assign array = ""1,2,3,4"" | split : "","" %}{%for val in array%}{% if forloop.index | modulo: 2 == 0 %}even{% else %}odd{%endif%}{%endfor%}";
             ITemplateContext ctx = new TemplateContext().WithAllFilters();
 
-            //ctx.DefineLocalVariable("string", new LiquidString("test"));
+            //ctx.DefineLocalVariable("string", LiquidString.Create("test"));
             var template = LiquidTemplate.Create(input);
 
             // Act
@@ -428,10 +428,10 @@ namespace Liquid.NET.Tests.Tags
             TemplateContext ctx = new TemplateContext();
             ctx.DefineLocalVariable("dict", new LiquidHash
             {
-                {"one", new LiquidString("ONE")},
-                {"two", new LiquidString("TWO")},
-                {"three", new LiquidString("THREE")},
-                {"four", new LiquidString("FOUR")}
+                {"one", LiquidString.Create("ONE")},
+                {"two", LiquidString.Create("TWO")},
+                {"three", LiquidString.Create("THREE")},
+                {"four", LiquidString.Create("FOUR")}
 
             });
             var template =
@@ -555,7 +555,7 @@ namespace Liquid.NET.Tests.Tags
         private LiquidCollection CreateArrayValues()
         {
            return new LiquidCollection {
-                new LiquidString("a string"),
+                LiquidString.Create("a string"),
                 LiquidNumeric.Create(123),
                 LiquidNumeric.Create(456m),
                 new LiquidBoolean(false)

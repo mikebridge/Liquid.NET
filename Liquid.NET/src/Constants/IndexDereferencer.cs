@@ -130,7 +130,7 @@ namespace Liquid.NET.Constants
         // TODO: this is inefficient and ugly and duplicates much of LiquidCollection
         private LiquidExpressionResult DoLookup(ITemplateContext ctx, LiquidString str, ILiquidValue indexProperty)
         {
-            var strValues = str.StringVal.ToCharArray().Select(ch => new LiquidString(ch.ToString()).ToOption()).ToList();
+            var strValues = str.StringVal.ToCharArray().Select(ch => LiquidString.Create(ch.ToString()).ToOption()).ToList();
             String propertyNameString = ValueCaster.RenderAsString(indexProperty);
             int index;
             if (propertyNameString.ToLower().Equals("first"))

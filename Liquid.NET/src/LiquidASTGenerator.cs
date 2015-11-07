@@ -586,7 +586,7 @@ namespace Liquid.NET
                 if (obj.NULL() != null)
                 {
                     //throw new Exception("Null not implemented yet");
-                    cycleList.Add(CreateObjectSimpleExpressionNode(new LiquidString("")));
+                    cycleList.Add(CreateObjectSimpleExpressionNode(LiquidString.Create("")));
                 }   
             }
             while (varsToCapture.Count > 0) // eval the queued variable captures.
@@ -604,7 +604,7 @@ namespace Liquid.NET
                 if (context.cycle_group().STRING() != null)
                 {
                     cycleTag.GroupNameExpressionTree =
-                        CreateObjectSimpleExpressionNode(new LiquidString(context.cycle_group().STRING().GetText()));
+                        CreateObjectSimpleExpressionNode(LiquidString.Create(context.cycle_group().STRING().GetText()));
                 }
                 if (context.cycle_group().NUMBER() != null)
                 {
@@ -1409,7 +1409,7 @@ namespace Liquid.NET
         /// </summary>
         private LiquidString GenerateStringSymbol(String text)
         {
-            return new LiquidString(StripQuotes(text));
+            return LiquidString.Create(StripQuotes(text));
         }
 
         private static string StripQuotes(String str)
@@ -1905,7 +1905,7 @@ namespace Liquid.NET
             public void AddStringIndex(String index)
             {
                 Log(Indent() + "# VariableReferenceTreeBuilder.AddStringIndex(" + index + ")");
-                _current.Value = new LiquidString(index);
+                _current.Value = LiquidString.Create(index);
 
             }
 

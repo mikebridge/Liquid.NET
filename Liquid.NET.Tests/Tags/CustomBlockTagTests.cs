@@ -162,7 +162,7 @@ namespace Liquid.NET.Tests.Tags
             {
                 var words = result.Split(new[] {' '}, StringSplitOptions.RemoveEmptyEntries);
 
-                return new LiquidString(String.Join(" ",
+                return LiquidString.Create(String.Join(" ",
                     words.Select(x => new String(x.Reverse().ToArray()))));
             }
 
@@ -213,7 +213,7 @@ namespace Liquid.NET.Tests.Tags
                 {
                     templateContext.SymbolTableStack.Pop();
                 }
-                return new LiquidString("START CUSTOM FOR LOOP" + result.StringVal + "END CUSTOM FOR LOOP");
+                return LiquidString.Create("START CUSTOM FOR LOOP" + result.StringVal + "END CUSTOM FOR LOOP");
 
             }
 
@@ -232,7 +232,7 @@ namespace Liquid.NET.Tests.Tags
                     renderingVisitor.StartWalking(liquidBlock);
                 }
                 renderingVisitor.PopTextAccumulator();
-                return new LiquidString(result);
+                return LiquidString.Create(result);
             }
 
         }

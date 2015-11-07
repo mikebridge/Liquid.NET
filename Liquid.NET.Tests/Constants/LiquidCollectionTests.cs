@@ -13,7 +13,7 @@ namespace Liquid.NET.Tests.Constants
 
             // Arrange
             LiquidCollection liquidCollection = new LiquidCollection {
-                new LiquidString("a string"), 
+                LiquidString.Create("a string"), 
                 LiquidNumeric.Create(123), 
                 LiquidNumeric.Create(456m),
                 new LiquidBoolean(false)
@@ -30,7 +30,7 @@ namespace Liquid.NET.Tests.Constants
             // Arrange
             LiquidCollection liquidCollection = new LiquidCollection
             {
-                new LiquidString("a string"),
+                LiquidString.Create("a string"),
                 LiquidNumeric.Create(123),
                 LiquidNumeric.Create(456m),
                 new LiquidBoolean(false)
@@ -65,7 +65,7 @@ namespace Liquid.NET.Tests.Constants
         [Test]
         public void It_Should_Clear_An_Array()
         {
-            var liquidCollection = new LiquidCollection{new LiquidString("test")};
+            var liquidCollection = new LiquidCollection{LiquidString.Create("test")};
             liquidCollection.Clear();
             Assert.That(liquidCollection.Count, Is.EqualTo(0));
         }
@@ -74,38 +74,38 @@ namespace Liquid.NET.Tests.Constants
         [Test]
         public void It_Should_Remove_An_Element_From_An_Array()
         {
-            var liquidCollection = new LiquidCollection { new LiquidString("test") };
-            liquidCollection.Remove(new LiquidString("test"));
+            var liquidCollection = new LiquidCollection { LiquidString.Create("test") };
+            liquidCollection.Remove(LiquidString.Create("test"));
             Assert.That(liquidCollection.Count, Is.EqualTo(0));
         }
 
         [Test]
         public void It_Should_Remove_An_Element_At_An_Index_In_An_Array()
         {
-            var liquidCollection = new LiquidCollection { new LiquidString("test") };
+            var liquidCollection = new LiquidCollection { LiquidString.Create("test") };
             liquidCollection.RemoveAt(0);
             Assert.That(liquidCollection.Count, Is.EqualTo(0));
         }
         [Test]
         public void It_Should_Find_An_Element_By_Value()
         {
-            var liquidCollection = new LiquidCollection { new LiquidString("test") };
-            var index = liquidCollection.IndexOf(new LiquidString("test"));
+            var liquidCollection = new LiquidCollection { LiquidString.Create("test") };
+            var index = liquidCollection.IndexOf(LiquidString.Create("test"));
             Assert.That(index, Is.EqualTo(0));
         }
         [Test]
         public void It_Should_Insert_An_Element()
         {
-            var liquidCollection = new LiquidCollection { new LiquidString("test") };
-            liquidCollection.Insert(0,new LiquidString("test 1"));
-            Assert.That(liquidCollection.IndexOf(new LiquidString("test 1")), Is.EqualTo(0));
+            var liquidCollection = new LiquidCollection { LiquidString.Create("test") };
+            liquidCollection.Insert(0,LiquidString.Create("test 1"));
+            Assert.That(liquidCollection.IndexOf(LiquidString.Create("test 1")), Is.EqualTo(0));
         }
         [Test]
         public void It_Should_Set_An_Element()
         {
-            var liquidCollection = new LiquidCollection { new LiquidString("test") };
-            liquidCollection[0] = new LiquidString("test 1");
-            Assert.That(liquidCollection.IndexOf(new LiquidString("test 1")), Is.EqualTo(0));
+            var liquidCollection = new LiquidCollection { LiquidString.Create("test") };
+            liquidCollection[0] = LiquidString.Create("test 1");
+            Assert.That(liquidCollection.IndexOf(LiquidString.Create("test 1")), Is.EqualTo(0));
         }
     }
 }

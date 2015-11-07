@@ -47,7 +47,7 @@ namespace Liquid.NET.Tests.Tags
             public LiquidString Render(ITemplateContext templateContext, IList<Option<ILiquidValue>> args)
             {
                 var argsAsString = String.Join(", ", args.Select(x => x.Value.LiquidTypeName+":"+ValueCaster.RenderAsString(x)));
-                return new LiquidString("I heard " + argsAsString);
+                return LiquidString.Create("I heard " + argsAsString);
             }
         }
 

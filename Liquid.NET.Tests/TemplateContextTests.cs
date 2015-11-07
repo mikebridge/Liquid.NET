@@ -16,7 +16,7 @@ namespace Liquid.NET.Tests
             // Arrange
             const string varname = "hello";
             var templateContext = new TemplateContext();            
-            templateContext.DefineLocalVariable(varname, new LiquidString("HELLO"));
+            templateContext.DefineLocalVariable(varname, LiquidString.Create("HELLO"));
 
             // Act
             var result = templateContext.SymbolTableStack.Reference(varname);
@@ -65,7 +65,7 @@ namespace Liquid.NET.Tests
             // Arrange
             const string varname = "hello";
             var templateContext = new TemplateContext().WithLocalVariables(
-                new Dictionary<String,Option<ILiquidValue>> { { varname, new LiquidString("TEST") } });
+                new Dictionary<String,Option<ILiquidValue>> { { varname, LiquidString.Create("TEST") } });
 
 
             // Act

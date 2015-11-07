@@ -15,7 +15,7 @@ namespace Liquid.NET.Tests.Symbols
             // Arrange
             const string str = "This is a test.";
             var templateContext = new TemplateContext();
-            templateContext.DefineLocalVariable("test", new LiquidString(str));
+            templateContext.DefineLocalVariable("test", LiquidString.Create(str));
             var stack = StackHelper.CreateSymbolTableStack(templateContext);
 
             // Act
@@ -67,10 +67,10 @@ namespace Liquid.NET.Tests.Symbols
         {
             // Arrange
             var stack = StackHelper.CreateSymbolTableStack();
-            stack.Define("hello", new LiquidString("HELLO"));
+            stack.Define("hello", LiquidString.Create("HELLO"));
             var localScope = new SymbolTable();
             stack.Push(localScope);
-            stack.Define("hello", new LiquidString("HI"));
+            stack.Define("hello", LiquidString.Create("HI"));
 
             // Act
             var result = stack.Reference("hello");
@@ -87,10 +87,10 @@ namespace Liquid.NET.Tests.Symbols
             // Arrange
             const string varname = "hello";
             var stack = StackHelper.CreateSymbolTableStack();
-            stack.Define(varname, new LiquidString("HELLO"));
+            stack.Define(varname, LiquidString.Create("HELLO"));
             var localScope = new SymbolTable();
             stack.Push(localScope);
-            stack.Define(varname, new LiquidString("HI"));
+            stack.Define(varname, LiquidString.Create("HI"));
             stack.Pop();
 
             // Act
@@ -106,7 +106,7 @@ namespace Liquid.NET.Tests.Symbols
         {
             // Arrange
             var stack = StackHelper.CreateSymbolTableStack(); 
-            stack.Define("hello", new LiquidString("HELLO"));
+            stack.Define("hello", LiquidString.Create("HELLO"));
             var localScope = new SymbolTable();
             stack.Push(localScope);
 
@@ -124,7 +124,7 @@ namespace Liquid.NET.Tests.Symbols
         {
             // Arrange
             var stack = StackHelper.CreateSymbolTableStack();
-            stack.Define("hello", new LiquidString("HELLO"));
+            stack.Define("hello", LiquidString.Create("HELLO"));
 
             bool found = false;
             
@@ -141,7 +141,7 @@ namespace Liquid.NET.Tests.Symbols
         {
             // Arrange
             var stack = StackHelper.CreateSymbolTableStack();
-            stack.Define("hello", new LiquidString("HELLO"));
+            stack.Define("hello", LiquidString.Create("HELLO"));
             var localScope = new SymbolTable();
             stack.Push(localScope);
             bool found = false;

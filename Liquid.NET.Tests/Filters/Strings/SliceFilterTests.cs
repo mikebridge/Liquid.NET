@@ -80,7 +80,7 @@ namespace Liquid.NET.Tests.Filters.Strings
         {
             // Arrange
             var ctx = new TemplateContext();
-            ctx.DefineLocalVariable("str", new LiquidString("Test"));
+            ctx.DefineLocalVariable("str", LiquidString.Create("Test"));
             // Act
             var result = RenderingHelper.RenderTemplate("Result : {{ str | slice }}", ctx);
 
@@ -106,7 +106,7 @@ namespace Liquid.NET.Tests.Filters.Strings
         public LiquidCollection CreateArray()
         {
             return new LiquidCollection {
-                new LiquidString("a string"), 
+                LiquidString.Create("a string"), 
                 LiquidNumeric.Create(123), 
                 LiquidNumeric.Create(456m),
                 new LiquidBoolean(false)

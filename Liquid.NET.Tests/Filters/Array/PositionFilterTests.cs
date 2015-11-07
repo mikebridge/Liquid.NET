@@ -14,7 +14,7 @@ namespace Liquid.NET.Tests.Filters.Array
             // Arrange
 
             LiquidCollection liquidCollection = new LiquidCollection {
-                new LiquidString("a string"), 
+                LiquidString.Create("a string"), 
                 LiquidNumeric.Create(123), 
                 LiquidNumeric.Create(456m),
                 new LiquidBoolean(false)

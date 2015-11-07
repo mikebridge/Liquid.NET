@@ -19,12 +19,12 @@ namespace Liquid.NET.Filters.Strings
         public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, LiquidString liquidExpression)
         {
             var strToAppend = _strToAppend == null ? "" : _strToAppend.StringVal;
-            return LiquidExpressionResult.Success(new LiquidString(liquidExpression.StringVal + strToAppend));
+            return LiquidExpressionResult.Success(LiquidString.Create(liquidExpression.StringVal + strToAppend));
         }
 
         public override LiquidExpressionResult ApplyToNil(ITemplateContext ctx)
         {
-            return ApplyTo(ctx, new LiquidString(""));
+            return ApplyTo(ctx, LiquidString.Create(""));
         }
 
     }

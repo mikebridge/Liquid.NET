@@ -71,7 +71,7 @@ namespace Liquid.NET.Tests.Expressions
             ITemplateContext ctx = new TemplateContext();
 
             ctx.DefineLocalVariable("dict", new LiquidHash{
-                {"x", new LiquidString("a string")}
+                {"x", LiquidString.Create("a string")}
             });
 
             // Act

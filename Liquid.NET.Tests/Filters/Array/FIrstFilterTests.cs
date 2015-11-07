@@ -15,7 +15,7 @@ namespace Liquid.NET.Tests.Filters.Array
             // Arrange
 
             LiquidCollection liquidCollection = new LiquidCollection{
-                new LiquidString("a string"), 
+                LiquidString.Create("a string"), 
                 LiquidNumeric.Create(123), 
                 LiquidNumeric.Create(456m),
                 new LiquidBoolean(false)
@@ -37,7 +37,7 @@ namespace Liquid.NET.Tests.Filters.Array
             var filter = new FirstFilter();
 
             // Act
-            var result = filter.Apply(new TemplateContext(), new LiquidString("Hello World")).SuccessValue<LiquidString>();
+            var result = filter.Apply(new TemplateContext(), LiquidString.Create("Hello World")).SuccessValue<LiquidString>();
 
             // Assert
             Assert.That(result.Value, Is.EqualTo("H"));
@@ -66,7 +66,7 @@ namespace Liquid.NET.Tests.Filters.Array
             var filter = new FirstFilter();
 
             // Act
-            var result = filter.Apply(new TemplateContext(), new LiquidString(""));
+            var result = filter.Apply(new TemplateContext(), LiquidString.Create(""));
 
             // Assert
             Assert.That(result.IsError, Is.True);
@@ -80,7 +80,7 @@ namespace Liquid.NET.Tests.Filters.Array
             var filter = new FirstFilter();
 
             // Act
-            var result = filter.Apply(new TemplateContext(), new LiquidString(null));
+            var result = filter.Apply(new TemplateContext(), LiquidString.Create(null));
 
             // Assert
             Assert.That(result.IsError, Is.True);

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Numerics;
 using System.Reflection;
 using Liquid.NET.Constants;
@@ -80,7 +79,7 @@ namespace Liquid.NET.Tests.Constants
         public void It_Should_Format_An_Array_By_Concatenating_Each_Elements_STring_Value()
         {
             // Arrange
-            var num = new LiquidCollection{ new LiquidString("a"), new LiquidString("b"), new LiquidString("c") };
+            var num = new LiquidCollection{ LiquidString.Create("a"), LiquidString.Create("b"), LiquidString.Create("c") };
 
             // Act
             var result1 = ValueCaster.Cast<LiquidCollection, LiquidString>(num);
@@ -109,7 +108,7 @@ namespace Liquid.NET.Tests.Constants
         public void It_Should_Return_The_Same_Object_If_Src_And_Dest_Are_Strings()
         {
             // Arrange
-            var original = new LiquidString("Test");
+            var original = LiquidString.Create("Test");
 
             // Act
             var result = ValueCaster.Cast<LiquidString, LiquidString>(original).SuccessValue<LiquidString>();
@@ -136,7 +135,7 @@ namespace Liquid.NET.Tests.Constants
         public void It_Should_Handle_Casting_A_Null_Value()
         {
             // Arrange
-            var original = new LiquidString(null);
+            var original = LiquidString.Create(null);
 
             // Act
             var result = ValueCaster.Cast<LiquidString, LiquidNumeric>(original);
@@ -144,8 +143,9 @@ namespace Liquid.NET.Tests.Constants
             Assert.That(result.IsSuccess, Is.True);
 
             // Assert
-            // is this what it should do?
-            Assert.That(result.SuccessValue<LiquidNumeric>().IntValue, Is.EqualTo(0));
+            //Assert.That(result.SuccessValue<LiquidNumeric>().IntValue, Is.EqualTo(0));
+            Assert.That(result.IsSuccess, Is.True);
+            Assert.That(result.SuccessOption<ILiquidValue>().HasValue, Is.False);
 
         }
 
@@ -234,7 +234,7 @@ namespace Liquid.NET.Tests.Constants
 //        public void It_Should_Cast_A_String_To_An_Array_Of_Strings()
 //        {
 //            // Arrange
-//            var str = new LiquidString("Hello");
+//            var str = LiquidString.Create("Hello");
 //
 //            // Act
 //            var arrayResult = ValueCaster.Cast<LiquidString, LiquidCollection>(str);
@@ -251,7 +251,7 @@ namespace Liquid.NET.Tests.Constants
         public void It_Should_Cast_A_String_To_An_Array_Of_One_String()
         {
             // Arrange
-            var str = new LiquidString("Hello");
+            var str = LiquidString.Create("Hello");
 
             // Act
             var arrayResult = ValueCaster.Cast<LiquidString, LiquidCollection>(str);
@@ -270,10 +270,10 @@ namespace Liquid.NET.Tests.Constants
         {
             // Arrange
             var dictValue = new LiquidHash {
-                    {"one", new LiquidString("ONE")},
-                    {"two", new LiquidString("TWO")},
-                    {"three", new LiquidString("THREE")},
-                    {"four", new LiquidString("FOUR")}
+                    {"one", LiquidString.Create("ONE")},
+                    {"two", LiquidString.Create("TWO")},
+                    {"three", LiquidString.Create("THREE")},
+                    {"four", LiquidString.Create("FOUR")}
 
                 };
 
@@ -316,7 +316,7 @@ namespace Liquid.NET.Tests.Constants
             // Arrange     
             var subDictValue = new LiquidHash
             {
-                {"abc", new LiquidString("def")}
+                {"abc", LiquidString.Create("def")}
             };
             var dictValue = new LiquidHash {
                     {"one", LiquidNumeric.Create(1)},
@@ -340,7 +340,7 @@ namespace Liquid.NET.Tests.Constants
             // Arrange     
             var subDictValue = new LiquidHash
             {
-                {"abc", new LiquidString("def")},
+                {"abc", LiquidString.Create("def")},
                 {"ghi", null}
             };
             var dictValue = new LiquidHash
@@ -388,7 +388,7 @@ namespace Liquid.NET.Tests.Constants
         [Test]
         public void It_Should_Convert_An_Array()
         {
-            var result = ValueCaster.Cast<LiquidCollection, LiquidString>(new LiquidCollection{new LiquidString("test")});
+            var result = ValueCaster.Cast<LiquidCollection, LiquidString>(new LiquidCollection{LiquidString.Create("test")});
             Assert.That(result.IsSuccess, Is.True);
             Assert.That(result.SuccessResult.HasValue, Is.True);
             Assert.That(result.SuccessValue<LiquidString>().StringVal, Is.EqualTo("test"));
@@ -445,7 +445,7 @@ namespace Liquid.NET.Tests.Constants
         public void It_Should_Not_Cast_Array_To_Numeric()
         {
             // Arrange
-            var result = ValueCaster.Cast<LiquidCollection, LiquidNumeric>(new LiquidCollection { new LiquidString("test") });
+            var result = ValueCaster.Cast<LiquidCollection, LiquidNumeric>(new LiquidCollection { LiquidString.Create("test") });
             Assert.That(result.IsSuccess, Is.False);
         }
 
@@ -457,6 +457,39 @@ namespace Liquid.NET.Tests.Constants
             Assert.That(result, Is.EqualTo(""));
         }
 
+        [Test]
+        public void It_Should_Cast_Nil_To_0_In_A_Filter() // integration
+        {
+            // Act
+            var result = RenderingHelper.RenderTemplate("Result : {{ x | plus: 1 }}");
+
+            // Assert
+            Assert.That(result, Is.EqualTo("Result : 1"));
+
+        }
+
+        [Test]
+        public void It_Should_Cast_Undefined_To_0_In_A_Filter_Arg() // integration
+        {
+            // Act
+            var result = RenderingHelper.RenderTemplate("Result : {{ 3 | plus: x }}");
+
+            // Assert
+            Assert.That(result, Is.EqualTo("Result : 3"));
+
+        }
+
+        [Test]
+        public void It_Should_Cast_Nil_To_0_In_A_Filter_Arg() // integration
+        {
+            // Act
+
+            var result = RenderingHelper.RenderTemplate("{% assign x = nil %}Result : {{ 3 | plus: x }}");
+
+            // Assert
+            Assert.That(result, Is.EqualTo("Result : 3"));
+
+        }
 
     }
 }

@@ -82,9 +82,9 @@ namespace Liquid.NET.Tests.Expressions
         {
             // Arrange
             return new LiquidCollection{
-                new LiquidString("1"), 
+                LiquidString.Create("1"), 
                 LiquidNumeric.Create(2), 
-                new LiquidString("Three"),
+                LiquidString.Create("Three"),
                 new LiquidBoolean(true)
             };;
 
@@ -94,9 +94,9 @@ namespace Liquid.NET.Tests.Expressions
         {
             return new LiquidHash
             {
-                {"one", new LiquidString("1")},
+                {"one", LiquidString.Create("1")},
                 {"two", LiquidNumeric.Create(2)},
-                {"three", new LiquidString("Three")},
+                {"three", LiquidString.Create("Three")},
                 {"four", new LiquidBoolean(true)}
             };
 

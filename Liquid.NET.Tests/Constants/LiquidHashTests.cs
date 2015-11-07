@@ -17,7 +17,7 @@ namespace Liquid.NET.Tests.Constants
             // Arrange
             var dictValue = new LiquidHash
             {
-                {"string1", new LiquidString("a string")},
+                {"string1", LiquidString.Create("a string")},
                 {"string2", LiquidNumeric.Create(123)},
                 {"string3", LiquidNumeric.Create(456m)}
             };
@@ -32,7 +32,7 @@ namespace Liquid.NET.Tests.Constants
 
             // Arrange
             LiquidHash dictValue3 = new LiquidHash  {
-                {"str", new LiquidString("Dict 3")},
+                {"str", LiquidString.Create("Dict 3")},
             };
 
             LiquidHash dictValue2 = new LiquidHash{
@@ -70,12 +70,12 @@ namespace Liquid.NET.Tests.Constants
             // Arrange
             var dict = new LiquidHash
             {
-                {"key1", Option<ILiquidValue>.Create(new LiquidString("test 1"))},
-                {"key2", Option<ILiquidValue>.Create(new LiquidString("test 2"))},
+                {"key1", Option<ILiquidValue>.Create(LiquidString.Create("test 1"))},
+                {"key2", Option<ILiquidValue>.Create(LiquidString.Create("test 2"))},
             };
 
             // Assert
-            Assert.That(dict.ValueAt("key1").Value, Is.EqualTo(new LiquidString("test 1")));
+            Assert.That(dict.ValueAt("key1").Value, Is.EqualTo(LiquidString.Create("test 1")));
 
         }
 
@@ -85,13 +85,13 @@ namespace Liquid.NET.Tests.Constants
             // Arrange
             var dict = new LiquidHash
             {
-                {"key1", new LiquidString("test 1")},
-                {"key2", new LiquidString("test 2")},
+                {"key1", LiquidString.Create("test 1")},
+                {"key2", LiquidString.Create("test 2")},
             };
 
 
             // Assert
-            Assert.That(dict.ValueAt("key1").Value, Is.EqualTo(new LiquidString("test 1")));
+            Assert.That(dict.ValueAt("key1").Value, Is.EqualTo(LiquidString.Create("test 1")));
 
         }
 
@@ -107,18 +107,18 @@ namespace Liquid.NET.Tests.Constants
         public void It_Should_Set_A_Value()
         {
             var dict = new LiquidHash();
-            dict["key"] = new Some<ILiquidValue>(new LiquidString("test"));
-            Assert.That(dict["key"].Value, Is.EqualTo(new LiquidString("test")));
+            dict["key"] = new Some<ILiquidValue>(LiquidString.Create("test"));
+            Assert.That(dict["key"].Value, Is.EqualTo(LiquidString.Create("test")));
         }
 
 
         [Test]
         public void It_Should_Set_A_Value_Via_Key_Value_Pair()
         {
-            var val = new Some<ILiquidValue>(new LiquidString("test"));           
+            var val = new Some<ILiquidValue>(LiquidString.Create("test"));           
             var kvp = new KeyValuePair<String,Option<ILiquidValue>>("key", val);
             var dict = new LiquidHash {kvp};
-            Assert.That(dict["key"].Value, Is.EqualTo(new LiquidString("test")));
+            Assert.That(dict["key"].Value, Is.EqualTo(LiquidString.Create("test")));
         }
 
         [Test]
@@ -133,14 +133,14 @@ namespace Liquid.NET.Tests.Constants
         public void It_Should_Add_A_Value()
         {
             var dict = new LiquidHash();
-            dict.Add("key", new LiquidString("test"));
-            Assert.That(dict["key"].Value, Is.EqualTo(new LiquidString("test")));
+            dict.Add("key", LiquidString.Create("test"));
+            Assert.That(dict["key"].Value, Is.EqualTo(LiquidString.Create("test")));
         }
 
         [Test]
         public void It_Should_Clear_Values()
         {
-            var dict = new LiquidHash {{"key", new LiquidString("test")}};
+            var dict = new LiquidHash {{"key", LiquidString.Create("test")}};
             dict.Clear();
             Assert.That(dict.Count, Is.EqualTo(0));
         }
@@ -148,7 +148,7 @@ namespace Liquid.NET.Tests.Constants
         [Test]
         public void It_Should_Remove_A_Value()
         {
-            var dict = new LiquidHash { { "key", new LiquidString("test") } };
+            var dict = new LiquidHash { { "key", LiquidString.Create("test") } };
             dict.Remove("key");
             Assert.That(dict.Count, Is.EqualTo(0));
         }
@@ -156,7 +156,7 @@ namespace Liquid.NET.Tests.Constants
         [Test]
         public void It_Should_Copy_Values()
         {
-            var dict = new LiquidHash { { "key", new LiquidString("test") } };
+            var dict = new LiquidHash { { "key", LiquidString.Create("test") } };
             var x = new KeyValuePair<string, Option<ILiquidValue>>[1];
             dict.CopyTo(x, 0);
             Assert.That(x.Length, Is.EqualTo(1));
@@ -165,7 +165,7 @@ namespace Liquid.NET.Tests.Constants
         [Test]
         public void It_Should_Know_If_A_Value_Is_Contained()
         {
-            var val = new Some<ILiquidValue>(new LiquidString("test"));
+            var val = new Some<ILiquidValue>(LiquidString.Create("test"));
             var kvp = new KeyValuePair<String, Option<ILiquidValue>>("key", val);
             var dict = new LiquidHash { kvp };
 
@@ -175,7 +175,7 @@ namespace Liquid.NET.Tests.Constants
         [Test]
         public void It_Should_Retrieve_Values()
         {
-            var dict = new LiquidHash {{"key", new LiquidString("test")}};
+            var dict = new LiquidHash {{"key", LiquidString.Create("test")}};
             Assert.That(dict.Values.Count, Is.EqualTo(1));
         }
     }

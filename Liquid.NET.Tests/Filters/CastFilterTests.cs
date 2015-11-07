@@ -13,7 +13,7 @@ namespace Liquid.NET.Tests.Filters
         {
             // Arrange
             var castFilter = new CastFilter<LiquidString, LiquidNumeric>();
-            var inputObj = new LiquidString("123");
+            var inputObj = LiquidString.Create("123");
 
             // Act
             var result = castFilter.Apply(new TemplateContext(),inputObj).SuccessValue<LiquidNumeric>();

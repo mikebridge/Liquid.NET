@@ -26,10 +26,8 @@ namespace Liquid.NET.Constants
             }
             if (typeof (TDest) == typeof (LiquidString))
             {
-                //Console.WriteLine(src);
-                return LiquidExpressionResult.Success(new LiquidString(src.ToString()));
+                return LiquidExpressionResult.Success(LiquidString.Create(src.ToString()));
             }
-            //return Convert<TDest>((dynamic)src);
             var str = src as LiquidString;
             if (str != null)
             {
@@ -80,7 +78,7 @@ namespace Liquid.NET.Constants
             }
             if (destType == typeof(LiquidString))
             {
-                return LiquidExpressionResult.Success(new Some<ILiquidValue>(new LiquidString(String.Empty)));
+                return LiquidExpressionResult.Success(LiquidString.Create(String.Empty));
             }
             return LiquidExpressionResult.Success(new None<ILiquidValue>());
         }
@@ -148,7 +146,7 @@ namespace Liquid.NET.Constants
                 var newArray = new LiquidCollection();
                 var dictarray = liquidHash.Keys.Select(
                     k => (Option<ILiquidValue>) new Some<ILiquidValue>(new LiquidCollection {
-                            new Some<ILiquidValue>(new LiquidString(k)),
+                            LiquidString.Create(k),
                             liquidHash[k]
                     })).ToList();
                 foreach (var item in dictarray)
@@ -226,7 +224,7 @@ namespace Liquid.NET.Constants
             {
                 var expressionConstants = new Some<ILiquidValue>(str);
                 // IN liquid, it doesn't seem to cast a string to an array of chars---it casts to an array of one element.
-                //var expressionConstants = str.StringVal.Select(x => (Option<ILiquidValue>) new Some<ILiquidValue>(new LiquidString(x.ToString())));
+                //var expressionConstants = str.StringVal.Select(x => (Option<ILiquidValue>) new Some<ILiquidValue>(LiquidString.Create(x.ToString())));
                 return LiquidExpressionResult.Success(new LiquidCollection{expressionConstants});
             }
             return LiquidExpressionResult.Error("Can't convert from string to " + destType);
@@ -245,7 +243,7 @@ namespace Liquid.NET.Constants
 //            var destType = typeof (TDest);
 //            if (destType == typeof (LiquidString))
 //            {
-//                return LiquidExpressionResult.Success(new LiquidString(source.ToString()));
+//                return LiquidExpressionResult.Success(LiquidString.Create(source.ToString()));
 //            }
 //            if (destType == typeof (LiquidNumeric))
 //            {

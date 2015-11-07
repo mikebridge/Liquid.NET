@@ -48,7 +48,7 @@ namespace Liquid.NET.Filters.Strings
                 return LiquidExpressionResult.Error("Please pass a start parameter.");
             }
 
-            return LiquidExpressionResult.Success(new LiquidString(String.Concat(SliceList(list))));
+            return LiquidExpressionResult.Success(LiquidString.Create(String.Concat(SliceList(list))));
         }
 
         private IList<T> SliceList<T>(IList<T> list)

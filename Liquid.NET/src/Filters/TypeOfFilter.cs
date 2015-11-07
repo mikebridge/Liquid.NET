@@ -8,12 +8,12 @@ namespace Liquid.NET.Filters
     {
         public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, ILiquidValue liquidExpression)
         {
-            return LiquidExpressionResult.Success(new LiquidString(liquidExpression.LiquidTypeName));
+            return LiquidExpressionResult.Success(LiquidString.Create(liquidExpression.LiquidTypeName));
         }
 
         public override LiquidExpressionResult ApplyToNil(ITemplateContext ctx)
         {
-            return LiquidExpressionResult.Success(new LiquidString("nil"));
+            return LiquidExpressionResult.Success(LiquidString.Create("nil"));
         }
 
     }

@@ -24,13 +24,13 @@ namespace Liquid.NET.Filters.Strings
             String numericString = ValueCaster.RenderAsString((ILiquidValue) liquidNumeric);
             if (_single == null && _plural == null)
             {
-                return LiquidExpressionResult.Success(new LiquidString(numericString));
+                return LiquidExpressionResult.Success(LiquidString.Create(numericString));
             }
             if (_plural == null)
             {
-                _plural = new LiquidString("");
+                _plural = LiquidString.Create("");
             }
-            var str = new LiquidString(numericString+" ");
+            var str = LiquidString.Create(numericString+" ");
             return LiquidExpressionResult.Success(str.Join(liquidNumeric.DecimalValue == 1 ? _single : _plural));
         }
 

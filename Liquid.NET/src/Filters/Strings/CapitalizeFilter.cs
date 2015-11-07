@@ -15,11 +15,11 @@ namespace Liquid.NET.Filters.Strings
             String before = ValueCaster.RenderAsString(liquidExpression);
             if (String.IsNullOrWhiteSpace(before))
             {
-                return LiquidExpressionResult.Success(new LiquidString(""));
+                return LiquidExpressionResult.Success(LiquidString.Create(""));
             }
             var nospaces = before.TrimStart();
             String trimmed = before.Substring(0, before.Length - nospaces.Length);
-            return LiquidExpressionResult.Success(new LiquidString(trimmed + char.ToUpper(nospaces[0]) + nospaces.Substring(1)));
+            return LiquidExpressionResult.Success(LiquidString.Create(trimmed + char.ToUpper(nospaces[0]) + nospaces.Substring(1)));
         }
     }
 }

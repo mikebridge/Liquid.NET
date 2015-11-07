@@ -122,7 +122,7 @@ namespace Liquid.NET.Tests.Expressions
 
             ctx.DefineLocalVariable("dict", new LiquidHash
             {
-                {"x", new LiquidString("a string")}
+                {"x", LiquidString.Create("a string")}
             });
 
             // Act
@@ -159,7 +159,7 @@ namespace Liquid.NET.Tests.Expressions
         public void It_Should_Return_True_If_LiquidString_Wraps_Null()
         {
             // Arrange
-            var str = new LiquidString(null);
+            var str = LiquidString.Create(null);
             var tmpl = @"Result : {% if str == blank %}BLANK{% else %}NOT BLANK{% endif %}";
             ITemplateContext ctx = new TemplateContext();
 

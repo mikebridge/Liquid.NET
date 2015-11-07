@@ -95,11 +95,11 @@ namespace Liquid.NET.Tests
         {
             return new LiquidCollection
             {
-                new LiquidString("a string"),
+                LiquidString.Create("a string"),
                 LiquidNumeric.Create(123),
                 LiquidNumeric.Create(456m),
                 new LiquidBoolean(false),
-                new LiquidString("a string 2"),
+                LiquidString.Create("a string 2"),
                 LiquidNumeric.Create(999999.0m ),
                 LiquidNumeric.Create(456m),
                 new LiquidBoolean(true),

@@ -16,7 +16,7 @@ namespace Liquid.NET.Tests.Filters.Array
             // Arrange
 
             LiquidCollection liquidCollection = new LiquidCollection{
-                new LiquidString("a string"), 
+                LiquidString.Create("a string"), 
                 LiquidNumeric.Create(123), 
                 LiquidNumeric.Create(456m),
                 new LiquidBoolean(false)
@@ -52,7 +52,7 @@ namespace Liquid.NET.Tests.Filters.Array
             // Arrange
 
             LiquidHash dictValue = new LiquidHash {
-                {"string1", new LiquidString("a string")},
+                {"string1", LiquidString.Create("a string")},
                 {"string2", LiquidNumeric.Create(123)},
                 {"string3", LiquidNumeric.Create(456m)}
             };
@@ -85,7 +85,7 @@ namespace Liquid.NET.Tests.Filters.Array
         public void It_Should_Measure_The_Size_Of_A_String()
         {
             // Arrange
-            var strVal = new LiquidString("1234567890");
+            var strVal = LiquidString.Create("1234567890");
             var filter = new SizeFilter();
 
             // Act
@@ -100,7 +100,7 @@ namespace Liquid.NET.Tests.Filters.Array
         public void A_String_With_No_Value_Should_Have_Zero_Length()
         {
             // Arrange
-            var strVal = new LiquidString(null);
+            var strVal = LiquidString.Create(null);
             var filter = new SizeFilter();
 
             // Act

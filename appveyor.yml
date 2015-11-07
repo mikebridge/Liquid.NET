@@ -16,9 +16,6 @@
   build:
     project: Liquid.NET.sln
 
-  nuget:
-    project_feed: true
-
   before_build:
   - nuget restore
 
@@ -27,6 +24,16 @@
   - "SET PATH=C:\\Python34;C:\\Python34\\Scripts;%PATH%"
   - pip install codecov
   - codecov -f "Liquid.NET.coverage.xml"
+
+  assembly_info:
+    patch: true
+    file: '**\AssemblyInfo.*'
+    assembly_version: '{version}-dev'
+    assembly_file_version: '{version}'
+    assembly_informational_version: '{version}'
+
+  nuget:
+	project_feed: true
 
 # configuration for "release" branch
 # build in Debug mode and Test

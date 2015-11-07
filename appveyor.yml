@@ -46,7 +46,7 @@
     - release
 
   environment:
-    release_version: '0.9.3'
+    release_version: '0.9.4'
 
   version: $(release_version).{build}
   configuration: Release

@@ -94,7 +94,7 @@ namespace Liquid.NET.Constants
         private static bool CheckIsBlank(LiquidString val)
         {
             String stringVal = val.StringVal;
-            return String.IsNullOrEmpty(stringVal.Trim());
+            return stringVal == null || String.IsNullOrEmpty(stringVal.Trim());
         }
 
 

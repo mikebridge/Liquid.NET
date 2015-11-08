@@ -6,7 +6,9 @@
 Liquid.NET is a C# port of Tobias Lüdke's [Liquid templating language](https://docs.shopify.com/themes/liquid-documentation/basics).  
 
 It can be downloaded via [NuGet](https://www.nuget.org/packages/Liquid.NET/).  There's more information on 
-[Liquid.NET Wiki](https://github.com/mikebridge/Liquid.NET/wiki).
+the [Liquid.NET Wiki](https://github.com/mikebridge/Liquid.NET/wiki).
+
+Start from zero with the [Quick Start](https://github.com/mikebridge/Liquid.NET/wiki/Quick-Start) wiki page.
 
 *Liquid.NET is an independent project and not affiliated with Shopify.*
 

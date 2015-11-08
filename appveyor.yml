@@ -7,7 +7,7 @@
     - master
 
   environment:
-    release_version: '0.9.4'
+    release_version: '0.9.5'
 
   version: $(release_version).{build}
 
@@ -46,7 +46,7 @@
     - release
 
   environment:
-    release_version: '0.9.4'
+    release_version: '0.9.5'
 
   version: $(release_version).{build}
   configuration: Release

@@ -30,8 +30,8 @@ namespace Liquid.NET.Filters.Strings
             {
                 _plural = LiquidString.Create("");
             }
-            var str = LiquidString.Create(numericString+" ");
-            return LiquidExpressionResult.Success(str.Join(liquidNumeric.DecimalValue == 1 ? _single : _plural));
+            //var str = LiquidString.Create(numericString+" ");
+            return LiquidExpressionResult.Success(liquidNumeric.DecimalValue == 1 ? _single : _plural);
         }
 
         public override LiquidExpressionResult ApplyToNil(ITemplateContext ctx)

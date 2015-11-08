@@ -9,7 +9,7 @@ namespace Liquid.NET.Tests.Filters.Strings
     public class PluralizeFilterTests
     {
         [Test]
-        [TestCase(1.2, "1.2 things")]
+        [TestCase(1.2, "things")]
         public void It_Should_Pluralize_A_Decimal_Number(decimal input, String expected)
         {
             // Arrange
@@ -22,10 +22,10 @@ namespace Liquid.NET.Tests.Filters.Strings
 
         }
 
-        [TestCase(2, "2 things")]
-        [TestCase(1, "1 thing")]
-        [TestCase(1, "1 thing")]
-        [TestCase(0, "0 things")]
+        [TestCase(2, "things")]
+        [TestCase(1, "thing")]
+        [TestCase(1, "thing")]
+        [TestCase(0, "things")]
         public void It_Should_Pluralize_An_Integerr(int input, String expected)
         {
             // Arrange
@@ -38,12 +38,12 @@ namespace Liquid.NET.Tests.Filters.Strings
 
         }
         [Test]
-        [TestCase("2", "2 things")]
-        [TestCase("1", "1 thing")]
-        [TestCase("1", "1 thing")]
-        [TestCase("1.2", "1.2 things")]
-        [TestCase("0", "0 things")]
-        [TestCase("z", "0 things")] // I  think this is what should happen...?
+        [TestCase("2", "things")]
+        [TestCase("1", "thing")]
+        [TestCase("1", "thing")]
+        [TestCase("1.2", "things")]
+        [TestCase("0", "things")]
+        [TestCase("z", "things")] // I  think this is what should happen...?
         public void It_Should_Pluralize_A_String(String input, String expected)
         {
             // Arrange
@@ -75,7 +75,7 @@ namespace Liquid.NET.Tests.Filters.Strings
             // Arrange
             TemplateContext ctx = new TemplateContext();
             ctx.DefineLocalVariable("input", LiquidString.Create("1"));
-            var result = RenderingHelper.RenderTemplate("Result : {{ input | pluralize: 'thing' }}", ctx);
+            var result = RenderingHelper.RenderTemplate("Result : {{input}} {{ input | pluralize: 'thing' }}", ctx);
 
             // Assert
             Assert.That(result, Is.EqualTo("Result : 1 thing"));
@@ -88,7 +88,7 @@ namespace Liquid.NET.Tests.Filters.Strings
             // Arrange
             TemplateContext ctx = new TemplateContext();
             ctx.DefineLocalVariable("input", Option<ILiquidValue>.None());
-            var result = RenderingHelper.RenderTemplate("Result : {{ input | pluralize: 'thing', 'things' }}", ctx);
+            var result = RenderingHelper.RenderTemplate("Result : {{ input | default: 0 }} {{ input | pluralize: 'thing', 'things' }}", ctx);
 
             // Assert
             Assert.That(result, Is.EqualTo("Result : 0 things"));

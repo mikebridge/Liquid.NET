@@ -10,10 +10,15 @@ namespace Liquid.NET.Utils
 
         public static Option<T> Create(T val)
         {
-            return val == null ?
+            return ReferenceEquals(val, null) ?
                 new None<T>() :
                 new Some<T>(val) as Option<T>;
                 
+        }
+
+        public T GetOrElse(T defaultvalue)
+        {
+            return HasValue ? Value : defaultvalue;
         }
 
         public static Option<T> None()

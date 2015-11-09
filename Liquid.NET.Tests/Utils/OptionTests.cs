@@ -167,5 +167,35 @@ namespace Liquid.NET.Tests.Utils
             Assert.That(result, Is.EqualTo("Test".GetHashCode()));
         }
 
+        [Test]
+        public void GetOrElse_Should_Use_The_Default_When_None()
+        {
+            // Arrange
+            var none = Option<String>.None(); 
+
+            // Act
+            var result = none.GetOrElse("nothing");
+
+            // Assert
+            Assert.That(result, Is.EqualTo("nothing"));
+
+        }
+
+
+        [Test] 
+        public void GetOrElse_Should_Use_The_Value_When_Some()
+        {
+            // Arrange
+            var none = Option<String>.Create("Something");
+
+            // Act
+            var result = none.GetOrElse("nothing");
+
+            // Assert
+            Assert.That(result, Is.EqualTo("Something"));
+
+        }
+
+
     }
 }

@@ -21,7 +21,8 @@ namespace Liquid.NET
     /// </summary>
     public class TemplateContext : ITemplateContext
     {
-        
+
+
         public SymbolTableStack SymbolTableStack {get {return _symbolTablestack;}}
         private readonly SymbolTableStack _symbolTablestack = new SymbolTableStack();
         private readonly SymbolTable _globalSymbolTable;

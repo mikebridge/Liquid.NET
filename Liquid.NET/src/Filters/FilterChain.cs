@@ -26,17 +26,25 @@ namespace Liquid.NET.Filters
             }
             // create the initial cast for the first value, then a way of unwrapping the value into an Option,
             // then chain with all the other functions.
-            return optionExpression => CreateUnwrapFunction(InitialCast(ctx, expressions.FirstOrDefault()), optionExpression)
-                .Bind(CreateChain(ctx, expressions));
+            return optionExpression =>
+                {
+                    var result = CreateUnwrapFunction(InitialCast(ctx, expressions.FirstOrDefault()), optionExpression).Bind(CreateChain(ctx, expressions));
+                    return result;
+                };
 
         }
 
         private static Func<ILiquidValue, LiquidExpressionResult> InitialCast(
             ITemplateContext ctx, IFilterExpression initialExpression)
         {
-            return expressionConstant => expressionConstant != null
-                ? CreateCastFilter(expressionConstant.GetType(), initialExpression.SourceType).Apply(ctx, expressionConstant)
-                : LiquidExpressionResult.Success(new None<ILiquidValue>());
+            return expressionConstant =>
+            {
+                var result= expressionConstant != null
+                    ? CreateCastFilter(expressionConstant.GetType(), initialExpression.SourceType)
+                        .Apply(ctx, expressionConstant)
+                    : LiquidExpressionResult.Success(new None<ILiquidValue>());
+                return result;
+            };
         }
 
         /// <summary>
@@ -56,7 +64,11 @@ namespace Liquid.NET.Filters
             ITemplateContext ctx,
             IEnumerable<IFilterExpression> filterExpressions)
         {
-            return x => BindAll(ctx, InterpolateCastFilters(filterExpressions))(x);
+            return x =>
+            {
+                var result = BindAll(ctx, InterpolateCastFilters(filterExpressions))(x);
+                return result;
+            };
         }
 
         private static Func<Option<ILiquidValue>, LiquidExpressionResult> BindAll(
@@ -65,7 +77,11 @@ namespace Liquid.NET.Filters
         {
             return initValue => filterExpressions.Aggregate(
                 LiquidExpressionResult.Success(initValue),
-                (current, filter) => filter.BindFilter(ctx, current));
+                (current, filter) =>
+                {
+                    var result = filter.BindFilter(ctx, current);
+                    return result;
+                });
         }
 
         /// <summary>

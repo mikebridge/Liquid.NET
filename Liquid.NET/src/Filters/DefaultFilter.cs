@@ -1,4 +1,5 @@
-﻿using Liquid.NET.Constants;
+﻿using System;
+using Liquid.NET.Constants;
 using Liquid.NET.Utils;
 
 namespace Liquid.NET.Filters
@@ -14,47 +15,39 @@ namespace Liquid.NET.Filters
             _defaultValue = defaultValue;
         }
 
-        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, LiquidString liquidExpression)
-        {
-            if (liquidExpression.StringVal == null || liquidExpression.StringVal.Equals(""))
-            {
-                return CreateDefaultReturn();
-            }
-            else
-            {
-                return LiquidExpressionResult.Success(liquidExpression.ToOption());
-            }
-        }
-
         public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, ILiquidValue liquidExpression)
         {
-            return LiquidExpressionResult.Success(liquidExpression.ToOption());
+            return CreateNonDefaultResult(liquidExpression);
+        }
+
+        public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, LiquidString liquidExpression)
+        {
+            return String.IsNullOrEmpty(liquidExpression.StringVal) ? 
+                CreateDefaultResult() : 
+                CreateNonDefaultResult(liquidExpression);
         }
 
         public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, LiquidCollection liquidCollection)
         {
-            if (liquidCollection != null && liquidCollection.Count > 0)
-            {
-                return LiquidExpressionResult.Success(liquidCollection.ToOption());
-            }
-            else
-            {
-                return CreateDefaultReturn();
-            }
+            return liquidCollection.Count > 0 ?
+                CreateNonDefaultResult(liquidCollection) : 
+                CreateDefaultResult();
         }
-
 
         public override LiquidExpressionResult ApplyToNil(ITemplateContext ctx)
         {
-            return CreateDefaultReturn();
+            return CreateDefaultResult();
         }
 
-        private LiquidExpressionResult CreateDefaultReturn()
+
+        private static LiquidExpressionResult CreateNonDefaultResult(ILiquidValue liquidExpression)
         {
-            Option<ILiquidValue> result = _defaultValue == null
-                ? (Option<ILiquidValue>) new None<ILiquidValue>()
-                : new Some<ILiquidValue>(_defaultValue);
-            return LiquidExpressionResult.Success(result);
+            return LiquidExpressionResult.Success(liquidExpression.ToOption());
+        }
+
+        private LiquidExpressionResult CreateDefaultResult()
+        {
+            return LiquidExpressionResult.Success(Option<ILiquidValue>.Create(_defaultValue));
         }
     }
 }

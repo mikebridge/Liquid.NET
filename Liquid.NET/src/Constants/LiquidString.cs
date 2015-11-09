@@ -47,7 +47,7 @@ namespace Liquid.NET.Constants
         /// <returns></returns>
         public LiquidString Join(LiquidString str)
         {
-            return LiquidString.Create(StringVal + str.StringVal);
+            return Create(StringVal + str.StringVal);
         }
 
         public IEnumerator GetEnumerator()

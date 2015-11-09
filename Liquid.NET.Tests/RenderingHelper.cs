@@ -1,8 +1,13 @@
-﻿namespace Liquid.NET.Tests
+﻿using System;
+
+namespace Liquid.NET.Tests
 {
     public static class RenderingHelper
     {
-        public static string RenderTemplate(string resultHello, ITemplateContext ctx = null)
+        public static string RenderTemplate(
+            string resultHello, 
+            ITemplateContext ctx = null,
+            Action<LiquidError> onRenderingError = null)
         {
             if (ctx == null)
             {
@@ -10,7 +15,8 @@
             }
             ctx.WithAllFilters();
             var template = LiquidTemplate.Create(resultHello);
-            return template.Render(ctx);
+            return template.Render(ctx, onRenderingError);
+            
         }
     }
 }

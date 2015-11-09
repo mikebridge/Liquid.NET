@@ -60,26 +60,16 @@ namespace Liquid.NET.Tests.Ruby
 
         [Test]
         [TestCase(@"{% unknown_tag %}", @"Liquid syntax error: Unknown tag 'unknown_tag'")]
-        public void It_Should_Generate_An_Exception(String input, String expectedMessage) {
+        public void It_Should_Capture_An_Error(String input, String expectedMessage) {
 
             // Arrange
             ITemplateContext ctx = new TemplateContext().WithAllFilters();
+            List<LiquidError> errors = new List<LiquidError>();
 
-            try
-            {
-                var result = RenderingHelper.RenderTemplate(input);
-                Assert.Fail("Expected exception: "+expectedMessage);
-            }
-            catch (LiquidParserException ex)
-            {
-                // Assert
-                Assert.That(ex.LiquidErrors[0].ToString(), Is.StringContaining(expectedMessage));
-            }
-            catch (LiquidRendererException ex)
-            {
-                // Assert
-                Assert.That(ex.LiquidErrors[0].ToString(), Is.StringContaining(expectedMessage));
-            }
+            var result = RenderingHelper.RenderTemplate(input, onRenderingError: err => errors.Add(err));
+
+            Assert.That(errors.Count, Is.EqualTo(1));
+            Assert.That(errors[0].ToString(), Is.StringContaining(expectedMessage));
         }
         
     }

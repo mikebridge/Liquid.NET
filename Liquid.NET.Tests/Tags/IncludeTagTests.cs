@@ -145,6 +145,33 @@ namespace Liquid.NET.Tests.Tags
 
         }
 
+        [Test]
+        public void It_Should_Accumulate_Errors_When_Include_Contains_Errors()
+        {
+            // Arrange
+            var ctx = CreateContext(new Dictionary<String, String>
+            {
+                { "test", "problem: {{ 1 | divided_by: 0 }}" }
+            }).WithAllFilters();
+            //var defaultAstGenerator = ctx.ASTGenerator;
+            //ctx.WithASTGenerator(str => { called = true; return defaultAstGenerator(str); });
+
+            const String template = "{% include 'test' %}";
+
+            // Act
+
+            var ast = new LiquidASTGenerator().Generate(template);
+            var renderingVisitor = new RenderingVisitor(ctx);
+            String result = "";
+            renderingVisitor.StartWalking(ast.RootNode, x => result += x);
+            Console.WriteLine(result);
+            Assert.That(renderingVisitor.HasErrors);
+
+        }
+
+
+
+
         private static ITemplateContext CreateContext(Dictionary<String, String> dict) 
         {
             return new TemplateContext().WithFileSystem(new TestFileSystem(dict));

@@ -33,19 +33,19 @@ namespace Liquid.NET.Tests.Tags
             var template = LiquidTemplate.Create("Result : {% for item in array %}{% capture thecycle %}{% cycle 'odd', 'even' %}{% endcapture %}{{ thecycle }} {% endfor %}");
 
             // Act
-            try
-            {
+//            try
+//            {
                 String result = template.Render(ctx);
                 Logger.Log(result);
 
                 // Assert
                 Assert.That(result.TrimEnd(), Is.EqualTo("Result : odd even odd even"));
-            }
-            catch (LiquidRendererException ex)
-            {
-                Logger.Log(ex.Message);
-                throw;
-            }
+//            }
+//            catch (LiquidRendererException ex)
+//            {
+//                Logger.Log(ex.Message);
+//                throw;
+//            }
 
         }
 

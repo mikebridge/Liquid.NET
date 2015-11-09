@@ -46,14 +46,7 @@ namespace Liquid.NET.Constants
 
         public static implicit operator Option<ILiquidValue>(LiquidValue t)
         {
-            if (ReferenceEquals(t,null))
-            {
-                return new None<ILiquidValue>();
-            }
-            else
-            {
-                return new Some<ILiquidValue>(t);
-            }
+            return Option<ILiquidValue>.Create(t);
         }
 
         public override bool Equals(object otherObj)

@@ -53,7 +53,8 @@ namespace Liquid.NET
         {
             if (constant == null)
             {
-                throw new ArgumentNullException("constant");
+                //throw new ArgumentNullException("constant");
+                constant = Option<ILiquidValue>.None();
             }
             _globalSymbolTable.DefineLocalVariable(name, constant);
             return this;

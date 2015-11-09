@@ -53,9 +53,10 @@ namespace Liquid.NET.Symbols
 
         public void DefineLocalVariable(String key, Option<ILiquidValue> obj)
         {
-            if (obj == null)
+            if (ReferenceEquals(obj,null))
             {
-                throw new ArgumentNullException("obj");
+                //throw new ArgumentNullException("obj");
+                obj = Option<ILiquidValue>.None();
             }
             if (_variableDictionary.ContainsKey(key))
             {

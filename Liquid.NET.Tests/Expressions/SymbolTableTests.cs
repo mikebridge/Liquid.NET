@@ -1,7 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using Liquid.NET.Constants;
 using Liquid.NET.Filters.Strings;
 using Liquid.NET.Symbols;
+using Liquid.NET.Utils;
 using NUnit.Framework;
 
 namespace Liquid.NET.Tests.Expressions
@@ -58,7 +59,51 @@ namespace Liquid.NET.Tests.Expressions
             Assert.That(arr, Is.TypeOf<LiquidCollection>());
         }
 
- 
+        [Test]
+        public void It_Should_Return_Null_When_Macro_Missing()
+        {
+            // Arrange
+            var symbolTable = new SymbolTable();
+    
+            // Act
+            var macro = symbolTable.ReferenceMacro("test");
+
+            // Assert
+            Assert.That(macro, Is.Null);
+        }
+
+
+        [Test]
+        public void It_Set_Null_Variable_To_None()
+        {
+            // Arrange
+            var symbolTable = new SymbolTable();
+            Option<ILiquidValue> val = null;
+
+            // Act            
+            symbolTable.DefineLocalVariable("test", val);
+            var result = symbolTable.ReferenceLocalVariable("test");
+
+            // Assert
+            Assert.That(result.SuccessResult.HasValue, Is.False);
+
+        }
+
+        [Test]
+        public void It_Should_Return_Null_When_Registry_Null()
+        {
+            // Arrange
+            var symbolTable = new SymbolTable();
+
+            // Act            
+            var result = symbolTable.ReferenceLocalRegistryVariable("test");
+
+            // Assert
+            Assert.That(result, Is.Null);
+
+        }
+
+
 
         private static LiquidCollection CreateArrayValue()
         {

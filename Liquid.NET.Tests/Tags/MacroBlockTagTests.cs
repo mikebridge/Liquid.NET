@@ -29,6 +29,29 @@ namespace Liquid.NET.Tests.Tags
         }
 
         [Test]
+        public void It_Should_Redefine_A_Macro()
+        {
+            // Arrange
+            const string templateString = @"Result : {% macro mymacro arg1 %}"
+                                          + @"You said '{{ arg1 }}'."
+                                          + @"{% endmacro %}{% macro mymacro arg1 %}"
+                                          + @"I heard '{{ arg1 }}'."
+                                          + @"{% endmacro %}"
+                                          + @"{% mymacro ""hello"" %}";
+
+            TemplateContext ctx = new TemplateContext();
+            var template = LiquidTemplate.Create(templateString);
+
+            // Act
+            String result = template.Render(ctx);
+
+            // Assert
+            Assert.That(result, Is.EqualTo("Result : I heard 'hello'."));
+
+        }
+
+
+        [Test]
         public void It_Should_Not_Overwrite_Global_Scope()
         {
             // Arrange
@@ -126,6 +149,7 @@ namespace Liquid.NET.Tests.Tags
             Assert.That(result, Is.EqualTo("Result : "));
 
         }
+
 
         [Test]
         [Ignore("When erroring-args is implemented, this should print an error.")]

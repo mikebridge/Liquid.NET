@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+
 using Liquid.NET.Constants;
 using NUnit.Framework;
 
@@ -103,19 +103,19 @@ namespace Liquid.NET.Tests.Tags
             var template = LiquidTemplate.Create("Result : {% macro thecycle %}{% cycle 'odd', 'even' %}{% endmacro %}{% for item in array %}{% thecycle %}{% endfor %}");
 
             // Act
-            try
-            {
+//            try
+//            {
                 String result = template.Render(ctx);
                 Logger.Log(result);
 
                 // Assert
                 Assert.That(result.TrimEnd(), Is.EqualTo("Result : oddevenoddeven"));
-            }
-            catch (LiquidRendererException ex)
-            {
-                Logger.Log(ex.Message);
-                throw;
-            }
+//            }
+//            catch (LiquidRendererException ex)
+//            {
+//                Logger.Log(ex.Message);
+//                throw;
+//            }
 
         }
 

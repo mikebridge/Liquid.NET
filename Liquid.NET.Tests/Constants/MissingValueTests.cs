@@ -27,7 +27,7 @@ namespace Liquid.NET.Tests.Constants
            
             // Act
             var result = RenderingHelper.RenderTemplate("Result : {{ "+varname+" }}", ctx);
-
+            Console.WriteLine(result);
             // Assert
             Assert.That(result, Is.EqualTo("Result : ERROR: " + missingVar + " is undefined"));
 

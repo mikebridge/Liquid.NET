@@ -36,17 +36,18 @@ namespace Liquid.NET.Tests.Tags
             //ctx.Define("payments", new LiquidCollection(new List<ILiquidValue>()));
 
             const String str = "{% include 'test' %}";
-
+            IList<LiquidError> errors = new List<LiquidError>();
             // Act
-            try
-            {
-                RenderingHelper.RenderTemplate(str, ctx);
-                Assert.Fail("Expected exception");
-            }
-            catch (LiquidParserException ex)
-            {
-                Assert.That(ex.LiquidErrors[0].TokenSource, Is.EqualTo("test"));    
-            }
+            //try
+            //{
+                RenderingHelper.RenderTemplate(str, ctx, errors.Add);
+                //Assert.Fail("Expected exception");
+            //}
+            //catch (LiquidParserException ex)
+            //{
+                //Assert.That(ex.LiquidErrors[0].TokenSource, Is.EqualTo("test"));    
+            Assert.That(errors[0].TokenSource, Is.EqualTo("test"));    
+            //}
             // Assert
             
 
@@ -133,7 +134,7 @@ namespace Liquid.NET.Tests.Tags
                 { "test", "Colour: {{ colour }}, Width: {{ width }}" }
             });
             var defaultAstGenerator = ctx.ASTGenerator;
-            ctx.WithASTGenerator(str => { called = true; return defaultAstGenerator(str); });
+            ctx.WithASTGenerator((str, errFn) => { called = true; return defaultAstGenerator(str, errFn); });
 
             const String tmpl = "{% include 'test' colour: 'Green', width: 10 %}";
 
@@ -144,6 +145,79 @@ namespace Liquid.NET.Tests.Tags
             Assert.That(called, Is.True);
 
         }
+
+        [Test]
+        public void It_Should_Accumulate_Errors_When_Include_Contains_Rendering_Errors()
+        {
+            // Arrange
+            var ctx = CreateContext(new Dictionary<String, String>
+            {
+                { "test", "problem: {{ 1 | divided_by: 0 }}" }
+            }).WithAllFilters();
+            //var defaultAstGenerator = ctx.ASTGenerator;
+            //ctx.WithASTGenerator(str => { called = true; return defaultAstGenerator(str); });
+
+            const String template = "{% include 'test' %}";
+
+            // Act
+
+            var ast = new LiquidASTGenerator().Generate(template);
+            var renderingVisitor = new RenderingVisitor(ctx);
+            String result = "";
+            renderingVisitor.StartWalking(ast.RootNode, x => result += x);
+            Console.WriteLine(result);
+            Assert.That(renderingVisitor.HasErrors);
+
+        }
+
+        [Test]
+        public void It_Should_Accumulate_Errors_When_Include_Contains_Parsing_Errors()
+        {
+            // Arrange
+            var ctx = CreateContext(new Dictionary<String, String>
+            {
+                { "test", "problem: {% unterminated" }
+            }).WithAllFilters();
+            //var defaultAstGenerator = ctx.ASTGenerator;
+            //ctx.WithASTGenerator(str => { called = true; return defaultAstGenerator(str); });
+
+            const String template = "{% include 'test' %}";
+
+            // Act
+
+            var ast = new LiquidASTGenerator().Generate(template);
+            var renderingVisitor = new RenderingVisitor(ctx);
+            String result = "";
+            renderingVisitor.StartWalking(ast.RootNode, x => result += x);
+            Console.WriteLine(result);
+            Assert.That(renderingVisitor.HasErrors);
+
+        }
+
+
+        [Test]
+        public void It_Should_Render_An_Error_When_Include_Contains_Parsing_Errors()
+        {
+            // Arrange
+            var ctx = CreateContext(new Dictionary<String, String>
+            {
+                { "test", "problem: {% unterminated" }
+            }).WithAllFilters();
+
+            const String template = "{% include 'test' %}";
+
+            // Act
+
+            var ast = new LiquidASTGenerator().Generate(template);
+            var renderingVisitor = new RenderingVisitor(ctx);
+            String result = "";
+            renderingVisitor.StartWalking(ast.RootNode, x => result += x);
+            Console.WriteLine("RESULT: " + result);
+            Assert.That(result, Is.StringContaining("missing TAGEND"));
+
+        }
+
+
 
         private static ITemplateContext CreateContext(Dictionary<String, String> dict) 
         {

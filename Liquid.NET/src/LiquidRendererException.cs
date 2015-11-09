@@ -3,11 +3,11 @@ using System.Collections.Generic;
 
 namespace Liquid.NET
 {
-    public class LiquidRendererException : Exception
+    public class LiquidRendererExceptionOLD : Exception
     {
         private readonly IList<LiquidError> _liquidErrors;
 
-        public LiquidRendererException(IList<LiquidError> liquidErrors)
+        public LiquidRendererExceptionOLD(IList<LiquidError> liquidErrors)
         {
             _liquidErrors = liquidErrors;
         }

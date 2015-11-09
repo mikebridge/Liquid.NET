@@ -28,14 +28,16 @@ namespace Liquid.NET.Filters
 
         public LiquidExpressionResult BindFilter(ITemplateContext ctx, LiquidExpressionResult current)
         {
-            return current.IsError ? current : ApplyValueOrNil(ctx, current);
+            var result = current.IsError ? current : ApplyValueOrNil(ctx, current); // short-circuit if error
+            return result;
         }
 
         private LiquidExpressionResult ApplyValueOrNil(ITemplateContext ctx, LiquidExpressionResult current)
         {
-            return current.SuccessResult.HasValue
+            var result = current.SuccessResult.HasValue
                 ? Apply(ctx, current.SuccessResult.Value)
                 : ApplyToNil(ctx); // pass through nil, because maybe there's e.g. a "default" filter somewhere in the chain.
+            return result;
         }
 
         /* override some or all of these ApplyTo functions */
@@ -135,7 +137,8 @@ namespace Liquid.NET.Filters
 
         public override LiquidExpressionResult Apply(ITemplateContext ctx, ILiquidValue liquidExpression)
         {
-            return Apply(ctx, (TSource)liquidExpression);
+            var result = Apply(ctx, (TSource)liquidExpression);
+            return result;
         }
         
 

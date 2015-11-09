@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
 using Liquid.NET.Constants;
 using Liquid.NET.Filters;
 using Liquid.NET.Symbols;
@@ -21,14 +22,15 @@ namespace Liquid.NET
         ITemplateContext WithRegisters(IDictionary<String, Object> kv);
         ITemplateContext WithLocalVariables(IDictionary<String, Option<ILiquidValue>> kv);
         ITemplateContext WithNoForLimit();
-        ITemplateContext WithASTGenerator(Func<string, LiquidAST> astGeneratorFunc);
+        ITemplateContext WithASTGenerator(Func<string, Action<LiquidError>, LiquidAST> astGeneratorFunc);
+
 
         IFileSystem FileSystem { get; }
         IDictionary<String, Object> Registers { get; }
         SymbolTableStack SymbolTableStack { get; }
         LiquidOptions Options { get; }
 
-        Func<string, LiquidAST> ASTGenerator { get; }
-        
+        Func<string, Action<LiquidError>, LiquidAST> ASTGenerator { get; }
+        //bool RenderErrorsInline { get; set; }
     }
 }

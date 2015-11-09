@@ -96,6 +96,10 @@ namespace Liquid.NET.Utils
         {
             if (f == null) throw new ArgumentNullException("f");
 
+            //var result = f(self.SuccessOption<T>());
+
+            //return result; // er, is this whole bind necessary?
+
             return self.IsError
                 ? self
                 : f(self.SuccessOption<T>());

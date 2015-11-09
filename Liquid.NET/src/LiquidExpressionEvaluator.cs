@@ -93,8 +93,8 @@ namespace Liquid.NET
 
             // apply the composed function to the object
             
-            return filterChain(objResult.SuccessResult);
-
+            var result= filterChain(objResult.SuccessResult);
+            return result;
         }
 
 

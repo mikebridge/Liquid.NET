@@ -548,21 +548,26 @@ c")]
                 ctx.DefineLocalVariable(tuple.Item1, tuple.Item2);
             }
             var template = LiquidTemplate.Create(input);
+            IList<LiquidError> errors = new List<LiquidError>();
             try
             {
-                String result = template.Render(ctx);
-                Assert.Fail("Expected exception: " + expectedMessage);
+                String result = template.Render(ctx, onRenderingError: errors.Add);
+                //Console.WriteLine("Errors")
+                Assert.That(errors.Count, Is.EqualTo(1));
+                Assert.That(errors[0].ToString(), Is.StringContaining(expectedMessage));
+                //Assert.Fail("Expected exception: " + expectedMessage);
             }
             catch (LiquidParserException ex)
             {
                 // Assert
                 Assert.That(ex.LiquidErrors[0].ToString(), Is.StringContaining(expectedMessage));
             }
-            catch (LiquidRendererException ex)
-            {
+            //catch (LiquidRendererException ex)
+            //{
                 // Assert
-                Assert.That(ex.LiquidErrors[0].ToString(), Is.StringContaining(expectedMessage));
-            }
+                //Assert.That(ex.LiquidErrors[0].ToString(), Is.StringContaining(expectedMessage));
+              //  Assert.That(errors.ToString(), Is.StringContaining(expectedMessage));
+            //}
         }
 
     }

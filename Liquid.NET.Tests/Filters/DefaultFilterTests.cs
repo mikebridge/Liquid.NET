@@ -65,6 +65,21 @@ namespace Liquid.NET.Tests.Filters
         }
 
         [Test]
+        public void It_Should_Not_Return_Default_If_Array_Has_Elements()
+        {
+            // Arrange
+            TemplateContext ctx = new TemplateContext();
+
+            // Act
+            var result = RenderingHelper.RenderTemplate("Result : {% assign arr=\"1|2\" | split: \"|\"%}{{ arr | default: \"DEFAULT\" }}", ctx);
+
+            // Assert
+            Assert.That(result, Is.EqualTo("Result : 12"));
+        }
+
+
+
+        [Test]
         public void It_Should_Return_Default_If_Array_Is_Null()
         {
             // Arrange

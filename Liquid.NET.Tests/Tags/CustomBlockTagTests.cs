@@ -16,8 +16,8 @@ namespace Liquid.NET.Tests.Tags
         [Test]
         public void It_Should_Parse_A_Custom_BlockTag()
         {
-            try
-            {
+//            try
+//            {
                 // Act
                 var templateContext =
                     new TemplateContext().WithAllFilters().WithCustomTagBlockRenderer<WordReverserBlockTag>("echoargs");
@@ -29,11 +29,11 @@ namespace Liquid.NET.Tests.Tags
 
                 // Assert
                 Assert.That(result, Is.EqualTo("Result : ohce"));
-            }
-            catch (LiquidRendererException ex)
-            {
-                Assert.Fail(String.Join(",", ex.LiquidErrors.Select(x => x.Message)));
-            }
+//            }
+//            catch (LiquidRendererException ex)
+//            {
+//                Assert.Fail(String.Join(",", ex.LiquidErrors.Select(x => x.Message)));
+//            }
         }
 
         [Test]
@@ -83,19 +83,23 @@ namespace Liquid.NET.Tests.Tags
         [Test]
         public void It_Should_Show_Error_On_Missing_Tags()
         {
-            // Act
-            try
-            {
-                RenderingHelper.RenderTemplate("Result : {% test %}{% endtest %}");
+            IList<LiquidError> errors = new List<LiquidError>();
+            RenderingHelper.RenderTemplate("Result : {% test %}", onRenderingError: errors.Add);
 
-                Assert.Fail("THis should have thrown an error");
-            }
-            catch (LiquidRendererException ex)
-            {
-                // Assert
-                Assert.That(String.Join(",", ex.LiquidErrors.Select(x => x.Message)), Is.EqualTo("Liquid syntax error: Unknown tag 'test'"));
-            }
+            Assert.That(String.Join(",",errors.Select(x => x.Message)), Is.EqualTo("Liquid syntax error: Unknown tag 'test'"));
+
         }
+
+        [Test]
+        public void It_Should_Show_Error_On_Missing_BLocks()
+        {
+            IList<LiquidError> errors = new List<LiquidError>();
+            RenderingHelper.RenderTemplate("Result : {% test %}{% endtest %}", onRenderingError: errors.Add);
+
+            Assert.That(String.Join(",", errors.Select(x => x.Message)), Is.EqualTo("Liquid syntax error: Unknown tag 'test'"));
+
+        }
+
 
         [Test]
         public void It_Should_Parse_A_Custom_BlockTag_Along_With_A_Custom_Tag() 

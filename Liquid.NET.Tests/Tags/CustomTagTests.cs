@@ -35,6 +35,19 @@ namespace Liquid.NET.Tests.Tags
 
         }
 
+        [Test]
+        public void It_Should_Render_An_Error_When_No_Tag()
+        {
+            // Act
+            var templateContext = new TemplateContext();
+            var result = RenderingHelper.RenderTemplate("Result : {% awefawef %}", templateContext);
+            Console.WriteLine(result);
+            // Assert
+            Assert.That(result, Is.StringContaining("Unknown tag 'awefawef'"));
+
+        }
+
+
 
         // ReSharper disable once ClassNeverInstantiated.Global
         public class EchoArgsTagRenderer : ICustomTagRenderer

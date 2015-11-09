@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using Antlr4.Runtime;
 using Liquid.NET.Constants;
 using Liquid.NET.Symbols;
 using Liquid.NET.Tags;
@@ -18,105 +21,148 @@ namespace Liquid.NET.Rendering
             _renderingVisitor = renderingVisitor;
         }
 
-        public void Render(IncludeTag includeTag, ITemplateContext templateContext)
+        public void Render(IncludeTag includeTag,
+                ITemplateContext templateContext)
         {
-            var virtualFilenameVar = LiquidExpressionEvaluator.Eval(includeTag.VirtualFileExpression, templateContext);
-            if (virtualFilenameVar.IsError)
-            {
-                _renderingVisitor.Errors.Add(virtualFilenameVar.ErrorResult);
-                return;  
-            }
-
-            String virtualFileName = ValueCaster.RenderAsString(virtualFilenameVar.SuccessResult.Value);
-
             if (templateContext.FileSystem == null)
             {
-                _renderingVisitor.Errors.Add(new LiquidError{Message = " ERROR: FileSystem is not defined"});
+                AddErrorToResult(new LiquidError{Message = " ERROR: FileSystem is not defined"});
                 return;
             }
 
-            String snippet = templateContext.FileSystem.Include(templateContext, virtualFileName);
-            templateContext.SymbolTableStack.DefineLocalRegistry(LOCALREGISTRY_FILE_KEY, virtualFileName);
-            LiquidAST snippetAst;
-            try
-            {
-                //snippetAst = GenerateSnippetAst(snippet);
-                snippetAst = templateContext.ASTGenerator(snippet);
-            }
-            catch (LiquidParserException ex)
-            {
-                foreach (var error in ex.LiquidErrors)
-                {
-                    if (String.IsNullOrEmpty(error.TokenSource))
-                    {
-                        error.TokenSource = virtualFileName;
-                    }
-                }
-                throw;
-            }
+            String virtualFileName = null;
 
+
+            LiquidExpressionEvaluator.Eval(includeTag.VirtualFileExpression, templateContext)
+                .WhenError(AddErrorToResult)
+                .WhenSuccess(result => { virtualFileName = ValueCaster.RenderAsString(result); });
+
+            if (virtualFileName == null) { return; }
+
+            //virtualFileName = ValueCaster.RenderAsString(virtualFilenameVar.SuccessResult.Value);
+
+            String snippet = templateContext.FileSystem.Include(templateContext, virtualFileName);
+            
+            templateContext.SymbolTableStack.DefineLocalRegistry(LOCALREGISTRY_FILE_KEY, virtualFileName);
+
+            RenderSnippet(includeTag, templateContext, snippet, virtualFileName);
+        }
+
+        private void RenderSnippet(IncludeTag includeTag, ITemplateContext templateContext, String snippet,
+            String virtualFileName)
+        {
+            var snippetAstTry = CreateAstFromSnippet(templateContext, snippet, virtualFileName);
+            if (snippetAstTry.IsLeft)
+            {
+                foreach (var err in snippetAstTry.Left)
+                {
+                    AddErrorToResult(err);
+                }
+                return;
+            }
+            var snippetAst = snippetAstTry.Right;
+            //zzz
             if (includeTag.ForExpression != null)
             {
-                var forExpressionOption = LiquidExpressionEvaluator.Eval(includeTag.ForExpression, templateContext);
-                if (forExpressionOption.IsError)
-                {
-                    _renderingVisitor.Errors.Add(forExpressionOption.ErrorResult);
-                    return;
-                }
-                if (forExpressionOption.SuccessResult.Value is LiquidHash) // it seems to render as a single element if it's a dictionary.
-                {
-                    var localBlockScope = new SymbolTable();
-                    DefineLocalVariables(templateContext, localBlockScope, includeTag.Definitions);
-
-                    var exprValue = LiquidExpressionEvaluator.Eval(includeTag.ForExpression, templateContext);
-                    localBlockScope.DefineLocalVariable(virtualFileName, exprValue.SuccessResult);
-
-                    RenderWithLocalScope(templateContext, localBlockScope, snippetAst.RootNode);
-                }
-                else
-                {
-                    //LiquidCollection array = ValueCaster.Cast<ILiquidValue, LiquidCollection>(forExpressionOption.SuccessResult.Value);
-                    var arrayResult = ValueCaster.Cast<ILiquidValue, LiquidCollection>(forExpressionOption.SuccessResult.Value);
-                    if (arrayResult.IsError)
+                LiquidExpressionEvaluator.Eval(includeTag.ForExpression, templateContext)
+                    .WhenError(AddErrorToResult)
+                    .WhenSuccess(result =>
                     {
-                        _renderingVisitor.Errors.Add(arrayResult.ErrorResult);
-                        return;
-                    }
-
-//                    if (array.HasError)
-//                    {
-//                        _renderingVisitor.Errors.Add(new LiquidError {Message = array.ErrorMessage});
-//                        return;
-//                    }
-                    foreach (Option<ILiquidValue> val in arrayResult.SuccessValue<LiquidCollection>())
-                    {
-                        var localBlockScope = new SymbolTable();
-                        DefineLocalVariables(templateContext, localBlockScope, includeTag.Definitions);
-                        localBlockScope.DefineLocalVariable(virtualFileName, val);
-                        RenderWithLocalScope(templateContext, localBlockScope, snippetAst.RootNode);
-                    }
-                }
+                        if (result.Value is LiquidHash)
+                        {
+                            // it seems to render as a single element if it's a dictionary.
+                            RenderFromLiquidHash(includeTag, templateContext, virtualFileName, snippetAst);
+                        }
+                        else
+                        {
+                            RenderFromLiquidExpression(includeTag, templateContext, virtualFileName, result, snippetAst);
+                        }
+                    });
             }
             else
             {
-                var localBlockScope = new SymbolTable();
-                DefineLocalVariables(templateContext, localBlockScope, includeTag.Definitions);
+                RenderIncludeBlock(includeTag, templateContext, virtualFileName, snippetAst);
+            }
+        }
+
+        private void RenderIncludeBlock(IncludeTag includeTag, ITemplateContext templateContext, String virtualFileName,
+            LiquidAST snippetAst)
+        {
+            Action<SymbolTable> action = localBlockScope =>
+            {
                 if (includeTag.WithExpression != null)
                 {
                     var withExpression = LiquidExpressionEvaluator.Eval(includeTag.WithExpression, templateContext);
                     localBlockScope.DefineLocalVariable(virtualFileName, withExpression.SuccessResult);
                 }
-                RenderWithLocalScope(templateContext, localBlockScope, snippetAst.RootNode);
-            }
-           
-                       
+            };
+            RenderBlock(includeTag, templateContext, snippetAst, action);
         }
 
-        public static LiquidAST GenerateSnippetAst(string snippet)
+        private void RenderFromLiquidExpression(IncludeTag includeTag, ITemplateContext templateContext, String virtualFileName,
+            Option<ILiquidValue> forExpressionOption, LiquidAST snippetAst)
         {
-            return new CachingLiquidASTGenerator(new LiquidASTGenerator()).Generate(snippet);
-            //return new LiquidASTGenerator().Generate(snippet);
+            ValueCaster.Cast<ILiquidValue, LiquidCollection>(forExpressionOption.Value)
+                .WhenError(AddErrorToResult)
+                .WhenSuccess(result =>
+                {
+                    foreach (Option<ILiquidValue> val in (LiquidCollection) result.Value)
+                    {
+                        var val1 = val;
+                        RenderBlock(includeTag, templateContext, snippetAst, localBlockScope => localBlockScope.DefineLocalVariable(virtualFileName, val1));
+                    }
+                });
         }
+
+        private void RenderFromLiquidHash(IncludeTag includeTag, ITemplateContext templateContext, String virtualFileName,
+            LiquidAST snippetAst)
+        {
+            Action<SymbolTable> action = localBlockScope => localBlockScope.DefineLocalVariable(
+                virtualFileName, LiquidExpressionEvaluator.Eval(includeTag.ForExpression, templateContext).SuccessResult);
+            
+            RenderBlock(includeTag, templateContext, snippetAst, action);
+        }
+
+
+        private static Either<IList<LiquidError>, LiquidAST> CreateAstFromSnippet(ITemplateContext templateContext, String snippet,
+            String virtualFileName)
+        {
+            LiquidAST snippetAst;
+            //try
+            //{
+            IList<LiquidError> errors = new List<LiquidError>();
+            snippetAst = templateContext.ASTGenerator(snippet, errors.Add);
+            //}
+            //catch (LiquidParserException ex)
+            //{
+            // save the included filename along with the error
+            //foreach (var error in ex.LiquidErrors.Where(error => String.IsNullOrEmpty(error.TokenSource)))
+            //{
+            //    error.TokenSource = virtualFileName;
+            //}
+            //throw;
+            //}
+            foreach (var error in errors.Where(error => String.IsNullOrEmpty(error.TokenSource)))
+            {
+                error.TokenSource = virtualFileName;
+            }
+            return errors.Any() ? 
+                Either.Left<IList<LiquidError>, LiquidAST>(errors) : 
+                Either.Right<IList<LiquidError>, LiquidAST>(snippetAst);
+        }
+
+        private void AddErrorToResult(LiquidError errorResult)
+        {
+            //_renderingVisitor.Errors.Add(errorResult); 
+            // TODO: Put these errors somewhere            
+            _renderingVisitor.RegisterError(errorResult);
+        }
+
+//        public static LiquidAST GenerateSnippetAst(string snippet)
+//        {
+//            return new CachingLiquidASTGenerator(new LiquidASTGenerator()).Generate(snippet);
+//            //return new LiquidASTGenerator().Generate(snippet);
+//        }
 
         private void RenderWithLocalScope(ITemplateContext templateContext, SymbolTable localBlockScope, TreeNode<IASTNode> rootNode)
         {
@@ -132,14 +178,28 @@ namespace Liquid.NET.Rendering
         {
             foreach (var def in definitions)
             {
-                var liquidExpressionREsult = LiquidExpressionEvaluator.Eval(def.Value, templateContext);
-                if (liquidExpressionREsult.IsError)
-                {
-                    // TODO: check if this should ignore this or not.
-                }
-                localBlockScope.DefineLocalVariable(def.Key,
-                    liquidExpressionREsult.SuccessResult);
+                var def1 = def;
+                LiquidExpressionEvaluator.Eval(def.Value, templateContext)
+                    //.WhenError( err =>   //TODO: Is this necessary?
+                    .WhenSuccess( result => 
+                        localBlockScope.DefineLocalVariable(def1. Key,result));
             }
         }
+
+        private void RenderBlock(
+            IncludeTag includeTag,
+            ITemplateContext templateContext,
+            LiquidAST snippetAst,
+            Action<SymbolTable> renderAction)
+        {
+            var localBlockScope = new SymbolTable();
+            DefineLocalVariables(templateContext, localBlockScope, includeTag.Definitions);
+
+            renderAction(localBlockScope);
+
+            RenderWithLocalScope(templateContext, localBlockScope, snippetAst.RootNode);
+        }
+
+
     }
 }

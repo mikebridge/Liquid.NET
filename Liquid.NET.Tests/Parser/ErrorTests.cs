@@ -9,27 +9,19 @@ namespace Liquid.NET.Tests.Parser
     public class ErrorTests
     {
         [Test]
-        [TestCase(@"TEST: {{ ""test,test"" | split: }} DONE", @"Liquid error: missing arguments after colon in filter 'split'")]
+        [TestCase(@"TEST: {{ ""test,test"" | split: }} DONE",
+            @"Liquid error: missing arguments after colon in filter 'split'")]
         public void It_Should_Handle_Invalid_Filters(String input, String expected)
         {
-            // Arrange
-            try
-            {
-                ITemplateContext ctx = new TemplateContext().WithAllFilters();
-                IList<LiquidError> errors = new List<LiquidError>();
-                var template = CreateRenderer(errors, input);
 
-                // Act
-                template.Render(ctx);
-            }
-            catch (LiquidParserException ex)
-            {
-                // Assert
-                //var allErrs = String.Join(",", ex.LiquidErrors.Select(x => x.ToString()));
-                var err = ex.LiquidErrors.FirstOrDefault(x => x.ToString().Contains(expected));
-                Assert.That(err, Is.Not.Null);
-            }
+            ITemplateContext ctx = new TemplateContext().WithAllFilters();
+            IList<LiquidError> errors = new List<LiquidError>();
+            var template = CreateRenderer(errors, input);
 
+            // Act
+            template.Render(ctx);
+            var err = errors.FirstOrDefault(x => x.ToString().Contains(expected));
+            Assert.That(err, Is.Not.Null);
 
         }
 
@@ -38,20 +30,11 @@ namespace Liquid.NET.Tests.Parser
         {
             // Arrange
             const string erroneousTemplate = "{{";
-            //ITemplateContext ctx = new TemplateContext().WithAllFilters();
             IList<LiquidError> errors = new List<LiquidError>();            
             
             // Act
-            try
-            {
-                CreateRenderer(errors, erroneousTemplate);
-                Assert.Fail("It Should throw an exception.");
-            }
-            catch (LiquidParserException ex)
-            {
-                Assert.That(ex.LiquidErrors.Count, Is.EqualTo(1));
-            }
-
+            CreateRenderer(errors, erroneousTemplate);
+            Assert.That(errors.Count, Is.EqualTo(1));
         }
 
 
@@ -74,10 +57,10 @@ namespace Liquid.NET.Tests.Parser
         private static LiquidTemplate CreateRenderer(IList<LiquidError> errors, string erroneousTemplate)
         {
             var liquidAstGenerator = new LiquidASTGenerator();
-            OnParsingErrorEventHandler liquidAstGeneratorParsingErrorEventHandler = errors.Add;
+            //OnParsingErrorEventHandler liquidAstGeneratorParsingErrorEventHandler = errors.Add;
 
-            liquidAstGenerator.ParsingErrorEventHandler += liquidAstGeneratorParsingErrorEventHandler;
-            var liquidAst = liquidAstGenerator.Generate(erroneousTemplate);
+            //liquidAstGenerator.ParsingErrorEventHandler += liquidAstGeneratorParsingErrorEventHandler;
+            var liquidAst = liquidAstGenerator.Generate(erroneousTemplate, errors.Add);
 
             var template = new LiquidTemplate(liquidAst);
             return template;

@@ -517,14 +517,22 @@ namespace Liquid.NET.Tests
 
         }
 
-        private static string Render(ITemplateContext templateContext, LiquidAST liquidAst)
+        private static string Render(ITemplateContext templateContext, LiquidAST liquidAst, Action<LiquidError> onError = null)
         {
+            if (onError == null)
+            {
+                onError = error => { };
+            }
             String result = "";
             var renderingVisitor = new RenderingVisitor(templateContext);
             renderingVisitor.StartWalking(liquidAst.RootNode, str => result += str);
             if (renderingVisitor.HasErrors)
             {
-                throw new LiquidRendererException(renderingVisitor.Errors);
+                foreach (var error in renderingVisitor.Errors)
+                {
+                    onError(error);
+                }
+                //throw new LiquidRendererException(renderingVisitor.Errors);
             }
             return result;
         }

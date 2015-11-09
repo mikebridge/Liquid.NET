@@ -30,7 +30,7 @@ namespace Liquid.NET
         // ReSharper disable once RedundantDefaultMemberInitializer
         private int _level = 0;
 
-        public event OnParsingErrorEventHandler ParsingErrorEventHandler;
+        //public event OnParsingErrorEventHandler ParsingErrorEventHandler;
 
         private BufferedTokenStream _tokenStream;
         private TokenStreamRewriter _tokenStreamRewriter;
@@ -50,8 +50,9 @@ namespace Liquid.NET
         /// </summary>
         private readonly Stack<TreeNode<IASTNode>> _astNodeStack = new Stack<TreeNode<IASTNode>>();
 
-        public LiquidAST Generate(String template)
+        public LiquidAST Generate(String template, Action<LiquidError> onParserError= null)
         {
+            onParserError = onParserError ?? (err => { });
             //Log("Parsing Template \r\n" + template);
 
             //BufferedTokenStream tokenStream
@@ -94,11 +95,20 @@ namespace Liquid.NET
             //parser.AddErrorListener(new DiagnosticErrorListener());
             //parser.Interpreter.PredictionMode = PredictionMode.LlExactAmbigDetection;           
             // END DEBUG 
-            
-            if (LiquidErrors.Any())
+
+            foreach (var err in LiquidErrors)
             {
-                throw new LiquidParserException(LiquidErrors);
+                onParserError(err);
             }
+
+            // TODO: Need to fix the erroring include renderer....
+
+//            if (LiquidErrors.Any())
+//            {
+//                //ParserError
+//               
+//                throw new LiquidParserException(LiquidErrors);
+//            }
 
             return liquidAst;
         }
@@ -106,7 +116,7 @@ namespace Liquid.NET
         private LiquidErrorListener CreateLiquidErrorListener()
         {
             var liquidErrorListener = new LiquidErrorListener();
-            liquidErrorListener.ParsingErrorEventHandler += ParsingErrorEventHandler;
+            //liquidErrorListener.ParsingErrorEventHandler += ParsingErrorEventHandler;
             liquidErrorListener.ParsingErrorEventHandler += ErrorHandler;
             return liquidErrorListener;
         }

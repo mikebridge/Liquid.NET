@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
 using Liquid.NET.Constants;
 using Liquid.NET.Rendering;
 using Liquid.NET.Symbols;
@@ -17,12 +18,16 @@ namespace Liquid.NET
     /// </summary>
     public class RenderingVisitor : IASTVisitor
     {
+        public event OnRenderingErrorEventHandler RenderingErrorEventHandler;
+        public event OnParsingErrorEventHandler ParsingErrorEventHandler;
+
         private readonly ITemplateContext _templateContext;
         private readonly ConcurrentDictionary<String, int> _counters = new ConcurrentDictionary<string, int>();
         public readonly IList<LiquidError> Errors = new List<LiquidError>();
         private IfChangedRenderer _isChangedRenderer;
 
         public bool HasErrors { get { return Errors.Any();  } }
+
 
         private readonly Stack<Action<String>> _accumulators = new Stack<Action<string>>();
 
@@ -77,54 +82,81 @@ namespace Liquid.NET
                     customTag.LiquidExpressionTrees.Select(x => LiquidExpressionEvaluator.Eval(x, _templateContext)).ToList();
                 if (evalResults.Any(x => x.IsError))
                 {
-                    RenderErrors(evalResults);
+                    var errors = evalResults.Where(x => x.IsError).Select(x => x.ErrorResult).ToList();
+                    foreach (LiquidError error in errors)
+                    {
+                        RegisterError(error);
+                    }
+                    //RenderErrors(errors);
                     return;
                 }
                 AppendTextToCurrentAccumulator(RenderMacro(macroDescription, evalResults.Select(x => x.SuccessResult)));
                 return;
             }
-            AddError("Liquid syntax error: Unknown tag '" + customTag.TagName + "'", customTag);
+
+            var err = new LiquidError{Message ="Liquid syntax error: Unknown tag '" + customTag.TagName + "'"};
+            //RenderError(err);
+            RegisterError(err);
         }
 
         private void RenderError(LiquidError liquidError)
         {
-            AppendTextToCurrentAccumulator(FormatErrors(new List<LiquidError>{liquidError}));
+            RenderErrors(new List<LiquidError>{liquidError});
         }
+
+        /// <summary>
+        /// Render errors inline.
+        /// </summary>
+        /// <param name="liquidErrors"></param>
         private void RenderErrors(IEnumerable<LiquidError> liquidErrors)
         {
-            AppendTextToCurrentAccumulator(FormatErrors(liquidErrors));
+            // TODO: Make this configurable
+            //if (_templateContext.RenderErrorsInline)
+            //{
+                AppendTextToCurrentAccumulator(FormatErrors(liquidErrors));
+            //}
         }
 
         private String FormatErrors(IEnumerable<LiquidError> liquidErrors)
-        {
-            //return "ERROR: " + String.Join("; ", liquidErrors.Select(x => x.Message));
-            return String.Join("; ", liquidErrors.Select(x => FormatError(x)));
+        {            
+            return String.Join("; ", liquidErrors.Select(FormatError));
         }
 
         private static string FormatError(LiquidError x)
         {
             // to remain backwards-compatible, this leaves "Liquid Error:" alone.
+            String err = x.Message;
+            if (!String.IsNullOrWhiteSpace(x.TokenSource))
+            {
+                err = x.ToString();
+            }
             if (x.Message.IndexOf("Liquid error") >= 0)
             {
-                return x.Message;
+                return err;
             }
             else
             {
-                return "ERROR: " + x.Message;
+                return "ERROR: " + err;
             }
 
         }
 
-        private void RenderErrors(IEnumerable<LiquidExpressionResult> liquidErrors)
-        {
-            var errors = liquidErrors.Where(x => x.IsError).Select(x => x.ErrorResult);
-            RenderErrors(errors);
-        }
-
         // ReSharper disable once UnusedParameter.Local
-        private void AddError(String message, IASTNode node)
-        { 
-            Errors.Add(new LiquidError{Message = message});
+        //private void RegisterError(String message, IASTNode node)
+        //{ 
+            
+       // }
+
+        /// <summary>
+        /// Save the error and notify listeners that an error
+        /// has occurred.
+        /// </summary>
+        /// <param name="error"></param>
+        internal void RegisterError(LiquidError error)
+        {
+            Errors.Add(error);
+            RenderError(error); // write it inline
+            OnRenderingErrorEventHandler(error);
         }
 
         private string RenderMacro(MacroBlockTag macroBlockTag, IEnumerable<Option<ILiquidValue>> args)
@@ -154,7 +186,9 @@ namespace Liquid.NET
             var tagRenderer = CustomBlockTagRendererFactory.Create(tagType);
             if (tagRenderer == null)
             {
-                AddError("Liquid syntax error: Unknown tag '" + customBlockTag.TagName + "'", customBlockTag);              
+                
+                var message = "Liquid syntax error: Unknown tag '" + customBlockTag.TagName + "'";
+                RegisterError(new LiquidError { Message = message });               
                 return;
             }
 
@@ -180,7 +214,10 @@ namespace Liquid.NET
                                 GetNextCycleText(
                                     groupName: x.HasValue ? ValueCaster.RenderAsString(x.Value) : null, 
                                     cycleTag: cycleTag)))
-                    .WhenError(RenderError);
+                    .WhenError(err => {
+                        RegisterError(err);
+                        //RenderError(err);
+                    });
             }
         }
 
@@ -224,10 +261,11 @@ namespace Liquid.NET
 
             LiquidExpressionEvaluator.Eval(assignTag.LiquidExpressionTree, _templateContext)
                 .WhenSuccess(x => _templateContext.SymbolTableStack.DefineGlobal(assignTag.VarName, x))
-//                    x => x.WhenSome(some => _templateContext.SymbolTableStack.DefineGlobal(assignTag.VarName, some))
-//                        .WhenNone(() => _templateContext.SymbolTableStack.DefineGlobal(assignTag.VarName, null)))
-                .WhenError(RenderError);
-
+                .WhenError( err => 
+                    {
+                        RegisterError(err);
+                        //RenderError(err);
+                    });
 
         }
 
@@ -288,7 +326,6 @@ namespace Liquid.NET
 
         public void Visit(IncludeTag includeTag)
         {
-
             var includeRenderer = new IncludeRenderer(this);
             includeRenderer.Render(includeTag, _templateContext);
  
@@ -324,7 +361,8 @@ namespace Liquid.NET
             //Console.WriteLine("Value to Match: "+valueToMatch);
             if (valueToMatchResult.IsError)
             {
-                RenderError(valueToMatchResult.ErrorResult);
+                RegisterError(valueToMatchResult.ErrorResult);
+                //RenderError(valueToMatchResult.ErrorResult);
                 return;
             }
 
@@ -395,9 +433,15 @@ namespace Liquid.NET
 
         public void Visit(LiquidExpressionTree liquidExpressionTree)
         {
-            LiquidExpressionEvaluator.Eval(liquidExpressionTree, _templateContext)
-                .WhenSuccess(success => success.WhenSome(x => AppendTextToCurrentAccumulator(Render(x))))
-                .WhenError(RenderError);
+            var result = LiquidExpressionEvaluator.Eval(liquidExpressionTree, _templateContext);
+
+            result.WhenSuccess(success => success.WhenSome(x => AppendTextToCurrentAccumulator(Render(x))))
+                .WhenError(error =>
+                {
+                    RegisterError(error);
+                    //Errors.Add(error);
+                    //RenderError(error);
+                });
         }
 
         public String Render(ILiquidValue result)
@@ -438,14 +482,29 @@ namespace Liquid.NET
             rootNode.Children.ForEach(StartWalking);
         }
 
-        public void StartWalking(TreeNode<IASTNode> rootNode, Action<String> accumulator)
+        public void StartWalking(
+            TreeNode<IASTNode> rootNode, 
+            Action<String> accumulator)
         {
             PushTextAccumulator(accumulator);
             StartWalking(rootNode);
             PopTextAccumulator();
         }
 
+        protected void OnRenderingErrorEventHandler(LiquidError args)
+        {
+            var handler = RenderingErrorEventHandler;
+            if (handler != null) handler(this, args);
+        }
+
+        protected void OnParsingErrorEventHandler(LiquidError liquiderror)
+        {
+            var handler = ParsingErrorEventHandler;
+            if (handler != null) handler(liquiderror);
+        }
     }
+
+    public delegate void OnRenderingErrorEventHandler(Object sender, LiquidError args);
 
     public class ContinueException : Exception { }
 

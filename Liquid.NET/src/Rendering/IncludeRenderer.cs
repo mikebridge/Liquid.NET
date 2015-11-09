@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Antlr4.Runtime;
 using Liquid.NET.Constants;
 using Liquid.NET.Symbols;
 using Liquid.NET.Tags;
@@ -19,7 +21,8 @@ namespace Liquid.NET.Rendering
             _renderingVisitor = renderingVisitor;
         }
 
-        public void Render(IncludeTag includeTag, ITemplateContext templateContext)
+        public void Render(IncludeTag includeTag,
+                ITemplateContext templateContext)
         {
             if (templateContext.FileSystem == null)
             {
@@ -48,8 +51,17 @@ namespace Liquid.NET.Rendering
         private void RenderSnippet(IncludeTag includeTag, ITemplateContext templateContext, String snippet,
             String virtualFileName)
         {
-            var snippetAst = CreateAstFromSnippet(templateContext, snippet, virtualFileName);
-
+            var snippetAstTry = CreateAstFromSnippet(templateContext, snippet, virtualFileName);
+            if (snippetAstTry.IsLeft)
+            {
+                foreach (var err in snippetAstTry.Left)
+                {
+                    AddErrorToResult(err);
+                }
+                return;
+            }
+            var snippetAst = snippetAstTry.Right;
+            //zzz
             if (includeTag.ForExpression != null)
             {
                 LiquidExpressionEvaluator.Eval(includeTag.ForExpression, templateContext)
@@ -111,29 +123,38 @@ namespace Liquid.NET.Rendering
             RenderBlock(includeTag, templateContext, snippetAst, action);
         }
 
-              
-        private static LiquidAST CreateAstFromSnippet(ITemplateContext templateContext, String snippet, String virtualFileName)
+
+        private static Either<IList<LiquidError>, LiquidAST> CreateAstFromSnippet(ITemplateContext templateContext, String snippet,
+            String virtualFileName)
         {
             LiquidAST snippetAst;
-            try
+            //try
+            //{
+            IList<LiquidError> errors = new List<LiquidError>();
+            snippetAst = templateContext.ASTGenerator(snippet, errors.Add);
+            //}
+            //catch (LiquidParserException ex)
+            //{
+            // save the included filename along with the error
+            //foreach (var error in ex.LiquidErrors.Where(error => String.IsNullOrEmpty(error.TokenSource)))
+            //{
+            //    error.TokenSource = virtualFileName;
+            //}
+            //throw;
+            //}
+            foreach (var error in errors.Where(error => String.IsNullOrEmpty(error.TokenSource)))
             {
-                snippetAst = templateContext.ASTGenerator(snippet);
+                error.TokenSource = virtualFileName;
             }
-            catch (LiquidParserException ex)
-            {
-                // save the included filename along with the error
-                foreach (var error in ex.LiquidErrors.Where(error => String.IsNullOrEmpty(error.TokenSource)))
-                {
-                    error.TokenSource = virtualFileName;
-                }
-                throw;
-            }
-            return snippetAst;
+            return errors.Any() ? 
+                Either.Left<IList<LiquidError>, LiquidAST>(errors) : 
+                Either.Right<IList<LiquidError>, LiquidAST>(snippetAst);
         }
 
         private void AddErrorToResult(LiquidError errorResult)
         {
-            //_renderingVisitor.Errors.Add(errorResult);
+            //_renderingVisitor.Errors.Add(errorResult); 
+            // TODO: Put these errors somewhere            
             _renderingVisitor.RegisterError(errorResult);
         }
 
@@ -178,7 +199,6 @@ namespace Liquid.NET.Rendering
 
             RenderWithLocalScope(templateContext, localBlockScope, snippetAst.RootNode);
         }
-
 
 
     }

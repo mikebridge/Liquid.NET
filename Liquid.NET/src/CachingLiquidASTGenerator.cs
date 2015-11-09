@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Caching;
 
 namespace Liquid.NET
@@ -22,8 +24,19 @@ namespace Liquid.NET
             return str;
         }
 
-        public LiquidAST Generate(string template)
+        public LiquidAST Generate(string template, Action<LiquidError> errorAccumulator = null)
         {
+            // We need to pass the errors back to the parent, but we
+            // also need to avoid saving in the cache if an error is generated.
+            errorAccumulator = errorAccumulator ?? (err => { });
+            IList<LiquidError> errors = new List<LiquidError>();
+
+            Action<LiquidError> decoratedAccumulator = err =>
+            {
+                errors.Add(err);
+                errorAccumulator(err);
+            };
+
             String hash = CacheKey(template);
             ObjectCache cache = MemoryCache.Default;
             var liquidAST = cache[hash] as LiquidAST;
@@ -33,8 +46,10 @@ namespace Liquid.NET
                 {
                     SlidingExpiration = _slidingExpiration
                 };
-                liquidAST =_generator.Generate(template);
-                if (liquidAST != null)
+                // TODO: If there are errors, don't caceh the template
+                liquidAST = _generator.Generate(template, decoratedAccumulator);
+                
+                if (!errors.Any() && liquidAST != null)
                 {
                     cache.Set(hash, liquidAST, policy);
                 }

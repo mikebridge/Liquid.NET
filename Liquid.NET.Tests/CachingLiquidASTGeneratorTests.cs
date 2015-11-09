@@ -43,6 +43,25 @@ namespace Liquid.NET.Tests
         }
 
         [Test]
+        public void It_Should_Not_Cache_Erroring_Templates()
+        {
+            // Arrange
+            String tmpl = "Result: {% weofijwef";
+            var mockGenerator = new MockGeneratorWithError(new LiquidError{Message = "Bad Things Happened!"});
+            var cachingGenerator = new CachingLiquidASTGenerator(mockGenerator);
+
+            // Act
+            var result1 = cachingGenerator.Generate(tmpl, err => { });
+            var result2 = cachingGenerator.Generate(tmpl, err => { });
+
+            // Assert
+            Assert.That(result1, Is.Not.Null);
+            Assert.That(result2, Is.Not.Null);
+            Assert.That(mockGenerator.Calls, Is.EqualTo(2));
+        }
+
+
+        [Test]
         public void It_Should_Cache_A_Template_Across_Objects()
         {
             // Arrange
@@ -67,11 +86,36 @@ namespace Liquid.NET.Tests
     public class MockGenerator : ILiquidASTGenerator
     {
         public int Calls { get; private set; }
-        public LiquidAST Generate(string template)
+        public LiquidAST Generate(string template, Action<LiquidError> onParserError = null)
         {
             Calls ++;
             return new LiquidAST();
         }
+
+    }
+
+    public class MockGeneratorWithError : ILiquidASTGenerator
+    {
+        private readonly LiquidError _err;
+
+        public MockGeneratorWithError(LiquidError err)
+        {
+            _err = err;
+        }
+
+        public int Calls { get; private set; }
+
+        public LiquidAST Generate(string template, Action<LiquidError> onParserError = null)
+        {
+            Calls++;
+            if (onParserError != null)
+            {
+                onParserError(_err);
+            }
+            
+            return new LiquidAST();
+        }
+
     }
 
 }

@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
 using Liquid.NET.Constants;
 using Liquid.NET.Rendering;
 using Liquid.NET.Symbols;
@@ -18,6 +19,7 @@ namespace Liquid.NET
     public class RenderingVisitor : IASTVisitor
     {
         public event OnRenderingErrorEventHandler RenderingErrorEventHandler;
+        public event OnParsingErrorEventHandler ParsingErrorEventHandler;
 
         private readonly ITemplateContext _templateContext;
         private readonly ConcurrentDictionary<String, int> _counters = new ConcurrentDictionary<string, int>();
@@ -25,6 +27,7 @@ namespace Liquid.NET
         private IfChangedRenderer _isChangedRenderer;
 
         public bool HasErrors { get { return Errors.Any();  } }
+
 
         private readonly Stack<Action<String>> _accumulators = new Stack<Action<string>>();
 
@@ -82,28 +85,36 @@ namespace Liquid.NET
                     var errors = evalResults.Where(x => x.IsError).Select(x => x.ErrorResult).ToList();
                     foreach (LiquidError error in errors)
                     {
-                        RenderError(error);
                         RegisterError(error);
                     }
-                    RenderErrors(errors);
+                    //RenderErrors(errors);
                     return;
                 }
                 AppendTextToCurrentAccumulator(RenderMacro(macroDescription, evalResults.Select(x => x.SuccessResult)));
                 return;
             }
 
-            var message = "Liquid syntax error: Unknown tag '" + customTag.TagName + "'";
-            RenderError(new LiquidError{Message = message});
-            RegisterError(message, customTag);
+            var err = new LiquidError{Message ="Liquid syntax error: Unknown tag '" + customTag.TagName + "'"};
+            //RenderError(err);
+            RegisterError(err);
         }
 
         private void RenderError(LiquidError liquidError)
         {
             RenderErrors(new List<LiquidError>{liquidError});
         }
+
+        /// <summary>
+        /// Render errors inline.
+        /// </summary>
+        /// <param name="liquidErrors"></param>
         private void RenderErrors(IEnumerable<LiquidError> liquidErrors)
         {
-            AppendTextToCurrentAccumulator(FormatErrors(liquidErrors));
+            // TODO: Make this configurable
+            //if (_templateContext.RenderErrorsInline)
+            //{
+                AppendTextToCurrentAccumulator(FormatErrors(liquidErrors));
+            //}
         }
 
         private String FormatErrors(IEnumerable<LiquidError> liquidErrors)
@@ -114,26 +125,27 @@ namespace Liquid.NET
         private static string FormatError(LiquidError x)
         {
             // to remain backwards-compatible, this leaves "Liquid Error:" alone.
+            String err = x.Message;
+            if (!String.IsNullOrWhiteSpace(x.TokenSource))
+            {
+                err = x.ToString();
+            }
             if (x.Message.IndexOf("Liquid error") >= 0)
             {
-                return x.Message;
+                return err;
             }
             else
             {
-                return "ERROR: " + x.Message;
+                return "ERROR: " + err;
             }
 
         }
 
         // ReSharper disable once UnusedParameter.Local
-        private void RegisterError(String message, IASTNode node)
-        { 
-            //var newError = new LiquidError{Message = message};
-            //OnRenderingErrorEventHandler(newError);
-            //Errors.Add(new LiquidError { Message = message });
-            RegisterError(new LiquidError { Message = message });
+        //private void RegisterError(String message, IASTNode node)
+        //{ 
             
-        }
+       // }
 
         /// <summary>
         /// Save the error and notify listeners that an error
@@ -143,6 +155,7 @@ namespace Liquid.NET
         internal void RegisterError(LiquidError error)
         {
             Errors.Add(error);
+            RenderError(error); // write it inline
             OnRenderingErrorEventHandler(error);
         }
 
@@ -173,7 +186,9 @@ namespace Liquid.NET
             var tagRenderer = CustomBlockTagRendererFactory.Create(tagType);
             if (tagRenderer == null)
             {
-                RegisterError("Liquid syntax error: Unknown tag '" + customBlockTag.TagName + "'", customBlockTag);              
+                
+                var message = "Liquid syntax error: Unknown tag '" + customBlockTag.TagName + "'";
+                RegisterError(new LiquidError { Message = message });               
                 return;
             }
 
@@ -201,7 +216,7 @@ namespace Liquid.NET
                                     cycleTag: cycleTag)))
                     .WhenError(err => {
                         RegisterError(err);
-                        RenderError(err);
+                        //RenderError(err);
                     });
             }
         }
@@ -249,7 +264,7 @@ namespace Liquid.NET
                 .WhenError( err => 
                     {
                         RegisterError(err);
-                        RenderError(err);
+                        //RenderError(err);
                     });
 
         }
@@ -311,7 +326,6 @@ namespace Liquid.NET
 
         public void Visit(IncludeTag includeTag)
         {
-
             var includeRenderer = new IncludeRenderer(this);
             includeRenderer.Render(includeTag, _templateContext);
  
@@ -348,7 +362,7 @@ namespace Liquid.NET
             if (valueToMatchResult.IsError)
             {
                 RegisterError(valueToMatchResult.ErrorResult);
-                RenderError(valueToMatchResult.ErrorResult);
+                //RenderError(valueToMatchResult.ErrorResult);
                 return;
             }
 
@@ -426,7 +440,7 @@ namespace Liquid.NET
                 {
                     RegisterError(error);
                     //Errors.Add(error);
-                    RenderError(error);
+                    //RenderError(error);
                 });
         }
 
@@ -481,6 +495,12 @@ namespace Liquid.NET
         {
             var handler = RenderingErrorEventHandler;
             if (handler != null) handler(this, args);
+        }
+
+        protected void OnParsingErrorEventHandler(LiquidError liquiderror)
+        {
+            var handler = ParsingErrorEventHandler;
+            if (handler != null) handler(liquiderror);
         }
     }
 

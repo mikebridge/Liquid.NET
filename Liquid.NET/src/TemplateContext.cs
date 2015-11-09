@@ -30,14 +30,14 @@ namespace Liquid.NET
         public IDictionary<string, object> Registers { get { return _registers;} }
         private IFileSystem _fileSystem;
         private readonly LiquidOptions _options = new LiquidOptions();
-        private Func<string, LiquidAST> _astGeneratorFunc;
+        private Func<string, Action<LiquidError>, LiquidAST> _astGeneratorFunc;
 
         public LiquidOptions Options
         {
             get { return _options; }
         }
 
-        public Func<string, LiquidAST> ASTGenerator
+        public Func<string, Action<LiquidError>, LiquidAST> ASTGenerator
         {
             get { return _astGeneratorFunc; }
         }
@@ -46,7 +46,7 @@ namespace Liquid.NET
         {            
             _globalSymbolTable = new SymbolTable();
             _symbolTablestack.Push(_globalSymbolTable);            
-            _astGeneratorFunc = snippet => new CachingLiquidASTGenerator(new LiquidASTGenerator()).Generate(snippet);
+            _astGeneratorFunc = (snippet,errorfn) => new CachingLiquidASTGenerator(new LiquidASTGenerator()).Generate(snippet, errorfn);
         }        
 
 
@@ -242,7 +242,7 @@ namespace Liquid.NET
         /// </summary>
         /// <param name="astGeneratorFunc"></param>
         /// <returns></returns>
-        public ITemplateContext WithASTGenerator(Func<String, LiquidAST> astGeneratorFunc)
+        public ITemplateContext WithASTGenerator(Func<string, Action<LiquidError>, LiquidAST> astGeneratorFunc)
         {
             if (astGeneratorFunc == null)
             {

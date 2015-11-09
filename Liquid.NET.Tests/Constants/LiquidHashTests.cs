@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-
+using System.Linq;
 using Liquid.NET.Constants;
 using Liquid.NET.Utils;
 using NUnit.Framework;
@@ -178,5 +178,26 @@ namespace Liquid.NET.Tests.Constants
             var dict = new LiquidHash {{"key", LiquidString.Create("test")}};
             Assert.That(dict.Values.Count, Is.EqualTo(1));
         }
+
+        [Test]
+        public void It_Should_Remove_Values()
+        {
+
+            var dict = new LiquidHash { { "key", LiquidString.Create("test") } };
+            dict.Remove("key");
+            Assert.That(dict.Values.Any(), Is.False);
+        }
+
+        [Test]
+        public void It_Should_Try_To_Retrieve_Values()
+        {
+            var dict = new LiquidHash { { "key", LiquidString.Create("test") } };
+            Option<ILiquidValue> opt;
+            bool success = dict.TryGetValue("key", out opt);
+            Assert.That(success, Is.True);
+            // ReSharper disable once PossibleNullReferenceException
+            Assert.That(((LiquidString) opt.Value).StringVal, Is.EqualTo("test"));
+        }
+
     }
 }

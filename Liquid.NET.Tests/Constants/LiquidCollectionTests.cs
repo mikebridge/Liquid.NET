@@ -100,6 +100,14 @@ namespace Liquid.NET.Tests.Constants
             liquidCollection.Insert(0,LiquidString.Create("test 1"));
             Assert.That(liquidCollection.IndexOf(LiquidString.Create("test 1")), Is.EqualTo(0));
         }
+
+        [Test]
+        public void It_Should_Cast_A_Null_Element_To_None()
+        {
+            var liquidCollection = new LiquidCollection { null };
+            Assert.That(liquidCollection.Count, Is.EqualTo(1));
+        }
+
         [Test]
         public void It_Should_Set_An_Element()
         {

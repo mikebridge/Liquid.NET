@@ -106,6 +106,13 @@ namespace Liquid.NET.Tests.Constants
         }
 
         [Test]
+        public void It_Should_Cast_A_BigInt_To_Long()
+        {
+            Assert.That(LiquidNumeric.Create(new BigInteger(123456789012345678)).LongValue, Is.EqualTo(123456789012345678L));
+        }
+
+
+        [Test]
         public void It_Should_Cast_An_Int_To_An_Int()
         {
             Assert.That(LiquidNumeric.Create(12345).IntValue, Is.EqualTo(12345));
@@ -149,6 +156,18 @@ namespace Liquid.NET.Tests.Constants
         }
 
         [Test]
+        public void It_Should_Cast_A_Decimal_To_A_Long()
+        {
+            Assert.That(LiquidNumeric.Create(12345.6m).LongValue, Is.EqualTo(12346L));
+        }
+
+        [Test]
+        public void It_Should_Cast_An_Int_To_A_Long()
+        {
+            Assert.That(LiquidNumeric.Create(12345).LongValue, Is.EqualTo(12345L));
+        }
+
+        [Test]
         public void It_Should_Cast_A_BigInt_To_BigintInt()
         {
             Assert.That(LiquidNumeric.Create(new BigInteger(123456789)).BigIntValue, Is.EqualTo(new BigInteger(123456789)));
@@ -172,13 +191,31 @@ namespace Liquid.NET.Tests.Constants
             Assert.That(LiquidNumeric.Create(new BigInteger(123)), Is.EqualTo(LiquidNumeric.Create(123)));
         }
 
-        
+        [Test]
+        public void It_Should_Return_The_BigInt_Value()
+        {
+            Assert.That(LiquidNumeric.Create(new BigInteger(123)).Value, Is.EqualTo(new BigInteger(123)));
+        }
+
         [Test]
         public void An_Int_Should_Create_A_Hash_Code()
         {
             var num = LiquidNumeric.Create(123);
             Assert.That(num.GetHashCode(), Is.Not.EqualTo(123.GetHashCode()));
         }
-      
+
+        [Test]
+        public void A_BigInt_Is_An_Int()
+        {
+            Assert.That(LiquidNumeric.Create(new BigInteger(123)).IsInt, Is.True);
+        }
+
+        [Test]
+        public void A_Long_Is_An_Int()
+        {
+            Assert.That(LiquidNumeric.Create(123L).IsInt, Is.True);
+        }
+
+
     }
 }

@@ -52,9 +52,10 @@ namespace Liquid.NET.Constants
 
         public void Add(Option<ILiquidValue> item)
         {
-            if (item == null)
+            if (ReferenceEquals(item, null))
             {
-                throw new ArgumentNullException("item");
+                //throw new ArgumentNullException("item");
+                item = Option<ILiquidValue>.None();
             }
             _values.Add(item);
         }

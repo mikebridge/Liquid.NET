@@ -81,6 +81,15 @@ namespace Liquid.NET.Tests.Utils
             Assert.That(val1 != val2, Is.True);
         }
 
+
+        [Test]
+        public void Underlying_Differing_Values_Should_Be_Unequal_With_Other_Nulls()
+        {
+            var val1 = Option<String>.Create("Test");
+            var val2 = (String) null;
+            Assert.That(val1.Equals(val2), Is.False);
+        }
+
         [Test]
         //[ExpectedException(typeof(ArgumentNullException))]
         public void Options_Cant_Be_Compared_To_Null()

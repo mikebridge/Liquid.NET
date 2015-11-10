@@ -47,7 +47,7 @@ namespace Liquid.NET.Tests.Ruby
 
         {% if exceptions != empty %}[Test]{% for test in exceptions %}
         [TestCase(@"{{test.input}}", @"{{test.assigns}}", @"{{test.expected | remove: 'EXCEPTION: '}}")]{% endfor %}
-        public void It_Should_Generate_An_Exception(String input, String assigns, String expectedMessage) 
+        public void It_Should_Capture_An_Error(String input, String assigns, String expectedMessage) 
         {
             // Arrange
             ITemplateContext ctx = new TemplateContext()
@@ -61,17 +61,20 @@ namespace Liquid.NET.Tests.Ruby
 
             var template = LiquidTemplate.Create(input);
             IList<LiquidError> errors = new List<LiquidError>();
-            try
-            {
-                String result = template.LiquidTemplate.Render(ctx, onRenderingError: errors.Add);
-                Assert.That(errors.Count, Is.EqualTo(1));
-                Assert.That(errors[0].ToString(), Is.StringContaining(expectedMessage));
-            }
-            catch (LiquidParserException ex)
-            {
+            //try
+            //{
+            
+			String result = template.LiquidTemplate.Render(ctx, onRenderingError: errors.Add);
+            Assert.That(errors.Count, Is.EqualTo(1));
+            Assert.That(errors[0].ToString(), Is.StringContaining(expectedMessage));
+            
+			// TODO: Clean this up:
+			//}
+            //catch (LiquidParserException ex)
+            //{
                 // Assert
-                Assert.That(ex.LiquidErrors[0].ToString(), Is.StringContaining(expectedMessage));
-            }
+            //    Assert.That(ex.LiquidErrors[0].ToString(), Is.StringContaining(expectedMessage));
+            //}
             //catch (LiquidRendererException ex)
             //{
                 // Assert

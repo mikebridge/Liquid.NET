@@ -4,7 +4,12 @@ using System.Linq;
 
 namespace Liquid.NET
 {
-    public class LiquidParserException : Exception
+    /// <summary>
+    /// Communicate parsing exceptions that are created from 
+    /// additional logic in the AST generator.  These should
+    /// only appear internally.
+    /// </summary>
+    internal class LiquidParserException : Exception
     {
         private readonly IList<LiquidError> _liquidErrors;
 
@@ -16,12 +21,13 @@ namespace Liquid.NET
             }
         }
 
-        public LiquidParserException(IList<LiquidError> liquidErrors)
+        internal LiquidParserException(IList<LiquidError> liquidErrors)
         {
             _liquidErrors = liquidErrors;
         }
 
-        public IList<LiquidError> LiquidErrors {
+        internal IList<LiquidError> LiquidErrors
+        {
             get { return _liquidErrors; }
         }
 

@@ -41,18 +41,25 @@ namespace Liquid.NET.Tests.Tags
         {
             // Act
             var templateContext = new TemplateContext().WithAllFilters().WithCustomTagBlockRenderer<WordReverserBlockTag>("echoargs");
-            try
-            {
-                RenderingHelper.RenderTemplate(
-                    "Result : {% echoargs \"hello\" 123 true %}echo{% endsomethingelse %}", templateContext);
-                Assert.Fail("This should have thrown an error.");
-            }
-            catch (LiquidParserException ex)
-            {
-                var allErrors = String.Join(",", ex.LiquidErrors.Select(x => x.ToString()));
-                Logger.Log(allErrors);
-                Assert.That(allErrors, Is.StringContaining("There was no opening tag for the ending tag 'endsomethingelse'"));
-            }
+
+            var templateResult = LiquidTemplate.Create("Result : {% echoargs \"hello\" 123 true %}echo{% endsomethingelse %}");
+            Assert.That(templateResult.HasParsingErrors);
+            Assert.That(templateResult.ParsingErrors[0].Message, Is.StringContaining("There was no opening tag for the ending tag 'endsomethingelse'"));
+            //Assert.That
+            //var result = templateResult.LiquidTemplate.Render(new TemplateContext().WithAllFilters());
+            
+//            try
+//            {
+                //RenderingHelper.RenderTemplate(
+                    //"Result : {% echoargs \"hello\" 123 true %}echo{% endsomethingelse %}", templateContext);
+               // Assert.Fail("This should have thrown an error.");
+            //}
+            //catch (LiquidParserException ex)
+            //{
+            //    var allErrors = String.Join(",", ex.LiquidErrors.Select(x => x.ToString()));
+            //    Logger.Log(allErrors);
+            //    Assert.That(allErrors, Is.StringContaining("There was no opening tag for the ending tag 'endsomethingelse'"));
+            //}
         }
 
 

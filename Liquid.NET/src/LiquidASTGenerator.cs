@@ -86,6 +86,15 @@ namespace Liquid.NET
                 parser.AddErrorListener(CreateLiquidErrorListener());
                 new ParseTreeWalker().Walk(this, parser.init());
             }
+            catch (LiquidParserException lpe) 
+            {
+                // exceptions thrown when building the AST.
+                // (don't bother with the re-parse)
+                foreach (var err in lpe.LiquidErrors)
+                {
+                    LiquidErrors.Add(err);
+                }
+            }
             catch
             {
                 parser.Reset();
@@ -106,16 +115,7 @@ namespace Liquid.NET
             {
                 onParserError(err);
             }
-
-            // TODO: Need to fix the erroring include renderer....
-
-//            if (LiquidErrors.Any())
-//            {
-//                //ParserError
-//               
-//                throw new LiquidParserException(LiquidErrors);
-//            }
-
+            
             return liquidAst;
         }
 
@@ -831,7 +831,6 @@ namespace Liquid.NET
             // then place all the liquid blocks that were siblings in between the start tag and here
             // into the new CustomBlockTag
 
-           // Log("NEED TO Restructure TREE HERE");
             //Log("-- END OF CLOSING CUSTOM TAG: " + context.ENDLABEL());
             while(true)
             {
@@ -862,21 +861,23 @@ namespace Liquid.NET
                        
                         break;
                     }
-                    else
-                    {
-                        //Log("Not a match");
-                    }
+//                    else
+//                    {
+//                        //Log("Not a match");
+//                    }
                 }
                 else
-                {                  
-                    throw new LiquidParserException(new List<LiquidError>  {                       
-                        new LiquidError
+                {
+                    var err = new LiquidError
                         {
                             Line = context.Start.Line,
                             CharPositionInLine = context.Start.Column,
-                            Message = "There was no opening tag for the ending tag '" + context.ENDLABEL()+"'"
-                        }
-                    });
+                            Message = "There was no opening tag for the ending tag '" + context.ENDLABEL() + "'"
+                        };
+
+                    //LiquidErrors.Add(err);
+                    throw new LiquidParserException(new List<LiquidError>{err});
+
 
                 }
             }

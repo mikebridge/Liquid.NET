@@ -218,6 +218,7 @@
     <Compile Include="src\Utils\LiquidExpressionResult.cs" />
     <Compile Include="src\Utils\LiquidVersionAttribute.cs" />
     <Compile Include="src\Utils\Option.cs" />
+    <Compile Include="src\Utils\LiquidValueConverter.cs" />
     <Compile Include="src\Utils\Registry.cs" />
     <Compile Include="src\Utils\StrFTime.cs" />
     <Compile Include="src\Utils\TreeNode.cs" />

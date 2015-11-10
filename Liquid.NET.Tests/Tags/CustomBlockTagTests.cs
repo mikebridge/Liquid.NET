@@ -83,20 +83,20 @@ namespace Liquid.NET.Tests.Tags
         [Test]
         public void It_Should_Show_Error_On_Missing_Tags()
         {
-            IList<LiquidError> errors = new List<LiquidError>();
-            RenderingHelper.RenderTemplate("Result : {% test %}", onRenderingError: errors.Add);
+            var template = LiquidTemplate.Create("Result : {% test %}");
+            var result = template.LiquidTemplate.Render(new TemplateContext().WithAllFilters());
+            //RenderingHelper.RenderTemplate(, onRenderingError: errors.Add);
 
-            Assert.That(String.Join(",",errors.Select(x => x.Message)), Is.EqualTo("Liquid syntax error: Unknown tag 'test'"));
+            Assert.That(String.Join(",",result.RenderingErrors.Select(x => x.Message)), Is.EqualTo("Liquid syntax error: Unknown tag 'test'"));
 
         }
 
         [Test]
         public void It_Should_Show_Error_On_Missing_BLocks()
         {
-            IList<LiquidError> errors = new List<LiquidError>();
-            RenderingHelper.RenderTemplate("Result : {% test %}{% endtest %}", onRenderingError: errors.Add);
-
-            Assert.That(String.Join(",", errors.Select(x => x.Message)), Is.EqualTo("Liquid syntax error: Unknown tag 'test'"));
+            var template = LiquidTemplate.Create("Result : {% test %}{% endtest %}");
+            var result = template.LiquidTemplate.Render(new TemplateContext().WithAllFilters());
+            Assert.That(String.Join(",", result.RenderingErrors.Select(x => x.Message)), Is.EqualTo("Liquid syntax error: Unknown tag 'test'"));
 
         }
 
@@ -137,10 +137,11 @@ namespace Liquid.NET.Tests.Tags
         {
             // Act
             var templateContext = new TemplateContext().WithAllFilters().WithCustomTagBlockRenderer<WordReverserBlockTag>("reverse");
-            var result = RenderingHelper.RenderTemplate("Result : {% reverse %}{{ 1 | divided_by: 0 }}{% endreverse %}", templateContext);
-
+            //var result = RenderingHelper.RenderTemplate("Result : {% reverse %}{{ 1 | divided_by: 0 }}{% endreverse %}", templateContext);
+            var template = LiquidTemplate.Create("Result : {% reverse %}{{ 1 | divided_by: 0 }}{% endreverse %}");
+            var result = template.LiquidTemplate.Render(templateContext);
             // Assert
-            Assert.That(result, Is.EqualTo("Result : diuqiL :rorre dedivid yb 0"));
+            Assert.That(result.Result, Is.EqualTo("Result : diuqiL :rorre dedivid yb 0"));
 
         }
 

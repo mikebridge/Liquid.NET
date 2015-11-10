@@ -45,10 +45,13 @@ namespace Liquid.NET.Tests.Filters.Strings
         public void It_Should_Remove_Nil_From_A_String()
         {
             // Arrange
-            var result = RenderingHelper.RenderTemplate("Result : {{ \"test\" | remove : x }}");
+
+            //var result = RenderingHelper.RenderTemplate("Result : {{ \"test\" | remove : x }}");
+            var template = LiquidTemplate.Create("Result : {{ \"test\" | remove : x }}");
+            var result = template.LiquidTemplate.Render(new TemplateContext().WithAllFilters());
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : ERROR: Please specify a replacement string."));
+            Assert.That(result.Result, Is.EqualTo("Result : ERROR: Please specify a replacement string."));
         }
 
 

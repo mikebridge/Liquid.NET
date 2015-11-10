@@ -40,10 +40,14 @@ namespace Liquid.NET.Tests.Tags
         {
             // Act
             var templateContext = new TemplateContext();
-            var result = RenderingHelper.RenderTemplate("Result : {% awefawef %}", templateContext);
+
+            //var result = RenderingHelper.RenderTemplate("Result : {% awefawef %}", templateContext);
+            var template = LiquidTemplate.Create("Result : {% awefawef %}");
+            var result = template.LiquidTemplate.Render(templateContext);
+
             Console.WriteLine(result);
             // Assert
-            Assert.That(result, Is.StringContaining("Unknown tag 'awefawef'"));
+            Assert.That(result.Result, Is.StringContaining("Unknown tag 'awefawef'"));
 
         }
 

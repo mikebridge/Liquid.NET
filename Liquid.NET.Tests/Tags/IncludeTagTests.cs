@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
 using Liquid.NET.Constants;
 using Liquid.NET.Tests.Helpers;
 using NUnit.Framework;
@@ -28,28 +30,24 @@ namespace Liquid.NET.Tests.Tags
         }
 
         [Test]
-        public void It_Should_Include_Name_Of_VirtualFile_With_Errors()
+        public void It_Should_Include_Name_Of_VirtualFile_With_ParsingErrors()
         {
             // Arrange
             var ctx = CreateContext(new Dictionary<String, String> { { "test", "{% if .wefiouhwef %}" } });
 
-            //ctx.Define("payments", new LiquidCollection(new List<ILiquidValue>()));
-
             const String str = "{% include 'test' %}";
-            IList<LiquidError> errors = new List<LiquidError>();
+            IList<LiquidError> renderingErrors = new List<LiquidError>();
+            IList<LiquidError> parsingErrors = new List<LiquidError>();
             // Act
-            //try
-            //{
-                RenderingHelper.RenderTemplate(str, ctx, errors.Add);
-                //Assert.Fail("Expected exception");
-            //}
-            //catch (LiquidParserException ex)
-            //{
-                //Assert.That(ex.LiquidErrors[0].TokenSource, Is.EqualTo("test"));    
-            Assert.That(errors[0].TokenSource, Is.EqualTo("test"));    
-            //}
-            // Assert
-            
+
+            var template = LiquidTemplate.Create(str);
+
+            var result = template.LiquidTemplate.Render(ctx);
+            //RenderingHelper.RenderTemplate(str, ctx, renderingErrors.Add, parsingErrors.Add);
+
+            Assert.That(result.RenderingErrors.Any(), Is.False);
+            Assert.That(result.ParsingErrors.Any(), Is.True);
+            Assert.That(result.ParsingErrors[0].TokenSource, Is.EqualTo("test"));    
 
         }
 
@@ -178,17 +176,17 @@ namespace Liquid.NET.Tests.Tags
             {
                 { "test", "problem: {% unterminated" }
             }).WithAllFilters();
-            //var defaultAstGenerator = ctx.ASTGenerator;
-            //ctx.WithASTGenerator(str => { called = true; return defaultAstGenerator(str); });
 
             const String template = "{% include 'test' %}";
 
             // Act
 
-            var ast = new LiquidASTGenerator().Generate(template);
+            var liquidParsingResult = new LiquidASTGenerator().Generate(template);
+            Assert.That(liquidParsingResult.HasParsingErrors, Is.False);
+
             var renderingVisitor = new RenderingVisitor(ctx);
             String result = "";
-            renderingVisitor.StartWalking(ast.LiquidAST.RootNode, x => result += x);
+            renderingVisitor.StartWalking(liquidParsingResult.LiquidAST.RootNode, x => result += x);
             Console.WriteLine(result);
             Assert.That(renderingVisitor.HasErrors);
 
@@ -217,7 +215,54 @@ namespace Liquid.NET.Tests.Tags
 
         }
 
+        [Test]
+        public void It_Should_Register_A_Parsing_Error_At_Rendering_Time_When_Invalid_Syntax()
+        {
+            // Arrange
+            var ctx = CreateContext(new Dictionary<String, String>
+            {
+                { "test", "problem: {% unterminated" }
+            }).WithAllFilters();
 
+            const String template = "{% include 'test' %}";
+
+            // Act
+
+            //var parsingResult = new LiquidASTGenerator().Generate(template);
+            //Assert.That(parsingResult.HasParsingErrors, Is.False);
+            var liquidTemplate = LiquidTemplate.Create(template);
+
+            var result = liquidTemplate.LiquidTemplate.Render(ctx);
+            Console.WriteLine(result.Result);
+
+            Assert.That(result.HasParsingErrors, Is.True);
+            Assert.That(result.ParsingErrors[0].Message, Is.StringContaining("missing TAGEND"));
+
+        }
+
+        [Test]
+        public void It_Should_Register_A_Rendering_Error()
+        {
+            // Arrange
+            var ctx = CreateContext(new Dictionary<String, String>
+            {
+                { "test", "problem: {{ 1 | divided_by: 0}}" }
+            }).WithAllFilters();
+
+            const String template = "{% include 'test' %}";
+
+            // Act
+
+            //var parsingResult = new LiquidASTGenerator().Generate(template);
+
+            var liquidTemplate = LiquidTemplate.Create(template);
+
+            var result = liquidTemplate.LiquidTemplate.Render(ctx);
+
+            Assert.That(result.HasRenderingErrors, Is.True);
+            Assert.That(result.RenderingErrors[0].Message, Is.StringContaining("divided by 0"));
+
+        }
 
         private static ITemplateContext CreateContext(Dictionary<String, String> dict) 
         {

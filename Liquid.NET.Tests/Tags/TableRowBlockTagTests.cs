@@ -19,7 +19,7 @@ namespace Liquid.NET.Tests.Tags
             var template = LiquidTemplate.Create(@"{% tablerow n in numbers cols:2%}ITER{{n}}{% endtablerow %}");
             
             // Act
-            String result = template.Render(ctx).Result;
+            String result = template.LiquidTemplate.Render(ctx).Result;
             Logger.Log(result);
             String expected =
                 "<tr class=\"row1\">\r\n" +
@@ -42,7 +42,7 @@ namespace Liquid.NET.Tests.Tags
             var template = LiquidTemplate.Create(@"{% tablerow n in ""Test"" cols:2%}ITER{{n}}{% endtablerow %}");
 
             // Act
-            String result = template.Render(ctx).Result;
+            String result = template.LiquidTemplate.Render(ctx).Result;
             Logger.Log(result);
             String expected =
                 "<tr class=\"row1\">\r\n<td class=\"col1\">ITERTest</td></tr>";
@@ -62,7 +62,7 @@ namespace Liquid.NET.Tests.Tags
             var template = LiquidTemplate.Create(@"{% tablerow n in (1..6) cols:2%}ITER{{n}}{% endtablerow %}");
 
             // Act
-            String result = template.Render(ctx).Result;
+            String result = template.LiquidTemplate.Render(ctx).Result;
             Logger.Log(result);
             String expected =
                 "<tr class=\"row1\">\r\n" +
@@ -95,7 +95,7 @@ namespace Liquid.NET.Tests.Tags
             var template = LiquidTemplate.Create(templateString);
 
             // Act
-            String result = template.Render(ctx).Result;
+            String result = template.LiquidTemplate.Render(ctx).Result;
             Logger.Log(result);
 
             // Assert

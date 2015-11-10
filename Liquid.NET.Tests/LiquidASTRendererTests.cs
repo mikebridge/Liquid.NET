@@ -460,11 +460,11 @@ namespace Liquid.NET.Tests
             renderingVisitor.StartWalking(liquidAst.RootNode, str => result += str);
             if (renderingVisitor.HasErrors)
             {
-                foreach (var error in renderingVisitor.Errors)
+                foreach (var error in renderingVisitor.RenderingErrors)
                 {
                     onError(error);
                 }
-                //throw new LiquidRendererException(renderingVisitor.Errors);
+                //throw new LiquidRendererException(renderingVisitor.RenderingErrors);
             }
             return result;
         }

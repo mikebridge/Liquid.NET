@@ -126,20 +126,24 @@ namespace Liquid.NET.Tests.Grammar
         public void It_Should_Render_An_Error_When_Conversion_From_Object_Fails()
         {
             // Act
-            var result = RenderTemplate("Result : {{ true | plus: 3 }}");
+            var template = LiquidTemplate.Create("Result : {{ true | plus: 3 }}");
+            var result = template.LiquidTemplate.Render(new TemplateContext().WithAllFilters());
 
             // Assert
-            Assert.That(result, Is.StringContaining("Can't convert")); // note: it doesn't remove that extra space.
+            Assert.That(result.Result, Is.StringContaining("Can't convert")); // note: it doesn't remove that extra space.
         }
 
         [Test]
         public void It_Should_Render_An_Error_When_Cant_Pass_Argument()
         {
             // Act
-            var result = RenderTemplate("Result : {{ true | plus }}");
-            Logger.Log(result);
+            //var result = RenderTemplate("Result : {{ true | plus }}");
+            //Logger.Log(result);
+            var template = LiquidTemplate.Create("Result : {{ true | plus }}");
+            var result = template.LiquidTemplate.Render(new TemplateContext().WithAllFilters());
+
             // Assert
-            Assert.That(result, Is.StringContaining("Can't convert")); // note: it doesn't remove that extra space.
+            Assert.That(result.Result, Is.StringContaining("Can't convert")); // note: it doesn't remove that extra space.
         }
 
 

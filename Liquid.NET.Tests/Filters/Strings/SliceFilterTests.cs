@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Liquid.NET.Constants;
 using NUnit.Framework;
 
@@ -36,7 +35,7 @@ namespace Liquid.NET.Tests.Filters.Strings
         public void It_Should_Slice_An_Array(String slice, string expected)
         {
             // Arrange
-            var ctx = new TemplateContext();
+            var ctx = new TemplateContext().WithAllFilters();
             ctx.DefineLocalVariable("array", CreateArray());
             // Act
             var result = RenderingHelper.RenderTemplate("Result : {{ array | slice : " + slice + " }}", ctx);
@@ -51,13 +50,16 @@ namespace Liquid.NET.Tests.Filters.Strings
         public void It_Should_Not_Slice_A_Number()
         {
             // Arrange
-            var ctx = new TemplateContext();
+            var ctx = new TemplateContext().WithAllFilters();
             ctx.DefineLocalVariable("num", LiquidNumeric.Create(1));
+
             // Act
-            var result = RenderingHelper.RenderTemplate("Result : {{ num | slice : 1,2 }}", ctx);
+            //var result = RenderingHelper.RenderTemplate("Result : {{ num | slice : 1,2 }}", ctx);
+            var template = LiquidTemplate.Create("Result : {{ num | slice : 1,2 }}");
+            var result = template.LiquidTemplate.Render(ctx);
 
             // Assert
-            Assert.That(result, Is.StringContaining("Can't slice a object of type"));
+            Assert.That(result.Result, Is.StringContaining("Can't slice a object of type"));
 
         }
 
@@ -65,13 +67,16 @@ namespace Liquid.NET.Tests.Filters.Strings
         public void It_Should_Handle_Missing_Start_With_Arrays()
         {
             // Arrange
-            var ctx = new TemplateContext();
+            var ctx = new TemplateContext().WithAllFilters();
             ctx.DefineLocalVariable("array", CreateArray());
+            
             // Act
-            var result = RenderingHelper.RenderTemplate("Result : {{ array | slice }}", ctx);
+            //var result = RenderingHelper.RenderTemplate("Result : {{ array | slice }}", ctx);
+            var template = LiquidTemplate.Create("Result : {{ array | slice }}");
+            var result = template.LiquidTemplate.Render(ctx);
 
             // Assert
-            Assert.That(result, Is.StringContaining("Please pass a start parameter"));
+            Assert.That(result.Result, Is.StringContaining("Please pass a start parameter"));
 
         }
 
@@ -79,13 +84,14 @@ namespace Liquid.NET.Tests.Filters.Strings
         public void It_Should_Handle_Missing_Start_With_Strings()
         {
             // Arrange
-            var ctx = new TemplateContext();
+            var ctx = new TemplateContext().WithAllFilters();
             ctx.DefineLocalVariable("str", LiquidString.Create("Test"));
             // Act
-            var result = RenderingHelper.RenderTemplate("Result : {{ str | slice }}", ctx);
-
+            //var result = RenderingHelper.RenderTemplate("Result : {{ str | slice }}", ctx);
+            var template = LiquidTemplate.Create("Result : {{ str | slice }}");
+            var result = template.LiquidTemplate.Render(ctx);
             // Assert
-            Assert.That(result, Is.StringContaining("Please pass a start parameter"));
+            Assert.That(result.Result, Is.StringContaining("Please pass a start parameter"));
 
         }
 
@@ -93,7 +99,7 @@ namespace Liquid.NET.Tests.Filters.Strings
         public void It_Should_Slice_Nil()
         {
             // Arrange
-            var ctx = new TemplateContext();
+            var ctx = new TemplateContext().WithAllFilters();
             //ctx.DefineLocalVariable("array", CreateArray());
             // Act
             var result = RenderingHelper.RenderTemplate("Result : {{ novar | slice }}", ctx);

@@ -52,7 +52,7 @@ namespace Liquid.NET.Tests.Ruby
             var template = LiquidTemplate.Create(input);
         
             // Act
-            String result = template.Render(ctx).Result;
+            String result = template.LiquidTemplate.Render(ctx).Result;
         
             // Assert
             Assert.That(result, Is.EqualTo(expected));
@@ -64,12 +64,16 @@ namespace Liquid.NET.Tests.Ruby
 
             // Arrange
             ITemplateContext ctx = new TemplateContext().WithAllFilters();
-            List<LiquidError> errors = new List<LiquidError>();
 
-            var result = RenderingHelper.RenderTemplate(input, onRenderingError: err => errors.Add(err));
+            var template = LiquidTemplate.Create(input);
 
-            Assert.That(errors.Count, Is.EqualTo(1));
-            Assert.That(errors[0].ToString(), Is.StringContaining(expectedMessage));
+            // Act
+            var result = template.LiquidTemplate.Render(ctx);
+
+            //var result = RenderingHelper.RenderTemplate(input, onRenderingError: err => errors.Add(err));
+
+            Assert.That(result.RenderingErrors.Count, Is.EqualTo(1));
+            Assert.That(result.RenderingErrors[0].ToString(), Is.StringContaining(expectedMessage));
         }
         
     }

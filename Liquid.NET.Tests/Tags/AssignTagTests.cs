@@ -16,7 +16,7 @@ namespace Liquid.NET.Tests.Tags
             var template = LiquidTemplate.Create("{% assign foo = \"bar\" %}{{ foo }}");
 
             // Act
-            String result = template.Render(ctx).Result;
+            String result = template.LiquidTemplate.Render(ctx).Result;
 
             // Assert
             Assert.That(result, Is.EqualTo("bar"));
@@ -31,7 +31,7 @@ namespace Liquid.NET.Tests.Tags
             var template = LiquidTemplate.Create("{% assign foo = false %}{{ foo | type_of}}");
 
             // Act
-            String result = template.Render(ctx).Result;
+            String result = template.LiquidTemplate.Render(ctx).Result;
 
             // Assert
             Assert.That(result, Is.EqualTo("bool"));
@@ -46,7 +46,7 @@ namespace Liquid.NET.Tests.Tags
             var template = LiquidTemplate.Create("{% assign foo = null %}{{ foo }}");
 
             // Act
-            String result = template.Render(ctx).Result;
+            String result = template.LiquidTemplate.Render(ctx).Result;
 
             // Assert
             Assert.That(result, Is.EqualTo(""));
@@ -62,7 +62,7 @@ namespace Liquid.NET.Tests.Tags
             var template = LiquidTemplate.Create("{% assign foo = array %}{{ foo[1] }}");
 
             // Act
-            String result = template.Render(ctx).Result;
+            String result = template.LiquidTemplate.Render(ctx).Result;
 
             // Assert
             Assert.That(result, Is.EqualTo("123"));
@@ -79,7 +79,7 @@ namespace Liquid.NET.Tests.Tags
             var template = LiquidTemplate.Create("{% assign foo = \"test\" | upcase %}{{ foo }}");
 
             // Act
-            String result = template.Render(ctx).Result;
+            String result = template.LiquidTemplate.Render(ctx).Result;
 
             // Assert
             Assert.That(result, Is.EqualTo("TEST"));
@@ -93,7 +93,7 @@ namespace Liquid.NET.Tests.Tags
             var template = LiquidTemplate.Create("{% assign content_column_width = content_column_width | minus: image_column_width | minus: 10 -%}");
 
             // Act
-            String result = template.Render(ctx).Result;
+            String result = template.LiquidTemplate.Render(ctx).Result;
 
             // Assert
             Assert.That(result, Is.EqualTo(""));
@@ -110,7 +110,7 @@ namespace Liquid.NET.Tests.Tags
             var template = LiquidTemplate.Create("{% assign show1 = show %}{{ show1 }}");
 
             // Act
-            String result = template.Render(ctx).Result;
+            String result = template.LiquidTemplate.Render(ctx).Result;
 
             // Assert
             Assert.That(result, Is.EqualTo("true"));

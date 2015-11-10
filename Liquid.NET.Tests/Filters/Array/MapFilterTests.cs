@@ -119,10 +119,14 @@ namespace Liquid.NET.Tests.Filters.Array
             ITemplateContext ctx = new TemplateContext()
                 .ErrorWhenValueMissing()
                 .WithAllFilters().DefineLocalVariable("arr", array);
-            var result = RenderingHelper.RenderTemplate("Result : {{ arr | map: \"missing\" }}", ctx);
+
+            //var result = RenderingHelper.RenderTemplate("Result : {{ arr | map: \"missing\" }}", ctx);
+            var template = LiquidTemplate.Create("Result : {{ arr | map: \"missing\" }}");
+            var result = template.LiquidTemplate.Render(ctx);
+
             Console.WriteLine("Result "+result);
             // Assert
-            Assert.That(result, Is.StringContaining("missing is undefined"));
+            Assert.That(result.Result, Is.StringContaining("missing is undefined"));
         }
 
         public LiquidCollection CreateArray()

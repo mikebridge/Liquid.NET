@@ -93,7 +93,7 @@ namespace Liquid.NET.Tests
             return new LiquidAST();
         }
 
-        public LiquidParsingResult Generate(string template)
+        public LiquidASTGenerationResult Generate(string template)
         {
             throw new NotImplementedException();
         }
@@ -110,10 +110,10 @@ namespace Liquid.NET.Tests
 
         public int Calls { get; private set; }
 
-        public LiquidParsingResult Generate(string template)
+        public LiquidASTGenerationResult Generate(string template)
         {
             Calls++;
-            return LiquidParsingResult.Create(new LiquidAST(), new List<LiquidError> {_err});
+            return LiquidASTGenerationResult.Create(new LiquidAST(), new List<LiquidError> {_err});
 
         }
 

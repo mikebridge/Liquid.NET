@@ -515,7 +515,7 @@ c")]
             var template = LiquidTemplate.Create(input);
             
             // Act
-            String result = template.Render(ctx).Result;
+            String result = template.LiquidTemplate.Render(ctx).Result;
         
             // Assert
             Assert.That(result.Trim(), Is.EqualTo(expected));
@@ -551,8 +551,8 @@ c")]
             IList<LiquidError> errors = new List<LiquidError>();
             try
             {
-                String result = template.Render(ctx, onRenderingError: errors.Add);
-                //Console.WriteLine("Errors")
+                String result = template.LiquidTemplate.Render(ctx, onRenderingError: errors.Add);
+                //Console.WriteLine("RenderingErrors")
                 Assert.That(errors.Count, Is.EqualTo(1));
                 Assert.That(errors[0].ToString(), Is.StringContaining(expectedMessage));
                 //Assert.Fail("Expected exception: " + expectedMessage);

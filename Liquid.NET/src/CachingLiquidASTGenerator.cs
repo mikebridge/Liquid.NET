@@ -24,10 +24,10 @@ namespace Liquid.NET
             return str;
         }
 
-        public LiquidParsingResult Generate(string template)
+        public LiquidASTGenerationResult Generate(string template)
         {
             var errors = new List<LiquidError>();
-            return LiquidParsingResult.Create(Generate(template, errors.Add), errors);
+            return LiquidASTGenerationResult.Create(Generate(template, errors.Add), errors);
         }
 
         public LiquidAST Generate(string template, Action<LiquidError> errorAccumulator)

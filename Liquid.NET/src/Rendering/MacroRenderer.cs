@@ -26,10 +26,6 @@ namespace Liquid.NET.Rendering
             }
             templateContext.SymbolTableStack.Push(macroScope);
 
-            //String result = "";
-            //var subRenderer = new RenderingVisitor(evaluator, templateContext, str => result += str);
-
-            //evaluator.StartVisiting(subRenderer, macroBlocktag.LiquidBlock);
             String hiddenText = "";
 
             renderingVisitor.PushTextAccumulator(str => hiddenText += str);
@@ -37,11 +33,7 @@ namespace Liquid.NET.Rendering
             renderingVisitor.PopTextAccumulator();
 
             templateContext.SymbolTableStack.Pop();
-            
-//            foreach (var error in subRenderer.Errors)
-//            {
-//                errorAccumulator.Add(error);
-//            }
+
             return LiquidString.Create(hiddenText);
 
 

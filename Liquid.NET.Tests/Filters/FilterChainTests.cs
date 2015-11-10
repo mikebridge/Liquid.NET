@@ -57,7 +57,7 @@ namespace Liquid.NET.Tests.Filters
             var template = LiquidTemplate.Create("{{ 1 | plus: bar }}");
 
             // Act
-            String result = template.Render(ctx).Result;
+            String result = template.LiquidTemplate.Render(ctx).Result;
             Logger.Log(result);
 
             // Assert
@@ -74,7 +74,7 @@ namespace Liquid.NET.Tests.Filters
             var template = LiquidTemplate.Create("{{ 1 | plus: bar.foo}}");
 
             // Act
-            String result = template.Render(ctx).Result;
+            String result = template.LiquidTemplate.Render(ctx).Result;
             Logger.Log(result);
 
             // Assert
@@ -92,7 +92,7 @@ namespace Liquid.NET.Tests.Filters
             var template = LiquidTemplate.Create("{{ 1 | plus: bar[0]  }}");
 
             // Act
-            String result = template.Render(ctx).Result;
+            String result = template.LiquidTemplate.Render(ctx).Result;
             Logger.Log(result);
 
             // Assert
@@ -115,7 +115,7 @@ namespace Liquid.NET.Tests.Filters
             var template = LiquidTemplate.Create("{{ 1 | mockfilter: bar.foo, foo.bar  }}");
 
             // Act
-            String result = template.Render(ctx).Result;
+            String result = template.LiquidTemplate.Render(ctx).Result;
             Logger.Log(result);
 
             // Assert
@@ -140,7 +140,7 @@ namespace Liquid.NET.Tests.Filters
             var template = LiquidTemplate.Create(liquid);
 
             // Act
-            String result = template.Render(ctx).Result;
+            String result = template.LiquidTemplate.Render(ctx).Result;
             Logger.Log(result);
 
             // Assert
@@ -158,7 +158,7 @@ namespace Liquid.NET.Tests.Filters
             var template = LiquidTemplate.Create("{{ a }} WORLD");
 
             // Act
-            String result = template.Render(ctx).Result;
+            String result = template.LiquidTemplate.Render(ctx).Result;
             Logger.Log(result);
 
             // Assert
@@ -176,7 +176,7 @@ namespace Liquid.NET.Tests.Filters
             var template = LiquidTemplate.Create("{{ a[0] }} WORLD");
 
             // Act
-            String result = template.Render(ctx).Result;
+            String result = template.LiquidTemplate.Render(ctx).Result;
             Logger.Log(result);
 
             // Assert
@@ -195,7 +195,7 @@ namespace Liquid.NET.Tests.Filters
             var template = LiquidTemplate.Create("{{ a.b[0] }} WORLD");
 
             // Act
-            String result = template.Render(ctx).Result;
+            String result = template.LiquidTemplate.Render(ctx).Result;
             Logger.Log(result);
 
             // Assert

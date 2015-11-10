@@ -18,7 +18,7 @@ namespace Liquid.NET.Tests.Examples
 
             var template = LiquidTemplate.Create("<div>{{myvariable}}</div>");
 
-            Assert.That(template.Render(ctx).Result, Is.EqualTo("<div>Hello World</div>"));
+            Assert.That(template.LiquidTemplate.Render(ctx).Result, Is.EqualTo("<div>Hello World</div>"));
 
         }
 
@@ -36,7 +36,7 @@ namespace Liquid.NET.Tests.Examples
 
             var template = LiquidTemplate.Create("<ul>{% for item in items %}<li>{{item}}</li>{% endfor %}</ul>");
 
-            Assert.That(template.Render(ctx).Result, Is.EqualTo("<ul><li>2</li><li>4</li><li>6</li></ul>"));
+            Assert.That(template.LiquidTemplate.Render(ctx).Result, Is.EqualTo("<ul><li>2</li><li>4</li><li>6</li></ul>"));
 
         }
 
@@ -58,7 +58,7 @@ namespace Liquid.NET.Tests.Examples
 
             var template = LiquidTemplate.Create("You said '{{ greeting.address }} {{ greeting.name.first }} {{ greeting.name.last }}'");
 
-            Assert.That(template.Render(ctx).Result, Is.EqualTo("You said 'Hello Tobias Lütke'"));
+            Assert.That(template.LiquidTemplate.Render(ctx).Result, Is.EqualTo("You said 'Hello Tobias Lütke'"));
 
         }
 
@@ -72,7 +72,7 @@ namespace Liquid.NET.Tests.Examples
 
             var template = LiquidTemplate.Create("{{ resultcount }} {{ resultcount | pluralize: 'item', 'items' }} were found for '{{searchterm | downcase}}'.");
 
-            Assert.That(template.Render(ctx).Result, Is.EqualTo("42 items were found for 'mixedcase'."));
+            Assert.That(template.LiquidTemplate.Render(ctx).Result, Is.EqualTo("42 items were found for 'mixedcase'."));
 
         }
 

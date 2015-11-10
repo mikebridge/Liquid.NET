@@ -40,7 +40,7 @@ namespace Liquid.NET.Tests.Ruby
             var template = LiquidTemplate.Create(input);
         
             // Act
-            String result = template.Render(ctx);
+            String result = template.Render(ctx).Result;
         
             // Assert
             Assert.That(result, Is.EqualTo(expected));

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Liquid.NET.Constants;
 using Liquid.NET.Symbols;
 using Liquid.NET.Tags;
@@ -28,13 +27,8 @@ namespace Liquid.NET.Tests
         public void It_Should_Render_Simple_Literals(String literal, String expected)
         {
             // Arrange
-            TemplateContext templateContext = new TemplateContext();
-          
-            // Arrange
-            var ast = _generator.Generate("Result : {{ "+literal+" }}");
+            var result = GenerateAndRender("Result : {{ "+literal+" }}");
 
-            // Act
-            String result = Render(templateContext, ast);
             // Act
 
             // Assert
@@ -42,7 +36,8 @@ namespace Liquid.NET.Tests
 
         }
 
-        
+
+
         [Test]
         public void It_Should_Parse_An_AST()
         {
@@ -70,12 +65,9 @@ namespace Liquid.NET.Tests
         public void It_Should_Compare_Two_Equal_Strings(String str1, String str2, String expected)
         {
             // Arrange
-            var ast =
-                _generator.Generate("Result : {% if \"" + str1 + "\" == \"" + str2 +
+            String result = GenerateAndRender("Result : {% if \"" + str1 + "\" == \"" + str2 +
                                     "\" %}equal{% else %}not equal{% endif %}");
-            
-            // Act
-            String result = Render(new TemplateContext(), ast);
+           
 
             // Assert
             Assert.That(result, Is.EqualTo("Result : " + expected));
@@ -96,10 +88,7 @@ namespace Liquid.NET.Tests
         public void It_Should_AndOr_Two_Expressions(String str1, String op, String str2, String expected)
         {
             // Arrange
-            var ast = _generator.Generate("Result : {% if " + str1 + " " + op + " " + str2 +" %}TRUE{% else %}FALSE{% endif %}");
-
-            // Act
-            String result = Render(new TemplateContext(), ast);
+            String result = GenerateAndRender("Result : {% if " + str1 + " " + op + " " + str2 + " %}TRUE{% else %}FALSE{% endif %}");
 
             // Assert
             Assert.That(result, Is.EqualTo("Result : " + expected));
@@ -112,10 +101,10 @@ namespace Liquid.NET.Tests
             // Arrange
             TemplateContext templateContext = new TemplateContext();
             templateContext.DefineLocalVariable("myVar", LiquidString.Create("My Variable"));
-            var ast = _generator.Generate("Result : {% if myVar %}OK{% else %}NOT OK{% endif %}");
-
+            //var ast = _generator.Generate("Result : {% if myVar %}OK{% else %}NOT OK{% endif %}");
+            String result = GenerateAndRender("Result : {% if myVar %}OK{% else %}NOT OK{% endif %}", templateContext);
             // Act
-            String result = Render(templateContext, ast);
+            //String result = Render(templateContext, ast);
 
             // Assert
             Assert.That(result, Is.EqualTo("Result : OK"));
@@ -126,12 +115,8 @@ namespace Liquid.NET.Tests
         public void It_Should_Eval_An_Undefine_Variable_In_An_IfExpression_As_False()
         {
             // Arrange
-            TemplateContext templateContext = new TemplateContext();
-            var ast = _generator.Generate("Result : {% if myUndefinedVar %}OK{% else %}NOT OK{% endif %}");
+            String result = GenerateAndRender("Result : {% if myUndefinedVar %}OK{% else %}NOT OK{% endif %}");
             
-            // Act
-            String result = Render(templateContext, ast);
-
             // Assert
             Assert.That(result, Is.EqualTo("Result : NOT OK"));
 
@@ -144,13 +129,9 @@ namespace Liquid.NET.Tests
             TemplateContext templateContext = new TemplateContext();
             const string val = "My Variable";
             templateContext.DefineLocalVariable("myVar", LiquidString.Create(val));
-            var ast = _generator.Generate("Result : {{ myVar }}");
-            
-            // Act
-            String result = Render(templateContext, ast);
-
+            String result = GenerateAndRender("Result : {{ myVar }}", templateContext);
+ 
             // Assert
-            // TODO: What is this supposed to do?
             Assert.That(result, Is.EqualTo("Result : " + val));
 
         }
@@ -160,14 +141,9 @@ namespace Liquid.NET.Tests
         public void It_Should_Not_Render_An_Undefined_Variable_In_A_LiquidExpression()
         {
             // Arrange
-            TemplateContext templateContext = new TemplateContext();
-            var ast = _generator.Generate("Result : {{ myUndefinedVar }}");
-
-            // Act
-            String result = Render(templateContext, ast);
+            String result = GenerateAndRender("Result : {{ myUndefinedVar }}");
 
             // Assert
-            // TODO: What is this supposed to do?
             Assert.That(result, Is.EqualTo("Result : "));
 
         }
@@ -179,10 +155,8 @@ namespace Liquid.NET.Tests
         public void It_Should_Group_Expressions(String expr, String expected)
         {
             // Arrange
-            var ast = _generator.Generate("Result : {% if " + expr + " %}TRUE{% else %}FALSE{% endif %}");
+            String result = GenerateAndRender("Result : {% if " + expr + " %}TRUE{% else %}FALSE{% endif %}");
 
-            // Act
-            String result = Render(new TemplateContext(), ast);
 
             Logger.Log("result is " + result);
             // Assert
@@ -196,10 +170,9 @@ namespace Liquid.NET.Tests
             // Arrange
             var templateContext = new TemplateContext().WithAllFilters();
             templateContext.DefineLocalVariable("myvar", LiquidString.Create("hello"));
-            var ast = _generator.Generate("Result : {% if myvar | upcase == \"HELLO\" %}TRUE{% else %}FALSE{% endif %}");
+            String result = GenerateAndRender("Result : {% if myvar | upcase == \"HELLO\" %}TRUE{% else %}FALSE{% endif %}", templateContext);
 
             // Act
-            String result = Render(templateContext, ast);
             Logger.Log("result is " + result);
 
             // Assert
@@ -213,10 +186,9 @@ namespace Liquid.NET.Tests
             // Arrange
             var templateContext = new TemplateContext().WithAllFilters();
             templateContext.DefineLocalVariable("myvar", new LiquidCollection{LiquidString.Create("hello")});
-            var ast = _generator.Generate("Result : {% if myvar[0] | upcase == \"HELLO\" %}TRUE{% else %}FALSE{% endif %}");
+            String result = GenerateAndRender("Result : {% if myvar[0] | upcase == \"HELLO\" %}TRUE{% else %}FALSE{% endif %}", templateContext);
 
             // Act
-            String result = Render(templateContext, ast);
             Logger.Log("result is " + result);
 
             // Assert
@@ -255,10 +227,7 @@ namespace Liquid.NET.Tests
             templateContext.DefineLocalVariable("mydict", new LiquidHash{ { "test1", LiquidString.Create("test element") } } );
 
             // Arrange
-            var ast = _generator.Generate("Result : {{ mydict.test1 }}");
-
-            // Act
-            String result = Render(templateContext, ast);
+            String result = GenerateAndRender("Result : {{ mydict.test1 }}", templateContext);
 
             // Assert
             Assert.That(result, Is.EqualTo("Result : test element"));
@@ -277,11 +246,8 @@ namespace Liquid.NET.Tests
 
             templateContext.DefineLocalVariable("mydict", dict1);
 
-            // Arrange
-            var ast = _generator.Generate("Result : {{ mydict.test.test1.test2 }}");
-
             // Act
-            String result = Render(templateContext, ast);
+            String result = GenerateAndRender("Result : {{ mydict.test.test1.test2 }}", templateContext);
 
             // Assert
             Assert.That(result, Is.EqualTo("Result : test element"));
@@ -302,10 +268,7 @@ namespace Liquid.NET.Tests
             templateContext.DefineLocalVariable("mydict",dict1);
 
             // Arrange
-            var ast = _generator.Generate("Result : {{ mydict.zzz.test1.test2 }}");
-
-            // Act
-            String result = Render(templateContext, ast);
+            String result = GenerateAndRender("Result : {{ mydict.zzz.test1.test2 }}", templateContext);
 
             // Assert
             Assert.That(result, Is.EqualTo("Result : "));
@@ -323,10 +286,8 @@ namespace Liquid.NET.Tests
             templateContext.DefineLocalVariable("mydict", dict);
 
             // Arrange
-            var ast = _generator.Generate("Result : {{ mydict.test[0] }}");
+            String result = GenerateAndRender("Result : {{ mydict.test[0] }}", templateContext);
 
-            // Act
-            String result = Render(templateContext, ast);
             // Act
 
             // Assert
@@ -343,11 +304,7 @@ namespace Liquid.NET.Tests
             templateContext.DefineLocalVariable("myarray", list);
 
             // Arrange
-            var ast = _generator.Generate("Result : {{ myarray }}");
-
-            // Act
-            String result = Render(templateContext, ast);
-            // Act
+            String result = GenerateAndRender("Result : {{ myarray }}", templateContext);
 
             // Assert
             //Assert.That(result, Is.EqualTo("Result : [ \"aaa\", 123 ]"));
@@ -364,12 +321,8 @@ namespace Liquid.NET.Tests
 
             templateContext.DefineLocalVariable("myarray", list);
 
-            // Arrange
-            var ast = _generator.Generate("Result : {{ myarray[1] }}");
-
             // Act
-            String result = Render(templateContext, ast);
-            // Act
+            String result = GenerateAndRender("Result : {{ myarray[1] }}", templateContext);
 
             // Assert
             Assert.That(result, Is.EqualTo("Result : 123.0"));
@@ -387,12 +340,8 @@ namespace Liquid.NET.Tests
             templateContext.DefineLocalVariable("indexes", indexlist);
             templateContext.DefineLocalVariable("myarray", list);
 
-            // Arrange
-            var ast = _generator.Generate("Result : {{ myarray[indexes[1]] }}");
-
             // Act
-            String result = Render(templateContext, ast);
-            // Act
+            String result = GenerateAndRender("Result : {{ myarray[indexes[1]] }}", templateContext);
 
             // Assert
             Assert.That(result, Is.EqualTo("Result : bbb"));
@@ -416,8 +365,8 @@ namespace Liquid.NET.Tests
             templateContext.DefineLocalVariable("arrayofbool", arrayofbool);
             
             // Act
-            var ast = _generator.Generate("Result : {% if array2[0][0][idx1] %}first is TRUE{% endif %}{%if array2[0][0][idx2] %}second is TRUE{% endif %}");
-            String result = Render(templateContext, ast);
+            String result = GenerateAndRender("Result : {% if array2[0][0][idx1] %}first is TRUE{% endif %}{%if array2[0][0][idx2] %}second is TRUE{% endif %}", templateContext);
+            
             Logger.Log(result);
             // Assert
             Assert.That(result, Is.EqualTo("Result : first is TRUE"));
@@ -440,12 +389,8 @@ namespace Liquid.NET.Tests
             templateContext.DefineLocalVariable("array2", array2);
             templateContext.DefineLocalVariable("arrayofstr", arrayofstr);
 
-            // Arrange
-            var ast = _generator.Generate("Result : {{ arrayofstr[array2[0][0][arrayofnums[arrayofnums[1]]]] }}");
-
             // Act
-            String result = Render(templateContext, ast);
-            // Act
+            String result = GenerateAndRender("Result : {{ arrayofstr[array2[0][0][arrayofnums[arrayofnums[1]]]] }}", templateContext);
 
             // Assert
             Assert.That(result, Is.EqualTo("Result : bbb"));
@@ -461,12 +406,8 @@ namespace Liquid.NET.Tests
 
             templateContext.DefineLocalVariable("arrayofnums", arrayofnums);
 
-            // Arrange
-            var ast = _generator.Generate("Result : {{ arrayofnums[4] }}");
-
             // Act
-            String result = Render(templateContext, ast);
-            // Act
+            String result = GenerateAndRender("Result : {{ arrayofnums[4] }}", templateContext);
 
             // Assert
             Assert.That(result, Is.EqualTo("Result : "));
@@ -482,12 +423,8 @@ namespace Liquid.NET.Tests
 
             templateContext.DefineLocalVariable("arrayofnums", arrayofnums);
 
-            // Arrange
-            var ast = _generator.Generate("Result : {{ arrayofnums[4][arrayofnums[4]] }}");
-
             // Act
-            String result = Render(templateContext, ast);
-            // Act
+            String result = GenerateAndRender("Result : {{ arrayofnums[4][arrayofnums[4]] }}", templateContext);
 
             // Assert
             Assert.That(result, Is.EqualTo("Result : "));
@@ -504,13 +441,8 @@ namespace Liquid.NET.Tests
             templateContext.DefineLocalVariable("arrayofnums", arrayofnums);
             templateContext.DefineLocalVariable("numeric", LiquidNumeric.Create(1));
 
-            // Arrange
-            var ast = _generator.Generate("Result : {{ arrayofnums[4][numeric[4]] }}");
-
             // Act
-            String result = Render(templateContext, ast);
-
-            // Act
+            String result = GenerateAndRender("Result : {{ arrayofnums[4][numeric[4]] }}", templateContext);
 
             // Assert
             Assert.That(result, Is.StringContaining("cannot apply an index to a numeric."));
@@ -541,11 +473,9 @@ namespace Liquid.NET.Tests
         public void It_Should_Not_Parse_Matching_Text_Off_Island()
         {
             // Arrange
-            var templateContext = new TemplateContext();
-            var ast = _generator.Generate("123 : {{ \"HELLO\" }}" );
+            String result = GenerateAndRender("123 : {{ \"HELLO\" }}");
 
             // Act
-            String result = Render(templateContext, ast);
             Logger.Log("result is " + result);
 
             // Assert
@@ -573,15 +503,23 @@ namespace Liquid.NET.Tests
                 endfor
               %}";
 
-            var ast = _generator.Generate(tmpl);
+            String result = GenerateAndRender(tmpl, templateContext);
 
             // Act
-            String result = Render(templateContext, ast);
             Logger.Log("result is " + result);
 
             // Assert
             Assert.That(result, Is.EqualTo("Title 1Title 2Title 3Title 4"));
 
+        }
+        private string GenerateAndRender(string template, ITemplateContext ctx = null)
+        {
+            ctx = ctx ?? new TemplateContext();
+            var ast = _generator.Generate(template).LiquidAST;
+
+            // Act
+            String result = Render(ctx, ast);
+            return result;
         }
 
     }

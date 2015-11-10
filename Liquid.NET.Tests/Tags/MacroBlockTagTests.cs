@@ -21,7 +21,7 @@ namespace Liquid.NET.Tests.Tags
             var template = LiquidTemplate.Create(templateString);
 
             // Act
-            String result = template.Render(ctx);
+            String result = template.Render(ctx).Result;
 
             // Assert
             Assert.That(result, Is.EqualTo("Result : You said 'hello'."));
@@ -43,7 +43,7 @@ namespace Liquid.NET.Tests.Tags
             var template = LiquidTemplate.Create(templateString);
 
             // Act
-            String result = template.Render(ctx);
+            String result = template.Render(ctx).Result;
 
             // Assert
             Assert.That(result, Is.EqualTo("Result : I heard 'hello'."));
@@ -64,7 +64,7 @@ namespace Liquid.NET.Tests.Tags
             var template = LiquidTemplate.Create(templateString);
 
             // Act
-            String result = template.Render(ctx);
+            String result = template.Render(ctx).Result;
 
             // Assert
             Assert.That(result, Is.EqualTo("Result : You said hello world"));
@@ -85,7 +85,7 @@ namespace Liquid.NET.Tests.Tags
             var template = LiquidTemplate.Create(templateString);
 
             // Act
-            String result = template.Render(ctx);
+            String result = template.Render(ctx).Result;
 
             // Assert
             Assert.That(result, Is.EqualTo("Result : You said hello."));
@@ -105,7 +105,7 @@ namespace Liquid.NET.Tests.Tags
             // Act
 //            try
 //            {
-                String result = template.Render(ctx);
+            String result = template.Render(ctx).Result;
                 Logger.Log(result);
 
                 // Assert

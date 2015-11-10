@@ -16,7 +16,7 @@ namespace Liquid.NET.Tests.Tags
             var template = LiquidTemplate.Create("{% assign foo = \"test\" | upcase %}{% capture cap %}Result: {{ foo }}{% endcapture %}Captured: {{ cap }}");
 
             // Act
-            String result = template.Render(ctx);
+            String result = template.Render(ctx).Result;
 
             // Assert
             Assert.That(result, Is.EqualTo("Captured: Result: TEST"));
@@ -35,7 +35,7 @@ namespace Liquid.NET.Tests.Tags
             // Act
 //            try
 //            {
-                String result = template.Render(ctx);
+            String result = template.Render(ctx).Result;
                 Logger.Log(result);
 
                 // Assert

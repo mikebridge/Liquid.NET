@@ -37,7 +37,7 @@ namespace Liquid.NET.Tests.Tags
             var template = LiquidTemplate.Create("Result : {% for item in array %}ITEM:{% cycle 'odd', 'even' %} {% endfor %}");
 
             // Act
-            String result = template.Render(ctx);
+            String result = template.Render(ctx).Result;
 
             // Assert
             Assert.That(result.TrimEnd(), Is.EqualTo("Result : ITEM:odd ITEM:even ITEM:odd ITEM:even"));
@@ -54,7 +54,7 @@ namespace Liquid.NET.Tests.Tags
             var template = LiquidTemplate.Create("Result : {% for item in array %}ITEM:{% cycle true, false %} {% endfor %}");
 
             // Act
-            String result = template.Render(ctx);
+            String result = template.Render(ctx).Result;
 
             // Assert
             Assert.That(result.TrimEnd(), Is.EqualTo("Result : ITEM:true ITEM:false ITEM:true ITEM:false"));
@@ -71,7 +71,7 @@ namespace Liquid.NET.Tests.Tags
             var template = LiquidTemplate.Create("Result : {% for item in array %}ITEM:{% cycle nil %} {% endfor %}");
 
             // Act
-            String result = template.Render(ctx);
+            String result = template.Render(ctx).Result;
 
             // Assert
             Assert.That(result.TrimEnd(), Is.EqualTo("Result : ITEM: ITEM: ITEM: ITEM:"));
@@ -93,7 +93,7 @@ namespace Liquid.NET.Tests.Tags
             var template = LiquidTemplate.Create("Result : {% for item in array %}{% cycle '1', '2', '3' %}{% endfor %}{% for item in array %}{% cycle '1', '2', '3' %}{% endfor %}");
 
             // Act
-            String result = template.Render(ctx);
+            String result = template.Render(ctx).Result;
 
             // Assert
             Assert.That(result.TrimEnd(), Is.EqualTo("Result : 12312312"));
@@ -109,7 +109,7 @@ namespace Liquid.NET.Tests.Tags
             var template = LiquidTemplate.Create("Result : {% for item in array %}{% cycle 'group1': '1', '2', '3' %}{% endfor %}{% for item in array %}{% cycle 'group2': '1', '2', '3' %}{% endfor %}");
 
             // Act
-            String result = template.Render(ctx);
+            String result = template.Render(ctx).Result;
 
             // Assert
             Assert.That(result.TrimEnd(), Is.EqualTo("Result : 12311231"));
@@ -128,7 +128,7 @@ namespace Liquid.NET.Tests.Tags
             var template = LiquidTemplate.Create("Result : {% for item in (1..4) %}{% cycle var1, var2, var3, var4 %}{% endfor %}");
 
             // Act
-            String result = template.Render(ctx);
+            String result = template.Render(ctx).Result;
 
             // Assert
             Assert.That(result.TrimEnd(), Is.EqualTo("Result : ONETWOfalse9"));
@@ -147,7 +147,7 @@ namespace Liquid.NET.Tests.Tags
             var template = LiquidTemplate.Create("Result : {% for item in (1..4) %}{% cycle \"ONE\", var2[0], var3, var4 %}{% endfor %}");
 
             // Act
-            String result = template.Render(ctx);
+            String result = template.Render(ctx).Result;
 
             // Assert
             Assert.That(result.TrimEnd(), Is.EqualTo("Result : ONETWOfalse9"));
@@ -166,7 +166,7 @@ namespace Liquid.NET.Tests.Tags
             var template = LiquidTemplate.Create("Result : {% for item in (1..4) %}{% cycle var1: \"ONE\", var2[0], var3, var4 %}{% endfor %}");
 
             // Act
-            String result = template.Render(ctx);
+            String result = template.Render(ctx).Result;
 
             // Assert
             Assert.That(result.TrimEnd(), Is.EqualTo("Result : ONETWOfalse9"));
@@ -192,7 +192,7 @@ namespace Liquid.NET.Tests.Tags
             var template = LiquidTemplate.Create(input);
             
             // Act
-            String result = template.Render(ctx);
+            String result = template.Render(ctx).Result;
         
             // Assert
             Assert.That(result.Trim(), Is.EqualTo(expected));

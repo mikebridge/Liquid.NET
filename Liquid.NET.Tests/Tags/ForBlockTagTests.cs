@@ -21,7 +21,7 @@ namespace Liquid.NET.Tests.Tags
             var template = LiquidTemplate.Create(templateString);
 
             // Act
-            String result = template.Render(ctx);
+            String result = template.Render(ctx).Result;
 
             // Assert
             Assert.That(result, Is.EqualTo("Result : <li>a string</li><li>123</li><li>456.0</li><li>false</li>"));
@@ -37,7 +37,7 @@ namespace Liquid.NET.Tests.Tags
             var template = LiquidTemplate.Create(templateString);
 
             // Act
-            String result = template.Render(ctx);
+            String result = template.Render(ctx).Result;
 
             // Assert
             Assert.That(result, Is.EqualTo("Result : <li>false</li><li>456.0</li><li>123</li><li>a string</li>"));
@@ -53,7 +53,7 @@ namespace Liquid.NET.Tests.Tags
             var template = LiquidTemplate.Create(templateString);
 
             // Act
-            String result = template.Render(ctx);
+            String result = template.Render(ctx).Result;
 
             // Assert
             Assert.That(result, Is.EqualTo("Result : <li>456.0</li><li>false</li>"));
@@ -69,7 +69,7 @@ namespace Liquid.NET.Tests.Tags
             var template = LiquidTemplate.Create(templateString);
 
             // Act
-            String result = template.Render(ctx);
+            String result = template.Render(ctx).Result;
 
             // Assert
             Assert.That(result, Is.EqualTo("Result : <li>a string</li><li>123</li>"));
@@ -86,7 +86,7 @@ namespace Liquid.NET.Tests.Tags
             var template = LiquidTemplate.Create(templateString);
 
             // Act
-            String result = template.Render(ctx);
+            String result = template.Render(ctx).Result;
 
             // Assert
             Assert.That(result, Is.EqualTo("Result : <li>456.0</li>"));
@@ -102,7 +102,7 @@ namespace Liquid.NET.Tests.Tags
             var template = LiquidTemplate.Create(templateString);
 
             // Act
-            String result = template.Render(ctx);
+            String result = template.Render(ctx).Result;
 
             // Assert
             Assert.That(result, Is.EqualTo("Result : <li>456.0</li><li>false</li>"));
@@ -118,7 +118,7 @@ namespace Liquid.NET.Tests.Tags
             var template = LiquidTemplate.Create(templateString);
 
             // Act
-            String result = template.Render(ctx);
+            String result = template.Render(ctx).Result;
 
             // Assert
             Assert.That(result, Is.EqualTo("Result : "));
@@ -142,7 +142,7 @@ namespace Liquid.NET.Tests.Tags
             var template = LiquidTemplate.Create(templateString);
 
             // Act
-            String result = template.Render(ctx);
+            String result = template.Render(ctx).Result;
 
             // Assert
             Assert.That(result, Is.EqualTo("Result : 34"));
@@ -158,7 +158,7 @@ namespace Liquid.NET.Tests.Tags
             var template = LiquidTemplate.Create(templateString);
 
             // Act
-            String result = template.Render(ctx);
+            String result = template.Render(ctx).Result;
 
             // Assert
             Assert.That(result, Is.EqualTo("Result : Inside: a string Inside: 123 Inside: 456.0 Inside: false Outside: ")); // undefined is blank.
@@ -188,7 +188,7 @@ namespace Liquid.NET.Tests.Tags
             var template = LiquidTemplate.Create(templateString);
 
             // Act
-            String result = template.Render(ctx);
+            String result = template.Render(ctx).Result;
 
             // Assert
             String row = "<tr><td>0</td><td>1</td><td>2</td></tr>";
@@ -206,7 +206,7 @@ namespace Liquid.NET.Tests.Tags
             var template = LiquidTemplate.Create(templateString);
 
             // Act
-            String result = template.Render(ctx);
+            String result = template.Render(ctx).Result;
 
             // Assert
             Assert.That(result, Is.EqualTo("Result : <li>a string</li><li>123</li><li>456.0</li><li>false</li>"));
@@ -221,7 +221,7 @@ namespace Liquid.NET.Tests.Tags
             var template = LiquidTemplate.Create("Result : {% for item in \"Hello\" %}<li>{{ item }}</li>{% endfor %}");
 
             // Act
-            String result = template.Render(new TemplateContext());
+            String result = template.Render(new TemplateContext()).Result;
 
             // Assert
             //Assert.That(result, Is.EqualTo("Result : <li>H</li><li>e</li><li>l</li><li>l</li><li>o</li>"));
@@ -239,7 +239,7 @@ namespace Liquid.NET.Tests.Tags
             var template = LiquidTemplate.Create("Result : {% for item in "+generator+" %}{{ item }}{% endfor %}");
 
             // Act
-            String result = template.Render(new TemplateContext());
+            String result = template.Render(new TemplateContext()).Result;
 
             // Assert
             Assert.That(result, Is.EqualTo("Result : " + expected));
@@ -257,7 +257,7 @@ namespace Liquid.NET.Tests.Tags
             var template = LiquidTemplate.Create("Result : {% for item in (array[0]..array[1]) %}{{ item }}{% endfor %}");
 
             // Act
-            String result = template.Render(ctx);
+            String result = template.Render(ctx).Result;
 
             // Assert
             Assert.That(result, Is.EqualTo("Result : 10111213"));
@@ -276,7 +276,7 @@ namespace Liquid.NET.Tests.Tags
             var template = LiquidTemplate.Create("Result : {% for item in (array[0]..array[1]) %}{{ item }}{% endfor %}");
 
             // Act
-            String result = template.Render(ctx);
+            String result = template.Render(ctx).Result;
 
             // Assert
             Assert.That(result, Is.EqualTo("Result : 543"));
@@ -294,7 +294,7 @@ namespace Liquid.NET.Tests.Tags
             var template = LiquidTemplate.Create("Result :{% for inner in outer %}{% for k in inner %} {{ forloop.parentloop.index }}.{{ forloop.index }}{% endfor %}{% endfor %}");
 
             // Act
-            String result = template.Render(ctx);
+            String result = template.Render(ctx).Result;
 
             // Assert
             Assert.That(result, Is.EqualTo("Result : 1.1 1.2 1.3 2.1 2.2 2.3"));
@@ -312,7 +312,7 @@ namespace Liquid.NET.Tests.Tags
             var template = LiquidTemplate.Create("Result : {% for wef in \"Hello\" limit:limit offset:offset %}<li>{{ for }}</li>{% endfor %}");
 
             // Act
-            String result = template.Render(new TemplateContext());
+            String result = template.Render(new TemplateContext()).Result;
 
             // Assert
             Assert.That(result, Is.EqualTo("Result : <li>e</li><li>l</li><li>l</li>"));
@@ -331,7 +331,7 @@ namespace Liquid.NET.Tests.Tags
             var template = LiquidTemplate.Create(input);
 
             // Act
-            String result = template.Render(ctx);
+            String result = template.Render(ctx).Result;
             Logger.Log(result);
             // Assert
             Assert.That(result.Trim(), Is.EqualTo(@"val-string-1-1-0-1-0-true-true-test string"));
@@ -349,7 +349,7 @@ namespace Liquid.NET.Tests.Tags
             var template = LiquidTemplate.Create(input);
 
             // Act
-            String result = template.Render(ctx);
+            String result = template.Render(ctx).Result;
             Logger.Log(result);
             // Assert
             Assert.That(result.Trim(), Is.EqualTo(@"oddevenoddeven"));
@@ -383,7 +383,7 @@ namespace Liquid.NET.Tests.Tags
             var template = LiquidTemplate.Create("Result : {% for item in array "+parms +"%}{{ "+varname+" }} {% endfor %}");
 
             // Act
-            String result = template.Render(ctx);
+            String result = template.Render(ctx).Result;
             Logger.Log(result);
 
             // Assert
@@ -407,7 +407,7 @@ namespace Liquid.NET.Tests.Tags
             var template = LiquidTemplate.Create("Result : {% for item in " + generator + " %}{{ item }}{% endfor %}");
 
             // Act
-            String result = template.Render(ctx);
+            String result = template.Render(ctx).Result;
 
             // Assert
             Assert.That(result, Is.EqualTo("Result : 12345"));
@@ -440,7 +440,7 @@ namespace Liquid.NET.Tests.Tags
 
 
             // Act
-            String result = template.Render(ctx);
+            String result = template.Render(ctx).Result;
 
             // Assert
             Assert.That(result, Is.StringContaining(expected));
@@ -486,7 +486,7 @@ namespace Liquid.NET.Tests.Tags
             var template = LiquidTemplate.Create(templateString);
 
             // Act
-            String result = template.Render(ctx);
+            String result = template.Render(ctx).Result;
 
             // Assert
             Assert.That(result, Is.EqualTo("Result : "+emptystr));
@@ -503,7 +503,7 @@ namespace Liquid.NET.Tests.Tags
             TemplateContext ctx = new TemplateContext();
             var template = LiquidTemplate.Create(@"{% for char in "+str+" %}char:{{char}}{% endfor %}");
             // Act
-            String result = template.Render(ctx);
+            String result = template.Render(ctx).Result;
 
             // Assert
             Assert.That(result, Is.EqualTo(expected));
@@ -532,7 +532,7 @@ namespace Liquid.NET.Tests.Tags
             var template = LiquidTemplate.Create(templateString);
 
             // Act
-            String result = template.Render(ctx);
+            String result = template.Render(ctx).Result;
 
             // Assert
             Assert.That(result, Is.StringContaining("<li>100</li>"));

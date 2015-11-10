@@ -13,7 +13,7 @@ namespace Liquid.NET.Tests.Tags
             TemplateContext ctx = new TemplateContext();
             var template = LiquidTemplate.Create("{% decrement varname %}{% decrement varname %}");
             // Act
-            String result = template.Render(ctx);
+            String result = template.Render(ctx).Result;
 
             // Assert
             Assert.That(result, Is.EqualTo("-1-2"));
@@ -28,7 +28,7 @@ namespace Liquid.NET.Tests.Tags
             var template = LiquidTemplate.Create("{% assign varname = 9 %}{% decrement varname %}{% decrement varname %}{{ varname }}");
 
             // Act
-            String result = template.Render(ctx);
+            String result = template.Render(ctx).Result;
 
             // Assert
             Assert.That(result, Is.EqualTo("-1-29"));
@@ -43,7 +43,7 @@ namespace Liquid.NET.Tests.Tags
             var template = LiquidTemplate.Create("{% decrement varname %}{% decrement varname2 %}");
 
             // Act
-            String result = template.Render(ctx);
+            String result = template.Render(ctx).Result;
 
             // Assert
             Assert.That(result, Is.EqualTo("-1-1"));

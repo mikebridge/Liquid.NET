@@ -25,6 +25,15 @@ namespace Liquid.NET
             _liquidAst = liquidAst;
         }
 
+        public LiquidRenderingResult Render(ITemplateContext ctx)
+        {
+            IList<LiquidError> renderingErrors = new List<LiquidError>();
+            IList<LiquidError> parsingErrors = new List<LiquidError>();
+            return LiquidRenderingResult.Create(Render(ctx, onRenderingError: renderingErrors.Add, onParsingError: parsingErrors.Add),
+                renderingErrors, parsingErrors);
+        }
+
+
         /// <summary>
         /// 
         /// </summary>

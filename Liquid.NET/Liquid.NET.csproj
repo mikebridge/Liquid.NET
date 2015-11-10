@@ -162,6 +162,7 @@
     <Compile Include="src\ITemplateContext.cs" />
     <Compile Include="src\LiquidAST.cs" />
     <Compile Include="src\LiquidASTGenerator.cs" />
+    <Compile Include="src\LiquidParsingResult.cs" />
     <Compile Include="src\LiquidError.cs" />
     <Compile Include="src\LiquidErrorListener.cs" />
     <Compile Include="src\LiquidExpressionEvaluator.cs" />
@@ -172,6 +173,7 @@
     <Compile Include="src\Filters\FilterFactory.cs" />
     <Compile Include="src\LiquidRendererException.cs" />
     <Compile Include="src\LiquidParserException.cs" />
+    <Compile Include="src\LiquidRenderingResult.cs" />
     <Compile Include="src\OnParsingErrorEventHandler.cs" />
     <Compile Include="src\RenderingVisitor.cs" />
     <Compile Include="src\Rendering\Expressions\VariableReferenceResolver.cs" />
@@ -224,7 +226,7 @@
     <None Include="Liquid.NET.nuspec">
       <SubType>Designer</SubType>
     </None>
-    <None Include="packages.config" />
+    <None Include="src\packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="src\Filters\Html\" />

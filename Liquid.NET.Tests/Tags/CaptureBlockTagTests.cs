@@ -16,7 +16,7 @@ namespace Liquid.NET.Tests.Tags
             var template = LiquidTemplate.Create("{% assign foo = \"test\" | upcase %}{% capture cap %}Result: {{ foo }}{% endcapture %}Captured: {{ cap }}");
 
             // Act
-            String result = template.Render(ctx).Result;
+            String result = template.LiquidTemplate.Render(ctx).Result;
 
             // Assert
             Assert.That(result, Is.EqualTo("Captured: Result: TEST"));
@@ -30,22 +30,15 @@ namespace Liquid.NET.Tests.Tags
             TemplateContext ctx = new TemplateContext();
             ctx.DefineLocalVariable("array", CreateArrayValues());
 
-            var template = LiquidTemplate.Create("Result : {% for item in array %}{% capture thecycle %}{% cycle 'odd', 'even' %}{% endcapture %}{{ thecycle }} {% endfor %}");
+            var template =
+                LiquidTemplate.Create(
+                    "Result : {% for item in array %}{% capture thecycle %}{% cycle 'odd', 'even' %}{% endcapture %}{{ thecycle }} {% endfor %}");
 
-            // Act
-//            try
-//            {
-            String result = template.Render(ctx).Result;
-                Logger.Log(result);
+            String result = template.LiquidTemplate.Render(ctx).Result;
+            Logger.Log(result);
 
-                // Assert
-                Assert.That(result.TrimEnd(), Is.EqualTo("Result : odd even odd even"));
-//            }
-//            catch (LiquidRendererException ex)
-//            {
-//                Logger.Log(ex.Message);
-//                throw;
-//            }
+            // Assert
+            Assert.That(result.TrimEnd(), Is.EqualTo("Result : odd even odd even"));
 
         }
 

@@ -5,9 +5,8 @@ namespace Liquid.NET.Tests
     public static class RenderingHelper
     {
         public static string RenderTemplate(
-            string resultHello, 
-            ITemplateContext ctx = null,
-            Action<LiquidError> onRenderingError = null)
+            string resultHello,
+            ITemplateContext ctx = null)
         {
             if (ctx == null)
             {
@@ -15,8 +14,28 @@ namespace Liquid.NET.Tests
             }
             ctx.WithAllFilters();
             var template = LiquidTemplate.Create(resultHello);
-            return template.Render(ctx, onRenderingError);
-            
+            var result= template.LiquidTemplate.Render(ctx);
+            if (result.HasRenderingErrors || result.HasParsingErrors)
+            {
+                throw new ApplicationException("Errors occurred....");
+            }
+            return result.Result;
         }
+
+//        public static string RenderTemplate(
+//            string resultHello, 
+//            ITemplateContext ctx = null,
+//            Action<LiquidError> onRenderingError = null,
+//            Action<LiquidError> onParsingError = null)
+//        {
+//            if (ctx == null)
+//            {
+//                ctx = new TemplateContext();
+//            }
+//            ctx.WithAllFilters();
+//            var template = LiquidTemplate.Create(resultHello);
+//            return template.LiquidTemplate.Render(ctx, onRenderingError: onRenderingError, onParsingError: onParsingError);
+//            
+//        }
     }
 }

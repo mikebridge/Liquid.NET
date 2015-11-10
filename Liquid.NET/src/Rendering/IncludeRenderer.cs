@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Antlr4.Runtime;
+
 using Liquid.NET.Constants;
 using Liquid.NET.Symbols;
 using Liquid.NET.Tags;
@@ -26,7 +25,7 @@ namespace Liquid.NET.Rendering
         {
             if (templateContext.FileSystem == null)
             {
-                AddErrorToResult(new LiquidError{Message = " ERROR: FileSystem is not defined"});
+                AddRenderingErrorToResult(new LiquidError{Message = " ERROR: FileSystem is not defined"});
                 return;
             }
 
@@ -34,7 +33,7 @@ namespace Liquid.NET.Rendering
 
 
             LiquidExpressionEvaluator.Eval(includeTag.VirtualFileExpression, templateContext)
-                .WhenError(AddErrorToResult)
+                .WhenError(AddRenderingErrorToResult)
                 .WhenSuccess(result => { virtualFileName = ValueCaster.RenderAsString(result); });
 
             if (virtualFileName == null) { return; }
@@ -56,7 +55,7 @@ namespace Liquid.NET.Rendering
             {
                 foreach (var err in snippetAstTry.Left)
                 {
-                    AddErrorToResult(err);
+                    AddParsingErrorToResult(err);
                 }
                 return;
             }
@@ -65,7 +64,7 @@ namespace Liquid.NET.Rendering
             if (includeTag.ForExpression != null)
             {
                 LiquidExpressionEvaluator.Eval(includeTag.ForExpression, templateContext)
-                    .WhenError(AddErrorToResult)
+                    .WhenError(AddRenderingErrorToResult)
                     .WhenSuccess(result =>
                     {
                         if (result.Value is LiquidHash)
@@ -103,7 +102,7 @@ namespace Liquid.NET.Rendering
             Option<ILiquidValue> forExpressionOption, LiquidAST snippetAst)
         {
             ValueCaster.Cast<ILiquidValue, LiquidCollection>(forExpressionOption.Value)
-                .WhenError(AddErrorToResult)
+                .WhenError(AddRenderingErrorToResult)
                 .WhenSuccess(result =>
                 {
                     foreach (Option<ILiquidValue> val in (LiquidCollection) result.Value)
@@ -127,36 +126,28 @@ namespace Liquid.NET.Rendering
         private static Either<IList<LiquidError>, LiquidAST> CreateAstFromSnippet(ITemplateContext templateContext, String snippet,
             String virtualFileName)
         {
-            LiquidAST snippetAst;
-            //try
-            //{
-            IList<LiquidError> errors = new List<LiquidError>();
-            snippetAst = templateContext.ASTGenerator(snippet, errors.Add);
-            //}
-            //catch (LiquidParserException ex)
-            //{
-            // save the included filename along with the error
-            //foreach (var error in ex.LiquidErrors.Where(error => String.IsNullOrEmpty(error.TokenSource)))
-            //{
-            //    error.TokenSource = virtualFileName;
-            //}
-            //throw;
-            //}
-            foreach (var error in errors.Where(error => String.IsNullOrEmpty(error.TokenSource)))
+            IList<LiquidError> parsingErrors = new List<LiquidError>();
+            var snippetAst = templateContext.ASTGenerator(snippet, parsingErrors.Add);
+
+            foreach (var error in parsingErrors.Where(error => String.IsNullOrEmpty(error.TokenSource)))
             {
                 error.TokenSource = virtualFileName;
             }
-            return errors.Any() ? 
-                Either.Left<IList<LiquidError>, LiquidAST>(errors) : 
+            return parsingErrors.Any() ? 
+                Either.Left<IList<LiquidError>, LiquidAST>(parsingErrors) : 
                 Either.Right<IList<LiquidError>, LiquidAST>(snippetAst);
         }
 
-        private void AddErrorToResult(LiquidError errorResult)
-        {
-            //_renderingVisitor.Errors.Add(errorResult); 
-            // TODO: Put these errors somewhere            
-            _renderingVisitor.RegisterError(errorResult);
+        private void AddRenderingErrorToResult(LiquidError errorResult)
+        {          
+            _renderingVisitor.RegisterRenderingError(errorResult);
         }
+
+        private void AddParsingErrorToResult(LiquidError errorResult)
+        {
+            _renderingVisitor.RegisterParsingError(errorResult);
+        }
+
 
 //        public static LiquidAST GenerateSnippetAst(string snippet)
 //        {

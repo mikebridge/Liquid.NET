@@ -42,18 +42,22 @@ namespace Liquid.NET.Tests.Parser
         public void It_Should_Check_For_A_Missing_Colon()
         {
             // Act
-            try
-            {
-                RenderingHelper.RenderTemplate("Result : {{ 2  | modulo 2 }}");
-                Assert.Fail("Expected exception");
-            }
-            catch (LiquidParserException ex)
-            {
-                // Assert
-                Assert.That(ex.LiquidErrors[0].ToString(), Is.StringContaining("Liquid error: missing colon before args "));
-            }
+            //try
+            //{
+            var templateResult = LiquidTemplate.Create("Result : {{ 2  | modulo 2 }}");
+            //var result = template.LiquidTemplate.Render(ctx);
+            //RenderingHelper.RenderTemplate("Result : {{ 2  | modulo 2 }}");
+            //Assert.Fail("Expected exception");
+            //}
+            //catch (LiquidParserException ex)
+            //{
+            // Assert
+            Assert.That(templateResult.HasParsingErrors, Is.True);
+            Assert.That(templateResult.ParsingErrors[0].Message,
+                Is.StringContaining("Liquid error: missing colon before args "));
+            //}
         }
-       
+
         private static LiquidTemplate CreateRenderer(IList<LiquidError> errors, string erroneousTemplate)
         {
             var liquidAstGenerator = new LiquidASTGenerator();

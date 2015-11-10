@@ -9,15 +9,20 @@ namespace Liquid.NET
         
         private readonly LiquidAST _liquidAst;
 
-        public static LiquidTemplate Create(String template)
+        public static LiquidParsingResult Create(String template)
         {
+            LiquidTemplate result = null;
             IList<LiquidError> errors = new List<LiquidError>();
             var liquidAst = new LiquidASTGenerator().Generate(template, errors.Add);
             if (errors.Any())
             {
-                throw new LiquidParserException(errors); 
+                //throw new LiquidParserException(errors);
             }
-            return new LiquidTemplate(liquidAst);
+            else
+            {
+                result = new LiquidTemplate(liquidAst);
+            }
+            return LiquidParsingResult.Create(result, errors);
         }
 
         public LiquidTemplate(LiquidAST liquidAst)

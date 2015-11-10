@@ -47,18 +47,25 @@ namespace Liquid.NET.Tests.Expressions
         {
             // Act
 
-            try
-            {
-                var result = RenderingHelper.RenderTemplate("Result : {% if " + arg1 + " " + op + " " + arg2 +
+            //try
+            //{
+                //var result = RenderingHelper.RenderTemplate("Result : {% if " + arg1 + " " + op + " " + arg2 +
+                //                                            " %}TRUE{% else %}FALSE{% endif %}");
+                var template = LiquidTemplate.Create("Result : {% if " + arg1 + " " + op + " " + arg2 +
                                                             " %}TRUE{% else %}FALSE{% endif %}");
-                Logger.Log(result);
-                Assert.Fail("Expected an error but none was thrown: " + result);
-            }
-            catch (LiquidParserException ex)
-            {
-                var errors = ex.LiquidErrors.Select(x => x.ToString());
-                Assert.That(errors.Count(x => x.Contains(expected)), Is.EqualTo(1), "Could not find error containing '" + expected+"'");
-            }
+                //var result = template.LiquidTemplate.Render(new TemplateContext().WithAllFilters());
+
+                var errors = template.ParsingErrors.Select(x => x.ToString());
+                Assert.That(errors.Count(x => x.Contains(expected)), Is.EqualTo(1), "Could not find error containing '" + expected + "'");
+
+                //L//ogger.Log(result.Result);
+                //Assert.Fail("Expected an error but none was thrown: " + result);
+            //}
+            //catch (LiquidParserException ex)
+            //{
+            //    var errors = ex.LiquidErrors.Select(x => x.ToString());
+            //    Assert.That(errors.Count(x => x.Contains(expected)), Is.EqualTo(1), "Could not find error containing '" + expected+"'");
+            //}
             // Assert
             //Assert.Fail("Need to figure out error message here.");
             

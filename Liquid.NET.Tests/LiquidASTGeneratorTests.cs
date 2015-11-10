@@ -255,7 +255,7 @@ namespace Liquid.NET.Tests
             var template = LiquidTemplate.Create(input);
             
             // Act
-            String result = template.Render(new TemplateContext()
+            String result = template.LiquidTemplate.Render(new TemplateContext()
                 .DefineLocalVariable("v", LiquidNumeric.Create(3))
                 .WithAllFilters()).Result;
         

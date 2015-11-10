@@ -1,5 +1,7 @@
 ﻿using System;
-
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using Liquid.NET.Constants;
 using NUnit.Framework;
 
@@ -21,7 +23,7 @@ namespace Liquid.NET.Tests.Tags
             var template = LiquidTemplate.Create(templateString);
 
             // Act
-            String result = template.Render(ctx).Result;
+            String result = template.LiquidTemplate.Render(ctx).Result;
 
             // Assert
             Assert.That(result, Is.EqualTo("Result : You said 'hello'."));
@@ -43,7 +45,7 @@ namespace Liquid.NET.Tests.Tags
             var template = LiquidTemplate.Create(templateString);
 
             // Act
-            String result = template.Render(ctx).Result;
+            String result = template.LiquidTemplate.Render(ctx).Result;
 
             // Assert
             Assert.That(result, Is.EqualTo("Result : I heard 'hello'."));
@@ -64,7 +66,7 @@ namespace Liquid.NET.Tests.Tags
             var template = LiquidTemplate.Create(templateString);
 
             // Act
-            String result = template.Render(ctx).Result;
+            String result = template.LiquidTemplate.Render(ctx).Result;
 
             // Assert
             Assert.That(result, Is.EqualTo("Result : You said hello world"));
@@ -85,7 +87,7 @@ namespace Liquid.NET.Tests.Tags
             var template = LiquidTemplate.Create(templateString);
 
             // Act
-            String result = template.Render(ctx).Result;
+            String result = template.LiquidTemplate.Render(ctx).Result;
 
             // Assert
             Assert.That(result, Is.EqualTo("Result : You said hello."));
@@ -105,7 +107,7 @@ namespace Liquid.NET.Tests.Tags
             // Act
 //            try
 //            {
-            String result = template.Render(ctx).Result;
+            String result = template.LiquidTemplate.Render(ctx).Result;
                 Logger.Log(result);
 
                 // Assert
@@ -120,7 +122,7 @@ namespace Liquid.NET.Tests.Tags
         }
 
         [Test]
-        public void It_Should_Parse_A_Nested_Error()
+        public void It_Should_Render_A_Nested_Error_Inline()
         {
             // Act
             var templateContext = new TemplateContext().WithAllFilters();
@@ -128,12 +130,61 @@ namespace Liquid.NET.Tests.Tags
                               + @"{{ 1 | divided_by: 0}}"
                               + @"{% endmacro %}"
                               + @"{% mymacro ""hello"" ""world""%}";
-            var result = RenderingHelper.RenderTemplate(templateString, templateContext);
+
+            //var result = RenderingHelper.RenderTemplate(templateString, templateContext);
+            var templateResult = LiquidTemplate.Create(templateString);
+            var renderingResult = templateResult.LiquidTemplate.Render(templateContext);
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : Liquid error: divided by 0"));
+            Assert.That(renderingResult.RenderingErrors[0].Message, Is.StringContaining("Liquid error: divided by 0"));
 
         }
+
+        [Test]
+        public void It_Should_Register_A_Rendering_Error()
+        {
+            // Act
+            IList<LiquidError> renderingErrors = new List<LiquidError>();
+            var templateContext = new TemplateContext().WithAllFilters();
+            const string templateString = @"Result : {% macro mymacro arg1 %}"
+                              + @"{{ 1 | divided_by: 0}}"
+                              + @"{% endmacro %}"
+                              + @"{% mymacro ""hello"" ""world""%}";
+
+            var template = LiquidTemplate.Create(templateString);
+
+            var result = template.LiquidTemplate.Render(templateContext);
+
+            //RenderingHelper.RenderTemplate(templateString, templateContext, renderingErrors.Add);
+
+            // Assert
+            Assert.That(result.RenderingErrors[0].Message, Is.StringContaining("Liquid error: divided by 0"));
+
+        }
+
+        [Test]
+        public void It_Should_Register_A_Parsing_Error()
+        {
+            // Act
+            IList<LiquidError> renderingErrors = new List<LiquidError>();
+            IList<LiquidError> parsingErrors = new List<LiquidError>();
+            var templateContext = new TemplateContext().WithAllFilters();
+            const string templateString = @"Result : {% macro mymacro arg1 %}"
+                              + @"{% dzserger "
+                              + @"{% endmacro %}"
+                              + @"{% mymacro ""hello"" ""world""%}";
+
+            var template = LiquidTemplate.Create(templateString);
+
+            //var result = template.LiquidTemplate.Render(templateContext);
+
+            // Assert
+            //Assert.That(result.RenderingErrors.Any(), Is.False);
+            Assert.That(template.ParsingErrors.Any(), Is.True);
+            Assert.That(template.ParsingErrors[0].Message, Is.StringContaining("mismatched input"));
+
+        }
+
         [Test]
         public void It_Should_Handle_Missing_Args()
         {

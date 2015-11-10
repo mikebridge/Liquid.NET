@@ -22,14 +22,15 @@ namespace Liquid.NET.Tests.Constants
 
             ITemplateContext ctx = new TemplateContext()                              
                 .ErrorWhenValueMissing();
-            //ctx.DefineLocalVariable("e", new LiquidCollection(new List<ILiquidValue>()));
             ctx.DefineLocalVariable("d", new LiquidHash());
            
             // Act
-            var result = RenderingHelper.RenderTemplate("Result : {{ "+varname+" }}", ctx);
+            var template = LiquidTemplate.Create("Result : {{ " + varname + " }}");
+            var result = template.LiquidTemplate.Render(ctx);
             Console.WriteLine(result);
+
             // Assert
-            Assert.That(result, Is.EqualTo("Result : ERROR: " + missingVar + " is undefined"));
+            Assert.That(result.Result, Is.EqualTo("Result : ERROR: " + missingVar + " is undefined"));
 
         }
 
@@ -45,10 +46,12 @@ namespace Liquid.NET.Tests.Constants
             ctx.DefineLocalVariable("e", new LiquidCollection());
 
             // Act
-            var result = RenderingHelper.RenderTemplate("Result : {{ " + varname + " }}", ctx);
+            //var result = RenderingHelper.RenderTemplate("Result : {{ " + varname + " }}", ctx);
+            var template = LiquidTemplate.Create("Result : {{ " + varname + " }}");
+            var result = template.LiquidTemplate.Render(ctx);
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : ERROR: cannot dereference empty array"));
+            Assert.That(result.Result, Is.EqualTo("Result : ERROR: cannot dereference empty array"));
 
         }
 
@@ -61,10 +64,12 @@ namespace Liquid.NET.Tests.Constants
             ctx.DefineLocalVariable("e", new LiquidCollection());
 
             // Act
-            var result = RenderingHelper.RenderTemplate("Result : {{ e.x }}", ctx);
+            var template = LiquidTemplate.Create("Result : {{ e.x }}");
+            var result = template.LiquidTemplate.Render(ctx);
+            //var result = RenderingHelper.RenderTemplate("Result : {{ e.x }}", ctx);
 
             // Assert
-            Assert.That(result, Is.StringContaining("invalid index: 'x'"));
+            Assert.That(result.Result, Is.StringContaining("invalid index: 'x'"));
 
         }
 

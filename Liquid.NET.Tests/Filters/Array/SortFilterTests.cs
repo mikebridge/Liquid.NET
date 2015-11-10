@@ -84,10 +84,12 @@ namespace Liquid.NET.Tests.Filters.Array
                 .WithAllFilters().DefineLocalVariable("arr", CreateObjList());
 
             // Act
-            var result = RenderingHelper.RenderTemplate("Result : {% assign x = arr | sort: \"test\" %}", ctx);
+            //var result = RenderingHelper.RenderTemplate("Result : {% assign x = arr | sort: \"test\" %}", ctx);
+            var template = LiquidTemplate.Create("Result : {% assign x = arr | sort: \"test\" %}");
+            var result = template.LiquidTemplate.Render(ctx);
 
             // Assert            
-            Assert.That(result, Is.StringContaining("an array element is missing the field \'test\'"));
+            Assert.That(result.Result, Is.StringContaining("an array element is missing the field \'test\'"));
         }
 
 

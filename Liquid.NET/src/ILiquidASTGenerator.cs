@@ -6,6 +6,6 @@ namespace Liquid.NET
     {
         LiquidAST Generate(String template, Action<LiquidError> onParserError);
 
-        LiquidParsingResult Generate(String template);
+        LiquidASTGenerationResult Generate(String template);
     }
 }

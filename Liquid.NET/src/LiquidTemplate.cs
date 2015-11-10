@@ -14,14 +14,14 @@ namespace Liquid.NET
             LiquidTemplate result = null;
             IList<LiquidError> errors = new List<LiquidError>();
             var liquidAst = new LiquidASTGenerator().Generate(template, errors.Add);
-            if (errors.Any())
-            {
-                //throw new LiquidParserException(errors);
-            }
-            else
-            {
+            //if (errors.Any())
+            //{
+//                //throw new LiquidParserException(errors);
+            //}
+            //else
+            //{
                 result = new LiquidTemplate(liquidAst);
-            }
+            //}
             return LiquidParsingResult.Create(result, errors);
         }
 

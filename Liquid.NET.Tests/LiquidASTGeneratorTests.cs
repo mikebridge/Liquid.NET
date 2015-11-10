@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Antlr4.Runtime;
 using Liquid.NET.Constants;
 using Liquid.NET.Expressions;
 using Liquid.NET.Symbols;
@@ -261,6 +262,39 @@ namespace Liquid.NET.Tests
         
             // Assert
             Assert.That(result.Trim(), Is.EqualTo("6"));
+        }
+
+        [Test]
+        public void It_Should_Generate_One_Error() // bug
+        {
+            // Arrange
+            var templateResult = LiquidTemplate.Create("This tag delimiter is not terminated: {% .");
+
+            // Assert
+            Assert.That(templateResult.ParsingErrors.Count, Is.EqualTo(1));
+        }
+
+        [Test]
+        public void It_Should_Generate_An_AST_Even_When_Parsing_Errors_Exist()
+        {
+            // Arrange
+            ITemplateContext ctx = new TemplateContext();
+            var templateResult = LiquidTemplate.Create("This filter is not terminated: {{ test" +
+                                                       "Some more text");
+            String error = String.Join(",", templateResult.ParsingErrors.Select(x => x.Message));
+
+            Assert.That(error, Is.StringContaining("Missing '}}'"));
+            Assert.That(templateResult.LiquidTemplate, Is.Not.Null);
+
+            // Act
+            var result = templateResult.LiquidTemplate.Render(ctx);
+
+            // Assert
+            //Console.WriteLine(result.Result);
+            Assert.That(result.Result, Is.StringContaining("This filter is not terminated"));
+            //Assert.That(result.Result, Is.StringContaining("Some more text")); // this seems to terminate here...
+
+
         }
 
         public static IEnumerable<TreeNode<IASTNode>> FindNodesWithType(LiquidAST ast, Type type)

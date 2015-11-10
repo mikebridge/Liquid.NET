@@ -40,7 +40,7 @@ namespace Liquid.NET.Tests.Tags
         public void It_Should_Not_Parse_A_Custom_BlockTag_With_No_End()
         {
             // Act
-            var templateContext = new TemplateContext().WithAllFilters().WithCustomTagBlockRenderer<WordReverserBlockTag>("echoargs");
+            //var templateContext = new TemplateContext().WithAllFilters().WithCustomTagBlockRenderer<WordReverserBlockTag>("echoargs");
 
             var templateResult = LiquidTemplate.Create("Result : {% echoargs \"hello\" 123 true %}echo{% endsomethingelse %}");
             Assert.That(templateResult.HasParsingErrors);

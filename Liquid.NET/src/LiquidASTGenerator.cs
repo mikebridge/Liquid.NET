@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Resources;
 using System.Text.RegularExpressions;
+using System.Xml;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Atn;
 using Antlr4.Runtime.Tree;
@@ -62,8 +64,8 @@ namespace Liquid.NET
             //Log("Parsing Template \r\n" + template);
 
             //BufferedTokenStream tokenStream
-            LiquidAST liquidAst = new LiquidAST();
-            _astNodeStack.Push(liquidAst.RootNode);
+            LiquidAST liquidAst = Reset();
+
             var stringReader = new StringReader(template);
 
             var liquidLexer = new LiquidLexer(new AntlrInputStream(stringReader));
@@ -86,7 +88,7 @@ namespace Liquid.NET
                 parser.AddErrorListener(CreateLiquidErrorListener());
                 new ParseTreeWalker().Walk(this, parser.init());
             }
-            catch (LiquidParserException lpe) 
+            catch (LiquidParserException lpe)
             {
                 // exceptions thrown when building the AST.
                 // (don't bother with the re-parse)
@@ -97,11 +99,14 @@ namespace Liquid.NET
             }
             catch
             {
+
                 parser.Reset();
+                Reset();
                 parser.ErrorHandler = defaultErrorStrategy;
                 parser.Interpreter.PredictionMode = PredictionMode.Ll;
                 // the error listener is still listening from the try block...
                 //parser.AddErrorListener(CreateLiquidErrorListener());
+
                 new ParseTreeWalker().Walk(this, parser.init());
             }
 
@@ -116,6 +121,19 @@ namespace Liquid.NET
                 onParserError(err);
             }
             
+            return liquidAst;
+        }
+
+        private LiquidAST Reset()
+        {
+            var liquidAst = new LiquidAST();
+            _astNodeStack.Clear();
+            _liquidErrors.Clear();
+            _blockBuilderContextStack.Clear();
+            _customTagStackAndParent.Clear();
+
+            _astNodeStack.Push(liquidAst.RootNode);
+
             return liquidAst;
         }
 

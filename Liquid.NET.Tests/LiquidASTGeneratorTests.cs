@@ -17,10 +17,7 @@ namespace Liquid.NET.Tests
         public void It_Should_Parse_An_Object_Expression()
         {
             // Arrange
-            LiquidASTGenerator generator = new LiquidASTGenerator();
-            
-            // Act
-            LiquidAST ast = generator.Generate("Result : {{ 123 }}");
+            var ast = CreateAST("Result : {{ 123 }}");
 
             // Assert
 
@@ -30,14 +27,20 @@ namespace Liquid.NET.Tests
             Assert.That(liquidExpressions.Count(), Is.EqualTo(1));
         }
 
+        private static LiquidAST CreateAST(string template)
+        {
+            LiquidASTGenerator generator = new LiquidASTGenerator();
+
+            // Act
+           return generator.Generate(template).LiquidAST;
+
+        }
+
         [Test]
         public void It_Should_Parse_An_Object_Expression_With_A_Variable()
         {
             // Arrange
-            LiquidASTGenerator generator = new LiquidASTGenerator();
-
-            // Act
-            LiquidAST ast = generator.Generate("Result : {{ a }}");
+            var ast = CreateAST("Result : {{ a }}");
 
             // Assert
 
@@ -52,10 +55,7 @@ namespace Liquid.NET.Tests
         public void It_Should_Parse_An_Object_Expression_With_An_Propertied_Variable()
         {
             // Arrange
-            LiquidASTGenerator generator = new LiquidASTGenerator();
-
-            // Act
-            LiquidAST ast = generator.Generate("Result : {{ a.b }}");
+            var ast = CreateAST("Result : {{ a.b }}");
 
             // Assert
 
@@ -71,10 +71,7 @@ namespace Liquid.NET.Tests
         public void It_Should_Find_A_Filter()
         {
             // Arrange
-            LiquidASTGenerator generator = new LiquidASTGenerator();
-
-            // Act
-            LiquidAST ast = generator.Generate("Result : {{ 123 | plus: 3}}");
+            var ast = CreateAST("Result : {{ 123 | plus: 3}}");
 
             // Assert
             var liquidExpressions = FindNodesWithType(ast, typeof(LiquidExpressionTree)).FirstOrDefault();
@@ -90,10 +87,7 @@ namespace Liquid.NET.Tests
         public void It_Should_Find_A_Filter_Argument()
         {
             // Arrange
-            LiquidASTGenerator generator = new LiquidASTGenerator();
-
-            // Act
-            LiquidAST ast = generator.Generate("Result : {{ 123 | add: 3}}");
+            var ast = CreateAST("Result : {{ 123 | add: 3}}");
 
             // Assert
             var liquidExpressions = FindNodesWithType(ast, typeof (LiquidExpressionTree)).FirstOrDefault();
@@ -109,10 +103,7 @@ namespace Liquid.NET.Tests
         public void It_Can_Find_Two_Object_Expressions()
         {
             // Arrange
-            LiquidASTGenerator generator = new LiquidASTGenerator();
-
-            // Act
-            LiquidAST ast = generator.Generate("Result : {{ 123 }} {{ 456 }}");
+            var ast = CreateAST("Result : {{ 123 }} {{ 456 }}");
 
             // Assert
             var liquidExpressions = FindNodesWithType(ast, typeof(LiquidExpressionTree));
@@ -125,10 +116,7 @@ namespace Liquid.NET.Tests
         public void It_Should_Capture_The_Raw_Text()
         {
             // Arrange
-            LiquidASTGenerator generator = new LiquidASTGenerator();
-
-            // Act
-            LiquidAST ast = generator.Generate("Result : {{ 123 | add: 3}} More Text.");
+            var ast = CreateAST("Result : {{ 123 | add: 3}} More Text.");
 
             // Assert
             var liquidExpressions = FindNodesWithType(ast, typeof(RawBlockTag));
@@ -140,10 +128,7 @@ namespace Liquid.NET.Tests
         public void It_Should_Find_An_If_Tag()
         {
             // Arrange
-            LiquidASTGenerator generator = new LiquidASTGenerator();
-
-            // Act
-            LiquidAST ast = generator.Generate("Result : {% if true %} abcd {% endif %}");
+            var ast = CreateAST("Result : {% if true %} abcd {% endif %}");
 
             // Assert
             var tagExpressions = FindNodesWithType(ast, typeof(IfThenElseBlockTag));
@@ -157,10 +142,7 @@ namespace Liquid.NET.Tests
         public void It_Should_Find_An_If_Tag_With_ElsIfs_And_Else()
         {
             // Arrange
-            LiquidASTGenerator generator = new LiquidASTGenerator();
-
-            // Act
-            LiquidAST ast = generator.Generate("Result : {% if true %} aaaa {% elsif false %} test 2 {% elsif true %} test 3 {% else %} ELSE {% endif %}");
+            var ast = CreateAST("Result : {% if true %} aaaa {% elsif false %} test 2 {% elsif true %} test 3 {% else %} ELSE {% endif %}");
 
             // Assert
             var tagExpressions = FindNodesWithType(ast, typeof(IfThenElseBlockTag));
@@ -174,10 +156,7 @@ namespace Liquid.NET.Tests
         public void It_Should_Find_An_Object_Expression_Inside_A_Block_ElsIfs_And_Else()
         {
             // Arrange
-            LiquidASTGenerator generator = new LiquidASTGenerator();
-
-            // Act
-            LiquidAST ast = generator.Generate("Result : {% if true %} 33 + 4 = {{ 33 | add: 4}} {% else %} hello {% endif %}");
+            var ast = CreateAST("Result : {% if true %} 33 + 4 = {{ 33 | add: 4}} {% else %} hello {% endif %}");
             var tagExpressions = FindNodesWithType(ast, typeof(IfThenElseBlockTag)).FirstOrDefault();
             // ReSharper disable once PossibleNullReferenceException
             var ifThenElseTag = (IfThenElseBlockTag) tagExpressions.Data;
@@ -191,10 +170,7 @@ namespace Liquid.NET.Tests
         public void It_Should_Nest_Expressions_Inside_Else()
         {
             // Arrange
-            LiquidASTGenerator generator = new LiquidASTGenerator();
-
-            // Act
-            LiquidAST ast = generator.Generate("Result : {% if true %} 33 + 4 = {% if true %} {{ 33 | add: 4}} {% endif %}{% else %} hello {% endif %}");
+            var ast = CreateAST("Result : {% if true %} 33 + 4 = {% if true %} {{ 33 | add: 4}} {% endif %}{% else %} hello {% endif %}");
 
             var tagExpressions = FindNodesWithType(ast, typeof(IfThenElseBlockTag)).FirstOrDefault();
             // ReSharper disable once PossibleNullReferenceException
@@ -217,10 +193,7 @@ namespace Liquid.NET.Tests
         public void It_Should_Group_Expressions_In_Parens()
         {
             // Arrange
-            LiquidASTGenerator generator = new LiquidASTGenerator();
-
-            // Act
-            LiquidAST ast = generator.Generate("Result : {% if true and (false or false) %}FALSE{% endif %}");
+            var ast = CreateAST("Result : {% if true and (false or false) %}FALSE{% endif %}");
 
             var visitor= new DebuggingVisitor();
 
@@ -259,11 +232,7 @@ namespace Liquid.NET.Tests
         public void It_Should_Parse_An_Indexed_Object_Reference(String tmpl)
         {
             // Arrange
-            LiquidASTGenerator generator = new LiquidASTGenerator();
-
-            // Act
-            //LiquidAST ast = generator.Generate("Result : {{ a[12][b[\"test\"][c.d.e[1]]] }}");
-            LiquidAST ast = generator.Generate("Result : "+ tmpl);
+            var ast = CreateAST("Result : " + tmpl);
 
             // Assert
 
@@ -288,7 +257,7 @@ namespace Liquid.NET.Tests
             // Act
             String result = template.Render(new TemplateContext()
                 .DefineLocalVariable("v", LiquidNumeric.Create(3))
-                .WithAllFilters());
+                .WithAllFilters()).Result;
         
             // Assert
             Assert.That(result.Trim(), Is.EqualTo("6"));

@@ -14,7 +14,7 @@ namespace Liquid.NET.Tests.Tags
             var template = LiquidTemplate.Create("{% assign x = \"one|two|two|three\" | split: \"|\" %}{% for i in x %}{% ifchanged %}{{ i }}{% endifchanged %}{% endfor %}");
 
             // Act
-            String result = template.Render(ctx);
+            String result = template.Render(ctx).Result;
 
             // Assert
             Assert.That(result, Is.EqualTo("onetwothree"));
@@ -29,7 +29,7 @@ namespace Liquid.NET.Tests.Tags
             var template = LiquidTemplate.Create("{% assign x = \"two|two|two|two\" | split: \"|\" %}{% for i in x %}{% ifchanged %}{{ i }}{% endifchanged %}{% endfor %}{% for i in x %}{% ifchanged %}{{ i }}{% endifchanged %}{% endfor %}");
 
             // Act
-            String result = template.Render(ctx);
+            String result = template.Render(ctx).Result;
 
             // Assert
             Assert.That(result, Is.EqualTo("twotwo"));

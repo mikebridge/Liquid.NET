@@ -24,7 +24,13 @@ namespace Liquid.NET
             return str;
         }
 
-        public LiquidAST Generate(string template, Action<LiquidError> errorAccumulator = null)
+        public LiquidParsingResult Generate(string template)
+        {
+            var errors = new List<LiquidError>();
+            return LiquidParsingResult.Create(Generate(template, errors.Add), errors);
+        }
+
+        public LiquidAST Generate(string template, Action<LiquidError> errorAccumulator)
         {
             // We need to pass the errors back to the parent, but we
             // also need to avoid saving in the cache if an error is generated.

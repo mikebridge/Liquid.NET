@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using NUnit.Framework;
 
 namespace Liquid.NET.Tests
@@ -86,12 +87,16 @@ namespace Liquid.NET.Tests
     public class MockGenerator : ILiquidASTGenerator
     {
         public int Calls { get; private set; }
-        public LiquidAST Generate(string template, Action<LiquidError> onParserError = null)
+        public LiquidAST Generate(string template, Action<LiquidError> onParserError)
         {
             Calls ++;
             return new LiquidAST();
         }
 
+        public LiquidParsingResult Generate(string template)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     public class MockGeneratorWithError : ILiquidASTGenerator
@@ -105,7 +110,14 @@ namespace Liquid.NET.Tests
 
         public int Calls { get; private set; }
 
-        public LiquidAST Generate(string template, Action<LiquidError> onParserError = null)
+        public LiquidParsingResult Generate(string template)
+        {
+            Calls++;
+            return LiquidParsingResult.Create(new LiquidAST(), new List<LiquidError> {_err});
+
+        }
+
+        public LiquidAST Generate(string template, Action<LiquidError> onParserError)
         {
             Calls++;
             if (onParserError != null)

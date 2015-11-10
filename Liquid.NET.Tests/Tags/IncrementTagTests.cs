@@ -13,7 +13,7 @@ namespace Liquid.NET.Tests.Tags
             TemplateContext ctx = new TemplateContext();
             var template = LiquidTemplate.Create("{% increment varname %}{% increment varname %}");
             // Act
-            String result = template.Render(ctx);
+            String result = template.Render(ctx).Result;
 
             // Assert
             Assert.That(result, Is.EqualTo("01"));
@@ -28,7 +28,7 @@ namespace Liquid.NET.Tests.Tags
             var template = LiquidTemplate.Create("{% assign varname = 9 %}{% increment varname %}{% increment varname %}{{ varname }}");
 
             // Act
-            String result = template.Render(ctx);
+            String result = template.Render(ctx).Result;
 
             // Assert
             Assert.That(result, Is.EqualTo("019"));
@@ -43,7 +43,7 @@ namespace Liquid.NET.Tests.Tags
             var template = LiquidTemplate.Create("{% increment varname %}{% increment varname2 %}");
 
             // Act
-            String result = template.Render(ctx);
+            String result = template.Render(ctx).Result;
 
             // Assert
             Assert.That(result, Is.EqualTo("00"));
@@ -58,7 +58,7 @@ namespace Liquid.NET.Tests.Tags
             var template = LiquidTemplate.Create("{% increment varname %}{% decrement varname %}");
 
             // Act
-            String result = template.Render(ctx);
+            String result = template.Render(ctx).Result;
 
             // Assert
             Assert.That(result, Is.EqualTo("00"));

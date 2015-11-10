@@ -164,7 +164,7 @@ namespace Liquid.NET.Tests.Tags
             var ast = new LiquidASTGenerator().Generate(template);
             var renderingVisitor = new RenderingVisitor(ctx);
             String result = "";
-            renderingVisitor.StartWalking(ast.RootNode, x => result += x);
+            renderingVisitor.StartWalking(ast.LiquidAST.RootNode, x => result += x);
             Console.WriteLine(result);
             Assert.That(renderingVisitor.HasErrors);
 
@@ -188,7 +188,7 @@ namespace Liquid.NET.Tests.Tags
             var ast = new LiquidASTGenerator().Generate(template);
             var renderingVisitor = new RenderingVisitor(ctx);
             String result = "";
-            renderingVisitor.StartWalking(ast.RootNode, x => result += x);
+            renderingVisitor.StartWalking(ast.LiquidAST.RootNode, x => result += x);
             Console.WriteLine(result);
             Assert.That(renderingVisitor.HasErrors);
 
@@ -211,7 +211,7 @@ namespace Liquid.NET.Tests.Tags
             var ast = new LiquidASTGenerator().Generate(template);
             var renderingVisitor = new RenderingVisitor(ctx);
             String result = "";
-            renderingVisitor.StartWalking(ast.RootNode, x => result += x);
+            renderingVisitor.StartWalking(ast.LiquidAST.RootNode, x => result += x);
             Console.WriteLine("RESULT: " + result);
             Assert.That(result, Is.StringContaining("missing TAGEND"));
 

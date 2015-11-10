@@ -50,7 +50,13 @@ namespace Liquid.NET
         /// </summary>
         private readonly Stack<TreeNode<IASTNode>> _astNodeStack = new Stack<TreeNode<IASTNode>>();
 
-        public LiquidAST Generate(String template, Action<LiquidError> onParserError= null)
+        public LiquidParsingResult Generate(String template)
+        {
+            IList<LiquidError> liquidErrors = new List<LiquidError>();
+            return LiquidParsingResult.Create(Generate(template, liquidErrors.Add), liquidErrors);
+        }
+
+        public LiquidAST Generate(String template, Action<LiquidError> onParserError)
         {
             onParserError = onParserError ?? (err => { });
             //Log("Parsing Template \r\n" + template);

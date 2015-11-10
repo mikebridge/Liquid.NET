@@ -29,7 +29,7 @@ namespace Liquid.NET.Tests
 
             // Assert
             var ifThenSymbolNode =
-                LiquidASTGeneratorTests.FindNodesWithType(ast, typeof (IfThenElseBlockTag)).FirstOrDefault();
+                LiquidASTGeneratorTests.FindNodesWithType(ast.LiquidAST, typeof (IfThenElseBlockTag)).FirstOrDefault();
             Assert.That(ifThenSymbolNode, Is.Not.Null);
             // ReSharper disable once PossibleNullReferenceException
             var predicateTree =
@@ -54,7 +54,7 @@ namespace Liquid.NET.Tests
 
             // Assert
             var ifThenSymbolNode =
-                LiquidASTGeneratorTests.FindNodesWithType(ast, typeof(IfThenElseBlockTag)).FirstOrDefault();
+                LiquidASTGeneratorTests.FindNodesWithType(ast.LiquidAST, typeof(IfThenElseBlockTag)).FirstOrDefault();
             Assert.That(ifThenSymbolNode, Is.Not.Null);
             // ReSharper disable once PossibleNullReferenceException
             var predicateTree = ((IfThenElseBlockTag)ifThenSymbolNode.Data).IfElseClauses[0].LiquidExpressionTree;
@@ -75,7 +75,7 @@ namespace Liquid.NET.Tests
 
             // Assert
             var ifThenSymbolNode =
-                LiquidASTGeneratorTests.FindNodesWithType(ast, typeof(IfThenElseBlockTag)).FirstOrDefault();
+                LiquidASTGeneratorTests.FindNodesWithType(ast.LiquidAST, typeof(IfThenElseBlockTag)).FirstOrDefault();
 
             Assert.That(ifThenSymbolNode, Is.Not.Null);
             // ReSharper disable once PossibleNullReferenceException
@@ -110,13 +110,13 @@ namespace Liquid.NET.Tests
 
             // Assert
             var ifThenSymbolNode =
-                LiquidASTGeneratorTests.FindNodesWithType(ast, typeof(IfThenElseBlockTag)).FirstOrDefault();
+                LiquidASTGeneratorTests.FindNodesWithType(ast.LiquidAST, typeof(IfThenElseBlockTag)).FirstOrDefault();
             Assert.That(ifThenSymbolNode, Is.Not.Null);
             // ReSharper disable once PossibleNullReferenceException
             var elseSymbols = ((IfThenElseBlockTag) ifThenSymbolNode.Data).IfElseClauses;
 
             Logger.Log("-- AST --");
-            Logger.Log(new ASTWalker().Walk(ast));
+            Logger.Log(new ASTWalker().Walk(ast.LiquidAST));
 
             Assert.That(elseSymbols.Count, Is.EqualTo(4)); // the else symbol is an elsif set to "true".
 
@@ -130,7 +130,7 @@ namespace Liquid.NET.Tests
             var ast = _generator.Generate("Result : {% if true %} {% if false %} True and false {% endif %} {% endif %}");
 
             // Assert
-            var parentIfThenElseSymbol = LiquidASTGeneratorTests.FindNodesWithType(ast, typeof(IfThenElseBlockTag)).FirstOrDefault();
+            var parentIfThenElseSymbol = LiquidASTGeneratorTests.FindNodesWithType(ast.LiquidAST, typeof(IfThenElseBlockTag)).FirstOrDefault();
 
             // ReSharper disable once PossibleNullReferenceException
             var childIfThenElse = ((IfThenElseBlockTag) parentIfThenElseSymbol.Data).IfElseClauses[0].LiquidBlock;
@@ -146,7 +146,7 @@ namespace Liquid.NET.Tests
             var ast = _generator.Generate("Result : {% if myvar  %} OK {% endif %}");
 
             // Assert
-            var ifThenElseNode = LiquidASTGeneratorTests.FindNodesWithType(ast, typeof(IfThenElseBlockTag)).FirstOrDefault();
+            var ifThenElseNode = LiquidASTGeneratorTests.FindNodesWithType(ast.LiquidAST, typeof(IfThenElseBlockTag)).FirstOrDefault();
             Assert.That(ifThenElseNode, Is.Not.Null);
             // ReSharper disable once PossibleNullReferenceException
             var ifThenElseSymbol = ((IfThenElseBlockTag)ifThenElseNode.Data);
@@ -163,7 +163,7 @@ namespace Liquid.NET.Tests
             var ast = _generator.Generate("Result : {{ myvar[3] }}");
 
             // Assert
-            var liquidExpressionNode = LiquidASTGeneratorTests.FindNodesWithType(ast, typeof(LiquidExpressionTree)).FirstOrDefault();
+            var liquidExpressionNode = LiquidASTGeneratorTests.FindNodesWithType(ast.LiquidAST, typeof(LiquidExpressionTree)).FirstOrDefault();
             Assert.That(liquidExpressionNode, Is.Not.Null);
             // ReSharper disable once PossibleNullReferenceException
             Assert.That(liquidExpressionNode.Data, Is.Not.Null);
@@ -187,7 +187,7 @@ namespace Liquid.NET.Tests
             var ast = _generator.Generate("Result : {{ myvar[\"test\"] }}");
 
             // Assert
-            var liquidExpressionNode = LiquidASTGeneratorTests.FindNodesWithType(ast, typeof(LiquidExpressionTree)).FirstOrDefault();
+            var liquidExpressionNode = LiquidASTGeneratorTests.FindNodesWithType(ast.LiquidAST, typeof(LiquidExpressionTree)).FirstOrDefault();
             Assert.That(liquidExpressionNode, Is.Not.Null);
             // ReSharper disable once PossibleNullReferenceException
             Assert.That(liquidExpressionNode.Data, Is.Not.Null);
@@ -208,7 +208,7 @@ namespace Liquid.NET.Tests
         {
             // Act
             var ast = _generator.Generate("Result : {% if true %} OK {% endif %}");
-            var ifThenElseNode = LiquidASTGeneratorTests.FindNodesWithType(ast, typeof(IfThenElseBlockTag)).FirstOrDefault();
+            var ifThenElseNode = LiquidASTGeneratorTests.FindNodesWithType(ast.LiquidAST, typeof(IfThenElseBlockTag)).FirstOrDefault();
             Assert.That(ifThenElseNode, Is.Not.Null);
             // ReSharper disable once PossibleNullReferenceException
             var ifThenElseSymbol = ((IfThenElseBlockTag)ifThenElseNode.Data);
@@ -223,7 +223,7 @@ namespace Liquid.NET.Tests
         {
             // Act
             var ast = _generator.Generate("Result : {% if \"hello\" %} OK {% endif %}");
-            var ifThenElseNode = LiquidASTGeneratorTests.FindNodesWithType(ast, typeof(IfThenElseBlockTag)).FirstOrDefault();
+            var ifThenElseNode = LiquidASTGeneratorTests.FindNodesWithType(ast.LiquidAST, typeof(IfThenElseBlockTag)).FirstOrDefault();
             Assert.That(ifThenElseNode, Is.Not.Null);
             // ReSharper disable once PossibleNullReferenceException
             var ifThenElseSymbol = ((IfThenElseBlockTag)ifThenElseNode.Data);

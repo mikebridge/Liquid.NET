@@ -11,7 +11,6 @@ namespace Liquid.NET
 
         public static LiquidParsingResult Create(String template)
         {
-            LiquidTemplate result = null;
             IList<LiquidError> errors = new List<LiquidError>();
             var liquidAst = new LiquidASTGenerator().Generate(template, errors.Add);
             //if (errors.Any())
@@ -20,7 +19,7 @@ namespace Liquid.NET
             //}
             //else
             //{
-                result = new LiquidTemplate(liquidAst);
+                var result = new LiquidTemplate(liquidAst);
             //}
             return LiquidParsingResult.Create(result, errors);
         }

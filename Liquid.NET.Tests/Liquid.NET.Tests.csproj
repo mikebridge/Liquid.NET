@@ -180,7 +180,9 @@
     <Compile Include="Tags\UnlessBlockTagTests.cs" />
     <Compile Include="TemplateContextTests.cs" />
     <Compile Include="Utils\EitherTests.cs" />
+    <Compile Include="Utils\LiquidConversionExtensionsTests.cs" />
     <Compile Include="Utils\OptionTests.cs" />
+    <Compile Include="Utils\LiquidValueConverterTests.cs" />
     <Compile Include="Utils\RegistryTests.cs" />
     <Compile Include="Utils\StrFTimeTests.cs" />
     <Compile Include="Utils\TryTests.cs" />

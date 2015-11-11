@@ -147,14 +147,18 @@ namespace Liquid.NET.Constants
             }
             else
             {
-                var maybeIndexResult = ValueCaster.Cast<ILiquidValue, LiquidNumeric>(indexProperty);
-                if (maybeIndexResult.IsError || !maybeIndexResult.SuccessResult.HasValue)
-                {
-                    return LiquidExpressionResult.Error("invalid array index: " + propertyNameString);
+                //var maybeIndexResult = ValueCaster.Cast<ILiquidValue, LiquidNumeric>(indexProperty);
+                var numericIndexProperty = indexProperty as LiquidNumeric;
+                
+                if (numericIndexProperty == null)
+                {                  
+                    return ctx.Options.ErrorWhenValueMissing ? 
+                        LiquidExpressionResult.Error("invalid string index: '" + propertyNameString + "'") : 
+                        LiquidExpressionResult.Success(new None<ILiquidValue>());
                 }
                 else
                 {
-                    index = maybeIndexResult.SuccessValue<LiquidNumeric>().IntValue;
+                    index = numericIndexProperty.IntValue;
                 }
             }
 

@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Liquid.NET.Constants;
 using NUnit.Framework;
 
@@ -55,6 +52,8 @@ namespace Liquid.NET.Tests.Constants
 
         }
 
+
+
         [Test]
         public void It_Should_Display_Error_When_Dereferencing_Array_With_Non_Int()
         {
@@ -72,6 +71,26 @@ namespace Liquid.NET.Tests.Constants
             Assert.That(result.Result, Is.StringContaining("invalid index: 'x'"));
 
         }
+
+        [Test]
+        public void It_Should_Display_Error_When_Dereferencing_Primitive_With_Index()
+        {
+            // Arrange
+            ITemplateContext ctx = new TemplateContext()
+                .ErrorWhenValueMissing();
+            ctx.DefineLocalVariable("e", LiquidString.Create("Hello"));
+
+            // Act
+            var template = LiquidTemplate.Create("Result : {{ e.x }}");
+            var result = template.LiquidTemplate.Render(ctx);
+
+            Assert.That(result.HasRenderingErrors, Is.True);
+            var errorMessage = String.Join(",", result.RenderingErrors.Select(x => x.Message));
+            // Assert
+            Assert.That(errorMessage, Is.StringContaining("invalid string index: 'x'"));
+
+        }
+
 
         [Test]
         [TestCase("x")]

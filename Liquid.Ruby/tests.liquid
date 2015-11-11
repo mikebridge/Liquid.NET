@@ -39,10 +39,12 @@ namespace Liquid.NET.Tests.Ruby
             var template = LiquidTemplate.Create(input);
             
             // Act
-            String result = template.LiquidTemplate.Render(ctx);
-        
+            var result = template.LiquidTemplate.Render(ctx);
+            Assert.That(result.HasParsingErrors, Is.False);
+            //Assert.That(result.HasRenderingErrors, Is.False);
+
             // Assert
-            Assert.That(result.Trim(), Is.EqualTo(expected));
+            Assert.That(result.Result.Trim(), Is.EqualTo(expected));
         }
 
         {% if exceptions != empty %}[Test]{% for test in exceptions %}
@@ -60,27 +62,13 @@ namespace Liquid.NET.Tests.Ruby
             }
 
             var template = LiquidTemplate.Create(input);
-            IList<LiquidError> errors = new List<LiquidError>();
-            //try
-            //{
-            
-			String result = template.LiquidTemplate.Render(ctx, onRenderingError: errors.Add);
-            Assert.That(errors.Count, Is.EqualTo(1));
-            Assert.That(errors[0].ToString(), Is.StringContaining(expectedMessage));
-            
-			// TODO: Clean this up:
-			//}
-            //catch (LiquidParserException ex)
-            //{
-                // Assert
-            //    Assert.That(ex.LiquidErrors[0].ToString(), Is.StringContaining(expectedMessage));
-            //}
-            //catch (LiquidRendererException ex)
-            //{
-                // Assert
-                // Assert.That(ex.LiquidErrors[0].ToString(), Is.StringContaining(expectedMessage));
-                // Assert.That(errors.ToString(), Is.StringContaining(expectedMessage));
-            //}        
+            IList<LiquidError> renderingerrors = new List<LiquidError>();
+            IList<LiquidError> parsingerrors = new List<LiquidError>();
+
+			String result = template.LiquidTemplate.Render(ctx, onRenderingError: renderingerrors.Add, onParsingError: parsingerrors.Add);
+            Assert.That(parsingerrors.Count, Is.EqualTo(1));
+            Assert.That(parsingerrors[0].ToString(), Is.StringContaining(expectedMessage));
+
         }
         {% endif %}
     }

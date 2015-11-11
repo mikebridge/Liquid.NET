@@ -2,12 +2,18 @@
 
 namespace Liquid.NET.Utils
 {
-    [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.Property)]
     public class LiquidIgnoreAttribute : Attribute
     {
     }
 
-    [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.Property)]
+    public class LiquidIgnoreIfNullAttribute : Attribute
+    {
+    }
+
+
+    [AttributeUsage(AttributeTargets.Property)]
     public class LiquidNameAttribute : Attribute
     {
         private readonly string _key;

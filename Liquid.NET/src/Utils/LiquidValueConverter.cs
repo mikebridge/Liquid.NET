@@ -37,7 +37,9 @@ namespace Liquid.NET.Utils
             var newHash = new LiquidHash();
             var kvps = obj.GetType()
                 .GetProperties()
-                .Where(property => !property.GetCustomAttributes<LiquidIgnoreAttribute>().Any())
+                .Where(property => !(property.GetCustomAttributes<LiquidIgnoreAttribute>().Any() 
+                     || (property.GetCustomAttributes<LiquidIgnoreIfNullAttribute>().Any() 
+                        && ReferenceEquals(property.GetGetMethod().Invoke(obj, null), null))))
                 .Select(property => new KeyValuePair<String, Option<ILiquidValue>> (
                     GetPropertyName(property),
                     GetPropertyValue(obj, property)));
@@ -167,7 +169,7 @@ namespace Liquid.NET.Utils
 
         private bool IsList(Object value)
         {
-            return value is IList; /* && value.GetType().IsGenericType*/;
+            return value is IList;
         }
 
         // http://stackoverflow.com/questions/1130698/checking-if-an-object-is-a-number-in-c-sharp#answer-1130705
@@ -190,7 +192,7 @@ namespace Liquid.NET.Utils
         {
             return value is Single || value is Double || value is Decimal;
         }
-        
-
+       
     }
+
 }

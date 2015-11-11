@@ -215,6 +215,7 @@
     <Compile Include="src\TemplateContext.cs" />
     <Compile Include="src\Symbols\IASTVisitor.cs" />
     <Compile Include="src\Utils\Either.cs" />
+    <Compile Include="src\Utils\LiquidConversionExtensions.cs" />
     <Compile Include="src\Utils\LiquidValueConverterAttributes.cs" />
     <Compile Include="src\Utils\LiquidExpressionResult.cs" />
     <Compile Include="src\Utils\LiquidVersionAttribute.cs" />

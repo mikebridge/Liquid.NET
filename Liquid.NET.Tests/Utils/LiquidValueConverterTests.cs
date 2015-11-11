@@ -84,6 +84,17 @@ namespace Liquid.NET.Tests.Utils
         }
 
         [Test]
+        public void It_Should_Convert_Nullable_Int_To_NumericValue()
+        {
+            int? nullableInt = 123;
+            var val = _converter.Convert(nullableInt);
+            Assert.That(val.HasValue, Is.True);
+            Assert.That(val.Value, Is.TypeOf<IntLiquidNumeric>());
+            Assert.That(val.Value.Value, Is.EqualTo(123));
+        }
+
+
+        [Test]
         public void It_Should_Covert_BigInteger()
         {
             var val = _converter.Convert(new BigInteger(999));
@@ -253,6 +264,27 @@ namespace Liquid.NET.Tests.Utils
             Assert.That(objAsHash.ContainsKey("ok"), Is.True);
         }
 
+        [Test]
+        [TestCase(null)]
+        [TestCase("test")]
+        public void It_Should_Ignore_A_Null_Field_When_IgnoreIfNull(String fieldValue)
+        {
+            // Act
+            var testClass = new ClassWithAttributes { SomeField = fieldValue};
+
+            var result = _converter.Convert(testClass);
+
+            Assert.That(result.HasValue);
+            var objAsHash = (LiquidHash)result.Value;
+
+            // Assert
+            Assert.That(objAsHash.ContainsKey("notnull"), Is.EqualTo(fieldValue != null));
+            if (objAsHash.ContainsKey("notnull"))
+            {
+                Assert.That(objAsHash.Value, Is.EqualTo(fieldValue.ToLiquid()));
+            }
+        }
+
         public class TestClass
         {
             public String Field1 {get; set;}
@@ -269,6 +301,10 @@ namespace Liquid.NET.Tests.Utils
 
             [LiquidName("somethingelse")]
             public String Renamed { get; set; }
+
+            [LiquidName("notnull")]
+            [LiquidIgnoreIfNull]
+            public String SomeField { get; set; }
 
             public String Ok { get; set; }
 

@@ -31,6 +31,11 @@ namespace Liquid.NET.Constants
             get { return "hash"; }
         }
 
+        private String KeyStrategy(String rawkey)
+        {
+            return rawkey.ToLowerInvariant().Trim();
+        }
+
         /// <summary>
         /// This will return None if the key is missing, even if ErrorOnMissing is enabled.
         /// </summary>
@@ -38,9 +43,14 @@ namespace Liquid.NET.Constants
         /// <returns></returns>
         public Option<ILiquidValue> ValueAt(String key)
         {
-            return ContainsKey(key) ? _value[key] : new None<ILiquidValue>();
+            var fixedKey = KeyStrategy(key);
+            return ContainsKey(fixedKey) ? _value[fixedKey] : new None<ILiquidValue>();
         }
 
+        private KeyValuePair<string, Option<ILiquidValue>> KeyStrategyForFixedItem(KeyValuePair<string, Option<ILiquidValue>> item)
+        {
+            return new KeyValuePair<string, Option<ILiquidValue>>(KeyStrategy(item.Key), item.Value);
+        }
 
         public void Add(String key, Option<ILiquidValue> val)
         {
@@ -50,26 +60,26 @@ namespace Liquid.NET.Constants
                 // to Option<ILiquidValue> won't happen if this value is null.
                 val = new None<ILiquidValue>();
             }
-            _value.Add(key, val);
+            _value.Add(KeyStrategy(key), val);
         }
 
         public bool Remove(string key)
         {
-            return _value.Remove(key);
+            return _value.Remove(KeyStrategy(key));
         }
 
         public bool TryGetValue(string key, out Option<ILiquidValue> value)
         {
-            return _value.TryGetValue(key, out value);
+            return _value.TryGetValue(KeyStrategy(key), out value);
         }
 
         public Option<ILiquidValue> this[string key]
         {
-            get { 
-                var result= _value[key];
+            get {
+                var result = _value[KeyStrategy(key)];
                 return result;
             }
-            set { _value[key] = value; }
+            set { _value[ KeyStrategy(key)] = value; }
         }
 
         public ICollection<string> Keys { get { return _value.Keys; } }
@@ -87,7 +97,7 @@ namespace Liquid.NET.Constants
                 //throw new ArgumentException("value must not be null.");
                val = None; 
             }
-            _value.Add(kvp.Key, val);
+            _value.Add( KeyStrategy(kvp.Key), val);
         }
 
         public void Clear()
@@ -97,8 +107,9 @@ namespace Liquid.NET.Constants
 
         public bool Contains(KeyValuePair<string, Option<ILiquidValue>> item)
         {
-            return _value.Contains(item);
+            return _value.Contains(KeyStrategyForFixedItem(item));
         }
+
 
         public void CopyTo(KeyValuePair<string, Option<ILiquidValue>>[] array, int arrayIndex)
         {
@@ -107,7 +118,7 @@ namespace Liquid.NET.Constants
 
         public bool Remove(KeyValuePair<string, Option<ILiquidValue>> item)
         {
-            return _value.Remove(item);
+            return _value.Remove(KeyStrategyForFixedItem(item));
         }
 
         public int Count { get { return _value.Count;  } }
@@ -116,7 +127,7 @@ namespace Liquid.NET.Constants
 
         public bool ContainsKey(string key)
         {
-            return _value.ContainsKey(key);
+            return _value.ContainsKey( KeyStrategy(key));
         }
 
         IEnumerator<KeyValuePair<string, Option<ILiquidValue>>> IEnumerable<KeyValuePair<string, Option<ILiquidValue>>>.GetEnumerator()
@@ -139,11 +150,11 @@ namespace Liquid.NET.Constants
         }
 
 
-        private static String FormatKvPair(string key, Option<ILiquidValue> expressionConstant)
+        private String FormatKvPair(string key, Option<ILiquidValue> expressionConstant)
         {
             Type wrappedType = GetWrappedType(expressionConstant);
             String exprConstantAsString = expressionConstant.HasValue ? expressionConstant.Value.ToString() : "null";
-            return Quote(typeof(LiquidString), key) + " : " + Quote(wrappedType, exprConstantAsString);
+            return Quote(typeof(LiquidString), KeyStrategy(key)) + " : " + Quote(wrappedType, exprConstantAsString);
         }
 
         private static Type GetWrappedType<T>(Option<T> expressionConstant)

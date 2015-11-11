@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Liquid.NET.Constants;
 using Liquid.NET.Filters;
+using Liquid.NET.Grammar;
 using Liquid.NET.Rendering;
 using Liquid.NET.Tags;
 using Liquid.NET.Tags.Custom;
@@ -53,19 +54,20 @@ namespace Liquid.NET.Symbols
 
         public void DefineLocalVariable(String key, Option<ILiquidValue> obj)
         {
+            var fixedKey = KeyStrategy(key);
             if (ReferenceEquals(obj,null))
             {
                 //throw new ArgumentNullException("obj");
                 obj = Option<ILiquidValue>.None();
             }
-            if (_variableDictionary.ContainsKey(key))
+            if (_variableDictionary.ContainsKey(fixedKey))
             {
-                _variableDictionary[key] = obj;
+                _variableDictionary[fixedKey] = obj;
                 SaveIncludeWhereReDefined(obj);
             }
             else
             {
-                _variableDictionary.Add(key, obj);
+                _variableDictionary.Add(fixedKey, obj);
                 SaveIncludeWhereDefined(obj);
             }
         }
@@ -94,25 +96,27 @@ namespace Liquid.NET.Symbols
 
         public void DefineLocalRegistryVariable(String key, Object obj)
         {
-            if (_localRegistry.ContainsKey(key))
+            var fixedKey = KeyStrategy(key);
+            if (_localRegistry.ContainsKey(fixedKey))
             {
-                _localRegistry[key] = obj;
+                _localRegistry[fixedKey] = obj;
             }
             else
             {
-                _localRegistry.Add(key, obj);
+                _localRegistry.Add(fixedKey, obj);
             }
         }
 
         public void DefineMacro(String key, MacroBlockTag macro)
         {
-            if (_macroRegistry.ContainsKey(key))
+            var fixedKey = KeyStrategy(key);
+            if (_macroRegistry.ContainsKey(fixedKey))
             {
-                _macroRegistry[key] = macro;
+                _macroRegistry[fixedKey] = macro;
             }
             else
             {
-                _macroRegistry.Add(key, macro);
+                _macroRegistry.Add(fixedKey, macro);
             }
         }
 
@@ -138,7 +142,8 @@ namespace Liquid.NET.Symbols
 
         public bool HasVariableReference(String key)
         {
-            return _variableDictionary.ContainsKey(key);
+            var fixedKey = KeyStrategy(key);
+            return _variableDictionary.ContainsKey(fixedKey);
         }
 
 
@@ -176,16 +181,17 @@ namespace Liquid.NET.Symbols
 
         public LiquidExpressionResult ReferenceLocalVariable(String key)
         {
-            if (HasVariableReference(key))
+            var fixedKey = KeyStrategy(key);
+            if (HasVariableReference(fixedKey))
             {
                 //var expressionConstant = _variableDictionary[key] == null ? new None<ILiquidValue>() : _variableDictionary[key].ToOption();
 
-                return LiquidExpressionResult.Success(_variableDictionary[key]);
+                return LiquidExpressionResult.Success(_variableDictionary[fixedKey]);
             }
             else
             {
                 //return LiquidExpressionResult.Success(new None<ILiquidValue>());
-                return LiquidExpressionResult.Error(NotFoundError(key));
+                return LiquidExpressionResult.Error(NotFoundError(fixedKey));
             }
         }
 
@@ -204,6 +210,11 @@ namespace Liquid.NET.Symbols
             {
                 return null;
             }
+        }
+
+        private String KeyStrategy(String rawkey)
+        {
+            return rawkey.ToLowerInvariant().Trim();
         }
     }
 }

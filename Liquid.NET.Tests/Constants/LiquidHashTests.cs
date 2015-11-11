@@ -199,5 +199,39 @@ namespace Liquid.NET.Tests.Constants
             Assert.That(((LiquidString) opt.Value).StringVal, Is.EqualTo("test"));
         }
 
+
+        [Test]
+        public void Keys_Should_Be_Case_Insensitive()
+        {
+            // Arrange
+            var dict = new LiquidHash { { "Key", LiquidString.Create("test 2") } };
+            var ctx = new TemplateContext().WithAllFilters();
+            ctx.DefineLocalVariable("MyHash", dict);
+            ctx.DefineLocalVariable("MyString", LiquidString.Create("test"));
+            // Act
+            var result = RenderingHelper.RenderTemplate("Result : {{ mystring }} {{ myhash.key }}", ctx);
+
+            // Assert
+            Console.WriteLine(result);
+            Assert.That(result, Is.EqualTo("Result : test test 2"));
+        }
+
+        [Test]
+        public void Calls_Should_Be_Case_Insensitive()
+        {
+            // Arrange
+            var dict = new LiquidHash { { "key", LiquidString.Create("test 2") } };
+            var ctx = new TemplateContext().WithAllFilters();
+            ctx.DefineLocalVariable("myhash", dict);
+            ctx.DefineLocalVariable("mystring", LiquidString.Create("test"));
+            // Act
+            var result = RenderingHelper.RenderTemplate("Result : {{ myStrinG }} {{ myhasH.keY }}", ctx);
+
+            // Assert
+
+            Assert.That(result, Is.EqualTo("Result : test test 2"));
+        }
+
+
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Liquid.NET.Constants;
+using Liquid.NET.Utils;
 using NUnit.Framework;
 
 namespace Liquid.NET.Tests.Examples
@@ -86,7 +87,6 @@ namespace Liquid.NET.Tests.Examples
             Assert.That(error, Is.StringContaining("line 1:52 at <EOF>: Missing '}}'"));            
         }
 
-
         [Test]
         public void Test_Rendering_Error()
         {
@@ -98,5 +98,48 @@ namespace Liquid.NET.Tests.Examples
             //Console.WriteLine("The RESULT was : " + renderingResult.Result);
             Assert.That(error, Is.StringContaining("Liquid error: divided by 0"));
         }
+
+        [Test]
+        public void Poco_Object_Should_Be_Serialized()
+        {
+            ITemplateContext ctx = new TemplateContext()
+                .DefineLocalVariable("poco", new MyPoco
+                {
+                    MyStringField = "A string field",
+                    MyNullableIntField = 123,
+                    MyOtherField = "Some Other Field",
+                    MyIgnoredField = "This Shouldn't Show Up",
+                    MyIgnoreIfNotNullField = null,
+                    NestedPoco = new MyPoco { MyStringField = "Nested Poco"}
+
+                }.ToLiquid());
+
+            var parsingResult = LiquidTemplate.Create("Poco Result: {{ poco }}");
+            var renderingResult = parsingResult.LiquidTemplate.Render(ctx);
+
+            Assert.That(renderingResult.Result, Is.StringContaining(@"Poco Result: { ""mystringfield"" : ""A string field"", ""mynullableintfield"" : 123, ""myrenamedfield"" : ""Some Other Field"", ""nestedpoco"" : { ""mystringfield"" : ""Nested Poco"", ""mynullableintfield"" : null, ""myrenamedfield"" : null } }"));
+        }
+
+        public class MyPoco
+        {
+            public String MyStringField { get; set; }
+
+            public int? MyNullableIntField { get; set; }
+
+            [LiquidName("myrenamedfield")]
+            public String MyOtherField { get; set; }
+
+            [LiquidIgnoreIfNull]
+            public String MyIgnoreIfNotNullField { get; set; }
+
+            [LiquidIgnore]
+            public String MyIgnoredField { get; set; }
+
+            [LiquidIgnoreIfNull]
+            public MyPoco NestedPoco { get; set; }
+
+        }
+
+
     }
 }

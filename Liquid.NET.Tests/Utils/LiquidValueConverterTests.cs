@@ -219,7 +219,38 @@ namespace Liquid.NET.Tests.Utils
 
             // Assert
             Assert.That(objAsHash["objfield1"].HasValue, Is.False);
+        }
 
+        [Test]
+        public void It_Should_Rename_A_Field()
+        {
+            // Act
+            var testClass = new ClassWithAttributes { Ignored = "ignored", Ok = "ok", Renamed="renamed"};
+
+            var result = _converter.Convert(testClass);
+
+            Assert.That(result.HasValue);
+            var objAsHash = (LiquidHash)result.Value;
+
+            // Assert
+            Assert.That(objAsHash["somethingelse"].HasValue);
+            Assert.That(objAsHash["somethingelse"].Value, Is.EqualTo(LiquidString.Create("renamed")));
+        }
+
+        [Test]
+        public void It_Should_Ignore_A_Field()
+        {
+            // Act
+            var testClass = new ClassWithAttributes { Ignored = "ignored", Ok = "ok", Renamed = "renamed" };
+
+            var result = _converter.Convert(testClass);
+
+            Assert.That(result.HasValue);
+            var objAsHash = (LiquidHash)result.Value;
+
+            // Assert
+            Assert.That(objAsHash.ContainsKey("ignored"), Is.False);
+            Assert.That(objAsHash.ContainsKey("ok"), Is.True);
         }
 
         public class TestClass
@@ -230,8 +261,18 @@ namespace Liquid.NET.Tests.Utils
             public Object ObjField1 {get; set;}
             
         }
-        
 
+        public class ClassWithAttributes
+        {
+            [LiquidIgnore]
+            public String Ignored { get; set; }
+
+            [LiquidName("somethingelse")]
+            public String Renamed { get; set; }
+
+            public String Ok { get; set; }
+
+        }
 
     }
 }

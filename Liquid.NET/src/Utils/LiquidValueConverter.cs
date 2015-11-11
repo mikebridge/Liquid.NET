@@ -1,5 +1,4 @@
 ﻿using System;
-using System.CodeDom;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,8 +37,9 @@ namespace Liquid.NET.Utils
             var newHash = new LiquidHash();
             var kvps = obj.GetType()
                 .GetProperties()
+                .Where(property => !property.GetCustomAttributes<LiquidIgnoreAttribute>().Any())
                 .Select(property => new KeyValuePair<String, Option<ILiquidValue>> (
-                    property.Name.ToLower(),
+                    GetPropertyName(property),
                     GetPropertyValue(obj, property)));
 
             foreach (var kvp in kvps)
@@ -55,6 +55,14 @@ namespace Liquid.NET.Utils
                 }
             }
             return newHash;
+        }
+
+        private string GetPropertyName(PropertyInfo property)
+        {
+            var overriddenName = property.GetCustomAttributes<LiquidNameAttribute>().FirstOrDefault();
+
+            return overriddenName == null ? property.Name.ToLowerInvariant() : overriddenName.Key.ToLowerInvariant();
+            
         }
 
         private Option<ILiquidValue> GetPropertyValue(Object obj, PropertyInfo property)

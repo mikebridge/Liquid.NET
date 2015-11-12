@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Remoting;
 using Liquid.NET.Constants;
+using Liquid.NET.Filters;
 using Liquid.NET.Utils;
 using NUnit.Framework;
 
@@ -141,5 +144,116 @@ namespace Liquid.NET.Tests.Examples
         }
 
 
+
+        public class MyUpCaseFilter : FilterExpression<LiquidString, LiquidString>
+        {
+            public override LiquidExpressionResult ApplyTo(ITemplateContext ctx, LiquidString liquidExpression)
+            {
+                return LiquidExpressionResult.Success(liquidExpression.ToString().ToUpper());
+            }
+        }
+
+        [Test]
+        public void It_Should_Render_In_Upper_Case()
+        {
+            // Arrange
+            var ctx = new TemplateContext()
+                .WithFilter<MyUpCaseFilter>("myupcase");
+            var parsingResult = LiquidTemplate.Create("Result : {{ \"test\" | myupcase }}");
+
+            // Act
+            var renderingResult = parsingResult.LiquidTemplate.Render(ctx);
+           
+            // Assert
+            Assert.That(renderingResult.Result, Is.EqualTo("Result : TEST"));
+        }
+
+        [Test]
+        public void Test_Introductory_Example()
+        {
+            // create a template context that knows about the standard filters,
+            // and define a string variable "myvariable"
+            ITemplateContext ctx = new TemplateContext()
+                .WithAllFilters()
+                .DefineLocalVariable("myvariable", LiquidString.Create("Hello World"));
+
+            // parse the template and check for errors
+            var parsingResult = LiquidTemplate.Create("<div>{{myvariable}}</div>");
+
+            if (parsingResult.HasParsingErrors)
+            {
+                HandleErrors(parsingResult.ParsingErrors);
+                return;
+            }
+
+            // merge the variables from the context into the template and check for errors
+            var renderingResult = parsingResult.LiquidTemplate.Render(ctx);
+            if (renderingResult.HasParsingErrors)
+            {
+                HandleErrors(renderingResult.ParsingErrors);
+                return;
+            }
+            if (renderingResult.HasRenderingErrors)
+            {
+                HandleErrors(renderingResult.RenderingErrors);
+                return;
+            }
+
+            Assert.That(renderingResult.Result, Is.EqualTo("<div>Hello World</div>"));
+
+        }
+
+        [Test]
+        public void Test_Introductory_Example_With_Syntactic_Sugar()
+        {
+            // create a place to accumulate parsing and rendering errors.
+            var errors = new List<LiquidError>();
+
+            // Note that you will still get a best-guess LiquidTemplate, even if you encounter errors.
+            var liquidTemplate = LiquidTemplate.Create("<div>{{myvariable}}</div>")
+                .OnParsingError(errors.Add)
+                .LiquidTemplate;
+
+            // [add code here to handle the parsing errors, return]
+            Assert.That(errors.Any(), Is.False);
+
+            var ctx = new TemplateContext()
+                .WithAllFilters()
+                .DefineLocalVariable("myvariable", LiquidString.Create("Hello World"));
+
+
+            // The final String output will still be available in .Result, 
+            // even when parsing or rendering errors are encountered.
+            var result = liquidTemplate.Render(ctx)
+                .OnAnyError(errors.Add) // also available: .OnParsingError, .OnRenderingError
+                .Result;
+
+            // [add code here to handle the parsing and rendering errors]
+            Assert.That(errors.Any(), Is.False);
+
+            Console.WriteLine(result);
+            Assert.That(result, Is.EqualTo("<div>Hello World</div>"));
+
+        }
+
+//        [Test]
+//        public void It_Should_Throw_An_Error()
+//        {
+//            LiquidHash hash = new LiquidHash();
+//            ITemplateContext ctx = new TemplateContext()
+//                .ErrorWhenValueMissing()
+//                .DefineLocalVariable("myvariable", hash);
+//
+//            var parsingResult = LiquidTemplate.Create("<div>{{myvariable.ss}}</div>");
+//            var renderingResult = parsingResult.LiquidTemplate.Render(ctx);
+//            
+//            Console.WriteLine("ERROR: " + String.Join("; ", renderingResult.RenderingErrors.Select(x => x.Message)));
+//            Console.WriteLine(renderingResult.Result, "<div>ui</div>");
+//        }
+
+        private void HandleErrors(IList<LiquidError> errors)
+        {
+            // ...
+        }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Antlr4.Runtime;
 using Liquid.NET.Constants;
 using NUnit.Framework;
 
@@ -118,6 +119,16 @@ namespace Liquid.NET.Tests.Tags
         }
 
         [Test]
+        public void It_Should_Keep_Accuracy_In_A_Filter()
+        {
+            // Arrange
+            var result = RenderingHelper.RenderTemplate("Result : {% assign x = 1 | plus: 12.0 %}{{ x }}");
+
+            // Assert
+            Assert.That(result, Is.EqualTo("Result : 13.0"));
+        }
+
+        [Test]
         public void It_Should_Add_A_Field_To_An_Existing_Hash()
         {
             // Arrange
@@ -177,16 +188,54 @@ namespace Liquid.NET.Tests.Tags
 
         }
 
-
         [Test]
-        public void It_Should_Keep_Accuracy_In_A_Filter()
+        public void It_Should_Fail_When_Assigning_To_Nonexistent_Hash()
         {
             // Arrange
-            var result = RenderingHelper.RenderTemplate("Result : {% assign x = 1 | plus: 12.0 %}{{ x }}");
+            ITemplateContext ctx = new TemplateContext()
+                .DefineLocalVariable("bar", LiquidString.Create("newfield"))
+                .DefineLocalVariable("foo", new LiquidHash { { "oldfield", LiquidString.Create("OLD") } });
+
+            var template = LiquidTemplate.Create("{% assign foo.boo.baz = \"NEW\" %}{{ foo.oldfield }} {{ foo.newfield }}")
+                .OnParsingError(err => Assert.Fail("ERROR " + err.Message));
+
+            // Act
+            var renderingErrors = new List<LiquidError>();
+            var result = template.LiquidTemplate.Render(ctx)
+                .OnRenderingError(renderingErrors.Add)
+                .OnParsingError(err => Assert.Fail("ERROR " + err.Message))
+                .Result;
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : 13.0"));
+            Assert.That(renderingErrors.Count, Is.EqualTo(1));
+            Assert.That(renderingErrors[0].Message, Is.StringContaining("undefined field 'foo.boo'" ));
+
         }
+
+        [Test]
+        public void It_Should_Fail_When_Assigning_To_Non_Hash()
+        {
+            // Arrange
+            ITemplateContext ctx = new TemplateContext()
+                .DefineLocalVariable("bar", LiquidString.Create("newfield"))
+                .DefineLocalVariable("foo", new LiquidHash { { "oldfield", LiquidString.Create("OLD") } });
+
+            var template = LiquidTemplate.Create("{% assign foo.oldfield.baz = \"NEW\" %}{{ foo.oldfield }} {{ foo.newfield }}")
+                .OnParsingError(err => Assert.Fail("ERROR " + err.Message));
+
+            // Act
+            var renderingErrors = new List<LiquidError>();
+            var result = template.LiquidTemplate.Render(ctx)
+                .OnRenderingError(renderingErrors.Add)
+                .OnParsingError(err => Assert.Fail("ERROR " + err.Message))
+                .Result;
+
+            // Assert
+            Assert.That(renderingErrors.Count, Is.EqualTo(1));
+            Assert.That(renderingErrors[0].Message, Is.StringContaining("'foo.oldfield' is not a hash"));
+
+        }
+
 
 
         private LiquidCollection CreateArrayValues()

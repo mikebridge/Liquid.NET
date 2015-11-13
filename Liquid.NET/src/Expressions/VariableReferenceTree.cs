@@ -12,6 +12,7 @@ namespace Liquid.NET.Expressions
         public VariableReferenceTree Parent { get; set; }
 
         public IExpressionDescription Value { get; set; }
+        //public VariableReferenceTree Value { get; set; }
 
         public VariableReferenceTree IndexExpression { get; set; }
 

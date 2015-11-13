@@ -287,15 +287,28 @@ namespace Liquid.NET
 
         private IList<TreeNode<LiquidExpression>> UnrollTreeIntoSegments(VariableReferenceTree tree)
         {
-            var result = new List<TreeNode<LiquidExpression>>
+            var result = new List<TreeNode<LiquidExpression>>();
+            
+            VariableReferenceTree node = tree.Value as VariableReferenceTree;
+            if (node != null)
             {
-                new TreeNode<LiquidExpression>(new LiquidExpression {Expression = tree.Value})
-            };
-
-            if (tree.IndexExpression != null)
-            {
-                result.AddRange(UnrollTreeIntoSegments(tree.IndexExpression));
+                result.AddRange(UnrollTreeIntoSegments(node));
+                result.AddRange(UnrollTreeIntoSegments(node.IndexExpression));
+                //result.Add(new TreeNode<LiquidExpression>(new LiquidExpression {Expression = node.Value}));
+                //result.Add(new TreeNode<LiquidExpression>(new LiquidExpression { Expression = node.I }));
             }
+            else
+            {
+                result.Add(new TreeNode<LiquidExpression>(new LiquidExpression {Expression = tree.Value}));
+                
+            }
+
+            //tree.
+            //result.AddRange(UnrollTreeIntoSegments.Tree.)
+//            if (tree.IndexExpression != null)
+//            {
+//                result.AddRange(UnrollTreeIntoSegments(tree.IndexExpression));
+//            }
             return result;
         }
 
@@ -311,7 +324,8 @@ namespace Liquid.NET
                 result => {
                     Console.WriteLine("Result" + result);
                     //EvalTreeToChain(assignTag, assignTag.VarIndices);
-                    foreach (var segment in UnrollTreeIntoSegments(result).Skip(1))
+                    var segments = UnrollTreeIntoSegments(result);
+                    foreach (var segment in segments.Skip(1))
                     {
                         assignTag.VarIndices.Add(segment);
                     }
@@ -1980,8 +1994,7 @@ namespace Liquid.NET
             public void AddStringIndex(String index)
             {
                 Log(Indent() + "# VariableReferenceTreeBuilder.AddStringIndex(" + index + ")");
-                _current.Value = LiquidString.Create(index);
-
+                _current.Value = LiquidString.Create(index);                
             }
 
             private String Indent()

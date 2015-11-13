@@ -4,6 +4,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices.ComTypes;
+using System.Web.Caching;
 using Liquid.NET.Constants;
 using Liquid.NET.Rendering;
 using Liquid.NET.Symbols;
@@ -270,15 +271,21 @@ namespace Liquid.NET
 
             LiquidExpressionEvaluator.Eval(assignTag.LiquidExpressionTree, _templateContext)
                 .WhenSuccess(x => AssignVariable(_templateContext, assignTag, x))
-                .WhenError( RegisterRenderingError);
+                .WhenError(RegisterRenderingError);
 
         }
 
         
+        /// <summary>
+        /// Assign a variable in the global scope, or if it exists and is a hash, attempt to 
+        /// update the value.
+        /// Side-effect: either assigns the variable requested or 
+        /// </summary>
+        /// <param name="ctx"></param>
+        /// <param name="assignTag"></param>
+        /// <param name="value"></param>
         private void AssignVariable(ITemplateContext ctx, AssignTag assignTag, Option<ILiquidValue> value)
-        {
-            var resolvedIndexReferences = assignTag.VarIndices.Select(varRef => LiquidExpressionEvaluator.Eval(varRef, ctx)).ToList();
-
+        {          
             //Console.WriteLine("Assigning to " + String.Join(".", resolvedIndexReferences.Select(x => x.SuccessResult.Value)));
 
             if (!assignTag.VarIndices.Any()) // we're defining a new variable
@@ -288,37 +295,51 @@ namespace Liquid.NET
             }
             else // we're attempting to modify a hash, maybe failing
             {
+                var maybeHash = ctx.SymbolTableStack.Reference(assignTag.VarName);
+                if (maybeHash.IsError)
+                {
+                    RegisterRenderingError(new LiquidError { Message = SymbolTable.NotFoundError(assignTag.VarName) });
+                    return;
+                }
 
+                var resolvedIndexReferences = assignTag.VarIndices.Select(
+                    varRef => LiquidExpressionEvaluator.Eval(varRef, ctx)).ToList();
+
+                var firstErroringReference = resolvedIndexReferences.FirstOrDefault(x => x.IsError);
+                if (firstErroringReference != null)
+                { 
+                    String refvar = GetErrorReference(assignTag.VarName,
+                        resolvedIndexReferences.TakeWhile(x => x.IsSuccess).Select(x => x.SuccessResult.Value.ToString()),
+                        firstErroringReference.SuccessResult.Value.ToString());
+                    RegisterRenderingError(new LiquidError { Message = SymbolTable.NotFoundError(refvar)});
+                    return;
+                }
+                
                 // TODO: if you're passing a reference to a hash or a variable, you'll get 
                 // a weird error message.
-                // TODO: Check for errors in the results
                 var varrefs = resolvedIndexReferences.Select(x => x.SuccessResult.Value.ToString()).ToList();
 
                 //Console.WriteLine("Hash assignment: Assigning " + value.Value +" to "+String.Join(".", varrefs));
 
-                var maybeHash = ctx.SymbolTableStack.Reference(assignTag.VarName);
-                if (maybeHash.IsError)
-                {
-                    // Todo: handle the error correctly---just pass it back
-                    throw new Exception(maybeHash.ErrorResult.Message);
-                }
+
                 LiquidHash theHash = maybeHash.SuccessValue<LiquidHash>();
                 if (theHash == null)
                 {
-                    // Todo: handle the error correctly---just pass it back
-                    throw new Exception(assignTag.VarName + " is not a hash");
+                    RegisterRenderingError(new LiquidError { Message = assignTag.VarName + " is not a hash" });
+                    return;
                 }
                 // traverse the nested hashes to find the last one
 
-                foreach (var varref in varrefs.Take(varrefs.Count - 2))
+                IList<String> errorRef = new List<String> { assignTag.VarName };
+                foreach (var varref in varrefs.Take(varrefs.Count - 1)) // find a hash for each one but the last one, which is the property
                 {
+                    errorRef.Add(varref);
                     //Console.WriteLine("Evaluating property " + varref);
-                    Option<ILiquidValue> maybeChildHash;// = Option<ILiquidValue>.None();
+                    Option<ILiquidValue> maybeChildHash;
                     if (!theHash.ContainsKey(varref))
                     {
-                        // Todo: handle the error correctly---just pass it back
-                        // TODO also, render the variable name to this point, a.b.c does not exist.
-                        throw new Exception(varref + " does not exist");                   
+                        RegisterRenderingError(new LiquidError { Message = SymbolTable.NotFoundError(String.Join(".", errorRef)) });
+                        return;
                     }
                     else
                     {
@@ -326,25 +347,28 @@ namespace Liquid.NET
                     }
                     if (!maybeChildHash.HasValue || !(maybeChildHash.Value is LiquidHash))
                     {
-                        throw new Exception(varref + " is not a hash");    
+                        RegisterRenderingError(new LiquidError { Message = SymbolTable.NotFoundError(String.Join(".", errorRef) + " is not a hash")});
+                        return;
                     }
                     theHash = (LiquidHash) maybeChildHash.Value;
                 }
-                String key = varrefs[varrefs.Count - 1];
-                //Console.WriteLine("Defining " + key );
-                //Console.WriteLine("With Value " + value.Value);
+                String key = varrefs.Last();
 
                 theHash[key] = value;
 
             }
 
-            
+        }
 
-
-            
-
-
-            
+        private static String GetErrorReference(
+            String varName,
+            IEnumerable<String> resolvedIndexReferences,
+            String firstErroringReference)
+        {
+            return String.Join(".",
+                varName,
+                String.Join(".", resolvedIndexReferences),
+                firstErroringReference);
         }
 
         public void Visit(CaptureBlockTag captureBlockTag)

@@ -116,7 +116,7 @@ cycle_group:		(STRING | variable | NUMBER) COLON ;
 
 cycle_value:		STRING | variable | NUMBER | BOOLEAN | NULL;
 
-assign_tag :		TAGSTART ASSIGN_TAG VARIABLENAME ASSIGNEQUALS outputexpression TAGEND ;
+assign_tag :		TAGSTART ASSIGN_TAG variable ASSIGNEQUALS outputexpression TAGEND ;
 
 capture_tag :		TAGSTART CAPTURE_TAG VARIABLENAME TAGEND capture_block TAGSTART ENDCAPTURE_TAG TAGEND;
 

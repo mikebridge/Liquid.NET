@@ -192,7 +192,7 @@ namespace Liquid.NET.Tests.Tags
 
 
         /// <summary>
-        /// Reverse each word
+        /// Something like a for loop
         /// </summary>
         // ReSharper disable once ClassNeverInstantiated.Local
         private class ForLikeBlockTag : ICustomBlockTagRenderer
@@ -204,6 +204,7 @@ namespace Liquid.NET.Tests.Tags
                 TreeNode<IASTNode> liquidBlock,
                 IList<Option<ILiquidValue>> args)
             {
+                templateContext.SymbolTableStack.DefineLocalRegistry("currentoption", "green");
                 var localBlockScope = new SymbolTable();
                 templateContext.SymbolTableStack.Push(localBlockScope);
                 LiquidString result;

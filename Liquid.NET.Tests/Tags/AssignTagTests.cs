@@ -117,6 +117,66 @@ namespace Liquid.NET.Tests.Tags
 
         }
 
+        [Test]
+        public void It_Should_Add_A_Field_To_An_Existing_Hash()
+        {
+            // Arrange
+            ITemplateContext ctx = new TemplateContext()
+                .DefineLocalVariable("foo", new LiquidHash{{"oldfield", LiquidString.Create("OLD")}});
+            var template = LiquidTemplate.Create("{% assign foo.newfield = \"NEW\" %}{{ foo.oldfield }} {{ foo.newfield }}")
+                .OnParsingError( err => Assert.Fail("ERROR "+err.Message));
+
+            // Act
+            var result = template.LiquidTemplate.Render(ctx)
+                .OnAnyError(err => Assert.Fail("ERROR " + err.Message))
+                .Result;
+
+            // Assert
+            Assert.That(result, Is.EqualTo("OLD NEW"));
+
+        }
+
+        [Test]
+        public void It_Should_Add_A_Defined_Field_To_An_Existing_Hash_Using_Array_Syntax()
+        {
+            // Arrange
+            ITemplateContext ctx = new TemplateContext()
+                .DefineLocalVariable("foo", new LiquidHash { { "oldfield", LiquidString.Create("OLD") } });
+
+            var template = LiquidTemplate.Create("{% assign foo[\"newfield\"] = \"NEW\" %}{{ foo.oldfield }} {{ foo.newfield }}")
+                .OnParsingError(err => Assert.Fail("ERROR " + err.Message));
+
+            // Act
+            var result = template.LiquidTemplate.Render(ctx)
+                .OnAnyError(err => Assert.Fail("ERROR " + err.Message))
+                .Result;
+
+            // Assert
+            Assert.That(result, Is.EqualTo("OLD NEW"));
+
+        }
+
+        [Test]
+        public void It_Should_Add_A_Dynamically_Defined_Field_To_An_Existing_Hash()
+        {
+            // Arrange
+            ITemplateContext ctx = new TemplateContext()
+                .DefineLocalVariable("bar", LiquidString.Create("newfield"))
+                .DefineLocalVariable("foo", new LiquidHash { { "oldfield", LiquidString.Create("OLD") } });
+
+            var template = LiquidTemplate.Create("{% assign foo[bar] = \"NEW\" %}{{ foo.oldfield }} {{ foo.newfield }}")
+                .OnParsingError(err => Assert.Fail("ERROR " + err.Message));
+
+            // Act
+            var result = template.LiquidTemplate.Render(ctx)
+                .OnAnyError(err => Assert.Fail("ERROR " + err.Message))
+                .Result;
+
+            // Assert
+            Assert.That(result, Is.EqualTo("OLD NEW"));
+
+        }
+
 
         [Test]
         public void It_Should_Keep_Accuracy_In_A_Filter()

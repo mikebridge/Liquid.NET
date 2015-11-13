@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Resources;
 using System.Text.RegularExpressions;
+using System.Web;
 using System.Xml;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Atn;
@@ -284,14 +285,53 @@ namespace Liquid.NET
 
         #endregion
 
+        private IList<TreeNode<LiquidExpression>> UnrollTreeIntoSegments(VariableReferenceTree tree)
+        {
+            var result = new List<TreeNode<LiquidExpression>>
+            {
+                new TreeNode<LiquidExpression>(new LiquidExpression {Expression = tree.Value})
+            };
+
+            if (tree.IndexExpression != null)
+            {
+                result.AddRange(UnrollTreeIntoSegments(tree.IndexExpression));
+            }
+            return result;
+        }
+
         public override void EnterAssign_tag(LiquidParser.Assign_tagContext context)
         {
             base.EnterAssign_tag(context);
-            var label = context.VARIABLENAME();
-            var assignTag = new AssignTag
-            {
-                VarName = label.GetText()
+//            context.variable().
+            var assignTag = new AssignTag{
+                VarName = context.variable().VARIABLENAME().GetText()
             };
+            StartCapturingVariable(
+                context.variable(),
+                result => {
+                    Console.WriteLine("Result" + result);
+                    //EvalTreeToChain(assignTag, assignTag.VarIndices);
+                    foreach (var segment in UnrollTreeIntoSegments(result).Skip(1))
+                    {
+                        assignTag.VarIndices.Add(segment);
+                    }
+                    Console.WriteLine("Indexes: " + assignTag.VarIndices);
+                    //assignTag.VarIndices.Add(new TreeNode<LiquidExpression>(new LiquidExpression {Expression = result}));
+                    // TODO: recurse through indices
+                    //assignTag.VarIndices.Add(new TreeNode<LiquidExpression>(new LiquidExpression { Expression = result.IndexExpression.Value }));
+                    //assignTag.VarIndices.Add(new TreeNode<LiquidExpression>(new LiquidExpression {Expression = result}));
+                    //assignTag.VarIndices result);
+                    //assignTag.VarName =
+                }                  
+            );
+                    //new TreeNode<LiquidExpression>(new LiquidExpression { Expression = x }));
+
+//
+//            //var label = context.VARIABLENAME();
+//            var assignTag = new AssignTag
+//            {
+//                VarName = label.GetText()
+//            };
             //assignTag.
 
             var newNode = CreateTreeNode<IASTNode>(assignTag);
@@ -1582,8 +1622,8 @@ namespace Liquid.NET
         /// to index it.  (The indices may contain nested LiquidExpressions, hence the tree).
         /// </summary>
         private void StartCapturingVariable(
-            LiquidParser.VariableContext variableContext, 
-            Action<IExpressionDescription> onComplete = null)
+            LiquidParser.VariableContext variableContext,
+            Action<VariableReferenceTree> onComplete = null)
         {
             // Create a new variable and put it on the stack.
             Log(Indent() + "===> StartCapturingVariable: START: "+variableContext.GetText());

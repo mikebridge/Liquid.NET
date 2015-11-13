@@ -66,3 +66,5 @@
 {% assign myarray = "1,2,3,4" |split: "," %}{{ myarray.x }}
 #
 {% assign myarray = "1,2,3,4" |split: "," %}{{ myarray[x] }}
+#
+{% assign myarray = "1,2,3,4" |split: "," %}{{ myarray[x] }}

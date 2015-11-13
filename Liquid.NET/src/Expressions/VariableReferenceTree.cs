@@ -13,7 +13,7 @@ namespace Liquid.NET.Expressions
 
         public IExpressionDescription Value { get; set; }
 
-        public IExpressionDescription IndexExpression { get; set; }
+        public VariableReferenceTree IndexExpression { get; set; }
 
 
 //        public void Accept(IExpressionDescriptionVisitor expressionDescriptionVisitor)

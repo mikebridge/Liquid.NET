@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -268,13 +269,82 @@ namespace Liquid.NET
         {
 
             LiquidExpressionEvaluator.Eval(assignTag.LiquidExpressionTree, _templateContext)
-                .WhenSuccess(x => _templateContext.SymbolTableStack.DefineGlobal(assignTag.VarName, x))
-                .WhenError( err => 
-                    {
-                        RegisterRenderingError(err);
-                        //RenderError(err);
-                    });
+                .WhenSuccess(x => AssignVariable(_templateContext, assignTag, x))
+                .WhenError( RegisterRenderingError);
 
+        }
+
+        
+        private void AssignVariable(ITemplateContext ctx, AssignTag assignTag, Option<ILiquidValue> value)
+        {
+            var resolvedIndexReferences = assignTag.VarIndices.Select(varRef => LiquidExpressionEvaluator.Eval(varRef, ctx)).ToList();
+
+            //Console.WriteLine("Assigning to " + String.Join(".", resolvedIndexReferences.Select(x => x.SuccessResult.Value)));
+
+            if (!assignTag.VarIndices.Any()) // we're defining a new variable
+            {
+                //Console.WriteLine("Simple assignment: Assigning " + value+ " to " + assignTag.VarName);
+                ctx.SymbolTableStack.DefineGlobal(assignTag.VarName, value);
+            }
+            else // we're attempting to modify a hash, maybe failing
+            {
+
+                // TODO: if you're passing a reference to a hash or a variable, you'll get 
+                // a weird error message.
+                // TODO: Check for errors in the results
+                var varrefs = resolvedIndexReferences.Select(x => x.SuccessResult.Value.ToString()).ToList();
+
+                //Console.WriteLine("Hash assignment: Assigning " + value.Value +" to "+String.Join(".", varrefs));
+
+                var maybeHash = ctx.SymbolTableStack.Reference(assignTag.VarName);
+                if (maybeHash.IsError)
+                {
+                    // Todo: handle the error correctly---just pass it back
+                    throw new Exception(maybeHash.ErrorResult.Message);
+                }
+                LiquidHash theHash = maybeHash.SuccessValue<LiquidHash>();
+                if (theHash == null)
+                {
+                    // Todo: handle the error correctly---just pass it back
+                    throw new Exception(assignTag.VarName + " is not a hash");
+                }
+                // traverse the nested hashes to find the last one
+
+                foreach (var varref in varrefs.Take(varrefs.Count - 2))
+                {
+                    //Console.WriteLine("Evaluating property " + varref);
+                    Option<ILiquidValue> maybeChildHash;// = Option<ILiquidValue>.None();
+                    if (!theHash.ContainsKey(varref))
+                    {
+                        // Todo: handle the error correctly---just pass it back
+                        // TODO also, render the variable name to this point, a.b.c does not exist.
+                        throw new Exception(varref + " does not exist");                   
+                    }
+                    else
+                    {
+                        maybeChildHash = theHash[varref];
+                    }
+                    if (!maybeChildHash.HasValue || !(maybeChildHash.Value is LiquidHash))
+                    {
+                        throw new Exception(varref + " is not a hash");    
+                    }
+                    theHash = (LiquidHash) maybeChildHash.Value;
+                }
+                String key = varrefs[varrefs.Count - 1];
+                //Console.WriteLine("Defining " + key );
+                //Console.WriteLine("With Value " + value.Value);
+
+                theHash[key] = value;
+
+            }
+
+            
+
+
+            
+
+
+            
         }
 
         public void Visit(CaptureBlockTag captureBlockTag)

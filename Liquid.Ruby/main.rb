@@ -76,9 +76,9 @@ end
 #print_test "Nothing: {{ \"abcd\" | truncate: 6 }}"
 #print_test "Nothing: {{ \"abcd\" | truncate: 7 }}"
 
-print_test "{% assign a = '' %}{% decrement 'a' %}"
-print_test "{% assign a = port %}{% decrement port %}"
-print_test "{% assign a = '' %}{% decrement a %}"
-print_test "{% assign a = 3 %}{% decrement a %}{% decrement a %}"
-print_test "{% decrement a %}{% decrement a %}{% increment a %}{% decrement b %}"
+print_test "{% assign name.['last'] = 'LastName' %}{{ name.first }} {{name.last}}", {'name' => { 'first' => 'tobi'}}
+#print_test "{% assign a = port %}{% decrement port %}"
+#print_test "{% assign a = '' %}{% decrement a %}"
+#print_test "{% assign a = 3 %}{% decrement a %}{% decrement a %}"
+#print_test "{% decrement a %}{% decrement a %}{% increment a %}{% decrement b %}"
 #print_test "{{ missing }}"

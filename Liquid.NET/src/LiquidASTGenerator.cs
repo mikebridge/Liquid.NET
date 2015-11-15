@@ -285,32 +285,33 @@ namespace Liquid.NET
 
         #endregion
 
-        private IList<TreeNode<LiquidExpression>> UnrollTreeIntoSegments(VariableReferenceTree tree)
-        {
-            var result = new List<TreeNode<LiquidExpression>>();
-            
-            VariableReferenceTree node = tree.Value as VariableReferenceTree;
-            if (node != null)
-            {
-                result.AddRange(UnrollTreeIntoSegments(node));
-                result.AddRange(UnrollTreeIntoSegments(node.IndexExpression));
-                //result.Add(new TreeNode<LiquidExpression>(new LiquidExpression {Expression = node.Value}));
-                //result.Add(new TreeNode<LiquidExpression>(new LiquidExpression { Expression = node.I }));
-            }
-            else
-            {
-                result.Add(new TreeNode<LiquidExpression>(new LiquidExpression {Expression = tree.Value}));
-                
-            }
-
-            //tree.
-            //result.AddRange(UnrollTreeIntoSegments.Tree.)
-//            if (tree.IndexExpression != null)
+//        private IList<TreeNode<LiquidExpression>> UnrollTreeIntoSegments(VariableReferenceTree tree)
+//        {
+//            var result = new List<TreeNode<LiquidExpression>>();
+//            
+//            VariableReferenceTree node = tree.Value as VariableReferenceTree;
+//            if (node != null)
 //            {
-//                result.AddRange(UnrollTreeIntoSegments(tree.IndexExpression));
+//                result.Add(new TreeNode<LiquidExpression>(new LiquidExpression {Expression = node}));
+//                result.Add(node.IndexExpression);
+//                //result.AddRange(UnrollTreeIntoSegments(node));
+//                //result.AddRange(UnrollTreeIntoSegments(node.IndexExpression));
+//                //result.Add(new TreeNode<LiquidExpression>(new LiquidExpression {Expression = node.Value}));
+//                //result.Add(new TreeNode<LiquidExpression>(new LiquidExpression { Expression = node.I }));
 //            }
-            return result;
-        }
+//            else
+//            {
+//                result.Add(new TreeNode<LiquidExpression>(new LiquidExpression {Expression = tree.Value}));                
+//            }
+//
+//            //tree.
+//            //result.AddRange(UnrollTreeIntoSegments.Tree.)
+////            if (tree.IndexExpression != null)
+////            {
+////                result.AddRange(UnrollTreeIntoSegments(tree.IndexExpression));
+////            }
+//            return result;
+//        }
 
         public override void EnterAssign_tag(LiquidParser.Assign_tagContext context)
         {
@@ -323,12 +324,16 @@ namespace Liquid.NET
                 context.variable(),
                 result => {
                     Console.WriteLine("Result" + result);
+                              assignTag.VarIndices = result;
+                              //assignTag.VarIndices =
+                                  //new TreeNode<LiquidExpression>(new LiquidExpression {Expression = result});
+                    //assignTag.VarIndices = new TreeNode<LiquidExpression>(new LiquidExpression{Expression = result});
                     //EvalTreeToChain(assignTag, assignTag.VarIndices);
-                    var segments = UnrollTreeIntoSegments(result);
-                    foreach (var segment in segments.Skip(1))
-                    {
-                        assignTag.VarIndices.Add(segment);
-                    }
+//                    var segments = UnrollTreeIntoSegments(result);
+//                    foreach (var segment in segments.Skip(1))
+//                    {
+                        //assignTag.VarIndices.Add(segment);
+                    //}
                     Console.WriteLine("Indexes: " + assignTag.VarIndices);
                     //assignTag.VarIndices.Add(new TreeNode<LiquidExpression>(new LiquidExpression {Expression = result}));
                     // TODO: recurse through indices

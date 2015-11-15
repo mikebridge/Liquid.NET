@@ -13,13 +13,13 @@ namespace Liquid.NET.Constants
             var dict = liquidValue as LiquidHash;
             if (dict == null)
             {
-                return LiquidExpressionResult.ErrorOrNone(ctx, index);
+                return LiquidExpressionResult.ErrorOrNone(index, ctx.Options.ErrorWhenValueMissing);
                           
             }
 
             return dict.ContainsKey(index)
                 ? LiquidExpressionResult.Success(dict[index])
-                : LiquidExpressionResult.ErrorOrNone(ctx, index);
+                : LiquidExpressionResult.ErrorOrNone(index, ctx.Options.ErrorWhenValueMissing);
         }
     }
 }

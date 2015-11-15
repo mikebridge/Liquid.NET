@@ -233,7 +233,7 @@ namespace Liquid.NET.Tests.Examples
 
             Console.WriteLine(result);
             Assert.That(result, Is.EqualTo("<div>Hello World</div>"));
-
+            
         }
 
 //        [Test]

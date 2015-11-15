@@ -9,40 +9,40 @@ namespace Liquid.NET.Constants
     {
         /// <summary>
         /// Look up the index in the value.  This works for dictionaries, arrays and strings.
+        /// 
+        /// Returns an error if errorWhenValueMissing is true.
         /// </summary>
-        /// <param name="ctx"></param>
         /// <param name="value"></param>
         /// <param name="indexProperty"></param>
+        /// <param name="errorWhenValueMissing"></param>
         /// <returns></returns>
-        public LiquidExpressionResult Lookup(
-            ITemplateContext ctx, 
-            ILiquidValue value,
-            ILiquidValue indexProperty)
+        public LiquidExpressionResult Lookup(ILiquidValue value,
+            ILiquidValue indexProperty, bool errorWhenValueMissing)
         {
             var arr = value as LiquidCollection;
             if (arr != null)
             {
-                return DoLookup(ctx, arr, indexProperty);
+                return DoLookup(arr, indexProperty, errorWhenValueMissing);
             }
 
             var dict = value as LiquidHash;
             if (dict != null)
             {
-                return DoLookup(ctx, dict, indexProperty);
+                return DoLookup(dict, indexProperty, errorWhenValueMissing);
             }
 
             var str = value as LiquidString;
             if (str != null)
             {
-                return DoLookup(ctx, str, indexProperty);
+                return DoLookup(str, indexProperty, errorWhenValueMissing);
             }
 
             return LiquidExpressionResult.Error("ERROR : cannot apply an index to a " + value.LiquidTypeName + ".");
         }
 
-        private LiquidExpressionResult DoLookup(ITemplateContext ctx, LiquidCollection liquidCollection, ILiquidValue indexProperty)
+        private LiquidExpressionResult DoLookup(LiquidCollection liquidCollection, ILiquidValue indexProperty, bool errorWhenValueMissing)
         {
-            bool errorOnEmpty = ctx.Options.ErrorWhenValueMissing && liquidCollection.Count == 0;
+            bool errorOnEmpty = errorWhenValueMissing && liquidCollection.Count == 0;
 
                             
 
@@ -75,7 +75,7 @@ namespace Liquid.NET.Constants
 
                 if (!success)
                 {
-                    if (ctx.Options.ErrorWhenValueMissing)
+                    if (errorWhenValueMissing)
                     {
                         return LiquidExpressionResult.Error("invalid index: '" + propertyNameString + "'");
                     }
@@ -106,7 +106,7 @@ namespace Liquid.NET.Constants
             return LiquidExpressionResult.Success(result);
         }
 
-        private LiquidExpressionResult DoLookup(ITemplateContext ctx, LiquidHash liquidHash, ILiquidValue indexProperty)
+        private LiquidExpressionResult DoLookup(LiquidHash liquidHash, ILiquidValue indexProperty, bool errorWhenValueMissing)
         {
 
             String propertyNameString = ValueCaster.RenderAsString(indexProperty);
@@ -122,13 +122,13 @@ namespace Liquid.NET.Constants
             }
             else
             {
-                return LiquidExpressionResult.ErrorOrNone(ctx, indexProperty.ToString());
+                return LiquidExpressionResult.ErrorOrNone(indexProperty.ToString(), errorWhenValueMissing);
 
             }
         }
 
         // TODO: this is inefficient and ugly and duplicates much of LiquidCollection
-        private LiquidExpressionResult DoLookup(ITemplateContext ctx, LiquidString str, ILiquidValue indexProperty)
+        private LiquidExpressionResult DoLookup(LiquidString str, ILiquidValue indexProperty, bool errorWhenValueMissing)
         {
             var strValues = str.StringVal.ToCharArray().Select(ch => LiquidString.Create(ch.ToString()).ToOption()).ToList();
             String propertyNameString = ValueCaster.RenderAsString(indexProperty);
@@ -152,7 +152,7 @@ namespace Liquid.NET.Constants
                 
                 if (numericIndexProperty == null)
                 {                  
-                    return ctx.Options.ErrorWhenValueMissing ? 
+                    return errorWhenValueMissing ? 
                         LiquidExpressionResult.Error("invalid string index: '" + propertyNameString + "'") : 
                         LiquidExpressionResult.Success(new None<ILiquidValue>());
                 }

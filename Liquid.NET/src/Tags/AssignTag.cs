@@ -1,5 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
+
+using Liquid.NET.Expressions;
 using Liquid.NET.Symbols;
 using Liquid.NET.Utils;
 
@@ -7,7 +8,7 @@ namespace Liquid.NET.Tags
 {
     public class AssignTag : IASTNode
     {
-        private readonly IList<TreeNode<LiquidExpression>> _varIndices = new List<TreeNode<LiquidExpression>>();
+        //private readonly IList<TreeNode<LiquidExpression>> _varIndices = new List<TreeNode<LiquidExpression>>();
 
         public void Accept(IASTVisitor visitor)
         {
@@ -16,7 +17,7 @@ namespace Liquid.NET.Tags
 
         public String VarName { get; set; }
 
-        public IList<TreeNode<LiquidExpression>> VarIndices { get { return _varIndices; } }
+        public VariableReferenceTree VarIndices { get; set; }
 
         public TreeNode<LiquidExpression> LiquidExpressionTree { get; set; }
 

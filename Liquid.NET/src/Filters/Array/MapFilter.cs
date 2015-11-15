@@ -25,7 +25,7 @@ namespace Liquid.NET.Filters.Array
         {
             var list = liquidArrayExpression.Select(x => x.HasValue
                 ? FieldAccessor.TryField(ctx, x.Value, _selector.StringVal)
-                : LiquidExpressionResult.ErrorOrNone(ctx, _selector.StringVal)).ToList();
+                : LiquidExpressionResult.ErrorOrNone(_selector.StringVal, ctx.Options.ErrorWhenValueMissing)).ToList();
                 //new None<ILiquidValue>()).ToList();
             return list.Any(x => x.IsError) ? 
                 list.First(x => x.IsError) : 

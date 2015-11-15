@@ -288,73 +288,96 @@ namespace Liquid.NET
         {          
             //Console.WriteLine("Assigning to " + String.Join(".", resolvedIndexReferences.Select(x => x.SuccessResult.Value)));
 
-            if (!assignTag.VarIndices.Any()) // we're defining a new variable
+            if (assignTag.VarIndices == null) // we're defining a new variable
             {
                 //Console.WriteLine("Simple assignment: Assigning " + value+ " to " + assignTag.VarName);
                 ctx.SymbolTableStack.DefineGlobal(assignTag.VarName, value);
             }
             else // we're attempting to modify a hash, maybe failing
             {
-                var maybeHash = ctx.SymbolTableStack.Reference(assignTag.VarName);
-                if (maybeHash.IsError)
+
+                //var obj = LiquidExpressionEvaluator.Eval(assignTag.VarIndices, ctx);
+                var obj = assignTag.VarIndices.PartialEval(ctx, new List<Option<ILiquidValue>>());
+                Console.WriteLine("Received "+obj.LiquidExpressionResult + " success = "+obj.LiquidExpressionResult.IsSuccess);
+                Console.WriteLine("  var " + obj.LastValue);
+                Console.WriteLine("  index " + obj.Index);
+                if (obj.LiquidExpressionResult.IsSuccess)
                 {
-                    RegisterRenderingError(new LiquidError { Message = SymbolTable.NotFoundError(assignTag.VarName) });
-                    return;
-                }
-
-                var resolvedIndexReferences = assignTag.VarIndices.Select(
-                    varRef => LiquidExpressionEvaluator.Eval(varRef, ctx)).ToList();
-
-                var firstErroringReference = resolvedIndexReferences.FirstOrDefault(x => x.IsError);
-                if (firstErroringReference != null)
-                { 
-                    String refvar = GetErrorReference(assignTag.VarName,
-                        resolvedIndexReferences.TakeWhile(x => x.IsSuccess).Select(x => x.SuccessResult.Value.ToString()),
-                        firstErroringReference.SuccessResult.Value.ToString());
-                    RegisterRenderingError(new LiquidError { Message = SymbolTable.NotFoundError(refvar)});
-                    return;
-                }
-                
-                // TODO: if you're passing a reference to a hash or a variable, you'll get 
-                // a weird error message.
-                var varrefs = resolvedIndexReferences.Select(x => x.SuccessResult.Value.ToString()).ToList();
-
-                //Console.WriteLine("Hash assignment: Assigning " + value.Value +" to "+String.Join(".", varrefs));
-
-
-                LiquidHash theHash = maybeHash.SuccessValue<LiquidHash>();
-                if (theHash == null)
-                {
-                    RegisterRenderingError(new LiquidError { Message = assignTag.VarName + " is not a hash" });
-                    return;
-                }
-                // traverse the nested hashes to find the last one
-
-                IList<String> errorRef = new List<String> { assignTag.VarName };
-                foreach (var varref in varrefs.Take(varrefs.Count - 1)) // find a hash for each one but the last one, which is the property
-                {
-                    errorRef.Add(varref);
-                    //Console.WriteLine("Evaluating property " + varref);
-                    Option<ILiquidValue> maybeChildHash;
-                    if (!theHash.ContainsKey(varref))
+                    if (!obj.LastValue.HasValue)
                     {
-                        RegisterRenderingError(new LiquidError { Message = SymbolTable.NotFoundError(String.Join(".", errorRef)) });
-                        return;
+                        // expression is ok, put in global scope
+                        ctx.SymbolTableStack.DefineGlobal(assignTag.VarName, value);
                     }
                     else
                     {
-                        maybeChildHash = theHash[varref];
+                        var hash = obj.LastValue.Value as LiquidHash;
+                        
+                        if (hash != null)
+                        {
+                            hash[obj.Index.Value.ToString()] = value;
+                        }
                     }
-                    if (!maybeChildHash.HasValue || !(maybeChildHash.Value is LiquidHash))
-                    {
-                        RegisterRenderingError(new LiquidError { Message = SymbolTable.NotFoundError(String.Join(".", errorRef) + " is not a hash")});
-                        return;
-                    }
-                    theHash = (LiquidHash) maybeChildHash.Value;
                 }
-                String key = varrefs.Last();
-
-                theHash[key] = value;
+//                var maybeHash = ctx.SymbolTableStack.Reference(assignTag.VarName);
+//                if (maybeHash.IsError)
+//                {
+//                    RegisterRenderingError(new LiquidError { Message = SymbolTable.NotFoundError(assignTag.VarName) });
+//                    return;
+//                }
+//
+//                var resolvedIndexReferences = assignTag.VarIndices.Select(
+//                    varRef => LiquidExpressionEvaluator.Eval(varRef, ctx)).ToList();
+//
+//                var firstErroringReference = resolvedIndexReferences.FirstOrDefault(x => x.IsError);
+//                if (firstErroringReference != null)
+//                { 
+//                    String refvar = GetErrorReference(assignTag.VarName,
+//                        resolvedIndexReferences.TakeWhile(x => x.IsSuccess).Select(x => x.SuccessResult.Value.ToString()),
+//                        firstErroringReference.SuccessResult.Value.ToString());
+//                    RegisterRenderingError(new LiquidError { Message = SymbolTable.NotFoundError(refvar)});
+//                    return;
+//                }
+//                
+//                // TODO: if you're passing a reference to a hash or a variable, you'll get 
+//                // a weird error message.
+//                var varrefs = resolvedIndexReferences.Select(x => x.SuccessResult.Value.ToString()).ToList();
+//
+//                //Console.WriteLine("Hash assignment: Assigning " + value.Value +" to "+String.Join(".", varrefs));
+//
+//
+//                LiquidHash theHash = maybeHash.SuccessValue<LiquidHash>();
+//                if (theHash == null)
+//                {
+//                    RegisterRenderingError(new LiquidError { Message = assignTag.VarName + " is not a hash" });
+//                    return;
+//                }
+//                // traverse the nested hashes to find the last one
+//
+//                IList<String> errorRef = new List<String> { assignTag.VarName };
+//                foreach (var varref in varrefs.Take(varrefs.Count - 1)) // find a hash for each one but the last one, which is the property
+//                {
+//                    errorRef.Add(varref);
+//                    //Console.WriteLine("Evaluating property " + varref);
+//                    Option<ILiquidValue> maybeChildHash;
+//                    if (!theHash.ContainsKey(varref))
+//                    {
+//                        RegisterRenderingError(new LiquidError { Message = SymbolTable.NotFoundError(String.Join(".", errorRef)) });
+//                        return;
+//                    }
+//                    else
+//                    {
+//                        maybeChildHash = theHash[varref];
+//                    }
+//                    if (!maybeChildHash.HasValue || !(maybeChildHash.Value is LiquidHash))
+//                    {
+//                        RegisterRenderingError(new LiquidError { Message = SymbolTable.NotFoundError(String.Join(".", errorRef) + " is not a hash")});
+//                        return;
+//                    }
+//                    theHash = (LiquidHash) maybeChildHash.Value;
+//                }
+//                String key = varrefs.Last();
+//
+//                theHash[key] = value;
 
             }
 

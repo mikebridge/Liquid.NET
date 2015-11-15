@@ -15,9 +15,9 @@ namespace Liquid.NET.Utils
         {
         }
 
-        public static LiquidExpressionResult ErrorOrNone(ITemplateContext ctx, String varname)
+        public static LiquidExpressionResult ErrorOrNone(String varname, bool errorWhenValueMissing)
         {
-            if (ctx.Options.ErrorWhenValueMissing)
+            if (errorWhenValueMissing)
             {
                 return Error(SymbolTable.NotFoundError(varname));
             }
@@ -86,6 +86,11 @@ namespace Liquid.NET.Utils
             return Success(LiquidString.Create(successString));
         }
 
+        public override string ToString()
+        {
+            return IsSuccess ? SuccessResult.ToString() : ErrorResult.ToString();
+            return base.ToString();
+        }
     }
 
     public static class LiquidExpressionResultExtensions

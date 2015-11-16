@@ -15,6 +15,7 @@ namespace Liquid.NET.Expressions
     {
         void Visit(LiquidValue expr);
         void Visit(VariableReferenceTree expr);
+        void Visit(VariableReference expr);
         void Visit(AndExpression expr);
         void Visit(NotExpression expr);
         void Visit(ContainsExpression expr);
@@ -32,13 +33,14 @@ namespace Liquid.NET.Expressions
         void Visit(OrExpression expr);
         //void Visit(LiquidExpression expr) // TODO: "LiquidExpression" should be "FilterExpression" maybe, then it should implement the same interface.
 
+        
     }
 
     /// <summary>
     /// This isn't a visitor yet.  What is currently IExpressionDescription.Eval should ultimately be 
     /// refactored into a visitor pattern.  This is where they will end up.
     /// </summary>
-    public class LiquidExpressionVisitor //: ILiquidExpressionVisitor
+    public class LiquidExpressionVisitor : ILiquidExpressionVisitor
     {
         private readonly ITemplateContext _templateContext;
 
@@ -64,9 +66,9 @@ namespace Liquid.NET.Expressions
             foreach (var child in tree.Children)
             {
                 // TODO: when this is all cleaned up, this can be removed:
-                IEnumerable<Option<ILiquidValue>> dummy = new List<Option<ILiquidValue>>();
+                //IEnumerable<Option<ILiquidValue>> dummy = new List<Option<ILiquidValue>>();
                 //child.Data.Accept(this, dummy);
-                //child.Data.Accept(visitor);
+                child.Data.Accept(this);
             }
             return this;
         }
@@ -77,6 +79,91 @@ namespace Liquid.NET.Expressions
         public static LiquidExpressionResult Visit(LiquidValue liquidValue)
         {
             return LiquidExpressionResult.Success(liquidValue);
+        }
+
+        public void Visit(VariableReferenceTree expr)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Visit(VariableReference expr)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Visit(AndExpression expr)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Visit(NotExpression expr)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Visit(ContainsExpression expr)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Visit(GroupedExpression expr)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Visit(EqualsExpression expr)
+        {
+            throw new NotImplementedException();
+        }
+
+        void ILiquidExpressionVisitor.Visit(FalseExpression expr)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Visit(GreaterThanExpression expr)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Visit(LessThanExpression expr)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Visit(GreaterThanOrEqualsExpression expr)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Visit(LessThanOrEqualsExpression expr)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Visit(IsBlankExpression expr)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Visit(IsEmptyExpression expr)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Visit(IsPresentExpression expr)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Visit(NotEqualsExpression expr)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Visit(OrExpression expr)
+        {
+            throw new NotImplementedException();
         }
 
         public static VariableReferenceTreeEvalResult Visit(VariableReferenceTree variableReferenceTree, ITemplateContext templateContext, IEnumerable<Option<ILiquidValue>> childresults)
@@ -302,6 +389,11 @@ namespace Liquid.NET.Expressions
         {
             var exprList = expressions.ToList();
             return LiquidExpressionResult.Success(new LiquidBoolean(exprList.Any(x => x.HasValue && x.Value.IsTrue)));
+        }
+
+        void ILiquidExpressionVisitor.Visit(LiquidValue expr)
+        {
+            throw new NotImplementedException();
         }
 
         public static LiquidExpressionResult Visit(FalseExpression expr)

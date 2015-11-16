@@ -50,6 +50,7 @@ namespace Liquid.NET
             // calculate the first part of the expression
             var objResult = expression.Expression == null ? 
                 LiquidExpressionResult.Success(new None<ILiquidValue>()) : 
+                //expression.Expression.Accept(templateContext, leaves);
                 expression.Expression.Accept(templateContext, leaves);
 
             if (objResult.IsError)

@@ -9,9 +9,13 @@ namespace Liquid.NET.Expressions
     public class ContainsExpression :ExpressionDescription
     {
 
-        public override LiquidExpressionResult Accept(ITemplateContext templateContext, IEnumerable<Option<ILiquidValue>> expressions)
+//        public override LiquidExpressionResult Accept(ITemplateContext templateContext, IEnumerable<Option<ILiquidValue>> expressions)
+//        {
+//            return LiquidExpressionVisitor.Visit(this, expressions);
+//        }
+        public override void Accept(ILiquidExpressionVisitor visitor)
         {
-            return LiquidExpressionVisitor.Visit(this, expressions);
+            visitor.Visit(this);
         }
 
         // ReSharper disable UnusedParameter.Local

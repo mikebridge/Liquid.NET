@@ -16,9 +16,14 @@ namespace Liquid.NET.Expressions
             Name = name;
         }
 
-        public override LiquidExpressionResult Accept(ITemplateContext templateContext, IEnumerable<Option<ILiquidValue>> childresults)
+//        public override LiquidExpressionResult Accept(ITemplateContext templateContext, IEnumerable<Option<ILiquidValue>> childresults)
+//        {
+//            return LiquidExpressionVisitor.Visit(this, templateContext);
+//        }
+        public override void Accept(ILiquidExpressionVisitor visitor)
         {
-            return LiquidExpressionVisitor.Visit(this, templateContext);
+            visitor.Visit(this);
         }
+
     }
 }

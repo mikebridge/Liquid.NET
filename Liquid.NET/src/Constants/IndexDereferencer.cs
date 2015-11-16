@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-using Liquid.NET.Symbols;
+
 using Liquid.NET.Utils;
 
 namespace Liquid.NET.Constants
@@ -9,8 +9,6 @@ namespace Liquid.NET.Constants
     {
         /// <summary>
         /// Look up the index in the value.  This works for dictionaries, arrays and strings.
-        /// 
-        /// Returns an error if errorWhenValueMissing is true.
         /// </summary>
         /// <param name="value"></param>
         /// <param name="indexProperty"></param>

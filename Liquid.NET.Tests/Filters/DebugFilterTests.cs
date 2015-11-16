@@ -64,7 +64,7 @@ namespace Liquid.NET.Tests.Filters
 
             //ctx.Define("payments", new LiquidCollection(new List<ILiquidValue>()));
 
-            const String str = "{% include 'test' %}{% include 'test2' %}{{ x | debug }}";
+            const String str = "{% include 'test' %}{% include 'test2' %}{{ x | debug }}RESULT:{{x}}";
 
             // Act
             var result = RenderingHelper.RenderTemplate(str, ctx);
@@ -72,6 +72,7 @@ namespace Liquid.NET.Tests.Filters
 
             // Assert
             //Assert.That(result, Is.StringContaining("{ \"assigned\" : \"test\""));
+            Assert.That(result, Is.StringContaining("RESULT:456"));
             Assert.That(result, Is.StringContaining("{ \"reassigned\" : \"test2\""));
 
         }

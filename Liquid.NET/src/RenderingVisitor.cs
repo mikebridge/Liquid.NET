@@ -1,10 +1,8 @@
 ﻿using System;
-using System.CodeDom;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices.ComTypes;
-using System.Web.Caching;
+
 using Liquid.NET.Constants;
 using Liquid.NET.Rendering;
 using Liquid.NET.Symbols;
@@ -68,7 +66,7 @@ namespace Liquid.NET
 
         public void Visit(CustomTag customTag)
         {
-            //Console.WriteLine("Looking up Custom Tag " + customTag.TagName);
+            
             var tagType = _templateContext.SymbolTableStack.LookupCustomTagRendererType(customTag.TagName);
             if (tagType != null)
             {
@@ -80,7 +78,6 @@ namespace Liquid.NET
             var macroDescription = _templateContext.SymbolTableStack.LookupMacro(customTag.TagName);
             if (macroDescription != null)
             {
-                //Console.WriteLine("...");
                 var evalResults =
                     customTag.LiquidExpressionTrees.Select(x => LiquidExpressionEvaluator.Eval(x, _templateContext)).ToList();
                 if (evalResults.Any(x => x.IsError))
@@ -288,97 +285,78 @@ namespace Liquid.NET
         {          
             //Console.WriteLine("Assigning to " + String.Join(".", resolvedIndexReferences.Select(x => x.SuccessResult.Value)));
 
-            if (assignTag.VarIndices == null) // we're defining a new variable
+            if (assignTag.VarIndices.IndexExpression == null) // we're defining a new variable at the top level
             {
                 //Console.WriteLine("Simple assignment: Assigning " + value+ " to " + assignTag.VarName);
                 ctx.SymbolTableStack.DefineGlobal(assignTag.VarName, value);
             }
-            else // we're attempting to modify a hash, maybe failing
+            else // we're attempting to modify a hash or replace a value, maybe failing
             {
-
-                //var obj = LiquidExpressionEvaluator.Eval(assignTag.VarIndices, ctx);
+                // before we refactor this to rewrite the expressiondescriptions to replace the inherited eval with the visitor pattern,
+                // I'm introducing this HACK to swap the error-reporting state on and off.  Right now, a LOT of dependencies on Eval
+                // is preventing me from easily refactoring it.
+                var origErrorWhenEvalMissing = ctx.Options.ErrorWhenValueMissing;
+                ctx.Options.ErrorWhenValueMissing = true;
                 var obj = assignTag.VarIndices.PartialEval(ctx, new List<Option<ILiquidValue>>());
-                Console.WriteLine("Received "+obj.LiquidExpressionResult + " success = "+obj.LiquidExpressionResult.IsSuccess);
-                Console.WriteLine("  var " + obj.LastValue);
-                Console.WriteLine("  index " + obj.Index);
-                if (obj.LiquidExpressionResult.IsSuccess)
+                //Console.WriteLine("Received "+obj.LiquidExpressionResult + " success = "+obj.LiquidExpressionResult.IsSuccess);
+                //Console.WriteLine("  var " + obj.LastValue);
+                //Console.WriteLine("  index " + obj.Index);
+                try
                 {
-                    if (!obj.LastValue.HasValue)
+                    if (obj.LiquidExpressionResult.IsSuccess)
                     {
-                        // expression is ok, put in global scope
-                        ctx.SymbolTableStack.DefineGlobal(assignTag.VarName, value);
+                        if (!obj.LastValue.HasValue)
+                        {
+                            // expression is ok, put in global scope
+                            ctx.SymbolTableStack.DefineGlobal(assignTag.VarName, value);
+                        }
+                        else
+                        {
+                            var hash = obj.LastValue.Value as LiquidHash;
+
+                            if (hash != null)
+                            {
+                                hash[obj.Index.Value.ToString()] = value;
+                            }
+                            else
+                            {
+                                ctx.SymbolTableStack.DefineGlobal(assignTag.VarName, value); // reassign the value.
+                            }
+
+                        }
                     }
                     else
                     {
-                        var hash = obj.LastValue.Value as LiquidHash;
-                        
-                        if (hash != null)
+                        if (obj.LastValue.HasValue && obj.Index.HasValue)
                         {
-                            hash[obj.Index.Value.ToString()] = value;
+
+                            var hash = obj.LastValue.Value as LiquidHash;
+                            if (hash != null)
+                            {
+                                // found a hash with no value.
+                                hash[obj.Index.Value.ToString()] = value;
+                                return;
+                            }
+                            else
+                            {
+
+                                RegisterRenderingError(new LiquidError
+                                {
+                                    Message =
+                                        "cannot assign new property '" + obj.Index.Value + "' on a " +
+                                        obj.Index.Value.LiquidTypeName +
+                                        ".  Only hashes can accept property assignments."
+                                });
+                                return;
+                            }
                         }
+                        RegisterRenderingError(obj.LiquidExpressionResult.ErrorResult);
                     }
                 }
-//                var maybeHash = ctx.SymbolTableStack.Reference(assignTag.VarName);
-//                if (maybeHash.IsError)
-//                {
-//                    RegisterRenderingError(new LiquidError { Message = SymbolTable.NotFoundError(assignTag.VarName) });
-//                    return;
-//                }
-//
-//                var resolvedIndexReferences = assignTag.VarIndices.Select(
-//                    varRef => LiquidExpressionEvaluator.Eval(varRef, ctx)).ToList();
-//
-//                var firstErroringReference = resolvedIndexReferences.FirstOrDefault(x => x.IsError);
-//                if (firstErroringReference != null)
-//                { 
-//                    String refvar = GetErrorReference(assignTag.VarName,
-//                        resolvedIndexReferences.TakeWhile(x => x.IsSuccess).Select(x => x.SuccessResult.Value.ToString()),
-//                        firstErroringReference.SuccessResult.Value.ToString());
-//                    RegisterRenderingError(new LiquidError { Message = SymbolTable.NotFoundError(refvar)});
-//                    return;
-//                }
-//                
-//                // TODO: if you're passing a reference to a hash or a variable, you'll get 
-//                // a weird error message.
-//                var varrefs = resolvedIndexReferences.Select(x => x.SuccessResult.Value.ToString()).ToList();
-//
-//                //Console.WriteLine("Hash assignment: Assigning " + value.Value +" to "+String.Join(".", varrefs));
-//
-//
-//                LiquidHash theHash = maybeHash.SuccessValue<LiquidHash>();
-//                if (theHash == null)
-//                {
-//                    RegisterRenderingError(new LiquidError { Message = assignTag.VarName + " is not a hash" });
-//                    return;
-//                }
-//                // traverse the nested hashes to find the last one
-//
-//                IList<String> errorRef = new List<String> { assignTag.VarName };
-//                foreach (var varref in varrefs.Take(varrefs.Count - 1)) // find a hash for each one but the last one, which is the property
-//                {
-//                    errorRef.Add(varref);
-//                    //Console.WriteLine("Evaluating property " + varref);
-//                    Option<ILiquidValue> maybeChildHash;
-//                    if (!theHash.ContainsKey(varref))
-//                    {
-//                        RegisterRenderingError(new LiquidError { Message = SymbolTable.NotFoundError(String.Join(".", errorRef)) });
-//                        return;
-//                    }
-//                    else
-//                    {
-//                        maybeChildHash = theHash[varref];
-//                    }
-//                    if (!maybeChildHash.HasValue || !(maybeChildHash.Value is LiquidHash))
-//                    {
-//                        RegisterRenderingError(new LiquidError { Message = SymbolTable.NotFoundError(String.Join(".", errorRef) + " is not a hash")});
-//                        return;
-//                    }
-//                    theHash = (LiquidHash) maybeChildHash.Value;
-//                }
-//                String key = varrefs.Last();
-//
-//                theHash[key] = value;
-
+                finally
+                {
+                    ctx.Options.ErrorWhenValueMissing = origErrorWhenEvalMissing;
+                }
             }
 
         }

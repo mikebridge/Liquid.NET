@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.SymbolStore;
 using System.Linq;
 using Liquid.NET.Constants;
 using Liquid.NET.Utils;
@@ -17,6 +18,7 @@ namespace Liquid.NET.Expressions
         
         public LiquidExpressionResult Eval(ITemplateContext templateContext, IEnumerable<Option<ILiquidValue>> childresults)
         {
+
             return PartialEval(templateContext, childresults).LiquidExpressionResult;
         }
 
@@ -25,7 +27,11 @@ namespace Liquid.NET.Expressions
             var errorWhenValueMissing = templateContext.Options.ErrorWhenValueMissing;
 
             var childResultsList = childresults as IList<Option<ILiquidValue>> ?? childresults.ToList();
+
+            //TODO: THis isn't apssing on errorWhenValueMissing. :(
+
             var valueResult = Value.Eval(templateContext, childResultsList);
+            // var valueResult = ((VariableReferenceTree )Value(.PartialEval(ITemplateContext templateContext, IEnumerable<Option<ILiquidValue>> childresults, bool errorWhenValueMissing)
             if (valueResult.IsError)
             {
                 return new VariableReferenceTreeEvalResult(valueResult, new None<ILiquidValue>(), new None<ILiquidValue>());

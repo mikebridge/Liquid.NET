@@ -88,7 +88,14 @@ namespace Liquid.NET.Utils
 
         public override string ToString()
         {
-            return IsSuccess ? SuccessResult.ToString() : ErrorResult.ToString();
+            if (IsSuccess)
+            {
+                return SuccessResult.ToString();
+            }
+            else
+            {
+                return ErrorResult.ToString();
+            }
             return base.ToString();
         }
     }

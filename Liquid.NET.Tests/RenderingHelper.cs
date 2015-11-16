@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace Liquid.NET.Tests
 {
@@ -17,7 +18,7 @@ namespace Liquid.NET.Tests
             var result= template.LiquidTemplate.Render(ctx);
             if (result.HasRenderingErrors || result.HasParsingErrors)
             {
-                throw new ApplicationException("Errors occurred....");
+                throw new ApplicationException("Errors occurred: " + String.Join(",", result.ParsingErrors.Select(x => x.Message).Concat(result.RenderingErrors.Select(x => x.Message))));
             }
             return result.Result;
         }

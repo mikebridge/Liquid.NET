@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using Antlr4.Runtime;
+using System.Linq;
+
 using Liquid.NET.Constants;
 using NUnit.Framework;
 
@@ -21,6 +22,21 @@ namespace Liquid.NET.Tests.Tags
 
             // Assert
             Assert.That(result, Is.EqualTo("bar"));
+
+        }
+
+        [Test]
+        public void It_Should_Overwrite_A_Variable()
+        {
+            // Arrange
+            TemplateContext ctx = new TemplateContext();
+            var template = LiquidTemplate.Create("{% assign foo = \"bar\" %}{% assign foo = \"baz\" %}{{ foo }}");
+
+            // Act
+            String result = template.LiquidTemplate.Render(ctx).Result;
+
+            // Assert
+            Assert.That(result, Is.EqualTo("baz"));
 
         }
 
@@ -189,14 +205,34 @@ namespace Liquid.NET.Tests.Tags
         }
 
         [Test]
+        public void It_Should_Replace_A_Field_On_An_Existing_Hash()
+        {
+            // Arrange
+            ITemplateContext ctx = new TemplateContext()
+                .DefineLocalVariable("foo", new LiquidHash { { "oldfield", LiquidString.Create("OLD") } });
+            var template = LiquidTemplate.Create("{% assign foo.oldfield = \"NEW\" %}Result: {{ foo.oldfield }}")
+                .OnParsingError(err => Assert.Fail("ERROR " + err.Message));
+
+            // Act
+            var result = template.LiquidTemplate.Render(ctx)
+                .OnAnyError(err => Assert.Fail("ERROR " + err.Message))
+                .Result;
+
+            // Assert
+            Assert.That(result, Is.EqualTo("Result: NEW"));
+
+        }
+
+
+        
+        [Test]
         public void It_Should_Fail_When_Assigning_To_Nonexistent_Hash()
         {
             // Arrange
             ITemplateContext ctx = new TemplateContext()
-                .DefineLocalVariable("bar", LiquidString.Create("newfield"))
                 .DefineLocalVariable("foo", new LiquidHash { { "oldfield", LiquidString.Create("OLD") } });
 
-            var template = LiquidTemplate.Create("{% assign foo.boo.baz = \"NEW\" %}{{ foo.oldfield }} {{ foo.newfield }}")
+            var template = LiquidTemplate.Create("RESULT: {% assign foo.boo.baz = \"NEW\" %}{{ foo.oldfield }}")
                 .OnParsingError(err => Assert.Fail("ERROR " + err.Message));
 
             // Act
@@ -206,9 +242,12 @@ namespace Liquid.NET.Tests.Tags
                 .OnParsingError(err => Assert.Fail("ERROR " + err.Message))
                 .Result;
 
+            Console.WriteLine(String.Join(",", renderingErrors.Select(x => x.Message)));
+
             // Assert
             Assert.That(renderingErrors.Count, Is.EqualTo(1));
-            Assert.That(renderingErrors[0].Message, Is.StringContaining("undefined field 'foo.boo'" ));
+            Assert.That(renderingErrors[0].Message, Is.StringContaining("boo is undefined"));
+            Assert.That(result, Is.EqualTo("RESULT: ERROR: boo is undefinedOLD"));
 
         }
 
@@ -217,10 +256,9 @@ namespace Liquid.NET.Tests.Tags
         {
             // Arrange
             ITemplateContext ctx = new TemplateContext()
-                .DefineLocalVariable("bar", LiquidString.Create("newfield"))
                 .DefineLocalVariable("foo", new LiquidHash { { "oldfield", LiquidString.Create("OLD") } });
 
-            var template = LiquidTemplate.Create("{% assign foo.oldfield.baz = \"NEW\" %}{{ foo.oldfield }} {{ foo.newfield }}")
+            var template = LiquidTemplate.Create("{% assign foo.oldfield.baz = \"NEW\" %}RESULT: {{ foo.oldfield }} {{ foo }}")
                 .OnParsingError(err => Assert.Fail("ERROR " + err.Message));
 
             // Act
@@ -230,10 +268,12 @@ namespace Liquid.NET.Tests.Tags
                 .OnParsingError(err => Assert.Fail("ERROR " + err.Message))
                 .Result;
 
+            Console.WriteLine(String.Join(",", renderingErrors.Select(x => x.Message)));
+
             // Assert
             Assert.That(renderingErrors.Count, Is.EqualTo(1));
-            Assert.That(renderingErrors[0].Message, Is.StringContaining("'foo.oldfield' is not a hash"));
-
+            Assert.That(renderingErrors[0].Message, Is.StringContaining("cannot assign new property 'baz' on a string.  Only hashes can accept property assignments"));
+            Assert.That(result, Is.StringContaining("RESULT: OLD"));
         }
 
 

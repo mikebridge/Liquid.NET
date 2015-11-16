@@ -96,7 +96,7 @@ namespace Liquid.NET.Utils
             {
                 return ErrorResult.ToString();
             }
-            return base.ToString();
+            //return base.ToString();
         }
     }
 

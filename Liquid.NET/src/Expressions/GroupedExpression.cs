@@ -7,13 +7,9 @@ namespace Liquid.NET.Expressions
 {
     public class GroupedExpression : ExpressionDescription
     {
-        public override LiquidExpressionResult Eval(ITemplateContext templateContext, IEnumerable<Option<ILiquidValue>> expressions)
+        public override LiquidExpressionResult Accept(ITemplateContext templateContext, IEnumerable<Option<ILiquidValue>> expressions)
         {
-            var childExpressions = expressions.ToList();
-
-            return childExpressions.Count != 1 ? 
-                LiquidExpressionResult.Error("Unable to parse expression in parentheses") : 
-                LiquidExpressionResult.Success(childExpressions.First());
+            return LiquidExpressionVisitor.Visit(this, expressions);
         }
     }
 }

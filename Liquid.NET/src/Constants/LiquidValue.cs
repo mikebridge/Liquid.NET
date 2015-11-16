@@ -75,12 +75,11 @@ namespace Liquid.NET.Constants
             return Value == null ? 0 : Value.GetHashCode();
         }
 
-        public override LiquidExpressionResult Eval(
+        public override LiquidExpressionResult Accept(
             ITemplateContext templateContext,
             IEnumerable<Option<ILiquidValue>> childresults)
         {
-            return LiquidExpressionResult.Success(this);
+            return LiquidExpressionVisitor.Visit(this);
         }
-
     }
 }

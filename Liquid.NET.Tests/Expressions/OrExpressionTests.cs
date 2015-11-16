@@ -21,7 +21,7 @@ namespace Liquid.NET.Tests.Expressions
             var expr = new OrExpression();
 
             // Act
-            var result = expr.Eval(new TemplateContext(), new List<Option<ILiquidValue>>()
+            var result = expr.Accept(new TemplateContext(), new List<Option<ILiquidValue>>()
             {
                 new LiquidBoolean(expr1),
                 new LiquidBoolean(expr2)

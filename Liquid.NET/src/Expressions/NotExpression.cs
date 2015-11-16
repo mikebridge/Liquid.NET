@@ -12,12 +12,18 @@ namespace Liquid.NET.Expressions
 //            expressionDescriptionVisitor.Visit(this);
 //        }
 
-        public override LiquidExpressionResult Eval(ITemplateContext templateContext, IEnumerable<Option<ILiquidValue>> expressions)
+        public override LiquidExpressionResult Accept(ITemplateContext templateContext, IEnumerable<Option<ILiquidValue>> expressions)
+        {
+            return LiquidExpressionVisitor(expressions);
+        }
+
+        public static LiquidExpressionResult LiquidExpressionVisitor(IEnumerable<Option<ILiquidValue>> expressions)
         {
             IList<Option<ILiquidValue>> exprList = expressions.ToList();
             if (exprList.Count != 1)
             {
-                return LiquidExpressionResult.Error("\"Not\" is a unary expression but received " + exprList.Count + " arguments.");
+                return
+                    LiquidExpressionResult.Error("\"Not\" is a unary expression but received " + exprList.Count + " arguments.");
             }
             return LiquidExpressionResult.Success(new LiquidBoolean(!exprList[0].HasValue || !exprList[0].Value.IsTrue));
         }

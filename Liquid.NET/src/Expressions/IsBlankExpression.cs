@@ -20,27 +20,9 @@ namespace Liquid.NET.Expressions
 //            expressionDescriptionVisitor.Visit(this);
 //        }
 
-        public override LiquidExpressionResult Eval(ITemplateContext templateContext, IEnumerable<Option<ILiquidValue>> expressions)
+        public override LiquidExpressionResult Accept(ITemplateContext templateContext, IEnumerable<Option<ILiquidValue>> expressions)
         {
-           
-            var list = expressions.ToList();
-            if (!list.Any())
-            {
-                return LiquidExpressionResult.Success(new LiquidBoolean(true));
-            }
-            if (list.Count != 1)
-            {
-                return LiquidExpressionResult.Error("Expected one variable to compare with \"blank\"");
-            }
-           
-            if (!list[0].HasValue)
-            {
-                return LiquidExpressionResult.Success(new LiquidBoolean(true)); // null is blank.
-            }
-            return LiquidExpressionResult.Success(new LiquidBoolean(BlankChecker.IsBlank(list[0].Value)));
+            return LiquidExpressionVisitor.Visit(this, expressions);
         }
-
-         
-
     }
 }

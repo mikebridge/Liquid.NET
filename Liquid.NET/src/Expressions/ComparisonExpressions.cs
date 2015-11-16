@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+
 using Liquid.NET.Constants;
 using Liquid.NET.Utils;
 
@@ -10,62 +10,39 @@ namespace Liquid.NET.Expressions
     public class GreaterThanExpression : ExpressionDescription
     {
 
-        public override LiquidExpressionResult Eval(ITemplateContext templateContext,
+        public override LiquidExpressionResult Accept(ITemplateContext templateContext,
             IEnumerable<Option<ILiquidValue>> expressions)
         {
-            var expressionList = expressions.ToList();
-            if (expressionList.Any(x => !x.HasValue))
-            {
-                return LiquidExpressionResult.Success(new LiquidBoolean(false));
-            }
-            return LiquidExpressionResult.Success(ComparisonExpressions.Compare(expressionList[0].Value, expressionList[1].Value, (x, y) => x > y));
+            return LiquidExpressionVisitor.Visit(this, expressions);
         }
     }
 
     public class LessThanOrEqualsExpression : ExpressionDescription
     {
 
-        public override LiquidExpressionResult Eval(ITemplateContext templateContext,
+        public override LiquidExpressionResult Accept(ITemplateContext templateContext,
             IEnumerable<Option<ILiquidValue>> expressions)
         {
-            var expressionList = expressions.ToList();
-            if (expressionList.Any(x => !x.HasValue))
-            {
-                return LiquidExpressionResult.Success(new LiquidBoolean(false));
-            }
-            return LiquidExpressionResult.Success(ComparisonExpressions.Compare(expressionList[0].Value, expressionList[1].Value, (x, y) => x <= y));
+            return LiquidExpressionVisitor.Visit(this, expressions);
         }
     }
 
     public class GreaterThanOrEqualsExpression : ExpressionDescription
     {
-        public override LiquidExpressionResult Eval(ITemplateContext templateContext,
+        public override LiquidExpressionResult Accept(ITemplateContext templateContext,
             IEnumerable<Option<ILiquidValue>> expressions)
         {
-            var expressionList = expressions.ToList();
-            if (expressionList.Any(x => !x.HasValue))
-            {
-                return LiquidExpressionResult.Success(new LiquidBoolean(false));
-            }
-            return LiquidExpressionResult.Success(ComparisonExpressions.Compare(expressionList[0].Value, expressionList[1].Value, (x, y) => x >= y));
+            return LiquidExpressionVisitor.Visit(this, expressions);
         }
     }
 
     public class LessThanExpression : ExpressionDescription
     {
 
-        public override LiquidExpressionResult Eval(ITemplateContext templateContext,
+        public override LiquidExpressionResult Accept(ITemplateContext templateContext,
             IEnumerable<Option<ILiquidValue>> expressions)
         {
-            var expressionList = expressions.ToList();
-            if (expressionList.Any(x => !x.HasValue))
-            {
-                return LiquidExpressionResult.Success(new LiquidBoolean(false));
-            }
-            
-            var val1 = expressionList[0].Value;
-            var val2 = expressionList[1].Value;
-            return LiquidExpressionResult.Success(ComparisonExpressions.Compare(val1, val2, (x, y) => x < y));
+            return LiquidExpressionVisitor.Visit(this, expressions);
         }
     }
 

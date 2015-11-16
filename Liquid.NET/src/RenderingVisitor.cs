@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 using Liquid.NET.Constants;
+using Liquid.NET.Expressions;
 using Liquid.NET.Rendering;
 using Liquid.NET.Symbols;
 using Liquid.NET.Tags;
@@ -297,7 +298,7 @@ namespace Liquid.NET
                 // is preventing me from easily refactoring it.
                 var origErrorWhenEvalMissing = ctx.Options.ErrorWhenValueMissing;
                 ctx.Options.ErrorWhenValueMissing = true;
-                var obj = assignTag.VarIndices.PartialEval(ctx, new List<Option<ILiquidValue>>());
+                var obj = LiquidExpressionVisitor.Visit(assignTag.VarIndices, ctx, new List<Option<ILiquidValue>>());
                 //Console.WriteLine("Received "+obj.LiquidExpressionResult + " success = "+obj.LiquidExpressionResult.IsSuccess);
                 //Console.WriteLine("  var " + obj.LastValue);
                 //Console.WriteLine("  index " + obj.Index);

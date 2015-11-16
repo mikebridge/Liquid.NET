@@ -13,20 +13,9 @@ namespace Liquid.NET.Expressions
 //            expressionDescriptionVisitor.Visit(this);
 //        }
 
-        public override LiquidExpressionResult Eval(ITemplateContext templateContext, IEnumerable<Option<ILiquidValue>> expressions)
+        public override LiquidExpressionResult Accept(ITemplateContext templateContext, IEnumerable<Option<ILiquidValue>> expressions)
         {
-            //Console.WriteLine("** ISEMPTY EXPRESSION");
-            var list = expressions.ToList();
-            if (list.Count != 1)
-            {
-                return LiquidExpressionResult.Error("Expected one variable to compare with \"empty\"");
-            }
-            if (!list[0].HasValue)
-            {
-                return LiquidExpressionResult.Success(new LiquidBoolean(true)); // nulls are empty.
-            }
-            return LiquidExpressionResult.Success(new LiquidBoolean(EmptyChecker.IsEmpty(list[0].Value)));
+            return LiquidExpressionVisitor.Visit(this, expressions);
         }
-        
     }
 }

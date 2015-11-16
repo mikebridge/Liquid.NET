@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Remoting;
+
 using Liquid.NET.Constants;
 using Liquid.NET.Filters;
 using Liquid.NET.Utils;
+
 using NUnit.Framework;
 
 namespace Liquid.NET.Tests.Examples
@@ -235,6 +236,31 @@ namespace Liquid.NET.Tests.Examples
             Assert.That(result, Is.EqualTo("<div>Hello World</div>"));
             
         }
+
+        [Test]
+        public void Test_Map_And_Join()
+        {
+            // it'd be nice to have a simpler syntax for this.
+            ITemplateContext ctx = new TemplateContext()
+                .WithAllFilters()
+                .DefineLocalVariable("items", new LiquidCollection
+            {
+                new LiquidHash{{"first", "First 1".ToLiquid()}, {"second","Second 1".ToLiquid()}, {"full","First 1 Second 1".ToLiquid()}},
+                new LiquidHash{{"first", "First 2".ToLiquid()}, {"second","Second 2".ToLiquid()}, {"full","First 2 Second 2".ToLiquid()}},
+            });
+            var parsingResult1 = LiquidTemplate.Create("{{ items | map: \"full\" | join: \",\"}}");
+            var parsingResult2 = LiquidTemplate.Create("{% for item in items %}{% if forloop.first == false %},{% endif %}{{ item.first }} {{ item.second }}{% endfor %}");
+
+            var renderingResult1 = parsingResult1.LiquidTemplate.Render(ctx);
+            var renderingResult2 = parsingResult2.LiquidTemplate.Render(ctx);
+
+            Console.WriteLine(renderingResult1.Result);
+            Console.WriteLine(renderingResult2.Result);
+            Assert.That(renderingResult1.Result, Is.StringContaining("First 1 Second 1,First 2 Second 2"));
+            Assert.That(renderingResult2.Result, Is.StringContaining("First 1 Second 1,First 2 Second 2"));
+            Assert.That(renderingResult2.Result, Is.EqualTo(renderingResult1.Result));
+        }
+
 
 //        [Test]
 //        public void It_Should_Throw_An_Error()

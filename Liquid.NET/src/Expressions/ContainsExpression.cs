@@ -9,61 +9,35 @@ namespace Liquid.NET.Expressions
     public class ContainsExpression :ExpressionDescription
     {
 
-        public override LiquidExpressionResult Eval(ITemplateContext templateContext, IEnumerable<Option<ILiquidValue>> expressions)
+        public override LiquidExpressionResult Accept(ITemplateContext templateContext, IEnumerable<Option<ILiquidValue>> expressions)
         {
-            IList<Option<ILiquidValue>> exprList = expressions.ToList();
-            if (exprList.Count != 2)
-            {
-                return LiquidExpressionResult.Error("Contains is a binary expression but received " + exprList.Count + "."); 
-            }
-            if (!exprList[0].HasValue || !exprList[1].HasValue)
-            {
-                return LiquidExpressionResult.Success(new LiquidBoolean(false));
-            }
-
-            //return Contains((dynamic) exprList[0].Value, exprList[1].Value);
-            var arr = exprList[0].Value as LiquidCollection;
-            if (arr != null)
-            {
-                return Contains(arr, exprList[1].Value);
-            }
-            var dict = exprList[0].Value as LiquidHash;
-            if (dict != null)
-            {
-                return Contains(dict, exprList[1].Value);
-            }
-            var str = exprList[0].Value as LiquidString;
-            if (str != null)
-            {
-                return Contains(str, exprList[1].Value);
-            }
-            return Contains(exprList[0].Value, exprList[1].Value);
+            return LiquidExpressionVisitor.Visit(this, expressions);
         }
 
         // ReSharper disable UnusedParameter.Local
-        private LiquidExpressionResult Contains(ILiquidValue expr, ILiquidValue liquidValue)
+        public LiquidExpressionResult Contains(ILiquidValue expr, ILiquidValue liquidValue)
         // ReSharper restore UnusedParameter.Local
         {
-            return LiquidExpressionResult.Error("Unable to use 'contains' on this type."); 
+            return LiquidExpressionResult.Error(String.Format("Unable to use 'contains' on a {0}.", expr.LiquidTypeName)); 
         }
 
-        private LiquidExpressionResult Contains(LiquidString liquidString, ILiquidValue liquidValue)
+        public LiquidExpressionResult Contains(LiquidString liquidString, ILiquidValue liquidValue)
         {
             String s = ValueCaster.RenderAsString(liquidValue);
             return LiquidExpressionResult.Success(liquidString.StringVal.Contains(s) ? new LiquidBoolean(true) : new LiquidBoolean(false));
         }
 
-        private LiquidExpressionResult Contains(LiquidCollection liquidCollection, ILiquidValue liquidValue)
+        public LiquidExpressionResult Contains(LiquidCollection liquidCollection, ILiquidValue liquidValue)
         {
             return LiquidExpressionResult.Success(new LiquidBoolean(liquidCollection.Any(IsEqual(liquidValue))));
         }
 
-        private LiquidExpressionResult Contains(LiquidHash dictValue, ILiquidValue liquidValue)
+        public LiquidExpressionResult Contains(LiquidHash dictValue, ILiquidValue liquidValue)
         {
             return LiquidExpressionResult.Success(new LiquidBoolean(dictValue.Keys.Any(x => x.Equals(liquidValue.Value))));
         }
 
-        private static Func<Option<ILiquidValue>, bool> IsEqual(ILiquidValue liquidValue)
+        public static Func<Option<ILiquidValue>, bool> IsEqual(ILiquidValue liquidValue)
         {            
             return x =>
             {

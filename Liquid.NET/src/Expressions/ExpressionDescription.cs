@@ -11,8 +11,7 @@ namespace Liquid.NET.Expressions
 //            throw new NotImplementedException();
 //        }
 
-        // TODO: Move this out of here.  This should be on the Evaluator class, not in the AST.
-        public abstract LiquidExpressionResult Eval(
+        public abstract LiquidExpressionResult Accept(
             ITemplateContext templateContext,
             IEnumerable<Option<ILiquidValue>> expressions);
 

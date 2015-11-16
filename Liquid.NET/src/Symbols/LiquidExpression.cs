@@ -3,7 +3,9 @@ using Liquid.NET.Expressions;
 
 namespace Liquid.NET.Symbols
 {
-
+    /// <summary>
+    ///  TODO: Make this an IExpressionDescription
+    /// </summary>
     public class LiquidExpression
     {
 

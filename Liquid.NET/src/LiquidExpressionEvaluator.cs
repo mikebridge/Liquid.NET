@@ -1,18 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using Liquid.NET.Constants;
+using Liquid.NET.Expressions;
 using Liquid.NET.Filters;
 using Liquid.NET.Symbols;
 using Liquid.NET.Utils;
 
-//using ExpressionResult = Liquid.NET.Utils.Either<Liquid.NET.LiquidError, Liquid.NET.Utils.Option<Liquid.NET.Constants.ILiquidValue>>;
-
 namespace Liquid.NET
 {
-    // Take an AST Expression and turn it into something
-    // that can be evaluated
     public static class LiquidExpressionEvaluator
     {
         
@@ -43,15 +39,18 @@ namespace Liquid.NET
             return Eval(expressiontree.ExpressionTree.Data, leaves.Select(x => x.SuccessResult), templateContext);
         }
 
-        public static LiquidExpressionResult Eval(
+        private static LiquidExpressionResult Eval(
             LiquidExpression expression,
             IEnumerable<Option<ILiquidValue>> leaves, 
             ITemplateContext templateContext)
         {
+
+            var visitor = new LiquidExpressionVisitor(templateContext);
+            
             // calculate the first part of the expression
             var objResult = expression.Expression == null ? 
                 LiquidExpressionResult.Success(new None<ILiquidValue>()) : 
-                expression.Expression.Eval(templateContext, leaves);
+                expression.Expression.Accept(templateContext, leaves);
 
             if (objResult.IsError)
             {

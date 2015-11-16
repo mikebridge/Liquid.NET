@@ -6,9 +6,8 @@ namespace Liquid.NET.Expressions
 {
     public interface IExpressionDescription
     {
-        //void Accept(IExpressionDescriptionVisitor expressionDescriptionVisitor);
-
-        LiquidExpressionResult Eval(ITemplateContext symbolTableStack, IEnumerable<Option<ILiquidValue>> childresults);
+        // TODO: This is in the process of being refactored into the visitor pattern.  It's not there yet.
+        LiquidExpressionResult Accept(ITemplateContext symbolTableStack, IEnumerable<Option<ILiquidValue>> childresults);
 
     }
 }

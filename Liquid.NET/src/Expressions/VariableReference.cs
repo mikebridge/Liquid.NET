@@ -16,24 +16,9 @@ namespace Liquid.NET.Expressions
             Name = name;
         }
 
-        public override LiquidExpressionResult Eval(ITemplateContext templateContext, IEnumerable<Option<ILiquidValue>> childresults)
+        public override LiquidExpressionResult Accept(ITemplateContext templateContext, IEnumerable<Option<ILiquidValue>> childresults)
         {
-            var lookupResult= templateContext.SymbolTableStack.Reference(Name);
-            return lookupResult.IsSuccess ? 
-                lookupResult :
-                ErrorOrNone(templateContext, lookupResult);
-        }
-
-        private LiquidExpressionResult ErrorOrNone(ITemplateContext templateContext, LiquidExpressionResult failureResult)
-        {
-            if (templateContext.Options.ErrorWhenValueMissing)
-            {
-                return failureResult;
-            }
-            else
-            {
-                return LiquidExpressionResult.Success(new None<ILiquidValue>());
-            }
+            return LiquidExpressionVisitor.Visit(this, templateContext);
         }
     }
 }

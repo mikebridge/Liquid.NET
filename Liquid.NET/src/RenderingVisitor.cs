@@ -2,7 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-
+using System.Web.UI.WebControls;
 using Liquid.NET.Constants;
 using Liquid.NET.Expressions;
 using Liquid.NET.Rendering;
@@ -79,6 +79,8 @@ namespace Liquid.NET
             var macroDescription = _templateContext.SymbolTableStack.LookupMacro(customTag.TagName);
             if (macroDescription != null)
             {
+                throw new ApplicationException("Failure");
+                /*
                 var evalResults =
                     customTag.LiquidExpressionTrees.Select(x => LiquidExpressionEvaluator.Eval(x, _templateContext)).ToList();
                 if (evalResults.Any(x => x.IsError))
@@ -93,6 +95,7 @@ namespace Liquid.NET
                 }
                 AppendTextToCurrentAccumulator(RenderMacro(macroDescription, evalResults.Select(x => x.SuccessResult)));
                 return;
+                 */
             }
 
             var err = new LiquidError{Message ="Liquid syntax error: Unknown tag '" + customTag.TagName + "'"};
@@ -239,8 +242,9 @@ namespace Liquid.NET
             int currentIndex;
             // Create a like dictionary key entry to keep track of this declaration.  THis takes the variable
             // names (not the eval-ed variables) or literals and concatenates them together.
-            var key = "cycle_" + groupName + "_" + String.Join("|", cycleTag.CycleList.Select(x => x.Data.Expression.ToString()));
-            
+            //var key = "cycle_" + groupName + "_" + String.Join("|", cycleTag.CycleList.Select(x => x.Data.Expression.ToString()));
+            var key = "cycle_" + groupName + "_" + String.Join("|", cycleTag.CycleList.Select(x => x.Data.ToString())); // er, what is the equiv to toString
+            throw new ApplicationException("FIX THIS");
 
             while (true)
             {
@@ -266,8 +270,8 @@ namespace Liquid.NET
 
         public void Visit(AssignTag assignTag)
         {
-
-            LiquidExpressionEvaluator.Eval(assignTag.LiquidExpressionTree, _templateContext)
+            new LiquidExpressionVisitor(_templateContext).Traverse(assignTag.LiquidExpressionTree).Result
+            //LiquidExpressionEvaluator.Eval(assignTag.LiquidExpressionTree, _templateContext)
                 .WhenSuccess(x => AssignVariable(_templateContext, assignTag, x))
                 .WhenError(RegisterRenderingError);
 
@@ -445,9 +449,10 @@ namespace Liquid.NET
 
             // find the first place where the expression tree evaluates to true (i.e. which of the if/elsif/else clauses)
             // This ignores "eval" errors in clauses.
-
             var match = ifThenElseBlockTag.IfElseClauses.FirstOrDefault(
-                                expr => LiquidExpressionResultIsTrue(LiquidExpressionEvaluator.Eval(expr.LiquidExpressionTree, _templateContext)));
+                                expr => LiquidExpressionResultIsTrue(new LiquidExpressionVisitor(_templateContext).Traverse(expr.LiquidExpressionTree).Result));
+//            var match = ifThenElseBlockTag.IfElseClauses.FirstOrDefault(
+//                                expr => LiquidExpressionResultIsTrue(LiquidExpressionEvaluator.Eval(expr.LiquidExpressionTree, _templateContext)));
             if (match != null)
             {
                 StartWalking(match.LiquidBlock); // then render the contents
@@ -461,7 +466,9 @@ namespace Liquid.NET
 
         public void Visit(CaseWhenElseBlockTag caseWhenElseBlockTag)
         {
-            var valueToMatchResult = LiquidExpressionEvaluator.Eval(caseWhenElseBlockTag.LiquidExpressionTree, _templateContext);
+            var liquidExpressionVisitor = new LiquidExpressionVisitor(_templateContext);
+            var valueToMatchResult = liquidExpressionVisitor.Traverse(caseWhenElseBlockTag.LiquidExpressionTree).Result;
+            //var valueToMatchResult = LiquidExpressionEvaluator.Eval(caseWhenElseBlockTag.LiquidExpressionTree, _templateContext);
             //Console.WriteLine("Value to Match: "+valueToMatch);
             if (valueToMatchResult.IsError)
             {
@@ -479,8 +486,10 @@ namespace Liquid.NET
                         // though it doesn't cast values---probably it should.
 
                         expr.LiquidExpressionTree.Any(val =>
-                            new EasyOptionComparer().Equals(valueToMatchResult.SuccessResult,
-                                        LiquidExpressionEvaluator.Eval(val, _templateContext).SuccessResult)));
+                            (new EasyOptionComparer()).Equals(valueToMatchResult.SuccessResult,
+                                liquidExpressionVisitor.Traverse(val).Result))
+                                        //LiquidExpressionEvaluator.Eval(val, _templateContext).SuccessResult))
+            );
 
 
             if (match != null) // found match
@@ -537,6 +546,8 @@ namespace Liquid.NET
 
         public void Visit(LiquidExpressionTree liquidExpressionTree)
         {
+            throw new ApplicationException("FIX THIS");
+            /*
             var result = LiquidExpressionEvaluator.Eval(liquidExpressionTree, _templateContext);
 
             result.WhenSuccess(success => success.WhenSome(x => AppendTextToCurrentAccumulator(Render(x))))
@@ -546,6 +557,7 @@ namespace Liquid.NET
                     //RenderingErrors.Add(error);
                     //RenderError(error);
                 });
+             */
         }
 
         public String Render(ILiquidValue result)
@@ -554,7 +566,7 @@ namespace Liquid.NET
         }
 
         public void EvalExpressions(
-            IEnumerable<TreeNode<LiquidExpression>> expressionTrees,
+            IEnumerable<TreeNode<IExpressionDescription>> expressionTrees,
             Action<IEnumerable<Option<ILiquidValue>>> successAction = null,
             Action<IEnumerable<LiquidError>> failureAction = null)
         {

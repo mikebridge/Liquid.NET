@@ -21,9 +21,9 @@ namespace Liquid.NET.Tags
             visitor.Visit(this);
         }
 
-        public TreeNode<LiquidExpression> Limit { get; set; }
+        public TreeNode<IExpressionDescription> Limit { get; set; }
 
-        public TreeNode<LiquidExpression> Offset { get; set; } // zero-indexed
+        public TreeNode<IExpressionDescription> Offset { get; set; } // zero-indexed
 
         public LiquidBoolean Reversed { get; set; }
 

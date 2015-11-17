@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Liquid.NET.Expressions;
 using Liquid.NET.Symbols;
 using Liquid.NET.Utils;
 
@@ -8,18 +9,18 @@ namespace Liquid.NET.Tags
     {
         public CycleTag()
         {
-            CycleList = new List<TreeNode<LiquidExpression>>();
+            CycleList = new List<TreeNode<IExpressionDescription>>();
         }
         //public IList<ILiquidValue> CycleList = new List<ILiquidValue>();
-        public  IList<TreeNode<LiquidExpression>> CycleList { get; set; }
+        public IList<TreeNode<IExpressionDescription>> CycleList { get; set; }
 
         //public String Group = "";
-        public TreeNode<LiquidExpression> GroupNameExpressionTree { get; set; }
+        public TreeNode<IExpressionDescription> GroupNameExpressionTree { get; set; }
 
         public int Length { get { return CycleList.Count; } }
         //private int _index = 0;
 
-        public TreeNode<LiquidExpression> ElementAt(int index)
+        public TreeNode<IExpressionDescription> ElementAt(int index)
         {
            return CycleList[index];
 

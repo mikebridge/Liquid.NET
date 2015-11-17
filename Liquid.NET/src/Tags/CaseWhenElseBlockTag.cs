@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Liquid.NET.Expressions;
 using Liquid.NET.Symbols;
 using Liquid.NET.Utils;
 
@@ -33,7 +34,7 @@ namespace Liquid.NET.Tags
         /// TODO: think of a better name for this.  "Thing to match case
         /// results to".
         /// </summary>
-        public TreeNode<LiquidExpression> LiquidExpressionTree { get; set; }
+        public TreeNode<IExpressionDescription> LiquidExpressionTree { get; set; }
 
         public bool HasElseClause
         {
@@ -48,7 +49,7 @@ namespace Liquid.NET.Tags
 
             // The expressions to evaluate.  One should match (e.g. when A or B or C")
             //public TreeNode<LiquidExpression> LiquidExpressionTree { get; set; }
-            public readonly IList<TreeNode<LiquidExpression>> LiquidExpressionTree = new List<TreeNode<LiquidExpression>>();
+            public readonly IList<TreeNode<IExpressionDescription>> LiquidExpressionTree = new List<TreeNode<IExpressionDescription>>();
 
         }
 

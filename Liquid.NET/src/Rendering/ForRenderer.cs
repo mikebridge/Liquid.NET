@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Liquid.NET.Constants;
+using Liquid.NET.Expressions;
 using Liquid.NET.Symbols;
 using Liquid.NET.Tags;
 using Liquid.NET.Utils;
@@ -56,7 +57,8 @@ namespace Liquid.NET.Rendering
             }
             if (forBlockTag.Offset != null)
             {
-                var result = LiquidExpressionEvaluator.Eval(forBlockTag.Offset, templateContext);
+                //var result = LiquidExpressionEvaluator.Eval(forBlockTag.Offset, templateContext);
+                var result = new LiquidExpressionVisitor(templateContext).Traverse(forBlockTag.Offset).Result;
                 if (result.IsSuccess)
                 {
                     offset = result.SuccessValue<LiquidNumeric>();
@@ -64,7 +66,8 @@ namespace Liquid.NET.Rendering
             }
             if (forBlockTag.Limit != null)
             {
-                var result = LiquidExpressionEvaluator.Eval(forBlockTag.Limit, templateContext);
+                //var result = LiquidExpressionEvaluator.Eval(forBlockTag.Limit, templateContext);
+                var result = new LiquidExpressionVisitor(templateContext).Traverse(forBlockTag.Limit).Result;
                 if (result.IsSuccess)
                 {
                     limit = result.SuccessValue<LiquidNumeric>();

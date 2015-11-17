@@ -16,11 +16,12 @@ namespace Liquid.NET.Tests.Expressions
             var boolTrue = new LiquidBoolean(true);
             var expr = new NotExpression();
 
-            // Act
-            var result = expr.Accept(new TemplateContext(), new List<Option<ILiquidValue>>{boolTrue}).SuccessValue<LiquidBoolean>();
-
-            // Assert
-            Assert.That(result.Value, Is.False);
+            Assert.Fail("FIx this");
+//            // Act
+//            var result = expr.Accept(new TemplateContext(), new List<Option<ILiquidValue>>{boolTrue}).SuccessValue<LiquidBoolean>();
+//
+//            // Assert
+//            Assert.That(result.Value, Is.False);
 
         }
 
@@ -32,13 +33,14 @@ namespace Liquid.NET.Tests.Expressions
             var expr = new NotExpression();
 
             // Act
-            var result = expr.Accept(new TemplateContext(), new List<Option<ILiquidValue>>
-            {
-                new LiquidBoolean(true),
-                new LiquidBoolean(false),
-            });
-
-            Assert.That(result.IsError);
+            Assert.Fail("FIx this");
+//            var result = expr.Accept(new TemplateContext(), new List<Option<ILiquidValue>>
+//            {
+//                new LiquidBoolean(true),
+//                new LiquidBoolean(false),
+//            });
+//
+//            Assert.That(result.IsError);
         }
 
     }

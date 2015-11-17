@@ -22,14 +22,16 @@ namespace Liquid.NET.Tests.Expressions
             var expr = new AndExpression();
 
             // Act
-            var result = expr.Accept(new TemplateContext(), new List<Option<ILiquidValue>>
-            {
-                new LiquidBoolean(expr1),
-                new LiquidBoolean(expr2)
-            }).SuccessValue<LiquidBoolean>().BoolValue;
 
-            // Assert
-            Assert.That(result, Is.EqualTo(expected));
+            Assert.Fail("FIx this");
+//            var result = expr.Accept(new TemplateContext(), new List<Option<ILiquidValue>>
+//            {
+//                new LiquidBoolean(expr1),
+//                new LiquidBoolean(expr2)
+//            }).SuccessValue<LiquidBoolean>().BoolValue;
+//
+//            // Assert
+//            Assert.That(result, Is.EqualTo(expected));
         }
 
         [Test]
@@ -39,15 +41,15 @@ namespace Liquid.NET.Tests.Expressions
             // Arrange
 
             var expr = new AndExpression();
-
+            Assert.Fail("FIx this");
             // Act
             // ReSharper disable once UnusedVariable
-            var result = expr.Accept(new TemplateContext(), new List<Option<ILiquidValue>>
-            {
-                new LiquidBoolean(true),
-                new LiquidBoolean(false),
-                new LiquidBoolean(false)
-            });
+//            var result = expr.Accept(new TemplateContext(), new List<Option<ILiquidValue>>
+//            {
+//                new LiquidBoolean(true),
+//                new LiquidBoolean(false),
+//                new LiquidBoolean(false)
+//            });
         }
 
     }

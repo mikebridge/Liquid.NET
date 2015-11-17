@@ -33,7 +33,8 @@ namespace Liquid.NET.Expressions
         void Visit(OrExpression expr);
         //void Visit(LiquidExpression expr) // TODO: "LiquidExpression" should be "FilterExpression" maybe, then it should implement the same interface.
 
-        
+
+        void Visit(LiquidExpression expr);
     }
 
     /// <summary>
@@ -44,8 +45,8 @@ namespace Liquid.NET.Expressions
     {
         private readonly ITemplateContext _templateContext;
 
-        private readonly Stack<LiquidExpressionResult> _result = new Stack<LiquidExpressionResult>();
-        private readonly Stack<List<LiquidExpressionResult>> _childResults = new Stack<List<LiquidExpressionResult>>();
+        //private readonly Stack<LiquidExpressionResult> _result = new Stack<LiquidExpressionResult>();
+        private readonly Stack<LiquidExpressionResult> _resultStack = new Stack<LiquidExpressionResult>();
 
         public LiquidExpressionVisitor(ITemplateContext templateContext)
         {
@@ -55,30 +56,29 @@ namespace Liquid.NET.Expressions
 
         public LiquidExpressionResult Result
         {
-            get { return _result.Peek(); }
+            get { return _resultStack.Peek(); }
         }
 
         public LiquidExpressionVisitor Traverse(TreeNode<IExpressionDescription> tree)
         {
             //_result.Push(new LiquidExpressionResult())
-            var childResultCollector = new List<LiquidExpressionResult>();
-            _childResults.Push(childResultCollector);
             foreach (var child in tree.Children)
             {
                 // TODO: when this is all cleaned up, this can be removed:
                 //IEnumerable<Option<ILiquidValue>> dummy = new List<Option<ILiquidValue>>();
                 //child.Data.Accept(this, dummy);
-                child.Data.Accept(this);
+                //child.Data.Accept(this);
+                Traverse(child);
             }
+            tree.Data.Accept(this);
             return this;
         }
 
 
 
-
-        public static LiquidExpressionResult Visit(LiquidValue liquidValue)
+        public void Visit(LiquidValue liquidValue)
         {
-            return LiquidExpressionResult.Success(liquidValue);
+            _resultStack.Push(LiquidExpressionResult.Success(liquidValue));
         }
 
         public void Visit(VariableReferenceTree expr)
@@ -166,8 +166,15 @@ namespace Liquid.NET.Expressions
             throw new NotImplementedException();
         }
 
+        public void Visit(LiquidExpression expr)
+        {
+            throw new NotImplementedException();
+        }
+
         public static VariableReferenceTreeEvalResult Visit(VariableReferenceTree variableReferenceTree, ITemplateContext templateContext, IEnumerable<Option<ILiquidValue>> childresults)
         {
+            throw new ApplicationException("FIX THIS");
+            /*
             var errorWhenValueMissing = templateContext.Options.ErrorWhenValueMissing;
 
             var childResultsList = childresults as IList<Option<ILiquidValue>> ?? childresults.ToList();
@@ -213,6 +220,7 @@ namespace Liquid.NET.Expressions
                 indexResult.SuccessResult.Value,
                 errorWhenValueMissing);
             return new VariableReferenceTreeEvalResult(result, valueResult.SuccessResult, indexResult.SuccessResult);
+             */
         }
 
         public static LiquidExpressionResult Visit(VariableReference variableReference, ITemplateContext templateContext)
@@ -391,10 +399,6 @@ namespace Liquid.NET.Expressions
             return LiquidExpressionResult.Success(new LiquidBoolean(exprList.Any(x => x.HasValue && x.Value.IsTrue)));
         }
 
-        void ILiquidExpressionVisitor.Visit(LiquidValue expr)
-        {
-            throw new NotImplementedException();
-        }
 
         public static LiquidExpressionResult Visit(FalseExpression expr)
         {

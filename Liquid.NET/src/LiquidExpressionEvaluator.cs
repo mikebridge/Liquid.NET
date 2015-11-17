@@ -13,18 +13,19 @@ namespace Liquid.NET
     {
         
         public static LiquidExpressionResult Eval(
-            TreeNode<LiquidExpression> expr,
+            TreeNode<IExpressionDescription> tree,
             ITemplateContext templateContext)
         {
             // Evaluate the children, depth first
-            var leaves = expr.Children.Select(x => Eval(x, templateContext)).ToList();
-            if (leaves.Any(x => x != null && x.IsError))
-            {
-                return leaves.First(x => x.IsError); // TODO: maybe aggregate tehse
-            }
-            return Eval(expr.Data, leaves.Select(x => x == null ? new None<ILiquidValue>() : x.SuccessResult), templateContext);
-        }
+//            var leaves = expr.Children.Select(x => Eval(x, templateContext)).ToList();
+//            if (leaves.Any(x => x != null && x.IsError))
+//            {
+//                return leaves.First(x => x.IsError); // TODO: maybe aggregate tehse
+//            }
+            //return Eval(expr.Data, leaves.Select(x => x == null ? new None<ILiquidValue>() : x.SuccessResult), templateContext);
+        //}
 
+        /*
         public static LiquidExpressionResult Eval(
             LiquidExpressionTree expressiontree, 
             ITemplateContext templateContext)
@@ -38,21 +39,27 @@ namespace Liquid.NET
             // pass the results to the parent
             return Eval(expressiontree.ExpressionTree.Data, leaves.Select(x => x.SuccessResult), templateContext);
         }
-
-        private static LiquidExpressionResult Eval(
-            LiquidExpression expression,
-            IEnumerable<Option<ILiquidValue>> leaves, 
-            ITemplateContext templateContext)
-        {
+        */
+        //private static LiquidExpressionResult Eval(
+        //    LiquidExpression expression,
+        //    IEnumerable<Option<ILiquidValue>> leaves, 
+        //    ITemplateContext templateContext)
+        //{
 
             var visitor = new LiquidExpressionVisitor(templateContext);
             
             // calculate the first part of the expression
-            var objResult = expression.Expression == null ? 
-                LiquidExpressionResult.Success(new None<ILiquidValue>()) : 
-                //expression.Expression.Accept(templateContext, leaves);
-                expression.Expression.Accept(templateContext, leaves);
-
+            if (tree == null)
+            {
+                return LiquidExpressionResult.Success(new None<ILiquidValue>());
+            }
+//            if (expression.Expression == null)
+//            {
+//                return LiquidExpressionResult.Success(new None<ILiquidValue>());
+//            } 
+             //expression.Expression.Accept(templateContext, leaves);
+            //     expression.Expression.Accept(visitor);
+            var objResult = visitor.Traverse(tree).Result;
             if (objResult.IsError)
             {
                 return objResult;
@@ -105,7 +112,10 @@ namespace Liquid.NET
 //            {
 //                return null;
 //            }
-            var expressionConstants = filterSymbol.Args.Select(x => Eval(x, templateContext)).ToList();
+            var visitor = new LiquidExpressionVisitor(templateContext);
+            var expressionConstants = filterSymbol.Args.Select(expr => visitor.Traverse(expr).Result).ToList();
+
+            //var expressionConstants = filterSymbol.Args.Select(x => Eval(x, templateContext)).ToList();
 
             if (expressionConstants.Any(x => x.IsError))
             {

@@ -467,7 +467,7 @@ namespace Liquid.NET
                     //LiquidExpression expr = new LiquidExpression();  // create the holding expression
                     StartCapturingVariable(
                         context.for_param_limit().variable(),
-                        x => forBlock.Limit = new TreeNode<LiquidExpression>(new LiquidExpression {Expression = x}));
+                        x => forBlock.Limit = new TreeNode<IExpressionDescription>(new LiquidExpression { Expression = x }));
 
 
                     //StartNewLiquidExpressionTree(x => forBlock.Limit = x);
@@ -488,7 +488,7 @@ namespace Liquid.NET
                 {
                     StartCapturingVariable(
                         context.for_param_offset().variable(),
-                        x => forBlock.Offset = new TreeNode<LiquidExpression>(new LiquidExpression { Expression = x }));
+                        x => forBlock.Offset = new TreeNode<IExpressionDescription>(new LiquidExpression { Expression = x }));
                     //StartNewLiquidExpressionTree(x => forBlock.Offset = x);
                     //StartCapturingVariable(context.for_param_offset().variable());
                     //MarkCurrentExpressionComplete();
@@ -528,7 +528,7 @@ namespace Liquid.NET
                 //StartCapturingVariable(context.variable()); // marked complete in ExitFor_iterable.
                 StartCapturingVariable(
                     context.variable(),
-                    x => forBlock.IterableCreator = new ArrayValueCreator(new TreeNode<LiquidExpression>(new LiquidExpression { Expression = x })));
+                    x => forBlock.IterableCreator = new ArrayValueCreator(new TreeNode<IExpressionDescription>(new LiquidExpression { Expression = x })));
                 
             }
             else if (context.generator() != null)
@@ -576,7 +576,7 @@ namespace Liquid.NET
             // the ContextBuilder.  otherwise, let the Generator 
             //Log("___ ENTER Generator Index " + context.GetText());
 
-            Action<TreeNode<LiquidExpression>> setCurrentExpression;
+            Action<TreeNode<IExpressionDescription>> setCurrentExpression;
             if (CurrentBuilderContext.GeneratorCreator.StartExpression == null)
             {
                 //Log("==== Assiging START Index " + context.variable().GetText() + " to " + x);
@@ -607,7 +607,7 @@ namespace Liquid.NET
             {
                 StartCapturingVariable(
                     context.variable(),
-                    x => setCurrentExpression(new TreeNode<LiquidExpression>(new LiquidExpression { Expression = x })));
+                    x => setCurrentExpression(new TreeNode<IExpressionDescription>(new LiquidExpression { Expression = x })));
 
 //                StartNewLiquidExpressionTree(x =>
 //                {
@@ -647,7 +647,7 @@ namespace Liquid.NET
         public override void EnterCycle_tag(LiquidParser.Cycle_tagContext context)
         {
             base.EnterCycle_tag(context);
-            var cycleList = new List<TreeNode<LiquidExpression>>();
+            var cycleList = new List<TreeNode<IExpressionDescription>>();
             Stack<Action> varsToCapture = new Stack<Action>();
             foreach (var obj in context.cycle_value())
             {
@@ -669,7 +669,7 @@ namespace Liquid.NET
                     //Log("Start Parsing CycleTag.cycle_list Variable...");
                     // Performing without an explicit "CLOSE"
                     LiquidExpression expr = new LiquidExpression();  // create the holding expression
-                    cycleList.Add(new TreeNode<LiquidExpression>(expr)); // add the (currently empty) expression to the list of vals
+                    cycleList.Add(new TreeNode<IExpressionDescription>(expr)); // add the (currently empty) expression to the list of vals
                     var obj1 = obj; // avoid weird closure issue
                     varsToCapture.Push(() => // push onto a stack, later to be eval-ed in reverse order.
                         StartCapturingVariable(
@@ -709,7 +709,7 @@ namespace Liquid.NET
                     //Log("Start Parsing CycleTag.cycle_group Variable...");
                     StartCapturingVariable(
                         context.cycle_group().variable(),
-                            x => cycleTag.GroupNameExpressionTree = new TreeNode<LiquidExpression>(new LiquidExpression { Expression = x }));
+                            x => cycleTag.GroupNameExpressionTree = new TreeNode<IExpressionDescription>(new LiquidExpression { Expression = x }));
                     //StartNewLiquidExpressionTree(x => cycleTag.GroupNameExpressionTree = x);
                     //StartCapturingVariable(context.cycle_group().variable()); // marked complete in ExitCycle_Tag
                     
@@ -762,7 +762,7 @@ namespace Liquid.NET
                 {
                     StartCapturingVariable(
                         context.tablerow_cols().variable(),
-                        x => tableRowBlock.Cols = new TreeNode<LiquidExpression>(new LiquidExpression { Expression = x }));
+                        x => tableRowBlock.Cols = new TreeNode<IExpressionDescription>(new LiquidExpression { Expression = x }));
 
                     //StartNewLiquidExpressionTree(x => tableRowBlock.Cols = x);
                     //StartCapturingVariable(context.for_param_limit().variable());
@@ -780,7 +780,7 @@ namespace Liquid.NET
                 {
                     StartCapturingVariable(
                         context.for_param_limit().variable(),
-                        x => tableRowBlock.Limit  = new TreeNode<LiquidExpression>(new LiquidExpression { Expression = x }));
+                        x => tableRowBlock.Limit = new TreeNode<IExpressionDescription>(new LiquidExpression { Expression = x }));
 
                     //StartNewLiquidExpressionTree(x => tableRowBlock.Limit = x);
                     //StartCapturingVariable(context.for_param_limit().variable());
@@ -798,7 +798,7 @@ namespace Liquid.NET
                 {
                     StartCapturingVariable(
                         context.for_param_offset().variable(),
-                        x => tableRowBlock.Offset  = new TreeNode<LiquidExpression>(new LiquidExpression { Expression = x }));
+                        x => tableRowBlock.Offset = new TreeNode<IExpressionDescription>(new LiquidExpression { Expression = x }));
                     //StartNewLiquidExpressionTree(x => tableRowBlock.Offset = x);
                     //StartCapturingVariable(context.for_param_offset().variable());
                     //MarkCurrentExpressionComplete();
@@ -822,7 +822,7 @@ namespace Liquid.NET
                 //Log("  +++ FOUND a VARIABLE ");
                 StartCapturingVariable(
                     context.variable(),
-                    x => tableRowBlock.IterableCreator = new ArrayValueCreator(new TreeNode<LiquidExpression>(new LiquidExpression { Expression = x })));
+                    x => tableRowBlock.IterableCreator = new ArrayValueCreator(new TreeNode<IExpressionDescription>(new LiquidExpression { Expression = x })));
 
 //                StartNewLiquidExpressionTree(result =>
 //                {
@@ -987,7 +987,7 @@ namespace Liquid.NET
             var unlessBlock = CurrentBuilderContext.IfThenElseBlockStack.Pop();
 
             LiquidExpression liquidExpression = new LiquidExpression { Expression = new NotExpression() };
-            var newRoot = new TreeNode<LiquidExpression>(liquidExpression);
+            var newRoot = new TreeNode<IExpressionDescription>(liquidExpression);
             newRoot.AddChild(unlessBlock.IfElseClauses[0].LiquidExpressionTree);
             unlessBlock.IfElseClauses[0].LiquidExpressionTree = newRoot;
             EndIfClause();
@@ -1131,7 +1131,7 @@ namespace Liquid.NET
             CurrentAstNode.AddChild(CreateTreeNode<IASTNode>(decrementTag));
         }
 
-        private void StartNewLiquidExpressionTree(Action<TreeNode<LiquidExpression>> setExpression)
+        private void StartNewLiquidExpressionTree(Action<TreeNode<IExpressionDescription>> setExpression)
         {
             CurrentBuilderContext.LiquidExpressionBuilder = new LiquidExpressionTreeBuilder();            
             CurrentBuilderContext.LiquidExpressionBuilder.ExpressionCompleteEvent += new OnExpressionCompleteEventHandler(setExpression);
@@ -1443,9 +1443,9 @@ namespace Liquid.NET
             CurrentBuilderContext.LiquidExpressionBuilder.StartLiquidExpression(symbol);
         }
 
-        private static TreeNode<LiquidExpression> CreateObjectSimpleExpressionNode(IExpressionDescription expressionDescription)
+        private static TreeNode<IExpressionDescription> CreateObjectSimpleExpressionNode(IExpressionDescription expressionDescription)
         {
-            return new TreeNode<LiquidExpression>(new LiquidExpression { Expression = expressionDescription });
+            return new TreeNode<IExpressionDescription>(new LiquidExpression { Expression = expressionDescription });
         }
 
 
@@ -1611,7 +1611,7 @@ namespace Liquid.NET
             StartCapturingVariable(
                 context.variable(),
                     x => CurrentBuilderContext.LiquidExpressionBuilder.AddFilterArgToLastExpressionsFilter(
-                      new TreeNode<LiquidExpression>(new LiquidExpression { Expression = x })));                
+                      new TreeNode<IExpressionDescription>(new LiquidExpression { Expression = x })));                
         }
 
         /// <summary>

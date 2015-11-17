@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Liquid.NET.Constants;
+using Liquid.NET.Expressions;
 using Liquid.NET.Symbols;
 using Liquid.NET.Tags;
 using Liquid.NET.Utils;
@@ -24,7 +25,8 @@ namespace Liquid.NET.Rendering
             var cols = LiquidNumeric.Create(5); // TODO: What is the default? https://github.com/Shopify/liquid/blob/master/lib/liquid/tags/table_row.rb
             if (tableRowBlockTag.Offset != null)
             {
-                var result = LiquidExpressionEvaluator.Eval(tableRowBlockTag.Offset, templateContext);
+                var result = new LiquidExpressionVisitor(templateContext).Traverse(tableRowBlockTag.Offset).Result;
+                //var result = LiquidExpressionEvaluator.Eval(tableRowBlockTag.Offset, templateContext);
                 if (result.IsSuccess)
                 {
                     offset = result.SuccessValue<LiquidNumeric>();
@@ -32,7 +34,8 @@ namespace Liquid.NET.Rendering
             }
             if (tableRowBlockTag.Limit != null)
             {
-                var result = LiquidExpressionEvaluator.Eval(tableRowBlockTag.Limit, templateContext);
+                var result = new LiquidExpressionVisitor(templateContext).Traverse(tableRowBlockTag.Limit).Result;
+                //var result = LiquidExpressionEvaluator.Eval(tableRowBlockTag.Limit, templateContext);
                 if (result.IsSuccess)
                 {
                     limit = result.SuccessValue<LiquidNumeric>();

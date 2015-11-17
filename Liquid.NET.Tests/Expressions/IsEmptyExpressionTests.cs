@@ -110,12 +110,13 @@ namespace Liquid.NET.Tests.Expressions
             var expr = new IsEmptyExpression();
 
             // Act
-            var result = expr.Accept(new TemplateContext(), new List<Option<ILiquidValue>>
-            {
-                new LiquidBoolean(true),
-                new LiquidBoolean(false)
-            });
-            Assert.That(result.IsError);
+            Assert.Fail("FIx this");
+//            var result = expr.Accept(new TemplateContext(), new List<Option<ILiquidValue>>
+//            {
+//                new LiquidBoolean(true),
+//                new LiquidBoolean(false)
+//            });
+            //Assert.That(result.IsError);
 
         }
 

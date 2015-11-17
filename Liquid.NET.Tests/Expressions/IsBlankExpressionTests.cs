@@ -46,12 +46,13 @@ namespace Liquid.NET.Tests.Expressions
             var expr = new IsBlankExpression();
 
             // Act
-            var result = expr.Accept(new TemplateContext(), new List<Option<ILiquidValue>>
-            {
-                new LiquidBoolean(true),
-                new LiquidBoolean(false)
-            });
-            Assert.That(result.IsError);
+            Assert.Fail("FIx this");
+//            var result = expr.Accept(new TemplateContext(), new List<Option<ILiquidValue>>
+//            {
+//                new LiquidBoolean(true),
+//                new LiquidBoolean(false)
+//            });
+//            Assert.That(result.IsError);
 
         }
 
@@ -62,9 +63,10 @@ namespace Liquid.NET.Tests.Expressions
             var expr = new IsBlankExpression();
 
             // Act
-            var result = expr.Accept(new TemplateContext(), new List<Option<ILiquidValue>>());
-          
-            Assert.That(result.SuccessValue<LiquidBoolean>().BoolValue, Is.True);
+            Assert.Fail("FIx this");
+//            var result = expr.Accept(new TemplateContext(), new List<Option<ILiquidValue>>());
+//          
+//            Assert.That(result.SuccessValue<LiquidBoolean>().BoolValue, Is.True);
 
         }
 

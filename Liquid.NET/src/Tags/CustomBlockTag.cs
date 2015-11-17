@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Liquid.NET.Expressions;
 using Liquid.NET.Symbols;
 using Liquid.NET.Utils;
 
@@ -21,7 +22,7 @@ namespace Liquid.NET.Tags
         public CustomBlockTag(String tagName)
         {
             TagName = tagName;
-            LiquidExpressionTrees = new List<TreeNode<LiquidExpression>>();
+            LiquidExpressionTrees = new List<TreeNode<IExpressionDescription>>();
         }
 
         public void Accept(IASTVisitor visitor)
@@ -29,7 +30,7 @@ namespace Liquid.NET.Tags
             visitor.Visit(this);
         }
 
-        public IList<TreeNode<LiquidExpression>> LiquidExpressionTrees { get; private set; }
+        public IList<TreeNode<IExpressionDescription>> LiquidExpressionTrees { get; private set; }
 
         public TreeNode<IASTNode> LiquidBlock = new TreeNode<IASTNode>(new RootDocumentNode());
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 using Liquid.NET.Constants;
+using Liquid.NET.Expressions;
 using Liquid.NET.Symbols;
 using Liquid.NET.Tags;
 using Liquid.NET.Utils;
@@ -30,9 +31,9 @@ namespace Liquid.NET.Rendering
             }
 
             String virtualFileName = null;
+            new LiquidExpressionVisitor(templateContext).Traverse(includeTag.VirtualFileExpression).Result
 
-
-            LiquidExpressionEvaluator.Eval(includeTag.VirtualFileExpression, templateContext)
+            //LiquidExpressionEvaluator.Eval(includeTag.VirtualFileExpression, templateContext)
                 .WhenError(AddRenderingErrorToResult)
                 .WhenSuccess(result => { virtualFileName = ValueCaster.RenderAsString(result); });
 
@@ -164,8 +165,8 @@ namespace Liquid.NET.Rendering
 
         private static void DefineLocalVariables(
             ITemplateContext templateContext,
-            SymbolTable localBlockScope, 
-            IDictionary<string, TreeNode<LiquidExpression>> definitions)
+            SymbolTable localBlockScope,
+            IDictionary<string, TreeNode<IExpressionDescription>> definitions)
         {
             foreach (var def in definitions)
             {

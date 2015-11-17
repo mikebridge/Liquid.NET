@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Liquid.NET.Expressions;
 using Liquid.NET.Symbols;
 using Liquid.NET.Utils;
 
@@ -11,14 +12,14 @@ namespace Liquid.NET.Tags
         /// <summary>
         /// This will be the reference to a virtual file
         /// </summary>
-        public TreeNode<LiquidExpression> VirtualFileExpression { get; set; }
+        public TreeNode<IExpressionDescription> VirtualFileExpression { get; set; }
 
-        public TreeNode<LiquidExpression> WithExpression { get; set; }
+        public TreeNode<IExpressionDescription> WithExpression { get; set; }
 
-        public TreeNode<LiquidExpression> ForExpression { get; set; }
+        public TreeNode<IExpressionDescription> ForExpression { get; set; }
 
-        public readonly IDictionary<String, TreeNode<LiquidExpression>> Definitions =
-            new Dictionary<string, TreeNode<LiquidExpression>>();
+        public readonly IDictionary<String, TreeNode<IExpressionDescription>> Definitions =
+            new Dictionary<string, TreeNode<IExpressionDescription>>();
 
         public void Accept(IASTVisitor visitor)
         {

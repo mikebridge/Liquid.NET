@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Liquid.NET.Expressions;
 using Liquid.NET.Symbols;
 using Liquid.NET.Utils;
 
@@ -29,7 +30,7 @@ namespace Liquid.NET.Tags
         public TreeNode<IASTNode> LiquidBlock = new TreeNode<IASTNode>(new RootDocumentNode());
 
         // The expression to evaluate
-        public TreeNode<LiquidExpression> LiquidExpressionTree { get; set; }
+        public TreeNode<IExpressionDescription> LiquidExpressionTree { get; set; }
 
     }
 

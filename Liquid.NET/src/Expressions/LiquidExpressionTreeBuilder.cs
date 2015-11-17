@@ -8,7 +8,7 @@ using Liquid.NET.Utils;
 namespace Liquid.NET.Expressions
 {
 
-    public delegate void OnExpressionCompleteEventHandler(TreeNode<LiquidExpression> expressionTree);
+    public delegate void OnExpressionCompleteEventHandler(TreeNode<IExpressionDescription> expressionTree);
 
     public class LiquidExpressionTreeBuilder
     {
@@ -43,7 +43,7 @@ namespace Liquid.NET.Expressions
             _lastExpression.Data.AddFilterSymbol(filter);
         }
 
-        public void AddFilterArgToLastExpressionsFilter(TreeNode<LiquidExpression> filterArg)        
+        public void AddFilterArgToLastExpressionsFilter(TreeNode<IExpressionDescription> filterArg)        
         {
             _lastExpression.Data.FilterSymbols.Last().AddArg(filterArg);
         }
@@ -77,7 +77,7 @@ namespace Liquid.NET.Expressions
             InvokeExpressionCompleteEvent(_lastExpression);
         }
 
-        private void InvokeExpressionCompleteEvent(TreeNode<LiquidExpression> expressionTree)
+        private void InvokeExpressionCompleteEvent(TreeNode<IExpressionDescription> expressionTree)
         {
             OnExpressionCompleteEventHandler handler = ExpressionCompleteEvent;
             if (handler != null)

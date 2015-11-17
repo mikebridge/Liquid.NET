@@ -37,22 +37,23 @@ namespace Liquid.NET.Expressions
 
     public class ArrayValueCreator : IIterableCreator
     {
-        private readonly TreeNode<LiquidExpression> _liquidCollectionExpression;
+        private readonly TreeNode<IExpressionDescription> _liquidCollectionExpression;
 
-        public ArrayValueCreator(TreeNode<LiquidExpression> liquidCollectionExpression)
+        public ArrayValueCreator(TreeNode<IExpressionDescription> liquidCollectionExpression)
         {
             _liquidCollectionExpression = liquidCollectionExpression;
         }
 
         public IEnumerable<ILiquidValue> Eval(ITemplateContext templateContext)
         {
-            var expressionConstant = LiquidExpressionEvaluator.Eval(_liquidCollectionExpression, templateContext);
-
-            if (expressionConstant.IsError || !expressionConstant.SuccessResult.HasValue)
+            
+            //var expressionResult = LiquidExpressionEvaluator.Eval(_liquidCollectionExpression, templateContext);
+            var expressionResult = new LiquidExpressionVisitor(templateContext).Traverse(_liquidCollectionExpression).Result;
+            if (expressionResult.IsError || !expressionResult.SuccessResult.HasValue)
             {
                 return new List<ILiquidValue>();
             }
-            var castResult = ValueCaster.Cast<ILiquidValue, LiquidCollection>(expressionConstant.SuccessResult.Value);
+            var castResult = ValueCaster.Cast<ILiquidValue, LiquidCollection>(expressionResult.SuccessResult.Value);
             if (castResult.IsError)
             {
                 // ??
@@ -67,8 +68,8 @@ namespace Liquid.NET.Expressions
 
     public class GeneratorCreator : IIterableCreator
     {
-        private TreeNode<LiquidExpression> _startExpression;
-        private TreeNode<LiquidExpression> _endExpression;
+        private TreeNode<IExpressionDescription> _startExpression;
+        private TreeNode<IExpressionDescription> _endExpression;
 
 //        public GeneratorCreator(TreeNode<LiquidExpression> start, TreeNode<LiquidExpression> end)
 //        {
@@ -76,13 +77,13 @@ namespace Liquid.NET.Expressions
 //            _endExpression = end;
 //        }
 
-        public TreeNode<LiquidExpression> StartExpression
+        public TreeNode<IExpressionDescription> StartExpression
         {
             get { return _startExpression; }
             set { _startExpression = value; }
         }
 
-        public TreeNode<LiquidExpression> EndExpression
+        public TreeNode<IExpressionDescription> EndExpression
         {
             get { return _endExpression; }
             set { _endExpression = value; }
@@ -108,9 +109,10 @@ namespace Liquid.NET.Expressions
 
         }
 
-        private LiquidNumeric ValueAsNumeric(TreeNode<LiquidExpression> expr, ITemplateContext templateContext)
+        private LiquidNumeric ValueAsNumeric(TreeNode<IExpressionDescription> expr, ITemplateContext templateContext)
         {
-            var liquidExpressionResult = LiquidExpressionEvaluator.Eval(expr, templateContext);
+            //var liquidExpressionResult = LiquidExpressionEvaluator.Eval(expr, templateContext);
+            var liquidExpressionResult = new LiquidExpressionVisitor(templateContext).Traverse(expr).Result;
             if (liquidExpressionResult.IsError)
             {
                 return LiquidNumeric.Create(0);

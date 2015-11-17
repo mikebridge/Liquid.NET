@@ -6,7 +6,7 @@ namespace Liquid.NET.Symbols
     /// <summary>
     ///  TODO: Make this an IExpressionDescription
     /// </summary>
-    public class LiquidExpression
+    public class LiquidExpression : IExpressionDescription
     {
 
         public IExpressionDescription Expression { get; set; }
@@ -21,5 +21,9 @@ namespace Liquid.NET.Symbols
         }
 
 
+        public void Accept(ILiquidExpressionVisitor visitor)
+        {
+            visitor.Visit(this);
+        }
     }
 }

@@ -19,7 +19,7 @@ namespace Liquid.NET.Tags
 
         public VariableReferenceTree VarIndices { get; set; }
 
-        public TreeNode<LiquidExpression> LiquidExpressionTree { get; set; }
+        public TreeNode<IExpressionDescription> LiquidExpressionTree { get; set; }
 
     }
 }

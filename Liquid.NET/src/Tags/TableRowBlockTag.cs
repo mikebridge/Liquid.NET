@@ -7,9 +7,9 @@ namespace Liquid.NET.Tags
 {
     public class TableRowBlockTag : IASTNode
     {
-        public TreeNode<LiquidExpression> Cols;
-        public TreeNode<LiquidExpression> Limit;
-        public TreeNode<LiquidExpression> Offset;
+        public TreeNode<IExpressionDescription> Cols;
+        public TreeNode<IExpressionDescription> Limit;
+        public TreeNode<IExpressionDescription> Offset;
         //public TreeNode<LiquidExpression> Range;
 
         public void Accept(IASTVisitor visitor)

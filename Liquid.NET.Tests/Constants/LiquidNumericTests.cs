@@ -17,10 +17,10 @@ namespace Liquid.NET.Tests.Constants
             var number = LiquidNumeric.Create(123m);
 
             // Act
-            var result = number.Accept(new TemplateContext(), new List<Option<ILiquidValue>>()).SuccessValue<LiquidNumeric>();
-
+            //var result = number.Accept(new TemplateContext(), new List<Option<ILiquidValue>>()).SuccessValue<LiquidNumeric>();
+            Assert.Fail("FIx this");
             // Assert
-            Assert.That(result.Value, Is.EqualTo(123m));
+            //Assert.That(result.Value, Is.EqualTo(123m));
 
         }
 

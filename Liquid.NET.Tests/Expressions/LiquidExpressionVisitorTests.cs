@@ -31,8 +31,9 @@ namespace Liquid.NET.Tests.Expressions
             Console.WriteLine(result);
             Assert.That(result.IsSuccess, Is.True);
             Assert.That(result.SuccessResult.Value, Is.EqualTo(liquidString));
-
-
         }
+
+
+
     }
 }

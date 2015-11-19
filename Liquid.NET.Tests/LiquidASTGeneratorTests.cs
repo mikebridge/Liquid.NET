@@ -80,7 +80,8 @@ namespace Liquid.NET.Tests
             // ReSharper disable once PossibleNullReferenceException
             var liquidExpression = ((LiquidExpressionTree)liquidExpressions.Data);
 
-            Assert.That(liquidExpression.ExpressionTree.Data.FilterSymbols.Count, Is.EqualTo(1));
+            Assert.Fail("FIx This");
+            //Assert.That(liquidExpression.ExpressionTree.Data.FilterSymbols.Count, Is.EqualTo(1));
 
         }
 
@@ -91,12 +92,18 @@ namespace Liquid.NET.Tests
             var ast = CreateAST("Result : {{ 123 | add: 3}}");
 
             // Assert
+            
             var liquidExpressions = FindNodesWithType(ast, typeof (LiquidExpressionTree)).FirstOrDefault();
             Assert.That(liquidExpressions, Is.Not.Null);
+
             // ReSharper disable once PossibleNullReferenceException
             var liquidExpression = (LiquidExpressionTree) liquidExpressions.Data;
+            var exprTree = liquidExpression.ExpressionTree;
+            Console.WriteLine("TREE: "+new PrintingVisitor().Traverse(exprTree));
+
             // ReSharper disable once PossibleNullReferenceException
-            Assert.That(liquidExpression.ExpressionTree.Data.FilterSymbols.FirstOrDefault().Args.Count, Is.EqualTo(1));
+            Assert.Fail("Fix This");
+            //Assert.That(liquidExpression.ExpressionTree.Data.FilterSymbols.FirstOrDefault().Args.Count, Is.EqualTo(1));
 
         }
 
@@ -211,14 +218,14 @@ namespace Liquid.NET.Tests
             var ifTagSymbol = ifThenElseTag.IfElseClauses[0];
             //Assert.That(ifTagSymbol.RootNode.Data, Is.TypeOf<AndExpression>());
             var expressionSymbolTree = ifTagSymbol.LiquidExpressionTree;
-            Assert.That(expressionSymbolTree.Data.Expression, Is.TypeOf<AndExpression>());
+            Assert.That(expressionSymbolTree.Data, Is.TypeOf<AndExpression>());
             Assert.That(expressionSymbolTree.Children.Count, Is.EqualTo(2));
-            Assert.That(expressionSymbolTree[0].Data.Expression, Is.TypeOf<LiquidBoolean>());
-            Assert.That(expressionSymbolTree[1].Data.Expression, Is.TypeOf<GroupedExpression>());
+            Assert.That(expressionSymbolTree[0].Data, Is.TypeOf<LiquidBoolean>());
+            Assert.That(expressionSymbolTree[1].Data, Is.TypeOf<GroupedExpression>());
             Assert.That(expressionSymbolTree[1].Children.Count, Is.EqualTo(1));
-            Assert.That(expressionSymbolTree[1][0].Data.Expression, Is.TypeOf<OrExpression>());
-            Assert.That(expressionSymbolTree[1][0][0].Data.Expression, Is.TypeOf<LiquidBoolean>());
-            Assert.That(expressionSymbolTree[1][0][1].Data.Expression, Is.TypeOf<LiquidBoolean>());
+            Assert.That(expressionSymbolTree[1][0].Data, Is.TypeOf<OrExpression>());
+            Assert.That(expressionSymbolTree[1][0][0].Data, Is.TypeOf<LiquidBoolean>());
+            Assert.That(expressionSymbolTree[1][0][1].Data, Is.TypeOf<LiquidBoolean>());
             //Assert.That(ifThenElseTag.IfElseClauses[0].LiquidExpression[2].Data, Is.TypeOf<GroupedExpression>());
             
             //Assert.That(liquidExpressions, Is.Not.Null);

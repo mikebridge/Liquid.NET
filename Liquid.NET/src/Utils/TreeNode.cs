@@ -5,7 +5,7 @@ using System.Linq;
 namespace Liquid.NET.Utils
 {
 
-    public class TreeNode<T>
+    public class TreeNode<T> 
     {
 
         public TreeNode(T data)

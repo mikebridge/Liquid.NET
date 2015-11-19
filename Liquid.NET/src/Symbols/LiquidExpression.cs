@@ -11,7 +11,7 @@ namespace Liquid.NET.Symbols
 
         public IExpressionDescription Expression { get; set; }
 
-        public IList<FilterSymbol> FilterSymbols { get {return _filterSymbols;} }
+        public IList<FilterSymbol> FilterSymbols { get { return _filterSymbols; } }
 
         private readonly IList<FilterSymbol> _filterSymbols = new List<FilterSymbol>();
 

@@ -38,11 +38,11 @@ namespace Liquid.NET.Tests
             {
                 DebugIfExpressions(expr.LiquidExpressionTree);
             }
-            Assert.That(predicateTree.Data.Expression, Is.TypeOf<OrExpression>());
-            Assert.That(predicateTree[0].Data.Expression, Is.TypeOf<AndExpression>());
-            Assert.That(predicateTree[1].Data.Expression, Is.TypeOf<LiquidBoolean>());
-            Assert.That(predicateTree[0][0].Data.Expression, Is.TypeOf<LiquidBoolean>());
-            Assert.That(predicateTree[0][1].Data.Expression, Is.TypeOf<LiquidBoolean>());
+            Assert.That(predicateTree.Data, Is.TypeOf<OrExpression>());
+            Assert.That(predicateTree[0].Data, Is.TypeOf<AndExpression>());
+            Assert.That(predicateTree[1].Data, Is.TypeOf<LiquidBoolean>());
+            Assert.That(predicateTree[0][0].Data, Is.TypeOf<LiquidBoolean>());
+            Assert.That(predicateTree[0][1].Data, Is.TypeOf<LiquidBoolean>());
         }
 
         [Test]
@@ -59,9 +59,9 @@ namespace Liquid.NET.Tests
             // ReSharper disable once PossibleNullReferenceException
             var predicateTree = ((IfThenElseBlockTag)ifThenSymbolNode.Data).IfElseClauses[0].LiquidExpressionTree;
 
-            Assert.That(predicateTree.Data.Expression, Is.TypeOf<EqualsExpression>());
-            Assert.That(predicateTree[0].Data.Expression, Is.TypeOf<VariableReferenceTree>());
-            Assert.That(predicateTree[1].Data.Expression, Is.TypeOf<LiquidString>());
+            Assert.That(predicateTree.Data, Is.TypeOf<EqualsExpression>());
+            Assert.That(predicateTree[0].Data, Is.TypeOf<VariableReferenceTree>());
+            Assert.That(predicateTree[1].Data, Is.TypeOf<LiquidString>());
             //Assert.That(predicateTree[0].Data, Is.TypeOf<VariableReference>());
             //Assert.That(predicateTree[1].Data, Is.TypeOf<String>());
         }
@@ -87,11 +87,11 @@ namespace Liquid.NET.Tests
             }
             Assert.That(elsIfPredicateTrees.Count, Is.EqualTo(3));
 
-            Assert.That(elsIfPredicateTrees[0].Data.Expression, Is.TypeOf<LiquidBoolean>());
-            Assert.That(elsIfPredicateTrees[1].Data.Expression, Is.TypeOf<LiquidBoolean>());
+            Assert.That(elsIfPredicateTrees[0].Data, Is.TypeOf<LiquidBoolean>());
+            Assert.That(elsIfPredicateTrees[1].Data, Is.TypeOf<LiquidBoolean>());
         }
 
-        private void DebugIfExpressions(TreeNode<LiquidExpression> ifExpression, int level = 0)
+        private void DebugIfExpressions(TreeNode<IExpressionDescription> ifExpression, int level = 0)
         {
   
             Logger.Log("-> " + new string(' ', level * 2) +  ifExpression.Data);
@@ -152,7 +152,7 @@ namespace Liquid.NET.Tests
             var ifThenElseSymbol = ((IfThenElseBlockTag)ifThenElseNode.Data);
 
             // Assert
-            Assert.That(ifThenElseSymbol.IfElseClauses[0].LiquidExpressionTree.Data.Expression, Is.TypeOf<VariableReferenceTree>());
+            Assert.That(ifThenElseSymbol.IfElseClauses[0].LiquidExpressionTree.Data, Is.TypeOf<VariableReferenceTree>());
 
         }
 
@@ -170,9 +170,9 @@ namespace Liquid.NET.Tests
             var liquidExpression = ((LiquidExpressionTree)liquidExpressionNode.Data);
 
             // Assert
-            Assert.That(liquidExpression.ExpressionTree.Data.Expression, Is.Not.Null);
-            Assert.That(liquidExpression.ExpressionTree.Data.Expression, Is.TypeOf<VariableReferenceTree>());
-            VariableReferenceTree varRefTree = (VariableReferenceTree)liquidExpression.ExpressionTree.Data.Expression;
+            Assert.That(liquidExpression.ExpressionTree.Data, Is.Not.Null);
+            Assert.That(liquidExpression.ExpressionTree.Data, Is.TypeOf<VariableReferenceTree>());
+            VariableReferenceTree varRefTree = (VariableReferenceTree)liquidExpression.ExpressionTree.Data;
             Assert.That(varRefTree.IndexExpression, Is.TypeOf<VariableReferenceTree>());
             VariableReferenceTree indexVarRefTree = (VariableReferenceTree)varRefTree.IndexExpression;
             Assert.That(indexVarRefTree.Value, Is.AssignableTo<LiquidNumeric>());
@@ -194,9 +194,9 @@ namespace Liquid.NET.Tests
             var liquidExpression = ((LiquidExpressionTree)liquidExpressionNode.Data);
 
             // Assert
-            Assert.That(liquidExpression.ExpressionTree.Data.Expression, Is.Not.Null);
-            Assert.That(liquidExpression.ExpressionTree.Data.Expression, Is.TypeOf<VariableReferenceTree>());
-            VariableReferenceTree varRefTree = (VariableReferenceTree) liquidExpression.ExpressionTree.Data.Expression;
+            Assert.That(liquidExpression.ExpressionTree.Data, Is.Not.Null);
+            Assert.That(liquidExpression.ExpressionTree.Data, Is.TypeOf<VariableReferenceTree>());
+            VariableReferenceTree varRefTree = (VariableReferenceTree) liquidExpression.ExpressionTree.Data;
             Assert.That(varRefTree.IndexExpression, Is.TypeOf<VariableReferenceTree>());
             VariableReferenceTree indexVarRefTree = (VariableReferenceTree)varRefTree.IndexExpression;
             Assert.That(indexVarRefTree.Value, Is.TypeOf<LiquidString>());
@@ -214,7 +214,7 @@ namespace Liquid.NET.Tests
             var ifThenElseSymbol = ((IfThenElseBlockTag)ifThenElseNode.Data);
 
             // Assert
-            Assert.That(ifThenElseSymbol.IfElseClauses[0].LiquidExpressionTree.Data.Expression, Is.TypeOf<LiquidBoolean>());
+            Assert.That(ifThenElseSymbol.IfElseClauses[0].LiquidExpressionTree.Data, Is.TypeOf<LiquidBoolean>());
 
         }
 
@@ -229,7 +229,7 @@ namespace Liquid.NET.Tests
             var ifThenElseSymbol = ((IfThenElseBlockTag)ifThenElseNode.Data);
 
             // Assert
-            Assert.That(ifThenElseSymbol.IfElseClauses[0].LiquidExpressionTree.Data.Expression, Is.TypeOf<LiquidString>());
+            Assert.That(ifThenElseSymbol.IfElseClauses[0].LiquidExpressionTree.Data, Is.TypeOf<LiquidString>());
 
         }
 

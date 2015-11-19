@@ -33,8 +33,8 @@ namespace Liquid.NET.Expressions
         void Visit(OrExpression expr);
         //void Visit(LiquidExpression expr) // TODO: "LiquidExpression" should be "FilterExpression" maybe, then it should implement the same interface.
 
-
         void Visit(LiquidExpression expr);
+        void Visit(FilterSymbol expr);
     }
 
     /// <summary>
@@ -53,6 +53,10 @@ namespace Liquid.NET.Expressions
             _templateContext = templateContext;
         }
 
+        public static LiquidExpressionResult Eval(TreeNode<IExpressionDescription> tree, ITemplateContext ctx)
+        {
+            return new LiquidExpressionVisitor(ctx).Traverse(tree).Result;
+        }
 
         public LiquidExpressionResult Result
         {
@@ -168,6 +172,13 @@ namespace Liquid.NET.Expressions
 
         public void Visit(LiquidExpression expr)
         {
+            throw new NotImplementedException();
+        }
+
+        public void Visit(FilterSymbol expr)
+        {
+            //throw new NotImplementedException();
+            Console.WriteLine("Visiting " + expr.Name + " Filter... ");
             throw new NotImplementedException();
         }
 

@@ -5,14 +5,13 @@ using Liquid.NET.Utils;
 
 namespace Liquid.NET.Symbols
 {
-    public class FilterSymbol
+    public class FilterSymbol : IExpressionDescription
     {
 
         public String Name { get; private set; }
 
         public String RawArgs { get; set; }
 
-        //public readonly List<IExpressionDescription> Args = new List<IExpressionDescription>();
         public readonly IList<TreeNode<IExpressionDescription>> Args = new List<TreeNode<IExpressionDescription>>();
 
         public FilterSymbol(String name)
@@ -25,5 +24,9 @@ namespace Liquid.NET.Symbols
             Args.Add(obj);
         }
 
+        public void Accept(ILiquidExpressionVisitor visitor)
+        {
+            visitor.Visit(this);
+        }
     }
 }

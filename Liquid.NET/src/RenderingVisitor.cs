@@ -218,7 +218,8 @@ namespace Liquid.NET
             else
             {
                 // figure out the group name if any, otherwise use null.
-                LiquidExpressionEvaluator.Eval(cycleTag.GroupNameExpressionTree, _templateContext)
+                LiquidExpressionVisitor.Eval(cycleTag.GroupNameExpressionTree, _templateContext)
+                //LiquidExpressionEvaluator.Eval(cycleTag.GroupNameExpressionTree, _templateContext)
                     .WhenSuccess(
                         x =>
                             AppendTextToCurrentAccumulator(
@@ -260,8 +261,10 @@ namespace Liquid.NET
 
             String result = "";
             var currentElement = cycleTag.ElementAt(currentIndex);
-            LiquidExpressionEvaluator.Eval(currentElement, _templateContext)
-                .WhenSuccess(x => result = ValueCaster.RenderAsString(LiquidExpressionEvaluator.Eval(currentElement, _templateContext).SuccessResult.Value))
+            LiquidExpressionVisitor.Eval(cycleTag.GroupNameExpressionTree, _templateContext)
+            //LiquidExpressionEvaluator.Eval(currentElement, _templateContext)
+                .WhenSuccess(x => result = ValueCaster.RenderAsString(LiquidExpressionVisitor.Eval(cycleTag.GroupNameExpressionTree, _templateContext).SuccessResult.Value))
+                //.WhenSuccess(x => result = ValueCaster.RenderAsString(LiquidExpressionEvaluator.Eval(currentElement, _templateContext).SuccessResult.Value))
                 .WhenError(err => result = FormatErrors(new List<LiquidError> {err}));
 
             return result;
@@ -486,8 +489,8 @@ namespace Liquid.NET
                         // though it doesn't cast values---probably it should.
 
                         expr.LiquidExpressionTree.Any(val =>
-                            (new EasyOptionComparer()).Equals(valueToMatchResult.SuccessResult,
-                                liquidExpressionVisitor.Traverse(val).Result))
+                            new EasyOptionComparer().Equals(valueToMatchResult.SuccessResult,
+                                liquidExpressionVisitor.Traverse(val).Result.SuccessResult))
                                         //LiquidExpressionEvaluator.Eval(val, _templateContext).SuccessResult))
             );
 
@@ -570,7 +573,9 @@ namespace Liquid.NET
             Action<IEnumerable<Option<ILiquidValue>>> successAction = null,
             Action<IEnumerable<LiquidError>> failureAction = null)
         {
-            var evaledArgs = expressionTrees.Select(x => LiquidExpressionEvaluator.Eval(x, _templateContext)).ToList();
+            var evaledArgs = expressionTrees.Select(x => LiquidExpressionVisitor.Eval(x, _templateContext)).ToList();
+
+            //var evaledArgs = expressionTrees.Select(x => LiquidExpressionEvaluator.Eval(x, _templateContext)).ToList();
             if (evaledArgs.Any(x => x.IsError))
             {
                 if (failureAction != null)

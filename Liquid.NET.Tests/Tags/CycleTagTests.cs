@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Liquid.NET.Constants;
+using Liquid.NET.Expressions;
 using Liquid.NET.Symbols;
 using Liquid.NET.Tags;
 using Liquid.NET.Tests.Ruby;
@@ -18,13 +19,13 @@ namespace Liquid.NET.Tests.Tags
         {
             // Arrange
             var cycleTag = new CycleTag();
-            cycleTag.CycleList.Add(new TreeNode<LiquidExpression>(new LiquidExpression { Expression = LiquidString.Create("A")}));
-            cycleTag.CycleList.Add(new TreeNode<LiquidExpression>(new LiquidExpression { Expression = LiquidString.Create("B") }));
-            cycleTag.CycleList.Add(new TreeNode<LiquidExpression>(new LiquidExpression { Expression = LiquidString.Create("C") }));
+            cycleTag.CycleList.Add(new TreeNode<IExpressionDescription>(new LiquidExpression { Expression = LiquidString.Create("A") }));
+            cycleTag.CycleList.Add(new TreeNode<IExpressionDescription>(new LiquidExpression { Expression = LiquidString.Create("B") }));
+            cycleTag.CycleList.Add(new TreeNode<IExpressionDescription>(new LiquidExpression { Expression = LiquidString.Create("C") }));
 
             // Assert
-            Assert.That(((LiquidString) cycleTag.ElementAt(0).Data.Expression).StringVal, Is.EqualTo("A"));
-            Assert.That(((LiquidString) cycleTag.ElementAt(1).Data.Expression).StringVal, Is.EqualTo("B"));
+            Assert.That(((LiquidString) cycleTag.ElementAt(0).Data).StringVal, Is.EqualTo("A"));
+            Assert.That(((LiquidString) cycleTag.ElementAt(1).Data).StringVal, Is.EqualTo("B"));
       }
 
         [Test]

@@ -215,7 +215,7 @@ namespace Liquid.NET.Tests.Tags
                     String varname = args[0].Value.ToString();
 
                     var iterableFactory = new ArrayValueCreator(
-                        new TreeNode<LiquidExpression>(
+                        new TreeNode<IExpressionDescription>(
                             new LiquidExpression { Expression = args[1].Value }));
 
                     var iterable = iterableFactory.Eval(templateContext).ToList();

@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Resources;
+
 using System.Text.RegularExpressions;
-using System.Web;
-using System.Xml;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Atn;
 using Antlr4.Runtime.Tree;
@@ -780,7 +778,7 @@ namespace Liquid.NET
                 {
                     StartCapturingVariable(
                         context.for_param_limit().variable(),
-                        x => tableRowBlock.Limit = new TreeNode<IExpressionDescription>(new LiquidExpression { Expression = x }));
+                        x => tableRowBlock.Limit = new TreeNode<IExpressionDescription>(x));
 
                     //StartNewLiquidExpressionTree(x => tableRowBlock.Limit = x);
                     //StartCapturingVariable(context.for_param_limit().variable());
@@ -1133,12 +1131,14 @@ namespace Liquid.NET
 
         private void StartNewLiquidExpressionTree(Action<TreeNode<IExpressionDescription>> setExpression)
         {
+            Console.WriteLine("Entering Expression Builder");
             CurrentBuilderContext.LiquidExpressionBuilder = new LiquidExpressionTreeBuilder();            
             CurrentBuilderContext.LiquidExpressionBuilder.ExpressionCompleteEvent += new OnExpressionCompleteEventHandler(setExpression);
         }
 
         private void FinishLiquidExpressionTree()
         {
+            Console.WriteLine("Exiting Expression Builder");
 
             CurrentBuilderContext.LiquidExpressionBuilder = null;
         }
@@ -1445,7 +1445,7 @@ namespace Liquid.NET
 
         private static TreeNode<IExpressionDescription> CreateObjectSimpleExpressionNode(IExpressionDescription expressionDescription)
         {
-            return new TreeNode<IExpressionDescription>(new LiquidExpression { Expression = expressionDescription });
+            return new TreeNode<IExpressionDescription>(expressionDescription);
         }
 
 
@@ -1552,6 +1552,7 @@ namespace Liquid.NET
         /// <param name="context"></param>
         public override void EnterOutputmarkup(LiquidParser.OutputmarkupContext context)
         {
+            Console.WriteLine("Creating obj expression " + context.GetText());
             base.EnterOutputmarkup(context);
             StartNewLiquidExpressionTree(result =>
             {
@@ -1574,35 +1575,51 @@ namespace Liquid.NET
         /// <param name="context"></param>
         public override void EnterFiltername(LiquidParser.FilternameContext context)
         {
+            Console.WriteLine("Enter Filter " + context.GetText());
             base.EnterFiltername(context);           
-            CurrentBuilderContext.LiquidExpressionBuilder.AddFilterSymbolToLastExpression(new FilterSymbol(context.GetText()));
-
+            //CurrentBuilderContext.LiquidExpressionBuilder.AddFilterSymbolToLastExpression(new FilterSymbol(context.GetText()));
+            CurrentBuilderContext.FilterStack.Push(new FilterSymbol(context.GetText()));
         }
 
+        public override void ExitFilter(LiquidParser.FilterContext context)
+        {
+            Console.WriteLine("Exit Filter " + context.GetText());
+            var filter = CurrentBuilderContext.FilterStack.Pop();
+            AddExpressionToCurrentExpressionBuilder(filter);
+            //CurrentBuilderContext.LiquidExpressionBuilder.AddFilterSymbolToLastExpression
+            //zzz
+            base.ExitFilter(context);
+        }
 
         public override void EnterStringFilterArg(LiquidParser.StringFilterArgContext context)
         {
             base.EnterStringFilterArg(context);
-            CurrentBuilderContext.LiquidExpressionBuilder.AddFilterArgToLastExpressionsFilter(
-                CreateObjectSimpleExpressionNode(
-                GenerateStringSymbol(context.GetText())));
+            Console.WriteLine("Adding string arg " + context.GetText());
+//            CurrentBuilderContext.LiquidExpressionBuilder.AddFilterArgToLastExpressionsFilter(
+//                CreateObjectSimpleExpressionNode(
+//                GenerateStringSymbol(context.GetText())));
+            CurrentBuilderContext.FilterStack.Peek().Args.Add(CreateObjectSimpleExpressionNode(GenerateStringSymbol(context.GetText())));
         }
 
         public override void EnterNumberFilterArg(LiquidParser.NumberFilterArgContext context)
         {
             base.EnterNumberFilterArg(context);
+            Console.WriteLine("Adding number arg " + context.GetText());
             LiquidNumeric.Parse(context.GetText())
                 .WhenError(_ => { throw new Exception("Unable to parse " + context.GetText()); }) // if the lexer is correct this shouldn't occur
                 .WhenSuccess(
-                    result => CurrentBuilderContext.LiquidExpressionBuilder.AddFilterArgToLastExpressionsFilter(
-                        CreateObjectSimpleExpressionNode((LiquidNumeric) result.Value)));
+                    result => CurrentBuilderContext.FilterStack.Peek().Args.Add(CreateObjectSimpleExpressionNode((LiquidNumeric) result.Value)));
+//                    result => CurrentBuilderContext.LiquidExpressionBuilder.AddFilterArgToLastExpressionsFilter(
+//                        CreateObjectSimpleExpressionNode((LiquidNumeric) result.Value)));
         }
 
         public override void EnterBooleanFilterArg(LiquidParser.BooleanFilterArgContext context)
         {
             base.EnterBooleanFilterArg(context);
-            CurrentBuilderContext.LiquidExpressionBuilder.AddFilterArgToLastExpressionsFilter(
-                CreateObjectSimpleExpressionNode(new LiquidBoolean(Convert.ToBoolean(context.GetText()))));
+            CurrentBuilderContext.FilterStack.Peek().Args.Add(CreateObjectSimpleExpressionNode(new LiquidBoolean(Convert.ToBoolean(context.GetText()))));
+
+            //CurrentBuilderContext.LiquidExpressionBuilder.AddFilterArgToLastExpressionsFilter(
+                //CreateObjectSimpleExpressionNode(new LiquidBoolean(Convert.ToBoolean(context.GetText()))));
         }
 
         public override void EnterVariableFilterArg(LiquidParser.VariableFilterArgContext context)
@@ -1610,8 +1627,10 @@ namespace Liquid.NET
             base.EnterVariableFilterArg(context);
             StartCapturingVariable(
                 context.variable(),
-                    x => CurrentBuilderContext.LiquidExpressionBuilder.AddFilterArgToLastExpressionsFilter(
-                      new TreeNode<IExpressionDescription>(new LiquidExpression { Expression = x })));                
+                    x => CurrentBuilderContext.FilterStack.Peek().Args.Add(
+                        new TreeNode<IExpressionDescription>(new LiquidExpression { Expression = x })));
+                    //x => CurrentBuilderContext.LiquidExpressionBuilder.AddFilterArgToLastExpressionsFilter(
+                      //new TreeNode<IExpressionDescription>(new LiquidExpression { Expression = x })));                
         }
 
         /// <summary>
@@ -1628,7 +1647,8 @@ namespace Liquid.NET
             // May need to figure out how to put the whitespace in the hidden stream for this only.
             String normalizedArgs = String.Join(" ", originalTokens.Select(x => x.Text));
 
-            CurrentBuilderContext.LiquidExpressionBuilder.SetRawArgsForLastExpressionsFilter(normalizedArgs);
+            // TODO: Add the raw args back in
+            //CurrentBuilderContext.LiquidExpressionBuilder.SetRawArgsForLastExpressionsFilter(normalizedArgs);
         }
 
         #endregion
@@ -1838,7 +1858,8 @@ namespace Liquid.NET
             public readonly Stack<MacroBlockTag> MacroBlockTagStack = new Stack<MacroBlockTag>();
             public readonly Stack<ForBlockTag> ForBlockStack = new Stack<ForBlockTag>();
             public readonly Stack<IncludeTag> IncludeTagStack = new Stack<IncludeTag>();
-            public readonly Stack<TableRowBlockTag> TableRowBlockTagStack = new Stack<TableRowBlockTag>();  
+            public readonly Stack<TableRowBlockTag> TableRowBlockTagStack = new Stack<TableRowBlockTag>();
+            public readonly Stack<FilterSymbol> FilterStack = new Stack<FilterSymbol>();
             public LiquidExpressionTreeBuilder LiquidExpressionBuilder { get; set; }
             public GeneratorCreator GeneratorCreator { get; set; }
 

@@ -43,7 +43,8 @@ namespace Liquid.NET.Rendering
             }
             if (tableRowBlockTag.Cols != null)
             {
-                var result = LiquidExpressionEvaluator.Eval(tableRowBlockTag.Cols, templateContext);
+                //var result = LiquidExpressionEvaluator.Eval(tableRowBlockTag.Cols, templateContext);
+                var result = LiquidExpressionVisitor.Eval(tableRowBlockTag.Cols, templateContext);
                 if (result.IsSuccess)
                 {
                     cols = result.SuccessValue<LiquidNumeric>();

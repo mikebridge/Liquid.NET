@@ -114,7 +114,7 @@ namespace Liquid.NET.Tests
             _result += tableRowBlockTag.ToString();
         }
 
-        private String VisitIfTag(TreeNode<LiquidExpression> exprNode)
+        private String VisitIfTag(TreeNode<IExpressionDescription> exprNode)
         {
             String result = " IF => " + exprNode.Data;
             return result + "    -> " + exprNode.Children.Select(x => VisitIfTag(exprNode));

@@ -64,7 +64,8 @@ namespace Liquid.NET.Rendering
             //zzz
             if (includeTag.ForExpression != null)
             {
-                LiquidExpressionEvaluator.Eval(includeTag.ForExpression, templateContext)
+                LiquidExpressionVisitor.Eval(includeTag.ForExpression, templateContext)
+                //LiquidExpressionEvaluator.Eval(includeTag.ForExpression, templateContext)
                     .WhenError(AddRenderingErrorToResult)
                     .WhenSuccess(result =>
                     {
@@ -92,7 +93,8 @@ namespace Liquid.NET.Rendering
             {
                 if (includeTag.WithExpression != null)
                 {
-                    var withExpression = LiquidExpressionEvaluator.Eval(includeTag.WithExpression, templateContext);
+                    var withExpression = LiquidExpressionVisitor.Eval(includeTag.ForExpression, templateContext);
+                    //var withExpression = LiquidExpressionEvaluator.Eval(includeTag.WithExpression, templateContext);
                     localBlockScope.DefineLocalVariable(virtualFileName, withExpression.SuccessResult);
                 }
             };
@@ -117,8 +119,9 @@ namespace Liquid.NET.Rendering
         private void RenderFromLiquidHash(IncludeTag includeTag, ITemplateContext templateContext, String virtualFileName,
             LiquidAST snippetAst)
         {
-            Action<SymbolTable> action = localBlockScope => localBlockScope.DefineLocalVariable(
-                virtualFileName, LiquidExpressionEvaluator.Eval(includeTag.ForExpression, templateContext).SuccessResult);
+            Action<SymbolTable> action = localBlockScope => localBlockScope.DefineLocalVariable(virtualFileName, 
+                LiquidExpressionVisitor.Eval(includeTag.ForExpression, templateContext).SuccessResult);
+                //LiquidExpressionEvaluator.Eval(includeTag.ForExpression, templateContext).SuccessResult);
             
             RenderBlock(includeTag, templateContext, snippetAst, action);
         }
@@ -171,7 +174,8 @@ namespace Liquid.NET.Rendering
             foreach (var def in definitions)
             {
                 var def1 = def;
-                LiquidExpressionEvaluator.Eval(def.Value, templateContext)
+                LiquidExpressionVisitor.Eval(def.Value, templateContext)
+                //LiquidExpressionEvaluator.Eval(def.Value, templateContext)
                     //.WhenError( err =>   //TODO: Is this necessary?
                     .WhenSuccess( result => 
                         localBlockScope.DefineLocalVariable(def1. Key,result));

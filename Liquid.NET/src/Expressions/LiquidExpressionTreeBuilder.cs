@@ -38,20 +38,25 @@ namespace Liquid.NET.Expressions
             _liquidExpressionStack.Push(child);
         }
 
-        public void AddFilterSymbolToLastExpression(FilterSymbol filter)
-        {
-            _lastExpression.Data.AddFilterSymbol(filter);
-        }
+//        public void AddFilter(FilterSymbol filter)
+//        {
+//            _liquidExpressionStack.Peek().Data.FilterSymbols.Add(filter);
+//        }
 
-        public void AddFilterArgToLastExpressionsFilter(TreeNode<IExpressionDescription> filterArg)        
-        {
-            _lastExpression.Data.FilterSymbols.Last().AddArg(filterArg);
-        }
-
-        public void SetRawArgsForLastExpressionsFilter(string argstring)
-        {
-            _lastExpression.Data.FilterSymbols.Last().RawArgs = argstring;
-        }
+//        public void AddFilterSymbolToLastExpression(FilterSymbol filter)
+//        {
+//            _lastExpression.Data.AddFilterSymbol(filter);
+//        }
+//
+//        public void AddFilterArgToLastExpressionsFilter(TreeNode<IExpressionDescription> filterArg)        
+//        {
+//            _lastExpression.Data.FilterSymbols.Last().AddArg(filterArg);
+//        }
+//
+//        public void SetRawArgsForLastExpressionsFilter(string argstring)
+//        {
+//            _lastExpression.Data.FilterSymbols.Last().RawArgs = argstring;
+//        }
 
 //        public void AddFilterSymbolToCurrentExpression(FilterSymbol filter)
 //        {
@@ -74,6 +79,10 @@ namespace Liquid.NET.Expressions
             //Console.WriteLine("LiquidExpressionBuilder >>> POP");
             _lastExpression = _liquidExpressionStack.Pop();
             //Console.WriteLine("invoking end event...");
+            // TODO maybe make this contravariant
+            
+            //expr.AddChildren(_lastExpression.Children);
+
             InvokeExpressionCompleteEvent(_lastExpression);
         }
 

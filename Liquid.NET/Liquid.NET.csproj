@@ -177,6 +177,7 @@
     <Compile Include="src\LiquidParserException.cs" />
     <Compile Include="src\LiquidRenderingResult.cs" />
     <Compile Include="src\OnParsingErrorEventHandler.cs" />
+    <Compile Include="src\Expressions\PrintingVisitor.cs" />
     <Compile Include="src\RenderingVisitor.cs" />
     <Compile Include="src\Rendering\Expressions\VariableReferenceResolver.cs" />
     <Compile Include="src\Rendering\ForRenderer.cs" />

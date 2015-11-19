@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+
 using System.Linq;
 using Liquid.NET.Constants;
 using Liquid.NET.Expressions;
@@ -65,19 +65,13 @@ namespace Liquid.NET
                 return objResult;
             }
 
-            // Compose a chain of filters, making sure type-casting
-            // is done between them.
-            //IEnumerable<Tuple<FilterSymbol, IFilterExpression>> filterExpressionTuples;
-//            try
-//            {
+            throw new ApplicationException("FIX THIS");
+
+            /*
             var  filterExpressionTuples = expression.FilterSymbols.Select(symbol =>
                     new Tuple<FilterSymbol, Try<IFilterExpression>>(symbol, InstantiateFilter(templateContext, symbol)))
                     .ToList();
-            //}
-            //catch (Exception ex)
-            //{
-             //   return LiquidExpressionResult.Error(ex.Message);
-            //}
+
             if (filterExpressionTuples.Any(x => x.Item2.IsFailure))
             {
                 // just return the first error.
@@ -102,6 +96,7 @@ namespace Liquid.NET
             
             var result= filterChain(objResult.SuccessResult);
             return result;
+            */
         }
 
 

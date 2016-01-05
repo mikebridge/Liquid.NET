@@ -5,22 +5,26 @@ using Xunit;
 
 namespace Liquid.NET.Tests.Constants
 {
-    
     public class MissingValueTests
     {
         [Theory]
         [InlineData("x", "x")]
         [InlineData("d.x", "x")]
         [InlineData("d[x]", "x")]
-        [InlineData("a.b.c", "a")]
-        public void It_Should_Display_An_Error_When_Dereferencing_Missing_Value(String varname, String missingVar)
+        public void It_Should_Display_An_Error_When_Value_Is_Undefined(String varname, String missingVar)
         {
             // Arrange
 
-            ITemplateContext ctx = new TemplateContext()                              
+            ITemplateContext ctx = new TemplateContext()
                 .ErrorWhenValueMissing();
-            ctx.DefineLocalVariable("d", new LiquidHash());
-           
+            ctx.DefineLocalVariable("x", LiquidValue.None);
+            ctx.DefineLocalVariable("d", new LiquidHash()
+            {
+                {
+                    "x", LiquidValue.None
+                }
+            });
+
             // Act
             var template = LiquidTemplate.Create("Result : {{ " + varname + " }}");
             var result = template.LiquidTemplate.Render(ctx);
@@ -28,19 +32,18 @@ namespace Liquid.NET.Tests.Constants
 
             // Assert
             Assert.Equal("Result : ERROR: " + missingVar + " is undefined", result.Result);
-
         }
 
         [Theory]
-        [InlineData("e[1]")]
-        [InlineData("e.first")]
-        [InlineData("e.last")]
-        public void It_Should_Display_An_Error_When_Dereferencing_Empty_Array(String varname)
+        [InlineData("e[1]", "1")]
+        [InlineData("e.first", "first")]
+        [InlineData("e.last", "last")]
+        public void It_Should_Display_An_Error_When_Array_Value_Is_Undefined(String varname, String missingVar)
         {
             // Arrange
             ITemplateContext ctx = new TemplateContext()
                 .ErrorWhenValueMissing();
-            ctx.DefineLocalVariable("e", new LiquidCollection());
+            ctx.DefineLocalVariable("e", new LiquidCollection(new[] { LiquidValue.None, LiquidValue.None, LiquidValue.None }));
 
             // Act
             //var result = RenderingHelper.RenderTemplate("Result : {{ " + varname + " }}", ctx);
@@ -48,74 +51,33 @@ namespace Liquid.NET.Tests.Constants
             var result = template.LiquidTemplate.Render(ctx);
 
             // Assert
-            Assert.Equal("Result : ERROR: cannot dereference empty array", result.Result);
-
+            Assert.Equal("Result : ERROR: " + missingVar + " is undefined", result.Result);
         }
-
-
-
-        [Fact]
-        public void It_Should_Display_Error_When_Dereferencing_Array_With_Non_Int()
-        {
-            // Arrange
-            ITemplateContext ctx = new TemplateContext()
-                .ErrorWhenValueMissing();
-            ctx.DefineLocalVariable("e", new LiquidCollection());
-
-            // Act
-            var template = LiquidTemplate.Create("Result : {{ e.x }}");
-            var result = template.LiquidTemplate.Render(ctx);
-            //var result = RenderingHelper.RenderTemplate("Result : {{ e.x }}", ctx);
-
-            // Assert
-            Assert.Contains("invalid index: 'x'", result.Result);
-
-        }
-
-        [Fact]
-        public void It_Should_Display_Error_When_Dereferencing_Primitive_With_Index()
-        {
-            // Arrange
-            ITemplateContext ctx = new TemplateContext()
-                .ErrorWhenValueMissing();
-            ctx.DefineLocalVariable("e", LiquidString.Create("Hello"));
-
-            // Act
-            var template = LiquidTemplate.Create("Result : {{ e.x }}");
-            var result = template.LiquidTemplate.Render(ctx);
-
-            Assert.True(result.HasRenderingErrors);
-            var errorMessage = String.Join(",", result.RenderingErrors.Select(x => x.Message));
-            // Assert
-            Assert.Contains("invalid string index: 'x'", errorMessage);
-
-        }
-
 
         [Theory]
         [InlineData("x")]
+        [InlineData("e.first")]
         [InlineData("e[1]")]
-        [InlineData("e.x")]
         [InlineData("d.x")]
         [InlineData("d[x]")]
-        [InlineData("a.b.c")]
-        public void It_Should_Not_Display_An_Error_When_Dereferencing_Missing_Value(String varname)
+        public void It_Should_Not_Display_An_Error_When_Values_Are_Missing(String varname)
         {
             // Arrange
             //Console.WriteLine(varname);
-            TemplateContext ctx = new TemplateContext();
-            ctx.DefineLocalVariable("e", new LiquidCollection());
-            ctx.DefineLocalVariable("d", new LiquidHash());
+            ITemplateContext ctx = new TemplateContext()
+                .ErrorWhenVariableMissing();
+            ctx.DefineLocalVariable("e", new LiquidCollection(new[] { LiquidValue.None, LiquidValue.None, LiquidValue.None }));
+            ctx.DefineLocalVariable("d", new LiquidHash()
+            {
+                { "x", LiquidValue.None }
+            });
+            ctx.DefineLocalVariable("x", LiquidValue.None);
 
             // Act
             var result = RenderingHelper.RenderTemplate("Result : {{ " + varname + " }}", ctx);
 
             // Assert
             Assert.Equal("Result : ", result);
-
         }
-
-
-
     }
 }

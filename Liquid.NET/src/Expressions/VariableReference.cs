@@ -19,21 +19,9 @@ namespace Liquid.NET.Expressions
         public override LiquidExpressionResult Eval(ITemplateContext templateContext, IEnumerable<Option<ILiquidValue>> childresults)
         {
             var lookupResult= templateContext.SymbolTableStack.Reference(Name);
-            return lookupResult.IsSuccess ? 
-                lookupResult :
-                ErrorOrNone(templateContext, lookupResult);
-        }
-
-        private LiquidExpressionResult ErrorOrNone(ITemplateContext templateContext, LiquidExpressionResult failureResult)
-        {
-            if (templateContext.Options.ErrorWhenValueMissing)
-            {
-                return failureResult;
-            }
-            else
-            {
-                return LiquidExpressionResult.Success(new None<ILiquidValue>());
-            }
+            return lookupResult.IsSuccess 
+                ? (lookupResult.SuccessResult.HasValue ? lookupResult : LiquidExpressionResult.ErrorOrNone(templateContext, Name)) 
+                : LiquidExpressionResult.MissingOrNone(templateContext, Name);
         }
     }
 }

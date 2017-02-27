@@ -130,6 +130,12 @@ namespace Liquid.NET.Utils
                 var val = obj as IDictionary;
                 return CreateHash(val);
             }
+
+            var guidVal = obj as Guid?;
+            if (guidVal.HasValue)
+            {
+                return LiquidString.Create(guidVal.Value.ToString("D"));
+            }
             return null;
         }
 

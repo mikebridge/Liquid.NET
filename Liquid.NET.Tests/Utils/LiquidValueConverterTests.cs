@@ -124,6 +124,19 @@ namespace Liquid.NET.Tests.Utils
         }
 
         [Test]
+        public void It_Should_Convert_Guid_To_LiquidString()
+        {
+            // Act
+            var testValue = new Guid();
+            var val = _converter.Convert(testValue);
+
+            // Assert
+            Assert.That(val.HasValue, Is.True);
+            Assert.That(val.Value, Is.TypeOf<LiquidString>());
+            Assert.That(val.Value, Is.EqualTo(LiquidString.Create(testValue.ToString("D"))));
+        }
+
+        [Test]
         public void It_Should_Convert_Generic_List_To_Collection()
         {
             var list = new List<Object>();

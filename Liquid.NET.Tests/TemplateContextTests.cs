@@ -88,11 +88,12 @@ namespace Liquid.NET.Tests
 
 
         [Test]
-        [ExpectedException(typeof(ArgumentNullException))]
+        //[ExpectedException(typeof(ArgumentNullException))]
         public void It_Should_THrow_Error_When_No_ASTGenerator()
         {
             // Arrange
-            var templateContext = new TemplateContext().WithASTGenerator(null);
+            Assert.That(() => new TemplateContext().WithASTGenerator(null),
+                Throws.TypeOf<ArgumentNullException>());
         }
 
 

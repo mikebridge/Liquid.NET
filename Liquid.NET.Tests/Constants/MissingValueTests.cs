@@ -68,7 +68,7 @@ namespace Liquid.NET.Tests.Constants
             //var result = RenderingHelper.RenderTemplate("Result : {{ e.x }}", ctx);
 
             // Assert
-            Assert.That(result.Result, Is.StringContaining("invalid index: 'x'"));
+            Assert.That(result.Result, Does.Contain("invalid index: 'x'"));
 
         }
 
@@ -87,7 +87,7 @@ namespace Liquid.NET.Tests.Constants
             Assert.That(result.HasRenderingErrors, Is.True);
             var errorMessage = String.Join(",", result.RenderingErrors.Select(x => x.Message));
             // Assert
-            Assert.That(errorMessage, Is.StringContaining("invalid string index: 'x'"));
+            Assert.That(errorMessage, Does.Contain("invalid string index: 'x'"));
 
         }
 

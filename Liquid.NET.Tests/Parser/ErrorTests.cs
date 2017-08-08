@@ -54,7 +54,7 @@ namespace Liquid.NET.Tests.Parser
             // Assert
             Assert.That(templateResult.HasParsingErrors, Is.True);
             Assert.That(templateResult.ParsingErrors[0].Message,
-                Is.StringContaining("Liquid error: missing colon before args "));
+                Does.Contain("Liquid error: missing colon before args "));
             //}
         }
 

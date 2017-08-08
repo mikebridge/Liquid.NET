@@ -75,7 +75,7 @@ namespace Liquid.NET.Tests.Expressions
             var result = RenderingHelper.RenderTemplate("{%if 3 contains 3 %}TRUE{% else %}FALSE{% endif %}");
 
             // Assert
-            Assert.That(result, Is.StringContaining("FALSE")); // TODO: SHould this be an error?
+            Assert.That(result, Does.Contain("FALSE")); // TODO: SHould this be an error?
         }
 
         public LiquidCollection CreateArray()

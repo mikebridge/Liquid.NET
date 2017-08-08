@@ -211,7 +211,7 @@ namespace Liquid.NET.Tests.Tags
             String result = "";
             renderingVisitor.StartWalking(ast.LiquidAST.RootNode, x => result += x);
             Console.WriteLine("RESULT: " + result);
-            Assert.That(result, Is.StringContaining("missing TAGEND"));
+            Assert.That(result, Does.Contain("missing TAGEND"));
 
         }
 
@@ -236,7 +236,7 @@ namespace Liquid.NET.Tests.Tags
             Console.WriteLine(result.Result);
 
             Assert.That(result.HasParsingErrors, Is.True);
-            Assert.That(result.ParsingErrors[0].Message, Is.StringContaining("missing TAGEND"));
+            Assert.That(result.ParsingErrors[0].Message, Does.Contain("missing TAGEND"));
 
         }
 
@@ -260,7 +260,7 @@ namespace Liquid.NET.Tests.Tags
             var result = liquidTemplate.LiquidTemplate.Render(ctx);
 
             Assert.That(result.HasRenderingErrors, Is.True);
-            Assert.That(result.RenderingErrors[0].Message, Is.StringContaining("divided by 0"));
+            Assert.That(result.RenderingErrors[0].Message, Does.Contain("divided by 0"));
 
         }
 

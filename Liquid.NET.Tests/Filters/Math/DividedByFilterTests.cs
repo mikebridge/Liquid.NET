@@ -53,10 +53,12 @@ namespace Liquid.NET.Tests.Filters.Math
         public void It_Should_Not_Divide_By_Zero_In_French()
         {
             // Arrange
-            var origCulture = Thread.CurrentThread.CurrentCulture;
+            //var origCulture = Thread.CurrentThread.CurrentCulture;
+            var origCulture = CultureInfo.DefaultThreadCurrentCulture;
             try
             {
-                Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("fr-CA");
+                //Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("fr-CA");
+                CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("fr-CA");
                 var result = RenderingHelper.RenderTemplate("Result : {{ 10.0 | divided_by: 4 }}");
 
                 // Assert
@@ -64,7 +66,7 @@ namespace Liquid.NET.Tests.Filters.Math
             }
             finally
             {
-                Thread.CurrentThread.CurrentCulture = origCulture;
+                CultureInfo.DefaultThreadCurrentCulture = origCulture;
             }
         }
 

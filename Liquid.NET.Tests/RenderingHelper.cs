@@ -17,7 +17,7 @@ namespace Liquid.NET.Tests
             var result= template.LiquidTemplate.Render(ctx);
             if (result.HasRenderingErrors || result.HasParsingErrors)
             {
-                throw new ApplicationException("Errors occurred....");
+                throw new Exception("Errors occurred....");
             }
             return result.Result;
         }

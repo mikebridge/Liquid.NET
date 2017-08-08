@@ -126,7 +126,7 @@ namespace Liquid.NET.Tests.Filters.Array
 
             Console.WriteLine("Result "+result);
             // Assert
-            Assert.That(result.Result, Is.StringContaining("missing is undefined"));
+            Assert.That(result.Result, Does.Contain("missing is undefined"));
         }
 
         public LiquidCollection CreateArray()

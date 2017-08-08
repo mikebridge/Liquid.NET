@@ -29,7 +29,7 @@ namespace Liquid.NET.Tests
 
 
         [Test]
-        [ExpectedException(typeof(InvalidOperationException))]
+        //[ExpectedException(typeof(InvalidOperationException))]
         public void It_Should_Throw_An_Exception_When_No_Accumulator()
         {
             // Arrange
@@ -37,7 +37,7 @@ namespace Liquid.NET.Tests
             var rawTextNode = new RawBlockTag("HELLO");
 
             // Act
-            renderingVisitor.Visit(rawTextNode);
+            Assert.That(() => renderingVisitor.Visit(rawTextNode), Throws.TypeOf<InvalidOperationException>());
           
         }
 

@@ -44,7 +44,7 @@ namespace Liquid.NET.Tests.Tags
 
             var templateResult = LiquidTemplate.Create("Result : {% echoargs \"hello\" 123 true %}echo{% endsomethingelse %}");
             Assert.That(templateResult.HasParsingErrors);
-            Assert.That(templateResult.ParsingErrors[0].Message, Is.StringContaining("There was no opening tag for the ending tag 'endsomethingelse'"));
+            Assert.That(templateResult.ParsingErrors[0].Message, Does.Contain("There was no opening tag for the ending tag 'endsomethingelse'"));
             //Assert.That
             //var result = templateResult.LiquidTemplate.Render(new TemplateContext().WithAllFilters());
             
@@ -58,7 +58,7 @@ namespace Liquid.NET.Tests.Tags
             //{
             //    var allErrors = String.Join(",", ex.LiquidErrors.Select(x => x.ToString()));
             //    Logger.Log(allErrors);
-            //    Assert.That(allErrors, Is.StringContaining("There was no opening tag for the ending tag 'endsomethingelse'"));
+            //    Assert.That(allErrors, Does.Contain("There was no opening tag for the ending tag 'endsomethingelse'"));
             //}
         }
 

@@ -30,7 +30,7 @@ namespace Liquid.NET.Tests.Utils
         }
 
         [Test]
-        [ExpectedException(typeof(InvalidOperationException))]
+        //[ExpectedException(typeof(InvalidOperationException))]
         public void Failure_Does_Not_Have_A_Value()
         {
             // Arrange
@@ -38,11 +38,14 @@ namespace Liquid.NET.Tests.Utils
 
             // Assert
             // ReSharper disable once UnusedVariable
-            var val = result.Value;
+            //var val = result.Value;
+            Assert.That(() => result.Value,
+                Throws.TypeOf<InvalidOperationException>());
+
         }
 
         [Test]
-        [ExpectedException(typeof(InvalidOperationException))]
+        //[ExpectedException(typeof(InvalidOperationException))]
         public void Success_Does_Not_Have_An_Exception()
         {
             // Arrange
@@ -50,7 +53,8 @@ namespace Liquid.NET.Tests.Utils
 
             // Assert
             // ReSharper disable once UnusedVariable
-            var val = result.Exception;
+            //var val = result.Exception;
+            Assert.That(() => result.Exception, Throws.TypeOf<InvalidOperationException>());
         }
 
         [Test]

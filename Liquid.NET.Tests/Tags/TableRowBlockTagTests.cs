@@ -29,7 +29,7 @@ namespace Liquid.NET.Tests.Tags
             // Act
 
             // Assert
-            Assert.That(result, Is.StringContaining(expected));
+            Assert.That(result, Does.Contain(expected));
 
         }
 
@@ -49,7 +49,7 @@ namespace Liquid.NET.Tests.Tags
             // Act
 
             // Assert
-            Assert.That(result, Is.StringContaining(expected));
+            Assert.That(result, Does.Contain(expected));
 
         }
 
@@ -72,7 +72,7 @@ namespace Liquid.NET.Tests.Tags
             // Act
 
             // Assert
-            Assert.That(result, Is.StringContaining(expected));
+            Assert.That(result, Does.Contain(expected));
 
         }
 
@@ -99,13 +99,13 @@ namespace Liquid.NET.Tests.Tags
             Logger.Log(result);
 
             // Assert
-            Assert.That(result, Is.StringContaining("<tr class=\"row1\">"));
-            Assert.That(result, Is.StringContaining("<tr class=\"row2\">"));
-            Assert.That(result, Is.Not.StringContaining("<tr class=\"row3\">"));
-            Assert.That(result, Is.Not.StringContaining(">1</td>"));
-            Assert.That(result, Is.StringContaining(">2</td>"));
-            Assert.That(result, Is.StringContaining(">4</td>"));
-            Assert.That(result, Is.Not.StringContaining(">5</td>"));
+            Assert.That(result, Does.Contain("<tr class=\"row1\">"));
+            Assert.That(result, Does.Contain("<tr class=\"row2\">"));
+            Assert.That(result, Does.Not.Contain("<tr class=\"row3\">"));
+            Assert.That(result, Does.Not.Contain(">1</td>"));
+            Assert.That(result, Does.Contain(">2</td>"));
+            Assert.That(result, Does.Contain(">4</td>"));
+            Assert.That(result, Does.Not.Contain(">5</td>"));
             
         }
 

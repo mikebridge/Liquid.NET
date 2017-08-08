@@ -1,33 +1,16 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.40629.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.26430.16
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Liquid.NET", "Liquid.NET\Liquid.NET.csproj", "{00128464-3F55-4C96-9445-F829DE49FBBA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Liquid.NET", "Liquid.NET\Liquid.NET.csproj", "{DDBC881A-001D-43F8-BD83-B3E04F7620E3}"
 	ProjectSection(ProjectDependencies) = postProject
-		{30C05176-BCAF-4694-9696-634CCDCB33EC} = {30C05176-BCAF-4694-9696-634CCDCB33EC}
+		{EC1DA7C4-53DE-47DC-BC66-2A8C78B9566E} = {EC1DA7C4-53DE-47DC-BC66-2A8C78B9566E}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Liquid.NET.Tests", "Liquid.NET.Tests\Liquid.NET.Tests.csproj", "{49855817-BC43-4400-95C4-C7BA52A6816D}"
-	ProjectSection(ProjectDependencies) = postProject
-		{30C05176-BCAF-4694-9696-634CCDCB33EC} = {30C05176-BCAF-4694-9696-634CCDCB33EC}
-	EndProjectSection
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Liquid.NET.Tests", "Liquid.NET.Tests\Liquid.NET.Tests.csproj", "{F7296021-F57E-4389-B5A3-5566F332D255}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{5F8139A0-750E-45D4-BA82-5D8D7ED4D277}"
-	ProjectSection(SolutionItems) = preProject
-		appveyor.yml = appveyor.yml
-		icon32x32.png = icon32x32.png
-		LICENSE.txt = LICENSE.txt
-		README.md = README.md
-		TODO.txt = TODO.txt
-	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Liquid.NET.Grammar", "Liquid.NET.Grammar\Liquid.NET.Grammar.csproj", "{30C05176-BCAF-4694-9696-634CCDCB33EC}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{CA937BFB-FAA2-4180-8C65-C976C742B130}"
-	ProjectSection(SolutionItems) = preProject
-		.nuget\packages.config = .nuget\packages.config
-	EndProjectSection
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Liquid.NET.Grammar", "Liquid.NET.Grammar\Liquid.NET.Grammar.csproj", "{EC1DA7C4-53DE-47DC-BC66-2A8C78B9566E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,17 +18,18 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{00128464-3F55-4C96-9445-F829DE49FBBA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{00128464-3F55-4C96-9445-F829DE49FBBA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{00128464-3F55-4C96-9445-F829DE49FBBA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{00128464-3F55-4C96-9445-F829DE49FBBA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{49855817-BC43-4400-95C4-C7BA52A6816D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{49855817-BC43-4400-95C4-C7BA52A6816D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{49855817-BC43-4400-95C4-C7BA52A6816D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{30C05176-BCAF-4694-9696-634CCDCB33EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{30C05176-BCAF-4694-9696-634CCDCB33EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{30C05176-BCAF-4694-9696-634CCDCB33EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{30C05176-BCAF-4694-9696-634CCDCB33EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DDBC881A-001D-43F8-BD83-B3E04F7620E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DDBC881A-001D-43F8-BD83-B3E04F7620E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DDBC881A-001D-43F8-BD83-B3E04F7620E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DDBC881A-001D-43F8-BD83-B3E04F7620E3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F7296021-F57E-4389-B5A3-5566F332D255}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7296021-F57E-4389-B5A3-5566F332D255}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7296021-F57E-4389-B5A3-5566F332D255}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7296021-F57E-4389-B5A3-5566F332D255}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EC1DA7C4-53DE-47DC-BC66-2A8C78B9566E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EC1DA7C4-53DE-47DC-BC66-2A8C78B9566E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EC1DA7C4-53DE-47DC-BC66-2A8C78B9566E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EC1DA7C4-53DE-47DC-BC66-2A8C78B9566E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

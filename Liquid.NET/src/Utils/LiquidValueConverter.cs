@@ -29,7 +29,7 @@ namespace Liquid.NET.Utils
                 return valueFromObject;
             }
 
-            throw new ApplicationException("can't convert object of type" + obj.GetType());
+            throw new Exception("can't convert object of type" + obj.GetType());
         }
 
         private Option<ILiquidValue> FromObject(Object obj)

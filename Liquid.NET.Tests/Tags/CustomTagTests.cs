@@ -47,7 +47,7 @@ namespace Liquid.NET.Tests.Tags
 
             Console.WriteLine(result);
             // Assert
-            Assert.That(result.Result, Is.StringContaining("Unknown tag 'awefawef'"));
+            Assert.That(result.Result, Does.Contain("Unknown tag 'awefawef'"));
 
         }
 

@@ -27,7 +27,7 @@ namespace Liquid.NET.Tests.Filters.Math
             var template = LiquidTemplate.Create("Result : {{ 2  | modulo: 0 }}");
             var result = template.LiquidTemplate.Render(new TemplateContext().WithAllFilters());
             // Assert
-            Assert.That(result.Result, Is.StringContaining("Liquid error: divided by 0"));
+            Assert.That(result.Result, Does.Contain("Liquid error: divided by 0"));
         }
 
 

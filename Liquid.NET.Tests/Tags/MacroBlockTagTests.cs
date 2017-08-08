@@ -136,7 +136,7 @@ namespace Liquid.NET.Tests.Tags
             var renderingResult = templateResult.LiquidTemplate.Render(templateContext);
 
             // Assert
-            Assert.That(renderingResult.RenderingErrors[0].Message, Is.StringContaining("Liquid error: divided by 0"));
+            Assert.That(renderingResult.RenderingErrors[0].Message, Does.Contain("Liquid error: divided by 0"));
 
         }
 
@@ -158,7 +158,7 @@ namespace Liquid.NET.Tests.Tags
             //RenderingHelper.RenderTemplate(templateString, templateContext, renderingErrors.Add);
 
             // Assert
-            Assert.That(result.RenderingErrors[0].Message, Is.StringContaining("Liquid error: divided by 0"));
+            Assert.That(result.RenderingErrors[0].Message, Does.Contain("Liquid error: divided by 0"));
 
         }
 
@@ -181,7 +181,7 @@ namespace Liquid.NET.Tests.Tags
             // Assert
             //Assert.That(result.RenderingErrors.Any(), Is.False);
             Assert.That(template.ParsingErrors.Any(), Is.True);
-            Assert.That(template.ParsingErrors[0].Message, Is.StringContaining("mismatched input"));
+            Assert.That(template.ParsingErrors[0].Message, Does.Contain("mismatched input"));
 
         }
 

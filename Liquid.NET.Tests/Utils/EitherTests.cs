@@ -32,7 +32,7 @@ namespace Liquid.NET.Tests.Utils
         }
 
         [Test]
-        [ExpectedException(typeof(InvalidOperationException))]
+        //[ExpectedException(typeof(InvalidOperationException))]
         public void It_Should_Not_Be_Left()
         {
             // Arrange
@@ -41,11 +41,15 @@ namespace Liquid.NET.Tests.Utils
 
             // Assert
             // ReSharper disable once UnusedVariable
-            var result = either.Left;
+            // var result = either.Left;
+            Assert.That(() => either.Left,
+                Throws.TypeOf<InvalidOperationException>());
+
+            
         }
 
         [Test]
-        [ExpectedException(typeof(InvalidOperationException))]
+        //[ExpectedException(typeof(InvalidOperationException))]
         public void It_Should_Not_Be_Right()
         {
             // Arrange
@@ -54,7 +58,8 @@ namespace Liquid.NET.Tests.Utils
 
             // Assert
             // ReSharper disable once UnusedVariable
-            var result = either.Right;
+            //var result = either.Right;
+            Assert.That(() => either.Right, Throws.TypeOf<InvalidOperationException>());
         }
 
     }

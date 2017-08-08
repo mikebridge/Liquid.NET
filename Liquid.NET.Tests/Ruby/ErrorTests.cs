@@ -73,7 +73,7 @@ namespace Liquid.NET.Tests.Ruby
             //var result = RenderingHelper.RenderTemplate(input, onRenderingError: err => errors.Add(err));
 
             Assert.That(result.RenderingErrors.Count, Is.EqualTo(1));
-            Assert.That(result.RenderingErrors[0].ToString(), Is.StringContaining(expectedMessage));
+            Assert.That(result.RenderingErrors[0].ToString(), Does.Contain(expectedMessage));
         }
         
     }

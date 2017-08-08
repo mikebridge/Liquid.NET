@@ -130,7 +130,7 @@ namespace Liquid.NET.Tests.Grammar
             var result = template.LiquidTemplate.Render(new TemplateContext().WithAllFilters());
 
             // Assert
-            Assert.That(result.Result, Is.StringContaining("Can't convert")); // note: it doesn't remove that extra space.
+            Assert.That(result.Result, Does.Contain("Can't convert")); // note: it doesn't remove that extra space.
         }
 
         [Test]
@@ -143,7 +143,7 @@ namespace Liquid.NET.Tests.Grammar
             var result = template.LiquidTemplate.Render(new TemplateContext().WithAllFilters());
 
             // Assert
-            Assert.That(result.Result, Is.StringContaining("Can't convert")); // note: it doesn't remove that extra space.
+            Assert.That(result.Result, Does.Contain("Can't convert")); // note: it doesn't remove that extra space.
         }
 
 

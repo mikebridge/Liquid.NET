@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-
+using System.Reflection;
 using Liquid.NET.Utils;
 
 namespace Liquid.NET.Constants
@@ -166,7 +166,7 @@ namespace Liquid.NET.Constants
 
         private static bool TypeNeedsQuotes(Type origType)
         {
-            return typeof (LiquidString).IsAssignableFrom(origType) || typeof (LiquidDate).IsAssignableFrom(origType);
+            return typeof (LiquidString).GetTypeInfo().IsAssignableFrom(origType) || typeof (LiquidDate).IsAssignableFrom(origType);
         }
     }
 }

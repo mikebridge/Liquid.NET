@@ -14,11 +14,14 @@ namespace Liquid.NET.Tests.Utils
         }
 
         [Test]
-        [ExpectedException(typeof(InvalidOperationException))]
+        //[ExpectedException(typeof(InvalidOperationException))]
         public void It_Should_Disallow_Dereferenced_None_Value()
         {
             // ReSharper disable once UnusedVariable
-            var result = Option<String>.None().Value;
+            //var result = Option<String>.None().Value;
+            Assert.That(() => Option<String>.None().Value,
+                Throws.TypeOf<InvalidOperationException>());
+
         }
 
         [Test]
@@ -162,11 +165,10 @@ namespace Liquid.NET.Tests.Utils
         }
 
         [Test]
-        [ExpectedException(typeof(ArgumentNullException))]
+        //[ExpectedException(typeof(ArgumentNullException))]
         public void It_Should_Not_Bind_To_Null_func()
         {
-            // ReSharper disable once UnusedVariable
-            var result = Option<String>.None().Bind(null);           
+            Assert.That(() => Option<String>.None().Bind(null), Throws.TypeOf<ArgumentNullException>());
         }
 
         [Test]

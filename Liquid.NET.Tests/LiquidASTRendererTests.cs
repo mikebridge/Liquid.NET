@@ -445,7 +445,7 @@ namespace Liquid.NET.Tests
             String result = GenerateAndRender("Result : {{ arrayofnums[4][numeric[4]] }}", templateContext);
 
             // Assert
-            Assert.That(result, Is.StringContaining("cannot apply an index to a numeric."));
+            Assert.That(result, Does.Contain("cannot apply an index to a numeric."));
 
         }
 

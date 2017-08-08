@@ -554,19 +554,19 @@ c")]
                 String result = template.LiquidTemplate.Render(ctx, onRenderingError: errors.Add);
                 //Console.WriteLine("RenderingErrors")
                 Assert.That(errors.Count, Is.EqualTo(1));
-                Assert.That(errors[0].ToString(), Is.StringContaining(expectedMessage));
+                Assert.That(errors[0].ToString(), Does.Contain(expectedMessage));
                 //Assert.Fail("Expected exception: " + expectedMessage);
 //            }
 //            catch (LiquidParserException ex)
 //            {
                 // Assert
-                //Assert.That(ex.LiquidErrors[0].ToString(), Is.StringContaining(expectedMessage));
+                //Assert.That(ex.LiquidErrors[0].ToString(), Does.Contain(expectedMessage));
 //            }
             //catch (LiquidRendererException ex)
             //{
                 // Assert
-                //Assert.That(ex.LiquidErrors[0].ToString(), Is.StringContaining(expectedMessage));
-              //  Assert.That(errors.ToString(), Is.StringContaining(expectedMessage));
+                //Assert.That(ex.LiquidErrors[0].ToString(), Does.Contain(expectedMessage));
+              //  Assert.That(errors.ToString(), Does.Contain(expectedMessage));
             //}
         }
 

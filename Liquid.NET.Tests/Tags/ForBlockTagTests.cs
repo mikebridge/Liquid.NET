@@ -443,7 +443,7 @@ namespace Liquid.NET.Tests.Tags
             String result = template.LiquidTemplate.Render(ctx).Result;
 
             // Assert
-            Assert.That(result, Is.StringContaining(expected));
+            Assert.That(result, Does.Contain(expected));
 
         }
 
@@ -535,7 +535,7 @@ namespace Liquid.NET.Tests.Tags
             String result = template.LiquidTemplate.Render(ctx).Result;
 
             // Assert
-            Assert.That(result, Is.StringContaining("<li>100</li>"));
+            Assert.That(result, Does.Contain("<li>100</li>"));
         }
 
         private static string GetForLoop(string txt)

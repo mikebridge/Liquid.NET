@@ -59,7 +59,7 @@ namespace Liquid.NET.Constants
                 return Convert<TDest>(date);
             }
             //return Convert<TDest>(src);
-            throw new ApplicationException("Unknown type: "+ src.GetType());
+            throw new Exception("Unknown type: "+ src.GetType());
         }
 
         /// <summary>

@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Caching;
+using Microsoft.Extensions.Caching.Memory;
+
+//using System.Runtime.Caching;
+//using Microsoft.Extensions.Caching.Memory;
 
 namespace Liquid.NET
 {
@@ -44,20 +47,27 @@ namespace Liquid.NET
             };
 
             String hash = CacheKey(template);
-            ObjectCache cache = MemoryCache.Default;
-            var liquidAST = cache[hash] as LiquidAST;
-            if (liquidAST == null)
-            {                
-                CacheItemPolicy policy = new CacheItemPolicy
-                {
-                    SlidingExpiration = _slidingExpiration
-                };
+            //ObjectCache cache = MemoryCache.Default;
+            MemoryCache cache = new MemoryCache(new MemoryCacheOptions());
+
+            //var liquidAST = cache[hash] as LiquidAST;
+            LiquidAST liquidAST;
+            bool found = cache.TryGetValue(hash, out liquidAST);
+            if (!found)
+            {
+                //CacheItemPolicy policy = new CacheItemPolicy
+                //{
+                //    SlidingExpiration = _slidingExpiration
+                //};
+                var cacheEntryOptions = new MemoryCacheEntryOptions()
+                    // Keep in cache for this time, reset time if accessed.
+                    .SetSlidingExpiration(_slidingExpiration);
                 // TODO: If there are errors, don't caceh the template
                 liquidAST = _generator.Generate(template, decoratedAccumulator);
                 
                 if (!errors.Any() && liquidAST != null)
                 {
-                    cache.Set(hash, liquidAST, policy);
+                    cache.Set(hash, liquidAST, cacheEntryOptions);
                 }
             }
             return liquidAST;

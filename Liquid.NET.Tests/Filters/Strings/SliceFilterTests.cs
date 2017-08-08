@@ -59,7 +59,7 @@ namespace Liquid.NET.Tests.Filters.Strings
             var result = template.LiquidTemplate.Render(ctx);
 
             // Assert
-            Assert.That(result.Result, Is.StringContaining("Can't slice a object of type"));
+            Assert.That(result.Result, Does.Contain("Can't slice a object of type"));
 
         }
 
@@ -76,7 +76,7 @@ namespace Liquid.NET.Tests.Filters.Strings
             var result = template.LiquidTemplate.Render(ctx);
 
             // Assert
-            Assert.That(result.Result, Is.StringContaining("Please pass a start parameter"));
+            Assert.That(result.Result, Does.Contain("Please pass a start parameter"));
 
         }
 
@@ -91,7 +91,7 @@ namespace Liquid.NET.Tests.Filters.Strings
             var template = LiquidTemplate.Create("Result : {{ str | slice }}");
             var result = template.LiquidTemplate.Render(ctx);
             // Assert
-            Assert.That(result.Result, Is.StringContaining("Please pass a start parameter"));
+            Assert.That(result.Result, Does.Contain("Please pass a start parameter"));
 
         }
 
@@ -105,7 +105,7 @@ namespace Liquid.NET.Tests.Filters.Strings
             var result = RenderingHelper.RenderTemplate("Result : {{ novar | slice }}", ctx);
 
             // Assert
-            Assert.That(result, Is.StringContaining("Result : "));
+            Assert.That(result, Does.Contain("Result : "));
 
         }
 

@@ -89,7 +89,7 @@ namespace Liquid.NET.Tests.Filters.Array
             var result = template.LiquidTemplate.Render(ctx);
 
             // Assert            
-            Assert.That(result.Result, Is.StringContaining("an array element is missing the field \'test\'"));
+            Assert.That(result.Result, Does.Contain("an array element is missing the field \'test\'"));
         }
 
 

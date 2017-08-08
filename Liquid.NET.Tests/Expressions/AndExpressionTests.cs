@@ -33,7 +33,7 @@ namespace Liquid.NET.Tests.Expressions
         }
 
         [Test]
-        [ExpectedException(typeof(Exception))]
+        //[ExpectedException(typeof(Exception))]
         public void It_Should_Not_Accept_Three_Arguments()
         {
             // Arrange
@@ -42,12 +42,12 @@ namespace Liquid.NET.Tests.Expressions
 
             // Act
             // ReSharper disable once UnusedVariable
-            var result = expr.Eval(new TemplateContext(), new List<Option<ILiquidValue>>
+            Assert.That(() => expr.Eval(new TemplateContext(), new List<Option<ILiquidValue>>
             {
                 new LiquidBoolean(true),
                 new LiquidBoolean(false),
                 new LiquidBoolean(false)
-            });
+            }), Throws.TypeOf<Exception>());
         }
 
     }

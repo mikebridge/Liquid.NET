@@ -283,7 +283,7 @@ namespace Liquid.NET.Tests
                                                        "Some more text");
             String error = String.Join(",", templateResult.ParsingErrors.Select(x => x.Message));
 
-            Assert.That(error, Is.StringContaining("Missing '}}'"));
+            Assert.That(error, Does.Contain("Missing '}}'"));
             Assert.That(templateResult.LiquidTemplate, Is.Not.Null);
 
             // Act
@@ -291,8 +291,8 @@ namespace Liquid.NET.Tests
 
             // Assert
             //Console.WriteLine(result.Result);
-            Assert.That(result.Result, Is.StringContaining("This filter is not terminated"));
-            //Assert.That(result.Result, Is.StringContaining("Some more text")); // this seems to terminate here...
+            Assert.That(result.Result, Does.Contain("This filter is not terminated"));
+            //Assert.That(result.Result, Does.Contain("Some more text")); // this seems to terminate here...
 
 
         }

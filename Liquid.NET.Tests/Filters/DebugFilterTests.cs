@@ -13,9 +13,10 @@ namespace Liquid.NET.Tests.Filters
     {
         [Test]
         public void It_Should_Display_Debugging_Info_For_A_Variable()
-        {            
+        {
             // Arrange
-            Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
+            //Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
+            CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
             TemplateContext ctx = new TemplateContext();
             DateTime dateTime = new DateTime(2015, 3, 30, 23, 1, 12);
             var dateValue = new LiquidDate(dateTime);
@@ -26,9 +27,9 @@ namespace Liquid.NET.Tests.Filters
             var result = RenderingHelper.RenderTemplate("Result : {{ mydate | debug }}", ctx);
 
             // Assert
-            Assert.That(result, Is.StringContaining("\"metadata\" : { \"hello\" : \"test\" }"));
-            Assert.That(result, Is.StringContaining("\"value\" : \"03/30/2015 23:01:12\""));
-            Assert.That(result, Is.StringContaining("\"type\" : \"date"));
+            Assert.That(result, Does.Contain("\"metadata\" : { \"hello\" : \"test\" }"));
+            Assert.That(result, Does.Contain("\"value\" : \"03/30/2015 23:01:12\""));
+            Assert.That(result, Does.Contain("\"type\" : \"date"));
             Assert.That(result, Is.EqualTo("Result : { \"metadata\" : { \"hello\" : \"test\" }, \"value\" : \"03/30/2015 23:01:12\", \"type\" : \"date\" }"));
 
         }
@@ -48,7 +49,7 @@ namespace Liquid.NET.Tests.Filters
             Logger.Log(result);
 
             // Assert
-            Assert.That(result, Is.StringContaining("{ \"assigned\" : \"test\""));
+            Assert.That(result, Does.Contain("{ \"assigned\" : \"test\""));
 
         }
 
@@ -71,8 +72,8 @@ namespace Liquid.NET.Tests.Filters
             Logger.Log(result);
 
             // Assert
-            //Assert.That(result, Is.StringContaining("{ \"assigned\" : \"test\""));
-            Assert.That(result, Is.StringContaining("{ \"reassigned\" : \"test2\""));
+            //Assert.That(result, Does.Contain("{ \"assigned\" : \"test\""));
+            Assert.That(result, Does.Contain("{ \"reassigned\" : \"test2\""));
 
         }
 

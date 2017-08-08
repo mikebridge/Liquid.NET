@@ -16,7 +16,7 @@ namespace Liquid.NET.Filters
            
             if (filterType == null)
             {               
-                return new Failure<IFilterExpression>(new ApplicationException("Unable to create filter " + name));
+                return new Failure<IFilterExpression>(new Exception("Unable to create filter " + name));
             }
             if (!typeof (IFilterExpression).IsAssignableFrom(filterType))
             {
@@ -27,7 +27,7 @@ namespace Liquid.NET.Filters
             if (constructors.Length != 1)
             {
                 // for the time being, ensure just one constructor.
-                return new Failure<IFilterExpression>(new ApplicationException(("The \""+filterType+"\" class for " + name + " has more than one constructor.  Please contact the developer to fix this.")));              
+                return new Failure<IFilterExpression>(new Exception(("The \""+filterType+"\" class for " + name + " has more than one constructor.  Please contact the developer to fix this.")));              
             }
             var filter = InstantiateFilter(filterType, CreateArguments(filterArgs, constructors[0]));
             filter.Name = name;

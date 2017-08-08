@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Remoting;
+//using System.Runtime.Remoting;
 using Liquid.NET.Constants;
 using Liquid.NET.Filters;
 using Liquid.NET.Utils;
@@ -87,7 +87,7 @@ namespace Liquid.NET.Tests.Examples
         {
             var parsingResult = LiquidTemplate.Create("This filter delimiter is not terminated: {{ myfilter");            
             String error = String.Join(",", parsingResult.ParsingErrors.Select(x => x.ToString()));
-            Assert.That(error, Is.StringContaining("line 1:52 at <EOF>: Missing '}}'"));            
+            Assert.That(error, Does.Contain("line 1:52 at <EOF>: Missing '}}'"));            
         }
 
         [Test]
@@ -99,7 +99,7 @@ namespace Liquid.NET.Tests.Examples
             String error = String.Join(",", renderingResult.RenderingErrors.Select(x => x.Message));
             //Console.WriteLine("The ERROR was : " + error);
             //Console.WriteLine("The RESULT was : " + renderingResult.Result);
-            Assert.That(error, Is.StringContaining("Liquid error: divided by 0"));
+            Assert.That(error, Does.Contain("Liquid error: divided by 0"));
         }
 
         [Test]
@@ -120,7 +120,7 @@ namespace Liquid.NET.Tests.Examples
             var parsingResult = LiquidTemplate.Create("Poco Result: {{ poco }}");
             var renderingResult = parsingResult.LiquidTemplate.Render(ctx);
 
-            Assert.That(renderingResult.Result, Is.StringContaining(@"Poco Result: { ""mystringfield"" : ""A string field"", ""mynullableintfield"" : 123, ""myrenamedfield"" : ""Some Other Field"", ""nestedpoco"" : { ""mystringfield"" : ""Nested Poco"", ""mynullableintfield"" : null, ""myrenamedfield"" : null } }"));
+            Assert.That(renderingResult.Result, Does.Contain(@"Poco Result: { ""mystringfield"" : ""A string field"", ""mynullableintfield"" : 123, ""myrenamedfield"" : ""Some Other Field"", ""nestedpoco"" : { ""mystringfield"" : ""Nested Poco"", ""mynullableintfield"" : null, ""myrenamedfield"" : null } }"));
         }
 
         public class MyPoco

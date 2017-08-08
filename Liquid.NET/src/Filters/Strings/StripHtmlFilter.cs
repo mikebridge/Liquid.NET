@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Web;
+//using System.Web;
+using System.Net;
 using Liquid.NET.Constants;
 using Liquid.NET.Utils;
 
@@ -27,8 +28,8 @@ namespace Liquid.NET.Filters.Strings
 
         public static String UnHtml(String html)
         {
-            html = HttpUtility.UrlDecode(html);
-            html = HttpUtility.HtmlDecode(html);
+            html = WebUtility.UrlDecode(html);
+            html = WebUtility.HtmlDecode(html);
 
             html = RemoveTag(html, "<!--", "-->");
             html = RemoveTag(html, "<script", "</script>");

@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using Liquid.NET.Constants;
 using Liquid.NET.Tests.Helpers;
-using NUnit.Framework;
+using Xunit;
 
 namespace Liquid.NET.Tests
 {
-    [TestFixture]
+    
     public class CapacityTests
     {
-        [Test]
+        [Fact]
         public void It_Should_Parse_Includes()
         {
             DateTime start = DateTime.Now;
@@ -42,12 +42,12 @@ namespace Liquid.NET.Tests
             var end = DateTime.Now;
             TimeSpan timeDiff = end - start;
             Logger.Log("ELAPSED: " + timeDiff.TotalMilliseconds);
-            Assert.That(timeDiff.Milliseconds < 500);
+            Assert.True(timeDiff.Milliseconds < 500);
             //Assert.Fail("Not Implemented Yet");
 
         }
 
-        [Test]
+        [Fact]
         // https://github.com/antlr/antlr4/issues/192#issuecomment-15238595
         public void It_Should_Not_Bog_On_Raw_Text_With_Adaptive_Prediction()
         {
@@ -80,7 +80,7 @@ namespace Liquid.NET.Tests
             var end = DateTime.Now;
             TimeSpan timeDiff = end - start;
             Logger.Log("ELAPSED: " + timeDiff.TotalMilliseconds);
-            Assert.That(timeDiff.Milliseconds < 1000);
+            Assert.True(timeDiff.Milliseconds < 1000);
             //Assert.Fail("Not Implemented Yet");
 
         }

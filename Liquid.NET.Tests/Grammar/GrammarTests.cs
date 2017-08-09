@@ -1,128 +1,128 @@
-﻿using NUnit.Framework;
+﻿using Xunit;
 
 namespace Liquid.NET.Tests.Grammar
 {
-    [TestFixture]
+    
     public class GrammarTests
     {
 
-        [Test]
+        [Fact]
         public void It_Should_Echo_RawText()
         {
             // Act
             var result = RenderTemplate("HELLO");
 
             // Assert
-            Assert.That(result, Is.EqualTo("HELLO"));
+            Assert.Equal("HELLO", result);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Echo_A_String()
         {
             // Act
             var result = RenderTemplate("Result : {{  \"Hello\"  }}");
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : Hello"));
+            Assert.Equal("Result : Hello", result);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Echo_A_Boolean_True()
         {
             // Act
             var result = RenderTemplate("Result : {{ true}}");
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : true"));
+            Assert.Equal("Result : true", result);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Echo_A_Boolean_False()
         {
             // Act
             var result = RenderTemplate("Result : {{ false }}");
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : false"));
+            Assert.Equal("Result : false", result);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Echo_A_Number()
         {
             // Act
             var result = RenderTemplate("Result : {{ 1 }}");
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : 1"));
+            Assert.Equal("Result : 1", result);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Extract_A_Filter_Chain()
         {
             // Act
             var result = RenderTemplate("Result : {{ \"test awesome\" | upcase | remove: \"AWESOME\" }}");
             
             // Assert
-            Assert.That(result, Is.EqualTo("Result : TEST "));
+            Assert.Equal("Result : TEST ", result);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Extract_A_Filter()
         {
             // Act
             var result = RenderTemplate("Result : {{ \"test AWESOME\" | remove: \"AWESOME\" }}");
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : test ")); // note: it doesn't remove that extra space.
+            Assert.Equal("Result : test ", result); // note: it doesn't remove that extra space.
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Apply_A_Filter_With_No_Args()
         {
             // Act
             var result = RenderTemplate("Result : {{ \"test it\" | upcase }}");
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : TEST IT"));
+            Assert.Equal("Result : TEST IT", result);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Cast_From_Numeric_To_String_When_Filters_Mismatched()
         {
             // Act
             var result = RenderTemplate("Result : {{ 33 | upcase }}");
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : 33"));
+            Assert.Equal("Result : 33", result);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Cast_From_String_To_Numeric_When_Filters_Mismatched()
         {
             // Act
             var result = RenderTemplate("Result : {{ \"33\" | plus: 3 }}");
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : 36"));
+            Assert.Equal("Result : 36", result);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Pass_A_Numeric_Arg()
         {
             // Act
             var result = RenderTemplate("Result : {{ 33 | plus: 3 }}");
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : 36"));
+            Assert.Equal("Result : 36", result);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Render_An_Error_When_Conversion_From_Object_Fails()
         {
             // Act
@@ -130,10 +130,10 @@ namespace Liquid.NET.Tests.Grammar
             var result = template.LiquidTemplate.Render(new TemplateContext().WithAllFilters());
 
             // Assert
-            Assert.That(result.Result, Does.Contain("Can't convert")); // note: it doesn't remove that extra space.
+            Assert.Contains("Can't convert", result.Result); // note: it doesn't remove that extra space.
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Render_An_Error_When_Cant_Pass_Argument()
         {
             // Act
@@ -143,7 +143,7 @@ namespace Liquid.NET.Tests.Grammar
             var result = template.LiquidTemplate.Render(new TemplateContext().WithAllFilters());
 
             // Assert
-            Assert.That(result.Result, Does.Contain("Can't convert")); // note: it doesn't remove that extra space.
+            Assert.Contains("Can't convert", result.Result); // note: it doesn't remove that extra space.
         }
 
 

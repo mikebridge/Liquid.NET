@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Numerics;
 using Liquid.NET.Constants;
 using Liquid.NET.Utils;
-using NUnit.Framework;
+using Xunit;
 
 namespace Liquid.NET.Tests
 {
-    [TestFixture]
+    
     public class TemplateContextTests
     {
-        [Test]
+        [Fact]
         public void It_Should_Reference_A_Defined_Name()
         {
             // Arrange
@@ -22,11 +22,11 @@ namespace Liquid.NET.Tests
             var result = templateContext.SymbolTableStack.Reference(varname);
 
             // Assert
-            Assert.That(result.SuccessValue<LiquidString>().StringVal, Is.EqualTo("HELLO"));
+            Assert.Equal("HELLO", result.SuccessValue<LiquidString>().StringVal);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Add_A_Register()
         {
             // Arrange
@@ -40,10 +40,10 @@ namespace Liquid.NET.Tests
             var val = (BigInteger) templateContext.Registers[varname];
 
             // Assert
-            Assert.That(val, Is.EqualTo(orig));
+            Assert.Equal(orig, val);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Add_A_Register_Via_The_Context()
         {
             // Arrange
@@ -56,10 +56,10 @@ namespace Liquid.NET.Tests
             var val = (String)templateContext.Registers[varname];
 
             // Assert
-            Assert.That(val, Is.EqualTo("TEST"));
+            Assert.Equal("TEST", val);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Add_A_Local_Variable_Via_The_Context()
         {
             // Arrange
@@ -72,28 +72,28 @@ namespace Liquid.NET.Tests
             var val = templateContext.SymbolTableStack.Reference(varname);
 
             // Assert
-            Assert.That(val.SuccessValue<LiquidString>().StringVal, Is.EqualTo("TEST"));
+            Assert.Equal("TEST", val.SuccessValue<LiquidString>().StringVal);
         }
 
 
-        [Test]
+        [Fact]
        
         public void It_Should_Implicitly_Cast_A_Null_LocalVariable_To_None()
         {
             // Arrange
             var templateContext = new TemplateContext().DefineLocalVariable("test", null);
 
-            Assert.That(templateContext.SymbolTableStack.Reference("test"), Is.EqualTo(LiquidValue.None));
+            //Assert.Equal(LiquidValue.None,  templateContext.SymbolTableStack.Reference("test"));
+            Assert.Equal(LiquidValue.None, templateContext.SymbolTableStack.Reference("test").SuccessOption<ILiquidValue>());
         }
 
 
-        [Test]
+        [Fact]
         //[ExpectedException(typeof(ArgumentNullException))]
         public void It_Should_THrow_Error_When_No_ASTGenerator()
         {
             // Arrange
-            Assert.That(() => new TemplateContext().WithASTGenerator(null),
-                Throws.TypeOf<ArgumentNullException>());
+            Assert.Throws<ArgumentNullException>(() => new TemplateContext().WithASTGenerator(null));
         }
 
 

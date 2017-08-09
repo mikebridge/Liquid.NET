@@ -1,13 +1,13 @@
 ﻿using Liquid.NET.Constants;
 using Liquid.NET.Filters.Strings;
-using NUnit.Framework;
+using Xunit;
 
 namespace Liquid.NET.Tests.Filters.Strings
 {
-    [TestFixture]
+    
     public class RemoveFilterTests
     {
-        [Test]
+        [Fact]
         public void It_Should_Remove_an_Integer()
         {
             // Arrange
@@ -17,31 +17,31 @@ namespace Liquid.NET.Tests.Filters.Strings
             var result = removeFilter.Apply(new TemplateContext(), LiquidString.Create("Remove the 123 in this string.")).SuccessValue<LiquidString>();
 
             // Assert
-            Assert.That(result.Value, Is.EqualTo("Remove the  in this string."));
+            Assert.Equal("Remove the  in this string.", result.Value);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Remove_MultipleText_From_A_String()
         {
             // Arrange
             var result = RenderingHelper.RenderTemplate("Result : {{ \"testtest\" | remove : \"te\" }}");
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : stst"));
+            Assert.Equal("Result : stst", result);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Remove_A_Number_From_A_Number()
         {
             // Arrange
             var result = RenderingHelper.RenderTemplate("Result : {{ 123456789 | remove : 456 }}");
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : 123789"));
+            Assert.Equal("Result : 123789", result);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Remove_Nil_From_A_String()
         {
             // Arrange
@@ -51,7 +51,7 @@ namespace Liquid.NET.Tests.Filters.Strings
             var result = template.LiquidTemplate.Render(new TemplateContext().WithAllFilters());
 
             // Assert
-            Assert.That(result.Result, Is.EqualTo("Result : ERROR: Please specify a replacement string."));
+            Assert.Equal("Result : ERROR: Please specify a replacement string.", result.Result);
         }
 
 

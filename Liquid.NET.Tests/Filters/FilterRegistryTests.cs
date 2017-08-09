@@ -1,13 +1,13 @@
 ﻿using Liquid.NET.Filters;
 using Liquid.NET.Filters.Strings;
-using NUnit.Framework;
+using Xunit;
 
 namespace Liquid.NET.Tests.Filters
 {
-    [TestFixture]
+    
     public class FilterRegistryTests
     {
-        [Test]
+        [Fact]
         public void It_Should_Register_A_Filter()
         {
             // Arrange
@@ -19,7 +19,7 @@ namespace Liquid.NET.Tests.Filters
             var filterType = filterRegistry.Find(key);
 
             // Assert
-            Assert.That(filterType, Is.EqualTo(typeof(UpCaseFilter)));
+            Assert.Equal(typeof(UpCaseFilter), filterType);
 
         }
     }

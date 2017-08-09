@@ -1,11 +1,11 @@
-﻿using NUnit.Framework;
+﻿using Xunit;
 
 namespace Liquid.NET.Tests.Filters.Strings
 {
-    [TestFixture]
+    
     public class StripHtmlFilterTests
     {
-        [Test]
+        [Fact]
         public void It_Should_Strip_Html()
         {
             // Arrange
@@ -13,7 +13,7 @@ namespace Liquid.NET.Tests.Filters.Strings
             // Act
             var result = RenderingHelper.RenderTemplate(s);
             // Assert
-            Assert.That(result, Is.EqualTo("Hello World"));
+            Assert.Equal("Hello World", result);
 
         }
 

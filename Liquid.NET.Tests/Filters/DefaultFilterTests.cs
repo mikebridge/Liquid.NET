@@ -1,12 +1,12 @@
 ﻿using System;
-using NUnit.Framework;
+using Xunit;
 
 namespace Liquid.NET.Tests.Filters
 {
-    [TestFixture]
+    
     public class DefaultFilterTests
     {
-        [Test]
+        [Fact]
         public void It_Should_Return_Default_If_Null()
         {
             // Arrange
@@ -16,11 +16,11 @@ namespace Liquid.NET.Tests.Filters
             var result = RenderingHelper.RenderTemplate("Result : {{ mydate | default: \"Hello\" }}", ctx);
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : Hello"));
+            Assert.Equal("Result : Hello", result);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Return_Default_If_Empty_String()
         {
             // Arrange
@@ -30,14 +30,14 @@ namespace Liquid.NET.Tests.Filters
             var result = RenderingHelper.RenderTemplate("Result : {{ \"\" | default: \"Hello\" }}", ctx);
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : Hello"));
+            Assert.Equal("Result : Hello", result);
 
         }
 
-        [Test]
-        [TestCase("\"  \"", "  ")]
-        [TestCase("\"Test\"", "Test")]
-        [TestCase("0", "0")]
+        [Theory]
+        [InlineData("\"  \"", "  ")]
+        [InlineData("\"Test\"", "Test")]
+        [InlineData("0", "0")]
         public void It_Should_Not_Return_Default_If_Not_Null_And_Not_Empty(String input, String expected)
         {
             // Arrange
@@ -47,11 +47,11 @@ namespace Liquid.NET.Tests.Filters
             var result = RenderingHelper.RenderTemplate("Result : {{ "+input+" | default: \"Hello\" }}", ctx);
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : "+expected));
+            Assert.Equal("Result : "+expected, result);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Return_Default_If_Array_Has_No_Elements()
         {
             // Arrange
@@ -61,10 +61,10 @@ namespace Liquid.NET.Tests.Filters
             var result = RenderingHelper.RenderTemplate("Result : {% assign arr=\"\" | split: \"|\"%}{{ arr | default: \"DEFAULT\" }}", ctx);
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : DEFAULT"));
+            Assert.Equal("Result : DEFAULT", result);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Not_Return_Default_If_Array_Has_Elements()
         {
             // Arrange
@@ -74,12 +74,12 @@ namespace Liquid.NET.Tests.Filters
             var result = RenderingHelper.RenderTemplate("Result : {% assign arr=\"1|2\" | split: \"|\"%}{{ arr | default: \"DEFAULT\" }}", ctx);
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : 12"));
+            Assert.Equal("Result : 12", result);
         }
 
 
 
-        [Test]
+        [Fact]
         public void It_Should_Return_Default_If_Array_Is_Null()
         {
             // Arrange
@@ -89,7 +89,7 @@ namespace Liquid.NET.Tests.Filters
             var result = RenderingHelper.RenderTemplate("Result : {{ arr | default: \"DEFAULT\" }}", ctx);
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : DEFAULT"));
+            Assert.Equal("Result : DEFAULT", result);
         }
 
     }

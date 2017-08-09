@@ -6,14 +6,14 @@ using Liquid.NET.Expressions;
 using Liquid.NET.Symbols;
 using Liquid.NET.Tags.Custom;
 using Liquid.NET.Utils;
-using NUnit.Framework;
+using Xunit;
 
 namespace Liquid.NET.Tests.Tags
 {
-    [TestFixture]
+    
     public class CustomBlockTagTests
     {
-        [Test]
+        [Fact]
         public void It_Should_Parse_A_Custom_BlockTag()
         {
 //            try
@@ -28,7 +28,7 @@ namespace Liquid.NET.Tests.Tags
                 Logger.Log(result);
 
                 // Assert
-                Assert.That(result, Is.EqualTo("Result : ohce"));
+                Assert.Equal("Result : ohce", result);
 //            }
 //            catch (LiquidRendererException ex)
 //            {
@@ -36,15 +36,16 @@ namespace Liquid.NET.Tests.Tags
 //            }
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Not_Parse_A_Custom_BlockTag_With_No_End()
         {
             // Act
             //var templateContext = new TemplateContext().WithAllFilters().WithCustomTagBlockRenderer<WordReverserBlockTag>("echoargs");
 
             var templateResult = LiquidTemplate.Create("Result : {% echoargs \"hello\" 123 true %}echo{% endsomethingelse %}");
-            Assert.That(templateResult.HasParsingErrors);
-            Assert.That(templateResult.ParsingErrors[0].Message, Does.Contain("There was no opening tag for the ending tag 'endsomethingelse'"));
+            Assert.True(templateResult.HasParsingErrors);
+            Assert.Contains("There was no opening tag for the ending tag 'endsomethingelse'", 
+                            templateResult.ParsingErrors[0].Message);
             //Assert.That
             //var result = templateResult.LiquidTemplate.Render(new TemplateContext().WithAllFilters());
             
@@ -63,7 +64,7 @@ namespace Liquid.NET.Tests.Tags
         }
 
 
-        [Test]
+        [Fact]
         public void It_Should_Parse_A_Custom_BlockTag_With_Nested_Liquid()
         {
             // Act
@@ -71,11 +72,11 @@ namespace Liquid.NET.Tests.Tags
             var result = RenderingHelper.RenderTemplate("Result : {% echoargs \"hello\" 123 true %}{% if true %}IT IS TRUE{% endif %}{% endechoargs %}", templateContext);
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : TI SI EURT"));
+            Assert.Equal("Result : TI SI EURT", result);
                
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Parse_Very_Nested_Tags()
         {
             // Act
@@ -83,32 +84,32 @@ namespace Liquid.NET.Tests.Tags
             var result = RenderingHelper.RenderTemplate("Result : {% reverse %}{% if true %}TRUE{% endif %}{% reverse %}DEF{% reverse %}ABC{% endreverse %}{% endreverse %}{% endreverse %}", templateContext);
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : DEFCBAEURT"));
+            Assert.Equal("Result : DEFCBAEURT", result);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Show_Error_On_Missing_Tags()
         {
             var template = LiquidTemplate.Create("Result : {% test %}");
             var result = template.LiquidTemplate.Render(new TemplateContext().WithAllFilters());
             //RenderingHelper.RenderTemplate(, onRenderingError: errors.Add);
 
-            Assert.That(String.Join(",",result.RenderingErrors.Select(x => x.Message)), Is.EqualTo("Liquid syntax error: Unknown tag 'test'"));
+            Assert.Equal("Liquid syntax error: Unknown tag 'test'", String.Join(",",result.RenderingErrors.Select(x => x.Message)));
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Show_Error_On_Missing_BLocks()
         {
             var template = LiquidTemplate.Create("Result : {% test %}{% endtest %}");
             var result = template.LiquidTemplate.Render(new TemplateContext().WithAllFilters());
-            Assert.That(String.Join(",", result.RenderingErrors.Select(x => x.Message)), Is.EqualTo("Liquid syntax error: Unknown tag 'test'"));
+            Assert.Equal("Liquid syntax error: Unknown tag 'test'", String.Join(",", result.RenderingErrors.Select(x => x.Message)));
 
         }
 
 
-        [Test]
+        [Fact]
         public void It_Should_Parse_A_Custom_BlockTag_Along_With_A_Custom_Tag() 
         {
             // Act
@@ -119,12 +120,12 @@ namespace Liquid.NET.Tests.Tags
             var result = RenderingHelper.RenderTemplate("Result : {% echoargs2 \"Test\" %}{% echoargs \"hello\" 123 true %}{% if true %}IT IS TRUE{% endif %}{% endechoargs %}", templateContext);
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : I heard string:TestTI SI EURT"));
+            Assert.Equal("Result : I heard string:TestTI SI EURT", result);
 
         }
 
 
-        [Test]
+        [Fact]
         public void It_Should_Create_A_For_Like_Loop()
         {
             // Act
@@ -135,11 +136,11 @@ namespace Liquid.NET.Tests.Tags
             var result = RenderingHelper.RenderTemplate("Result : {% forcustom \"item\" array %}{{item}}{% endforcustom %}", templateContext);
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : START CUSTOM FOR LOOP1011END CUSTOM FOR LOOP"));
+            Assert.Equal("Result : START CUSTOM FOR LOOP1011END CUSTOM FOR LOOP", result);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Parse_A_Nested_Error()
         {
             // Act
@@ -148,7 +149,7 @@ namespace Liquid.NET.Tests.Tags
             var template = LiquidTemplate.Create("Result : {% reverse %}{{ 1 | divided_by: 0 }}{% endreverse %}");
             var result = template.LiquidTemplate.Render(templateContext);
             // Assert
-            Assert.That(result.Result, Is.EqualTo("Result : diuqiL :rorre dedivid yb 0"));
+            Assert.Equal("Result : diuqiL :rorre dedivid yb 0", result.Result);
 
         }
 

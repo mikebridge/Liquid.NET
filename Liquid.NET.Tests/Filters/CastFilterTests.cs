@@ -1,14 +1,14 @@
 ﻿using System;
 using Liquid.NET.Constants;
 using Liquid.NET.Filters;
-using NUnit.Framework;
+using Xunit;
 
 namespace Liquid.NET.Tests.Filters
 {
-    [TestFixture]
+    
     public class CastFilterTests
     {
-        [Test]
+        [Fact]
         public void It_Should_Cast_The_Value_From_One_Type_To_Another()
         {
             // Arrange
@@ -20,15 +20,15 @@ namespace Liquid.NET.Tests.Filters
             //result.Eval(new SymbolTableStack(new TemplateContext()), new List<ILiquidValue>());
 
             // Assert
-            Assert.That(result, Is.AssignableTo<LiquidNumeric>());
-            Assert.That(result.DecimalValue, Is.EqualTo(123m));
+            Assert.IsAssignableFrom<LiquidNumeric>(result);
+            Assert.Equal(123m, result.DecimalValue);
 
         }
 
-        [Test]
-        [TestCase(123.0, "123.0")]
-        [TestCase(123, "123.0")]
-        [TestCase(123.1, "123.1")]
+        [Theory]
+        [InlineData(123.0, "123.0")]
+        [InlineData(123, "123.0")]
+        [InlineData(123.1, "123.1")]
         public void It_Should_Cast_A_Decimal_To_A_String_Like_Ruby_Liquid(decimal input, String expected)
         {
             // Arrange
@@ -38,13 +38,13 @@ namespace Liquid.NET.Tests.Filters
             var result = castFilter.Apply(new TemplateContext(), LiquidNumeric.Create(input)).SuccessValue<LiquidString>();
 
             // Assert
-            Assert.That(result.StringVal, Is.EqualTo(expected));
+            Assert.Equal(expected, result.StringVal);
 
 
         }
 
-        [Test]
-        [TestCase(123, "123")]
+        [Theory]
+        [InlineData(123, "123")]
         public void It_Should_Cast_An_Int_To_A_String_Like_Ruby_Liquid(int input, String expected)
         {
             // Arrange
@@ -54,7 +54,7 @@ namespace Liquid.NET.Tests.Filters
             var result = castFilter.Apply(new TemplateContext(), LiquidNumeric.Create(input)).SuccessValue<LiquidString>();
 
             // Assert
-            Assert.That(result.StringVal, Is.EqualTo(expected));
+            Assert.Equal(expected, result.StringVal);
 
 
         }

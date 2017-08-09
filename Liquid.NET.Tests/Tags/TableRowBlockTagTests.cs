@@ -1,16 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using Liquid.NET.Constants;
 using Liquid.NET.Tests.Ruby;
-using NUnit.Framework;
+using Xunit;
 
 namespace Liquid.NET.Tests.Tags
 {
-    [TestFixture]
+    
     public class TableRowBlockTagTests
     {
-        [Test]
+        [Fact]
         public void It_Should_Render_A_Table_Row()
         {
             // Arrange
@@ -29,11 +27,11 @@ namespace Liquid.NET.Tests.Tags
             // Act
 
             // Assert
-            Assert.That(result, Does.Contain(expected));
+            Assert.Contains(expected, result);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Render_A_Table_Row_From_A_String()
         {
             // Arrange
@@ -49,12 +47,12 @@ namespace Liquid.NET.Tests.Tags
             // Act
 
             // Assert
-            Assert.That(result, Does.Contain(expected));
+            Assert.Contains(expected, result);
 
         }
 
 
-        [Test]
+        [Fact]
         public void It_Should_Render_A_Table_Row_With_A_Generator()
         {
             // Arrange
@@ -72,11 +70,11 @@ namespace Liquid.NET.Tests.Tags
             // Act
 
             // Assert
-            Assert.That(result, Does.Contain(expected));
+            Assert.Contains(expected, result);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Allow_Variables_In_Args()
         {
             // Arrange
@@ -99,13 +97,13 @@ namespace Liquid.NET.Tests.Tags
             Logger.Log(result);
 
             // Assert
-            Assert.That(result, Does.Contain("<tr class=\"row1\">"));
-            Assert.That(result, Does.Contain("<tr class=\"row2\">"));
-            Assert.That(result, Does.Not.Contain("<tr class=\"row3\">"));
-            Assert.That(result, Does.Not.Contain(">1</td>"));
-            Assert.That(result, Does.Contain(">2</td>"));
-            Assert.That(result, Does.Contain(">4</td>"));
-            Assert.That(result, Does.Not.Contain(">5</td>"));
+            Assert.Contains("<tr class=\"row1\">", result);
+            Assert.Contains("<tr class=\"row2\">", result);
+            Assert.DoesNotContain("<tr class=\"row3\">", result);
+            Assert.DoesNotContain(">1</td>", result);
+            Assert.Contains(">2</td>", result);
+            Assert.Contains(">4</td>", result);
+            Assert.DoesNotContain(">5</td>", result);
             
         }
 

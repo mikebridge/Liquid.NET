@@ -1,23 +1,23 @@
 ﻿using System;
 using Liquid.NET.Constants;
 using Liquid.NET.Tests.Filters.Array;
-using NUnit.Framework;
+using Xunit;
 
 namespace Liquid.NET.Tests.Constants
 {
-    [TestFixture]
+    
     public class IndexDereferencerTests
     {
-        [Test]
-        [TestCase("3", "false")]
-        [TestCase("4", "")]
-        [TestCase("30", "")]
-        [TestCase("-1", "false")]
-        [TestCase("-2", "456.0")]
-        [TestCase("-4", "a string")]
-        [TestCase("-5", "")]
-        [TestCase("4", "")]
-        [TestCase("-30", "")]
+        [Theory]
+        [InlineData("3", "false")]
+        [InlineData("4", "")]
+        [InlineData("30", "")]
+        [InlineData("-1", "false")]
+        [InlineData("-2", "456.0")]
+        [InlineData("-4", "a string")]
+        [InlineData("-5", "")]
+        [InlineData("4", "")]
+        [InlineData("-30", "")]
         public void It_Should_Look_Up_ArrayValues(String index, String expected)
         {
             // Arrange
@@ -31,15 +31,15 @@ namespace Liquid.NET.Tests.Constants
 
             // Assert
             //var expected = ValueCaster.RenderAsString(liquidCollection.ArrValue[3]);
-            Assert.That(result, Is.EqualTo(expected));
+            Assert.Equal(expected, result);
         }
 
 
-        [Test]
-        [TestCase("mydict.field1", "Property 1")]
-        //[TestCase("mydict | lookup: \"field1\"", "Property 1")]
-        [TestCase("mydict[\"field1\"]", "Property 1")]
-        [TestCase("mydict[\"qwefqwefwef\"]", "")]
+        [Theory]
+        [InlineData("mydict.field1", "Property 1")]
+        //[InlineData("mydict | lookup: \"field1\"", "Property 1")]
+        [InlineData("mydict[\"field1\"]", "Property 1")]
+        [InlineData("mydict[\"qwefqwefwef\"]", "")]
         public void It_Should_Look_Up_DictionaryValues(String liquid, String expected)
         {
             // Arrange
@@ -53,14 +53,14 @@ namespace Liquid.NET.Tests.Constants
             var result = RenderingHelper.RenderTemplate(tmpl, ctx);
             Logger.Log(result);
             // Assert
-            Assert.That(result, Is.EqualTo(expected));
+            Assert.Equal(expected, result);
         }
 
-        [Test]
-        [TestCase("{% assign str = \"A String\" %}{{str[0]}}", "A")]
-        [TestCase("{% assign str = \"A String\" %}{{str[-1]}}", "g")]
-        [TestCase("{% assign str = \"A String\" %}{{str[-20]}}", "")]
-        [TestCase("{% assign str = \"\" %}{{str[0]}}", "")]
+        [Theory]
+        [InlineData("{% assign str = \"A String\" %}{{str[0]}}", "A")]
+        [InlineData("{% assign str = \"A String\" %}{{str[-1]}}", "g")]
+        [InlineData("{% assign str = \"A String\" %}{{str[-20]}}", "")]
+        [InlineData("{% assign str = \"\" %}{{str[0]}}", "")]
         public void It_Should_Look_Up_StringValues(String input, String expected)
         {
 
@@ -68,15 +68,15 @@ namespace Liquid.NET.Tests.Constants
             var result = RenderingHelper.RenderTemplate(input);
 
             // Assert
-            Assert.That(result, Is.EqualTo(expected));
+            Assert.Equal(expected, result);
         }
 
 
-        [Test]
+        [Theory]
         // see: https://github.com/Shopify/liquid/issues/543
-        [TestCase("first", "a string")]
-        [TestCase("last", "false")]
-        [TestCase("size", "4")]
+        [InlineData("first", "a string")]
+        [InlineData("last", "false")]
+        [InlineData("size", "4")]
         public void It_Should_Dereference_Properties_Of_Array(String property, String expected)
         {
             // Arrange
@@ -89,13 +89,13 @@ namespace Liquid.NET.Tests.Constants
             var result = RenderingHelper.RenderTemplate(tmpl, ctx);
 
             // Assert          
-            Assert.That(result, Is.EqualTo(expected));
+            Assert.Equal(expected, result);
         }
 
-        [Test]
-        [TestCase("first", "a")]
-        [TestCase("last", "g")]
-        [TestCase("size", "7")]
+        [Theory]
+        [InlineData("first", "a")]
+        [InlineData("last", "g")]
+        [InlineData("size", "7")]
         public void It_Should_Dereference_Properties_Of_String(String property, String expected)
         {
             // Arrange
@@ -108,12 +108,12 @@ namespace Liquid.NET.Tests.Constants
             var result = RenderingHelper.RenderTemplate(tmpl, ctx);
 
             // Assert          
-            Assert.That(result, Is.EqualTo(expected));
+            Assert.Equal(expected, result);
         }
 
 
-        [Test]
-        [TestCase("size")]
+        [Theory]
+        [InlineData("size")]
         public void It_Should_Dereference_Properties_Of_Dictionary(String property)
         {
             // Arrange
@@ -126,7 +126,7 @@ namespace Liquid.NET.Tests.Constants
             var result = RenderingHelper.RenderTemplate(tmpl, ctx);
 
             // Assert
-            Assert.That(result, Is.EqualTo(dictValue.Count.ToString()));
+            Assert.Equal(dictValue.Count.ToString(), result);
         }
 
         public LiquidCollection CreateArrayOfDicts()

@@ -4,14 +4,14 @@ using System.Linq;
 using Liquid.NET.Constants;
 using Liquid.NET.Tags.Custom;
 using Liquid.NET.Utils;
-using NUnit.Framework;
+using Xunit;
 
 namespace Liquid.NET.Tests.Tags
 {
-    [TestFixture]
+    
     public class CustomTagTests
     {
-        [Test]
+        [Fact]
         public void It_Should_Parse_A_Custom_Tag()
         {
             // Act
@@ -19,11 +19,11 @@ namespace Liquid.NET.Tests.Tags
             var result = RenderingHelper.RenderTemplate("Result : {% echoargs \"hello\" 123 true %}", templateContext);
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : I heard string:hello, numeric:123, bool:true"));
+            Assert.Equal("Result : I heard string:hello, numeric:123, bool:true", result);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Resolve_A_Variable()
         {
             // Act
@@ -31,11 +31,11 @@ namespace Liquid.NET.Tests.Tags
             var result = RenderingHelper.RenderTemplate("{% assign planet = \"world\"%}Result : {% echoargs \"hello\" planet %}", templateContext);
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : I heard string:hello, string:world"));
+            Assert.Equal("Result : I heard string:hello, string:world", result);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Render_An_Error_When_No_Tag()
         {
             // Act
@@ -47,7 +47,7 @@ namespace Liquid.NET.Tests.Tags
 
             Console.WriteLine(result);
             // Assert
-            Assert.That(result.Result, Does.Contain("Unknown tag 'awefawef'"));
+            Assert.Contains("Unknown tag 'awefawef'", result.Result);
 
         }
 

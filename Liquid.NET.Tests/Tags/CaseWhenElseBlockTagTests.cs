@@ -1,12 +1,12 @@
 ﻿using System;
-using NUnit.Framework;
+using Xunit;
 
 namespace Liquid.NET.Tests.Tags
 {
-    [TestFixture]
+    
     public class CaseWhenElseBlockTagTests
     {
-        [Test]
+        [Fact]
         public void It_Should_Parse_A_Simple_Case_Tag()
         {
             // Arrange
@@ -17,11 +17,11 @@ namespace Liquid.NET.Tests.Tags
             // Act
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : TEST"));
+            Assert.Equal("Result : TEST", result);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Parse_A_Nested_Case_Tag()
         {
             // Arrange
@@ -32,14 +32,14 @@ namespace Liquid.NET.Tests.Tags
             // Act
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : SUCCESS"));
+            Assert.Equal("Result : SUCCESS", result);
 
         }
 
-        [Test]
-        [TestCase("cake", "This is a cake")]
-        [TestCase("cookie", "This is a cookie")]
-        [TestCase("apple", "This is not a cake nor a cookie")]
+        [Theory]
+        [InlineData("cake", "This is a cake")]
+        [InlineData("cookie", "This is a cookie")]
+        [InlineData("apple", "This is not a cake nor a cookie")]
         public void It_Should_Parse_A_Case_Tag(String handle, string expected)
         {
             // Arrange
@@ -49,11 +49,11 @@ namespace Liquid.NET.Tests.Tags
             Logger.Log(result);
 
             // Assert
-            Assert.That(result.Trim(), Is.EqualTo(expected));
+            Assert.Equal(expected, result.Trim());
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Allow_Multiple_Cases_Separated_By_Commas()
         {
             // Arrange
@@ -63,10 +63,10 @@ namespace Liquid.NET.Tests.Tags
             Logger.Log(result);
 
             // Assert
-            Assert.That(result.Trim(), Is.EqualTo("One"));
+            Assert.Equal("One", result.Trim());
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Allow_Multiple_Cases_Separated_By_Or()
         {
             // Arrange
@@ -76,7 +76,7 @@ namespace Liquid.NET.Tests.Tags
             Logger.Log(result);
 
             // Assert
-            Assert.That(result.Trim(), Is.EqualTo("One"));
+            Assert.Equal("One", result.Trim());
         }
 
         private String GetTestData(String handle)

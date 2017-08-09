@@ -1,12 +1,13 @@
 ﻿using Liquid.NET.Constants;
-using NUnit.Framework;
+using Xunit;
+
 
 namespace Liquid.NET.Tests.Constants
 {
-    [TestFixture]
+    
     public class EasyValueComparerTests
     {
-        [Test]
+        [Fact]
         public void It_Should_Compare_Two_Equal_Values()
         {
             // Arrange
@@ -14,11 +15,11 @@ namespace Liquid.NET.Tests.Constants
             var str2 = LiquidString.Create("hello");
             
             // Act
-            Assert.That(new EasyValueComparer().Equals(str1, str2), Is.True);
+            Assert.True(new EasyValueComparer().Equals(str1, str2));
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Compare_Two_Unequal_Values()
         {
             // Arrange
@@ -26,28 +27,28 @@ namespace Liquid.NET.Tests.Constants
             var str2 = LiquidString.Create("hello");
 
             // Act
-            Assert.That(new EasyValueComparer().Equals(str1, str2), Is.False);
+            Assert.False(new EasyValueComparer().Equals(str1, str2));
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Compare_Two_Identical_Values()
         {
             // Arrange
             var str = LiquidString.Create("hello");
 
             // Act
-            Assert.That(new EasyValueComparer().Equals(str, str), Is.True);
+            Assert.True(new EasyValueComparer().Equals(str, str));
 
         }
-        [Test]
+        [Fact]
         public void It_Should_Compare_Against_Null()
         {
             // Arrange
             var str = LiquidString.Create("hello");
 
             // Act
-            Assert.That(new EasyValueComparer().Equals(null, str), Is.False);
+            Assert.False(new EasyValueComparer().Equals(null, str));
 
         }
     }

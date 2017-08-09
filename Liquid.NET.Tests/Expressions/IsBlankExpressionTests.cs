@@ -3,26 +3,26 @@ using System.Collections.Generic;
 using Liquid.NET.Constants;
 using Liquid.NET.Expressions;
 using Liquid.NET.Utils;
-using NUnit.Framework;
+using Xunit;
 
 namespace Liquid.NET.Tests.Expressions
 {
-    [TestFixture]
+    
     public class IsBlankExpressionTests
     {
-        [Test]
-        [TestCase("\"\"", "==", true)]
-        [TestCase("\" \"", "==", true)]
-        [TestCase("\"x\"", "==", false)]
-        [TestCase("x", "==", true)]  // nil is blank
-        [TestCase("0", "==", false)]
-        [TestCase("-1", "==", false)]
-        [TestCase("\"  \"", "==", true)]
-        [TestCase("null", "==", true)]
-        [TestCase("null", "!=", false)]
-        [TestCase("\"\"", "!=", false)]
-        [TestCase("\" \"", "!=", false)]
-        [TestCase("0", "!=", true)]
+        [Theory]
+        [InlineData("\"\"", "==", true)]
+        [InlineData("\" \"", "==", true)]
+        [InlineData("\"x\"", "==", false)]
+        [InlineData("x", "==", true)]  // nil is blank
+        [InlineData("0", "==", false)]
+        [InlineData("-1", "==", false)]
+        [InlineData("\"  \"", "==", true)]
+        [InlineData("null", "==", true)]
+        [InlineData("null", "!=", false)]
+        [InlineData("\"\"", "!=", false)]
+        [InlineData("\" \"", "!=", false)]
+        [InlineData("0", "!=", true)]
         public void It_Should_Test_That_A_Value_Is_Blank(String val, String op, bool expected)
         {
             // Arrange
@@ -34,12 +34,12 @@ namespace Liquid.NET.Tests.Expressions
             var result = RenderingHelper.RenderTemplate(tmpl);
             Logger.Log("Value is " + result);
             // Assert
-            Assert.That(result, Is.EqualTo("Result : " + expectedStr));
+            Assert.Equal("Result : " + expectedStr, result);
 
                 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Not_Accept_Two_Args()
         {
             // Arrange
@@ -51,11 +51,11 @@ namespace Liquid.NET.Tests.Expressions
                 new LiquidBoolean(true),
                 new LiquidBoolean(false)
             });
-            Assert.That(result.IsError);
+            Assert.True(result.IsError);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Return_True_With_No_Args()
         {
             // Arrange
@@ -64,20 +64,20 @@ namespace Liquid.NET.Tests.Expressions
             // Act
             var result = expr.Eval(new TemplateContext(), new List<Option<ILiquidValue>>());
           
-            Assert.That(result.SuccessValue<LiquidBoolean>().BoolValue, Is.True);
+            Assert.True(result.SuccessValue<LiquidBoolean>().BoolValue);
 
         }
 
 
-        [Test]
-        [TestCase("\"\"", true)]
-        [TestCase("\" \"",true)]
-        [TestCase("\"x\"",  false)]
-        [TestCase("x", true)]  // nil is blank
-        [TestCase("0",  false)]
-        [TestCase("-1", false)]
-        [TestCase("\"  \"", true)]
-        [TestCase("null", true)]
+        [Theory]
+        [InlineData("\"\"", true)]
+        [InlineData("\" \"",true)]
+        [InlineData("\"x\"",  false)]
+        [InlineData("x", true)]  // nil is blank
+        [InlineData("0",  false)]
+        [InlineData("-1", false)]
+        [InlineData("\"  \"", true)]
+        [InlineData("null", true)]
         public void It_Should_Test_That_Blank_With_Question_Mark_Is_Alias(String val, bool expected)
         {
             // Arrange
@@ -89,13 +89,13 @@ namespace Liquid.NET.Tests.Expressions
             var result = RenderingHelper.RenderTemplate(tmpl);
             Logger.Log("Value is " + result);
             // Assert
-            Assert.That(result, Is.EqualTo("Result : " + expectedStr));
+            Assert.Equal("Result : " + expectedStr, result);
 
         }
 
-        [Test]
-        [TestCase("1,2", false)]
-        [TestCase("", true)]
+        [Theory]
+        [InlineData("1,2", false)]
+        [InlineData("", true)]
         public void It_Should_Test_That_An_Array_Is_Not_Blank(String arr, bool expected)
         {
             // Arrange
@@ -108,12 +108,12 @@ namespace Liquid.NET.Tests.Expressions
             Logger.Log("Value is " + result);
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : " + expectedStr));
+            Assert.Equal("Result : " + expectedStr, result);
 
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Return_Flase_If_A_Dictionary_Value_Is_Present()
         {
             // Arrange
@@ -131,11 +131,11 @@ namespace Liquid.NET.Tests.Expressions
 
             // Assert
             Logger.Log("Value is " + result);
-            Assert.That(result, Is.EqualTo("Result : NOT BLANK"));
+            Assert.Equal("Result : NOT BLANK", result);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Return_True_If_A_Dictionary_Value_Is_Empty()
         {
             // Arrange
@@ -150,12 +150,12 @@ namespace Liquid.NET.Tests.Expressions
 
             // Assert
             Logger.Log("Value is " + result);
-            Assert.That(result, Is.EqualTo("Result : NOT BLANK"));
+            Assert.Equal("Result : NOT BLANK", result);
 
         }
 
 
-        [Test]
+        [Fact]
         public void It_Should_Return_True_If_LiquidString_Wraps_Null()
         {
             // Arrange
@@ -171,7 +171,7 @@ namespace Liquid.NET.Tests.Expressions
 
             // Assert
             Logger.Log("Value is " + result);
-            Assert.That(result, Is.EqualTo("Result : BLANK"));
+            Assert.Equal("Result : BLANK", result);
 
         }
 

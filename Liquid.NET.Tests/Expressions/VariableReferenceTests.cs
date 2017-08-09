@@ -2,14 +2,14 @@
 using Liquid.NET.Constants;
 using Liquid.NET.Expressions;
 using Liquid.NET.Utils;
-using NUnit.Framework;
+using Xunit;
 
 namespace Liquid.NET.Tests.Expressions
 {
-    [TestFixture]
+    
     public class VariableReferenceTests
     {
-        [Test]
+        [Fact]
         public void It_Should_Derefence_A_Variable()
         {
             // Arrange
@@ -21,10 +21,10 @@ namespace Liquid.NET.Tests.Expressions
             var result = variableReference.Eval(templateContext, new List<Option<ILiquidValue>>()).SuccessValue<LiquidString>();
 
             // Assert
-            Assert.That(result.Value, Is.EqualTo("HELLO"));
+            Assert.Equal("HELLO", result.Value);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Derefence_A_Variable_Missing_Variable_As_None()
         {
             // Arrange
@@ -35,7 +35,7 @@ namespace Liquid.NET.Tests.Expressions
             var result = variableReference.Eval(templateContext, new List<Option<ILiquidValue>>());
 
             // Assert
-            Assert.That(result.SuccessResult.HasValue, Is.False);
+            Assert.False(result.SuccessResult.HasValue);
 
 
         }

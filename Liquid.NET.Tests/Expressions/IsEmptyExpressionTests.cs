@@ -3,26 +3,26 @@ using System.Collections.Generic;
 using Liquid.NET.Constants;
 using Liquid.NET.Expressions;
 using Liquid.NET.Utils;
-using NUnit.Framework;
+using Xunit;
 
 namespace Liquid.NET.Tests.Expressions
 {
-    [TestFixture]
+    
     public class IsEmptyExpressionTests
     {
-        [Test]
-        [TestCase("\"\"", "==", true)]
-        [TestCase("\" \"", "==", false)]
-        [TestCase("\"x\"", "==", false)]
-        [TestCase("x", "==", true)]  // nil == empty
-        [TestCase("0", "==", false)]
-        [TestCase("-1", "==", false)]
-        [TestCase("\"  \"", "==", false)]
-        [TestCase("null", "==", true)]
-        [TestCase("null", "!=", false)]
-        [TestCase("\"\"", "!=", false)]
-        [TestCase("\" \"", "!=", true)]
-        [TestCase("0", "!=", true)]
+        [Theory]
+        [InlineData("\"\"", "==", true)]
+        [InlineData("\" \"", "==", false)]
+        [InlineData("\"x\"", "==", false)]
+        [InlineData("x", "==", true)]  // nil == empty
+        [InlineData("0", "==", false)]
+        [InlineData("-1", "==", false)]
+        [InlineData("\"  \"", "==", false)]
+        [InlineData("null", "==", true)]
+        [InlineData("null", "!=", false)]
+        [InlineData("\"\"", "!=", false)]
+        [InlineData("\" \"", "!=", true)]
+        [InlineData("0", "!=", true)]
         public void It_Should_Test_That_A_Value_Is_Empty(String val, String op, bool expected)
         {
             // Arrange
@@ -34,20 +34,20 @@ namespace Liquid.NET.Tests.Expressions
             var result = RenderingHelper.RenderTemplate(tmpl);
             Logger.Log("Value is " + result);
             // Assert
-            Assert.That(result, Is.EqualTo("Result : " + expectedStr));
+            Assert.Equal("Result : " + expectedStr, result);
 
                 
         }
 
-        [Test]
-        [TestCase("\"\"", true)]
-        [TestCase("\" \"",  false)]
-        [TestCase("\"x\"", false)]
-        [TestCase("x", true)]  // nil == empty
-        [TestCase("0", false)]
-        [TestCase("-1",  false)]
-        [TestCase("\"  \"",  false)]
-        [TestCase("null", true)]
+        [Theory]
+        [InlineData("\"\"", true)]
+        [InlineData("\" \"",  false)]
+        [InlineData("\"x\"", false)]
+        [InlineData("x", true)]  // nil == empty
+        [InlineData("0", false)]
+        [InlineData("-1",  false)]
+        [InlineData("\"  \"",  false)]
+        [InlineData("null", true)]
         public void It_Should_Test_That_Empty_WIth_Question_Mark_Is_Alias(String val, bool expected)
         {
             // Arrange
@@ -59,11 +59,11 @@ namespace Liquid.NET.Tests.Expressions
             var result = RenderingHelper.RenderTemplate(tmpl);
             Logger.Log("Value is " + result);
             // Assert
-            Assert.That(result, Is.EqualTo("Result : " + expectedStr));
+            Assert.Equal("Result : " + expectedStr, result);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Return_False_If_A_Dictionary_Value_Is_Present()
         {
             // Arrange
@@ -80,11 +80,11 @@ namespace Liquid.NET.Tests.Expressions
 
             // Assert
             Logger.Log("Value is " + result);
-            Assert.That(result, Is.EqualTo("Result : NOT EMPTY"));
+            Assert.Equal("Result : NOT EMPTY", result);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Return_True_If_A_Dictionary_Value_Is_Empty()
         {
             // Arrange
@@ -99,11 +99,11 @@ namespace Liquid.NET.Tests.Expressions
 
             // Assert
             Logger.Log("Value is " + result);
-            Assert.That(result, Is.EqualTo("Result : EMPTY"));
+            Assert.Equal("Result : EMPTY", result);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Not_Accept_Two_Args()
         {
             // Arrange
@@ -115,7 +115,7 @@ namespace Liquid.NET.Tests.Expressions
                 new LiquidBoolean(true),
                 new LiquidBoolean(false)
             });
-            Assert.That(result.IsError);
+            Assert.True(result.IsError);
 
         }
 

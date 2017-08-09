@@ -1,14 +1,14 @@
 ﻿using Liquid.NET.Constants;
-using NUnit.Framework;
+using Xunit;
 
 namespace Liquid.NET.Tests.Constants
 {
-    [TestFixture]
+    
     public class LiquidBooleanTests
     {
-        [Test]
-        [TestCase(false)]
-        [TestCase(true)]
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
         public void It_Should_Store_The_Value(bool val)
         {
             // Arrange
@@ -16,7 +16,7 @@ namespace Liquid.NET.Tests.Constants
             var result = booleanSymbol.Value;
 
             // Assert
-            Assert.That(result, Is.EqualTo(val));
+            Assert.Equal(val, result);
 
         }
     }

@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using Liquid.NET.Constants;
-using NUnit.Framework;
+using Xunit;
 
 namespace Liquid.NET.Tests.Tags
 {
-    [TestFixture]
+    
     public class AssignTagTests
     {
-        [Test]
+        [Fact]
         public void It_Should_Store_A_Variable()
         {
             // Arrange
@@ -19,11 +19,11 @@ namespace Liquid.NET.Tests.Tags
             String result = template.LiquidTemplate.Render(ctx).Result;
 
             // Assert
-            Assert.That(result, Is.EqualTo("bar"));
+            Assert.Equal("bar", result);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Store_A_Boolean()
         {
             // Arrange
@@ -34,11 +34,11 @@ namespace Liquid.NET.Tests.Tags
             String result = template.LiquidTemplate.Render(ctx).Result;
 
             // Assert
-            Assert.That(result, Is.EqualTo("bool"));
+            Assert.Equal("bool", result);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Assign_Null()
         {
             // Arrange
@@ -49,11 +49,11 @@ namespace Liquid.NET.Tests.Tags
             String result = template.LiquidTemplate.Render(ctx).Result;
 
             // Assert
-            Assert.That(result, Is.EqualTo(""));
+            Assert.Equal("", result);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Refer_To_Another_Variable()
         {
             // Arrange
@@ -65,12 +65,12 @@ namespace Liquid.NET.Tests.Tags
             String result = template.LiquidTemplate.Render(ctx).Result;
 
             // Assert
-            Assert.That(result, Is.EqualTo("123"));
+            Assert.Equal("123", result);
 
         }
 
        
-        [Test]
+        [Fact]
         public void It_Should_Evaluate_An_Expresson()
         {
             // Arrange
@@ -82,11 +82,11 @@ namespace Liquid.NET.Tests.Tags
             String result = template.LiquidTemplate.Render(ctx).Result;
 
             // Assert
-            Assert.That(result, Is.EqualTo("TEST"));
+            Assert.Equal("TEST", result);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Assign_Empty_Values()
         {
             ITemplateContext ctx = new TemplateContext().WithAllFilters();
@@ -96,12 +96,12 @@ namespace Liquid.NET.Tests.Tags
             String result = template.LiquidTemplate.Render(ctx).Result;
 
             // Assert
-            Assert.That(result, Is.EqualTo(""));
+            Assert.Equal("", result);
             
         }
 
 
-        [Test]
+        [Fact]
         public void It_Should_Assign_A_Bool_Value()
         {
             ITemplateContext ctx = new TemplateContext().WithDebuggingFilters();
@@ -113,19 +113,19 @@ namespace Liquid.NET.Tests.Tags
             String result = template.LiquidTemplate.Render(ctx).Result;
 
             // Assert
-            Assert.That(result, Is.EqualTo("true"));
+            Assert.Equal("true", result);
 
         }
 
 
-        [Test]
+        [Fact]
         public void It_Should_Keep_Accuracy_In_A_Filter()
         {
             // Arrange
             var result = RenderingHelper.RenderTemplate("Result : {% assign x = 1 | plus: 12.0 %}{{ x }}");
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : 13.0"));
+            Assert.Equal("Result : 13.0", result);
         }
 
 

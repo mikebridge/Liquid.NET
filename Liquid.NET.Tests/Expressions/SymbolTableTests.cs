@@ -3,14 +3,14 @@ using Liquid.NET.Constants;
 using Liquid.NET.Filters.Strings;
 using Liquid.NET.Symbols;
 using Liquid.NET.Utils;
-using NUnit.Framework;
+using Xunit;
 
 namespace Liquid.NET.Tests.Expressions
 {
-    [TestFixture]
+    
     public class SymbolTableTests
     {
-        [Test]
+        [Fact]
         public void It_Should_Save_A_Variable()
         {
             // Arrange
@@ -21,11 +21,11 @@ namespace Liquid.NET.Tests.Expressions
             symbolTable.DefineLocalVariable("foo", str);
 
             // Assert
-            Assert.That(symbolTable.ReferenceLocalVariable("foo").SuccessValue<LiquidString>(), Is.EqualTo(str));            
+            Assert.Equal(str, symbolTable.ReferenceLocalVariable("foo").SuccessValue<LiquidString>());            
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Save_A_Filter_Reference()
         {
             // Arrange
@@ -37,11 +37,11 @@ namespace Liquid.NET.Tests.Expressions
             symbolTable.DefineFilter<UpCaseFilter>("upcase");
 
             // Assert
-            Assert.That(symbolTable.ReferenceFilter("upcase"), Is.EqualTo(typeof(UpCaseFilter)));
+            Assert.Equal(typeof(UpCaseFilter), symbolTable.ReferenceFilter("upcase"));
 
         }
 
-        [Test]
+        [Fact]
         // TODO: clean this up
         public void It_Should_Find_An_Array()
         {
@@ -56,10 +56,10 @@ namespace Liquid.NET.Tests.Expressions
             var arr = symbolTable.ReferenceLocalVariable(varname).SuccessValue<LiquidCollection>();
 
             // Assert
-            Assert.That(arr, Is.TypeOf<LiquidCollection>());
+            Assert.IsType<LiquidCollection>(arr);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Return_Null_When_Macro_Missing()
         {
             // Arrange
@@ -69,11 +69,11 @@ namespace Liquid.NET.Tests.Expressions
             var macro = symbolTable.ReferenceMacro("test");
 
             // Assert
-            Assert.That(macro, Is.Null);
+            Assert.Null(macro);
         }
 
 
-        [Test]
+        [Fact]
         public void It_Set_Null_Variable_To_None()
         {
             // Arrange
@@ -85,11 +85,11 @@ namespace Liquid.NET.Tests.Expressions
             var result = symbolTable.ReferenceLocalVariable("test");
 
             // Assert
-            Assert.That(result.SuccessResult.HasValue, Is.False);
+            Assert.False(result.SuccessResult.HasValue);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Return_Null_When_Registry_Null()
         {
             // Arrange
@@ -99,7 +99,7 @@ namespace Liquid.NET.Tests.Expressions
             var result = symbolTable.ReferenceLocalRegistryVariable("test");
 
             // Assert
-            Assert.That(result, Is.Null);
+            Assert.Null(result);
 
         }
 

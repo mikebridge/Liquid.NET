@@ -2,18 +2,18 @@
 using Liquid.NET.Constants;
 using Liquid.NET.Expressions;
 using Liquid.NET.Utils;
-using NUnit.Framework;
+using Xunit;
 
 namespace Liquid.NET.Tests.Expressions
 {
-    [TestFixture]
+    
     public class OrExpressionTests
     {
-        [Test]
-        [TestCase(true, true, true)]
-        [TestCase(true, true, false)]
-        [TestCase(true, false, true)]
-        [TestCase(false, false, false)]
+        [Theory]
+        [InlineData(true, true, true)]
+        [InlineData(true, true, false)]
+        [InlineData(true, false, true)]
+        [InlineData(false, false, false)]
         public void It_Should_OR_Two_Arguments(bool expected, bool expr1, bool expr2)
         {
             // Arrange
@@ -28,7 +28,7 @@ namespace Liquid.NET.Tests.Expressions
             }).SuccessValue<LiquidBoolean>().BoolValue;
 
             // Assert
-            Assert.That(result, Is.EqualTo(expected));
+            Assert.Equal(expected, result);
         }
     }
 }

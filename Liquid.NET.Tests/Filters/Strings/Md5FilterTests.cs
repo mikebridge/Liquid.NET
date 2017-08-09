@@ -1,12 +1,12 @@
 ﻿using Liquid.NET.Constants;
-using NUnit.Framework;
+using Xunit;
 
 namespace Liquid.NET.Tests.Filters.Strings
 {
-    [TestFixture]
+    
     public class Md5FilterTests
     {
-        [Test]
+        [Fact]
         public void It_Should_MD5_Hash_A_String()
         {
             // Arrange
@@ -16,8 +16,7 @@ namespace Liquid.NET.Tests.Filters.Strings
             var result = RenderingHelper.RenderTemplate(tmpl, ctx);
             Logger.Log(result);
             // Assert
-            Assert.That(result,
-                Is.EqualTo("<img src=\"https://www.gravatar.com/avatar/517ea04cf362ddc08f107f6ef98a12d9\" />"));
+            Assert.Equal("<img src=\"https://www.gravatar.com/avatar/517ea04cf362ddc08f107f6ef98a12d9\" />", result);
 
         }
     }

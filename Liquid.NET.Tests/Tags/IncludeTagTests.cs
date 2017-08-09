@@ -1,17 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using Liquid.NET.Constants;
 using Liquid.NET.Tests.Helpers;
-using NUnit.Framework;
+using Xunit;
 
 namespace Liquid.NET.Tests.Tags
 {
-    [TestFixture]
+    
     public class IncludeTagTests
     {
-        [Test]
+        [Fact]
         public void It_Should_Include_A_Virtual_File()
         {
             // Arrange
@@ -25,19 +24,19 @@ namespace Liquid.NET.Tests.Tags
             var result = RenderingHelper.RenderTemplate(str, ctx);
 
             // Assert
-            Assert.That(result, Is.EqualTo("Test Snippet"));
+            Assert.Equal("Test Snippet", result);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Include_Name_Of_VirtualFile_With_ParsingErrors()
         {
             // Arrange
             var ctx = CreateContext(new Dictionary<String, String> { { "test", "{% if .wefiouhwef %}" } });
 
             const String str = "{% include 'test' %}";
-            IList<LiquidError> renderingErrors = new List<LiquidError>();
-            IList<LiquidError> parsingErrors = new List<LiquidError>();
+            //IList<LiquidError> renderingErrors = new List<LiquidError>();
+            //IList<LiquidError> parsingErrors = new List<LiquidError>();
             // Act
 
             var template = LiquidTemplate.Create(str);
@@ -45,13 +44,13 @@ namespace Liquid.NET.Tests.Tags
             var result = template.LiquidTemplate.Render(ctx);
             //RenderingHelper.RenderTemplate(str, ctx, renderingErrors.Add, parsingErrors.Add);
 
-            Assert.That(result.RenderingErrors.Any(), Is.False);
-            Assert.That(result.ParsingErrors.Any(), Is.True);
-            Assert.That(result.ParsingErrors[0].TokenSource, Is.EqualTo("test"));    
+            Assert.False(result.RenderingErrors.Any());
+            Assert.True(result.ParsingErrors.Any());
+            Assert.Equal("test", result.ParsingErrors[0].TokenSource);    
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Include_A_Virtual_File_With_With()
         {
             // Arrange
@@ -64,12 +63,12 @@ namespace Liquid.NET.Tests.Tags
             var result = RenderingHelper.RenderTemplate(str, ctx);
 
             // Assert
-            Assert.That(result, Is.EqualTo("Test Snippet: green"));
+            Assert.Equal("Test Snippet: green", result);
 
         }
 
 
-        [Test]
+        [Fact]
         public void It_Should_Include_A_Virtual_File_With_For()
         {
             // Arrange
@@ -83,12 +82,12 @@ namespace Liquid.NET.Tests.Tags
             var result = RenderingHelper.RenderTemplate(str, ctx);
 
             // Assert
-            Assert.That(result, Is.EqualTo("Test Snippet: 1 Test Snippet: 2 Test Snippet: 3 Test Snippet: 4 "));
+            Assert.Equal("Test Snippet: 1 Test Snippet: 2 Test Snippet: 3 Test Snippet: 4 ", result);
 
         }
 
 
-        [Test]
+        [Fact]
         public void It_Should_Include_A_Virtual_File_With_A_Variable_Value()
         {
             // Arrange
@@ -101,11 +100,11 @@ namespace Liquid.NET.Tests.Tags
             var result = RenderingHelper.RenderTemplate(str, ctx);
 
             // Assert
-            Assert.That(result, Is.EqualTo("Test Snippet: green"));
+            Assert.Equal("Test Snippet: green", result);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Define_Variables_In_Include()
         {
             // Arrange
@@ -118,11 +117,11 @@ namespace Liquid.NET.Tests.Tags
             var result = RenderingHelper.RenderTemplate(str, ctx);
 
             // Assert
-            Assert.That(result, Is.EqualTo("Colour: Green, Width: 10"));
+            Assert.Equal("Colour: Green, Width: 10", result);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Use_Contexts_Caching_Strategy()
         {
             // Arrange
@@ -140,11 +139,11 @@ namespace Liquid.NET.Tests.Tags
             RenderingHelper.RenderTemplate(tmpl, ctx);
 
             // Assert
-            Assert.That(called, Is.True);
+            Assert.True(called);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Accumulate_Errors_When_Include_Contains_Rendering_Errors()
         {
             // Arrange
@@ -164,11 +163,11 @@ namespace Liquid.NET.Tests.Tags
             String result = "";
             renderingVisitor.StartWalking(ast.LiquidAST.RootNode, x => result += x);
             Console.WriteLine(result);
-            Assert.That(renderingVisitor.HasErrors);
+            Assert.True(renderingVisitor.HasErrors);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Accumulate_Errors_When_Include_Contains_Parsing_Errors()
         {
             // Arrange
@@ -182,18 +181,18 @@ namespace Liquid.NET.Tests.Tags
             // Act
 
             var liquidParsingResult = new LiquidASTGenerator().Generate(template);
-            Assert.That(liquidParsingResult.HasParsingErrors, Is.False);
+            Assert.False(liquidParsingResult.HasParsingErrors);
 
             var renderingVisitor = new RenderingVisitor(ctx);
             String result = "";
             renderingVisitor.StartWalking(liquidParsingResult.LiquidAST.RootNode, x => result += x);
             Console.WriteLine(result);
-            Assert.That(renderingVisitor.HasErrors);
+            Assert.True(renderingVisitor.HasErrors);
 
         }
 
 
-        [Test]
+        [Fact]
         public void It_Should_Render_An_Error_When_Include_Contains_Parsing_Errors()
         {
             // Arrange
@@ -211,11 +210,11 @@ namespace Liquid.NET.Tests.Tags
             String result = "";
             renderingVisitor.StartWalking(ast.LiquidAST.RootNode, x => result += x);
             Console.WriteLine("RESULT: " + result);
-            Assert.That(result, Does.Contain("missing TAGEND"));
+            Assert.Contains("missing TAGEND", result);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Register_A_Parsing_Error_At_Rendering_Time_When_Invalid_Syntax()
         {
             // Arrange
@@ -229,18 +228,18 @@ namespace Liquid.NET.Tests.Tags
             // Act
 
             //var parsingResult = new LiquidASTGenerator().Generate(template);
-            //Assert.That(parsingResult.HasParsingErrors, Is.False);
+            //Assert.False(parsingResult.HasParsingErrors);
             var liquidTemplate = LiquidTemplate.Create(template);
 
             var result = liquidTemplate.LiquidTemplate.Render(ctx);
             Console.WriteLine(result.Result);
 
-            Assert.That(result.HasParsingErrors, Is.True);
-            Assert.That(result.ParsingErrors[0].Message, Does.Contain("missing TAGEND"));
+            Assert.True(result.HasParsingErrors);
+            Assert.Contains("missing TAGEND", result.ParsingErrors[0].Message);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Register_A_Rendering_Error()
         {
             // Arrange
@@ -259,8 +258,8 @@ namespace Liquid.NET.Tests.Tags
 
             var result = liquidTemplate.LiquidTemplate.Render(ctx);
 
-            Assert.That(result.HasRenderingErrors, Is.True);
-            Assert.That(result.RenderingErrors[0].Message, Does.Contain("divided by 0"));
+            Assert.True(result.HasRenderingErrors);
+            Assert.Contains("divided by 0", result.RenderingErrors[0].Message);
 
         }
 

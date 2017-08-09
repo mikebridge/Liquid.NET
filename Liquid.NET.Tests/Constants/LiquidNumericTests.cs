@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Numerics;
 using Liquid.NET.Constants;
 using Liquid.NET.Utils;
-using NUnit.Framework;
+using Xunit;
 
 namespace Liquid.NET.Tests.Constants
 {
-    [TestFixture]
+    
     public class LiquidNumericTests
     {
-        [Test]
+        [Fact]
         public void It_Should_Evaluate_To_Itself()
         {
             // Arrange
@@ -20,200 +20,200 @@ namespace Liquid.NET.Tests.Constants
             var result = number.Eval(new TemplateContext(), new List<Option<ILiquidValue>>()).SuccessValue<LiquidNumeric>();
 
             // Assert
-            Assert.That(result.Value, Is.EqualTo(123m));
+            Assert.Equal(123m, result.Value);
 
         }
 
-        [Test]
-        [TestCase(123.4, 123)]
-        [TestCase(123.5, 124)]
-        [TestCase(124.4, 124)]
-        [TestCase(124.5, 125)] // Convert.ToInt32 rounds to nearest even #.
-        [TestCase(-1.99, -2)]
-        [TestCase(-1.4, -1)]
-        [TestCase(0, 0)]
+        [Theory]
+        [InlineData(123.4, 123)]
+        [InlineData(123.5, 124)]
+        [InlineData(124.4, 124)]
+        [InlineData(124.5, 125)] // Convert.ToInt32 rounds to nearest even #.
+        [InlineData(-1.99, -2)]
+        [InlineData(-1.4, -1)]
+        [InlineData(0, 0)]
         public void It_Should_Round_A_Decimal_To_Nearest_Int(decimal input, int expected)
         {
             // Arrange
             var number = LiquidNumeric.Create(input);
 
             // Assert
-            Assert.That(number.IntValue, Is.EqualTo(expected));
+            Assert.Equal(expected, number.IntValue);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Format_Without_Trailing_Zeroes()
         {
             // Arrange
             var result = RenderingHelper.RenderTemplate("Result : {{ 0.0075| times: 100 }}");
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : 0.75"));
+            Assert.Equal("Result : 0.75", result);
         }
 
 
-        [Test]
+        [Fact]
         public void It_Should_Cast_A_Non_Numeric_String_To_Zero()
         {
             // Act
             LiquidNumeric number = LiquidNumeric.Parse("z").SuccessValue<LiquidNumeric>();
 
             // Assert
-            Assert.That(number.IntValue, Is.EqualTo(0));
+            Assert.Equal(0, number.IntValue);
 
         }
 
-        [Test]        
+        [Fact]        
         public void It_Should_Remember_If_It_Is_An_Int_Or_Double()
         {
 
             // Assert
-            Assert.That(LiquidNumeric.Create(123.0m).IsInt, Is.False);
+            Assert.False(LiquidNumeric.Create(123.0m).IsInt);
 
             // Assert
-            Assert.That( LiquidNumeric.Create(123).IsInt, Is.True);
+            Assert.True( LiquidNumeric.Create(123).IsInt);
         }
 
-        [Test]
-        [TestCase("123", true)]
-        [TestCase("123.0", false)]
-        [TestCase("123.1", false)]
+        [Theory]
+        [InlineData("123", true)]
+        [InlineData("123.0", false)]
+        [InlineData("123.1", false)]
         public void It_Should_Remember_If_It_Is_An_Int_Or_Double_When_Parsed(String input, bool isInt)
         {
 
             // Assert
-            Assert.That(LiquidNumeric.Parse(input).SuccessValue<LiquidNumeric>().IsInt, Is.EqualTo(isInt));
+            Assert.Equal(isInt, LiquidNumeric.Parse(input).SuccessValue<LiquidNumeric>().IsInt);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Cast_An_Int_To_Decimal()
         {
-            Assert.That(LiquidNumeric.Create(12345).DecimalValue, Is.EqualTo(12345m));
+            Assert.Equal(12345m, LiquidNumeric.Create(12345).DecimalValue);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Cast_A_Long_To_Decimal()
         {
-            Assert.That(LiquidNumeric.Create(long.MaxValue).DecimalValue, Is.EqualTo((decimal) long.MaxValue));
+            Assert.Equal(long.MaxValue, LiquidNumeric.Create(long.MaxValue).DecimalValue);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Cast_A_BigInt_To_Decimal()
         {
-            Assert.That(LiquidNumeric.Create(new BigInteger(12345678901234567890)).DecimalValue, Is.EqualTo(12345678901234567890m));            
+            Assert.Equal(12345678901234567890m, LiquidNumeric.Create(new BigInteger(12345678901234567890)).DecimalValue);            
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Cast_A_BigInt_To_Long()
         {
-            Assert.That(LiquidNumeric.Create(new BigInteger(123456789012345678)).LongValue, Is.EqualTo(123456789012345678L));
+            Assert.Equal(123456789012345678L, LiquidNumeric.Create(new BigInteger(123456789012345678)).LongValue);
         }
 
 
-        [Test]
+        [Fact]
         public void It_Should_Cast_An_Int_To_An_Int()
         {
-            Assert.That(LiquidNumeric.Create(12345).IntValue, Is.EqualTo(12345));
+            Assert.Equal(12345, LiquidNumeric.Create(12345).IntValue);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Cast_A_Decimal_To_An_Int()
         {
-            Assert.That(LiquidNumeric.Create(12345.6m).IntValue, Is.EqualTo(12346));
+            Assert.Equal(12346, LiquidNumeric.Create(12345.6m).IntValue);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Cast_A_Long_To_An_Int()
         {
-            Assert.That(LiquidNumeric.Create(12345L).IntValue, Is.EqualTo(12345));
+            Assert.Equal(12345, LiquidNumeric.Create(12345L).IntValue);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Cast_A_BigInt_To_Int()
         {
-            Assert.That(LiquidNumeric.Create(new BigInteger(123456789)).IntValue, Is.EqualTo(123456789));
+            Assert.Equal(123456789, LiquidNumeric.Create(new BigInteger(123456789)).IntValue);
         }
 
 
-        [Test]
+        [Fact]
         public void It_Should_Cast_An_Int_To_A_BigInt()
         {
-            Assert.That(LiquidNumeric.Create(12345).BigIntValue, Is.EqualTo(new BigInteger(12345)));
+            Assert.Equal(new BigInteger(12345), LiquidNumeric.Create(12345).BigIntValue);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Cast_A_Decimal_To_An_BigInt()
         {
-            Assert.That(LiquidNumeric.Create(12345.6m).BigIntValue, Is.EqualTo(new BigInteger(12346)));
+            Assert.Equal(new BigInteger(12346), LiquidNumeric.Create(12345.6m).BigIntValue);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Cast_A_Long_To_A_BigInteger()
         {
-            Assert.That(LiquidNumeric.Create(12345L).BigIntValue, Is.EqualTo(new BigInteger(12345)));
+            Assert.Equal(new BigInteger(12345), LiquidNumeric.Create(12345L).BigIntValue);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Cast_A_Decimal_To_A_Long()
         {
-            Assert.That(LiquidNumeric.Create(12345.6m).LongValue, Is.EqualTo(12346L));
+            Assert.Equal(12346L, LiquidNumeric.Create(12345.6m).LongValue);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Cast_An_Int_To_A_Long()
         {
-            Assert.That(LiquidNumeric.Create(12345).LongValue, Is.EqualTo(12345L));
+            Assert.Equal(12345L, LiquidNumeric.Create(12345).LongValue);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Cast_A_BigInt_To_BigintInt()
         {
-            Assert.That(LiquidNumeric.Create(new BigInteger(123456789)).BigIntValue, Is.EqualTo(new BigInteger(123456789)));
+            Assert.Equal(new BigInteger(123456789), LiquidNumeric.Create(new BigInteger(123456789)).BigIntValue);
         }
 
-        [Test]
+        [Fact]
         public void An_Bigint_Should_Equal_A_Decimal()
         {
-            Assert.That(LiquidNumeric.Create(new BigInteger(123)), Is.EqualTo(LiquidNumeric.Create(123m)));
+            Assert.Equal(LiquidNumeric.Create(123m), LiquidNumeric.Create(new BigInteger(123)));
         }
 
-        [Test]
+        [Fact]
         public void An_Int_Should_Equal_A_Decimal()
         {
-            Assert.That(LiquidNumeric.Create(123), Is.EqualTo(LiquidNumeric.Create(123m)));
+            Assert.Equal(LiquidNumeric.Create(123m), LiquidNumeric.Create(123));
         }
 
-        [Test]
+        [Fact]
         public void An_Int_Should_Equal_A_BigInt()
         {
-            Assert.That(LiquidNumeric.Create(new BigInteger(123)), Is.EqualTo(LiquidNumeric.Create(123)));
+            Assert.Equal(LiquidNumeric.Create(123), LiquidNumeric.Create(new BigInteger(123)));
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Return_The_BigInt_Value()
         {
-            Assert.That(LiquidNumeric.Create(new BigInteger(123)).Value, Is.EqualTo(new BigInteger(123)));
+            Assert.Equal(new BigInteger(123), LiquidNumeric.Create(new BigInteger(123)).Value);
         }
 
-        [Test]
+        [Fact]
         public void An_Int_Should_Create_A_Hash_Code()
         {
             var num = LiquidNumeric.Create(123);
-            Assert.That(num.GetHashCode(), Is.Not.EqualTo(123.GetHashCode()));
+            Assert.NotEqual(123.GetHashCode(), num.GetHashCode());
         }
 
-        [Test]
+        [Fact]
         public void A_BigInt_Is_An_Int()
         {
-            Assert.That(LiquidNumeric.Create(new BigInteger(123)).IsInt, Is.True);
+            Assert.True(LiquidNumeric.Create(new BigInteger(123)).IsInt);
         }
 
-        [Test]
+        [Fact]
         public void A_Long_Is_An_Int()
         {
-            Assert.That(LiquidNumeric.Create(123L).IsInt, Is.True);
+            Assert.True(LiquidNumeric.Create(123L).IsInt);
         }
 
 

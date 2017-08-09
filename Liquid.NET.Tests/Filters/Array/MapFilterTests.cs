@@ -3,15 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using Liquid.NET.Constants;
 using Liquid.NET.Filters.Array;
-using Liquid.NET.Utils;
-using NUnit.Framework;
+using Xunit;
 
 namespace Liquid.NET.Tests.Filters.Array
 {
-    [TestFixture]
+    
     public class MapFilterTests
     {
-        [Test]
+        [Fact]
         public void It_Should_Extract_The_Property_From_Each_Element()
         {
             // Arrange
@@ -28,10 +27,11 @@ namespace Liquid.NET.Tests.Filters.Array
             IEnumerable<String> expected = dictionaryValues.Select(x => x[field].Value.Value.ToString());
             //var expected = array.ArrValue.Cast<LiquidHash>().Select(x => x.DictValue[field].Value.ToString());
             IEnumerable<String> actual = result.Select(x => x.Value.Value.ToString());
-            Assert.That(actual, Is.EquivalentTo(expected));
+            //Assert.That(actual, Is.EquivalentTo(expected));
+            Assert.Equal(expected, actual);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Return_None_Where_A_Field_Is_Missing()
         {
             // Arrange
@@ -46,11 +46,11 @@ namespace Liquid.NET.Tests.Filters.Array
 
             // Act
             var result = (mapFilter.Apply(new TemplateContext(), array).SuccessValue<LiquidCollection>()).ToList();
-            Assert.That(result.Count(x => !x.HasValue), Is.EqualTo(1));
+            Assert.Equal(1, result.Count(x => !x.HasValue));
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Return_An_Error_When_Trying_To_Map_A_Non_Dictionary()
         {
             // Arrange
@@ -64,12 +64,12 @@ namespace Liquid.NET.Tests.Filters.Array
             var result = mapFilter.Apply(new TemplateContext(), liquidCollection).SuccessValue<LiquidCollection>();
 
             // Assert
-            Assert.That(result.Count, Is.EqualTo(liquidCollection.Count));
-            Assert.That(result[0].HasValue, Is.False);
-            Assert.That(result[1].HasValue, Is.False);
+            Assert.Equal(liquidCollection.Count, result.Count);
+            Assert.False(result[0].HasValue);
+            Assert.False(result[1].HasValue);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Do_The_Same_As_Lookup_When_Dictionary()
         {
             // Arrange
@@ -81,11 +81,11 @@ namespace Liquid.NET.Tests.Filters.Array
             var result = mapFilter.Apply(new TemplateContext(), dict).SuccessValue<LiquidString>();
 
             // Assert
-            Assert.That(result, Is.EquivalentTo("Value 1 A"));
+            Assert.Equal("Value 1 A", result.Value.ToString());
         }
 
 
-        [Test]
+        [Fact]
         public void It_Should_Render_The_Fields()
         {
             // Arrange
@@ -95,10 +95,10 @@ namespace Liquid.NET.Tests.Filters.Array
             var result = RenderingHelper.RenderTemplate("Result : {{ arr | map: \"field1\" }}",ctx);
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : Value 1 AValue 2 AValue 3 AValue 4 A"));
+            Assert.Equal("Result : Value 1 AValue 2 AValue 3 AValue 4 A", result);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Render_Missing_Fields_When_ErrorsOff()
         {
             // Arrange
@@ -108,10 +108,10 @@ namespace Liquid.NET.Tests.Filters.Array
             var result = RenderingHelper.RenderTemplate("Result : {{ arr | map: \"awefwef\" }}", ctx);
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : "));
+            Assert.Equal("Result : ", result);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Error_When_No_Field_When_ErrorsOn()
         {
             // Arrange
@@ -126,7 +126,7 @@ namespace Liquid.NET.Tests.Filters.Array
 
             Console.WriteLine("Result "+result);
             // Assert
-            Assert.That(result.Result, Does.Contain("missing is undefined"));
+            Assert.Contains("missing is undefined", result.Result);
         }
 
         public LiquidCollection CreateArray()

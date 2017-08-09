@@ -1,49 +1,49 @@
-﻿using NUnit.Framework;
+﻿using Xunit;
 
 namespace Liquid.NET.Tests.Filters.Strings
 {
-    [TestFixture]
+    
     public class PrependFilterTests
     {
 
-        [Test]
+        [Fact]
         public void It_Should_Prepend_Text_To_A_String()
         {
             // Arrange
             var result = RenderingHelper.RenderTemplate("Result : {{ \"test\" | prepend : \"ABC\" }}");
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : ABCtest"));
+            Assert.Equal("Result : ABCtest", result);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Prepend_Text_To_A_Number()
         {
             // Arrange
             var result = RenderingHelper.RenderTemplate("Result : {{ 123 | prepend : \"ABC\" }}");
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : ABC123"));
+            Assert.Equal("Result : ABC123", result);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Prepend_An_Int_To_An_int()
         {
             // Arrange
             var result = RenderingHelper.RenderTemplate("Result : {{ 456 | prepend : 123 }}");
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : 123456"));
+            Assert.Equal("Result : 123456", result);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Prepend_Nil_A_String()
         {
             // Arrange
             var result = RenderingHelper.RenderTemplate("Result : {{ \"test\" | prepend : x }}");
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : test"));
+            Assert.Equal("Result : test", result);
         }
 
     }

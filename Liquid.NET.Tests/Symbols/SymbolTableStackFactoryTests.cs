@@ -1,12 +1,12 @@
 ﻿using Liquid.NET.Filters.Array;
-using NUnit.Framework;
+using Xunit;
 
 namespace Liquid.NET.Tests.Symbols
 {
-    [TestFixture]
+    
     public class SymbolTableStackFactoryTests
     {
-        [Test]
+        [Fact]
         public void It_Should_Initialize_The_Filter_Registry()
         {
             // Arrange
@@ -16,7 +16,7 @@ namespace Liquid.NET.Tests.Symbols
             var result = ctx.SymbolTableStack;
 
             // Assert
-            Assert.That(result.HasFilter("abcde"));
+            Assert.True(result.HasFilter("abcde"));
 
         }
 

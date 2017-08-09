@@ -1,27 +1,27 @@
 ﻿using System;
-using NUnit.Framework;
+using Xunit;
 
 namespace Liquid.NET.Tests.Tags
 {
-    [TestFixture]
+    
     public class IncrementTagTests
     {
-        [Test]
+        [Fact]
         public void It_Should_Increment_A_Variable()
         {
             // Arrange
             TemplateContext ctx = new TemplateContext();
             var parsingResult = LiquidTemplate.Create("{% increment varname %}{% increment varname %}");
-            Assert.That(parsingResult.HasParsingErrors, Is.False);
+            Assert.False(parsingResult.HasParsingErrors);
             // Act
             String result = parsingResult.LiquidTemplate.Render(ctx).Result;
 
             // Assert
-            Assert.That(result, Is.EqualTo("01"));
+            Assert.Equal("01", result);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Not_Interfere_With_An_Assign()
         {
             // Arrange
@@ -32,11 +32,11 @@ namespace Liquid.NET.Tests.Tags
             String result = template.LiquidTemplate.Render(ctx).Result;
 
             // Assert
-            Assert.That(result, Is.EqualTo("019"));
+            Assert.Equal("019", result);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Not_Interfere_With_Another_Increment()
         {
             // Arrange
@@ -47,11 +47,11 @@ namespace Liquid.NET.Tests.Tags
             String result = template.LiquidTemplate.Render(ctx).Result;
 
             // Assert
-            Assert.That(result, Is.EqualTo("00"));
+            Assert.Equal("00", result);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Increment_And_Decrement_The_Same_Variable()
         {
             // Arrange
@@ -62,7 +62,7 @@ namespace Liquid.NET.Tests.Tags
             String result = template.LiquidTemplate.Render(ctx).Result;
 
             // Assert
-            Assert.That(result, Is.EqualTo("00"));
+            Assert.Equal("00", result);
 
         }
 

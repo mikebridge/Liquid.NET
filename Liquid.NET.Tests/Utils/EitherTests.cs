@@ -1,13 +1,13 @@
 ﻿using System;
 using Liquid.NET.Utils;
-using NUnit.Framework;
+using Xunit;
 
 namespace Liquid.NET.Tests.Utils
 {
-    [TestFixture]
+    
     public class EitherTests
     {
-        [Test]
+        [Fact]
         public void It_Should_Be_Right()
         {
             // Arrange
@@ -15,11 +15,11 @@ namespace Liquid.NET.Tests.Utils
             // Act
 
             // Assert
-            Assert.That(either.Right, Is.EqualTo(123));
+            Assert.Equal(123, either.Right);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Be_Left()
         {
             // Arrange
@@ -27,11 +27,11 @@ namespace Liquid.NET.Tests.Utils
             // Act
 
             // Assert
-            Assert.That(either.Left, Is.EqualTo("test"));
+            Assert.Equal("test", either.Left);
 
         }
 
-        [Test]
+        [Fact]
         //[ExpectedException(typeof(InvalidOperationException))]
         public void It_Should_Not_Be_Left()
         {
@@ -42,13 +42,12 @@ namespace Liquid.NET.Tests.Utils
             // Assert
             // ReSharper disable once UnusedVariable
             // var result = either.Left;
-            Assert.That(() => either.Left,
-                Throws.TypeOf<InvalidOperationException>());
+            Assert.Throws<InvalidOperationException>(() => either.Left);
 
             
         }
 
-        [Test]
+        [Fact]
         //[ExpectedException(typeof(InvalidOperationException))]
         public void It_Should_Not_Be_Right()
         {
@@ -59,7 +58,7 @@ namespace Liquid.NET.Tests.Utils
             // Assert
             // ReSharper disable once UnusedVariable
             //var result = either.Right;
-            Assert.That(() => either.Right, Throws.TypeOf<InvalidOperationException>());
+            Assert.Throws<InvalidOperationException>(() => either.Right);
         }
 
     }

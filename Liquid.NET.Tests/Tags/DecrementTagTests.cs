@@ -1,12 +1,12 @@
 ﻿using System;
-using NUnit.Framework;
+using Xunit;
 
 namespace Liquid.NET.Tests.Tags
 {
-    [TestFixture]
+    
     public class DecrementTagTests
     {
-        [Test]
+        [Fact]
         public void It_Should_Decrement_A_Variable()
         {
             // Arrange
@@ -16,11 +16,11 @@ namespace Liquid.NET.Tests.Tags
             String result = template.LiquidTemplate.Render(ctx).Result;
 
             // Assert
-            Assert.That(result, Is.EqualTo("-1-2"));
+            Assert.Equal("-1-2", result);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Not_Interfere_With_An_Assign()
         {
             // Arrange
@@ -31,11 +31,11 @@ namespace Liquid.NET.Tests.Tags
             String result = template.LiquidTemplate.Render(ctx).Result;
 
             // Assert
-            Assert.That(result, Is.EqualTo("-1-29"));
+            Assert.Equal("-1-29", result);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Not_Interfere_With_Another_Decrement()
         {
             // Arrange
@@ -46,7 +46,7 @@ namespace Liquid.NET.Tests.Tags
             String result = template.LiquidTemplate.Render(ctx).Result;
 
             // Assert
-            Assert.That(result, Is.EqualTo("-1-1"));
+            Assert.Equal("-1-1", result);
 
         }
 

@@ -4,32 +4,31 @@ using System.Numerics;
 using System.Reflection;
 using Liquid.NET.Constants;
 using Liquid.NET.Utils;
-using NUnit.Framework;
+using Xunit;
 
 namespace Liquid.NET.Tests.Utils
 {
-    [TestFixture]
+    
     public class LiquidValueConverterTests
     {
-        LiquidValueConverter _converter;
+        readonly LiquidValueConverter _converter;
 
-        [SetUp]
-        public void SetUp()
+        public LiquidValueConverterTests()
         {
             _converter = new LiquidValueConverter();
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Convert_Null_To_None()
         {
             // Act
             var none = _converter.Convert(null);
 
             // Assert
-            Assert.That(none, Is.EqualTo(Option<ILiquidValue>.None()));
+            Assert.Equal(Option<ILiquidValue>.None(), none);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Convert_String_To_LiquidString()
         {
             // Act
@@ -37,168 +36,168 @@ namespace Liquid.NET.Tests.Utils
             var val = _converter.Convert(testString);
 
             // Assert
-            Assert.That(val.HasValue, Is.True);
-            Assert.That(val.Value, Is.TypeOf<LiquidString>());
-            Assert.That(val.Value, Is.EqualTo(LiquidString.Create(testString)));
+            Assert.True(val.HasValue);
+            Assert.IsType<LiquidString>(val.Value);
+            Assert.Equal(LiquidString.Create(testString), val.Value);
         }
 
-        [Test]
-        [TestCase(123, typeof(IntLiquidNumeric), 123)]
-        [TestCase(123U, typeof(IntLiquidNumeric), 123)]
-        [TestCase(123L, typeof(LongLiquidNumeric), 123)]
-        [TestCase(123UL, typeof(LongLiquidNumeric), 123)]
+        [Theory]
+        [InlineData(123, typeof(IntLiquidNumeric), 123)]
+        [InlineData(123U, typeof(IntLiquidNumeric), 123)]
+        [InlineData(123L, typeof(LongLiquidNumeric), 123)]
+        [InlineData(123UL, typeof(LongLiquidNumeric), 123)]
         public void It_Should_Convert_Int_To_LiquidNumeric_Int(object origValue, Type type, object expected)
         {
             // Act
             var val = _converter.Convert(origValue);
 
             // Assert
-            Assert.That(val.HasValue, Is.True);
-            Assert.That(val.Value.GetType().IsAssignableFrom(type), Is.True);
-            Assert.That(val.Value.Value, Is.EqualTo(expected));
+            Assert.True(val.HasValue);
+            Assert.True(val.Value.GetType().IsAssignableFrom(type));
+            Assert.Equal(expected, Convert.ToInt32(val.Value.Value));
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Convert_To_Decimal()
         {
             var val = _converter.Convert(123.2m);
-            Assert.That(val.HasValue, Is.True);
-            Assert.That(val.Value, Is.TypeOf<DecimalLiquidNumeric>());
+            Assert.True(val.HasValue);
+            Assert.IsType<DecimalLiquidNumeric>(val.Value);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Convert_Double_To_Decimal()
         {
             var val = _converter.Convert(123.2d);
-            Assert.That(val.HasValue, Is.True);
-            Assert.That(val.Value, Is.TypeOf<DecimalLiquidNumeric>());
-            Assert.That(val.Value.Value, Is.EqualTo(123.2m));
+            Assert.True(val.HasValue);
+            Assert.IsType<DecimalLiquidNumeric>(val.Value);
+            Assert.Equal(123.2m, val.Value.Value);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Convert_Float_To_Decimal()
         {
             var val = _converter.Convert(123.2f);
-            Assert.That(val.HasValue, Is.True);
-            Assert.That(val.Value, Is.TypeOf<DecimalLiquidNumeric>());
-            Assert.That(val.Value.Value, Is.EqualTo(123.2m));
+            Assert.True(val.HasValue);
+            Assert.IsType<DecimalLiquidNumeric>(val.Value);
+            Assert.Equal(123.2m, val.Value.Value);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Convert_Nullable_Int_To_NumericValue()
         {
             int? nullableInt = 123;
             var val = _converter.Convert(nullableInt);
-            Assert.That(val.HasValue, Is.True);
-            Assert.That(val.Value, Is.TypeOf<IntLiquidNumeric>());
-            Assert.That(val.Value.Value, Is.EqualTo(123));
+            Assert.True(val.HasValue);
+            Assert.IsType<IntLiquidNumeric>(val.Value);
+            Assert.Equal(123, val.Value.Value);
         }
 
 
-        [Test]
+        [Fact]
         public void It_Should_Covert_BigInteger()
         {
             var val = _converter.Convert(new BigInteger(999));
-            Assert.That(val.HasValue, Is.True);
-            Assert.That(val.Value, Is.TypeOf<BigIntegerLiquidNumeric>());
-            Assert.That(val.Value.Value, Is.EqualTo(new BigInteger(999)));
+            Assert.True(val.HasValue);
+            Assert.IsType<BigIntegerLiquidNumeric>(val.Value);
+            Assert.Equal(new BigInteger(999), val.Value.Value);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Covert_A_Boolean()
         {
             var val = _converter.Convert(true);
-            Assert.That(val.HasValue, Is.True);
-            Assert.That(val.Value, Is.TypeOf<LiquidBoolean>());
-            Assert.That(val.Value.Value, Is.True);
+            Assert.True(val.HasValue);
+            Assert.IsType<LiquidBoolean>(val.Value);
+            Assert.True((bool) val.Value.Value);
         }
 
 
-        [Test]
+        [Fact]
         public void It_Should_Covert_A_DateTime()
         {
             var dateTime = new DateTime(2015,11,10,15,34,10);
             var val = _converter.Convert(dateTime);
-            Assert.That(val.HasValue, Is.True);
-            Assert.That(val.Value, Is.TypeOf<LiquidDate>());
-            Assert.That(val.Value, Is.EqualTo(new LiquidDate(dateTime)));
+            Assert.True(val.HasValue);
+            Assert.IsType<LiquidDate>(val.Value);
+            Assert.Equal(new LiquidDate(dateTime), val.Value);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Convert_Generic_List_To_Collection()
         {
             var list = new List<Object>();
             var val = _converter.Convert(list);
-            Assert.That(val.HasValue, Is.True);
-            Assert.That(val.Value, Is.TypeOf<LiquidCollection>());
+            Assert.True(val.HasValue);
+            Assert.IsType<LiquidCollection>(val.Value);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Convert_IDictionary_To_Hash()
         {
             var dict = new Dictionary<String, Object>();
             var val = _converter.Convert(dict);
-            Assert.That(val.HasValue, Is.True);
-            Assert.That(val.Value, Is.TypeOf<LiquidHash>());
+            Assert.True(val.HasValue);
+            Assert.IsType<LiquidHash>(val.Value);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Convert_IDictionary_Values_To_Hash_When_String_Key()
         {
             var dict = new Dictionary<String, Object>{{"test", 1}, {"test2", "TEST"}};
             var val = _converter.Convert(dict);
-            Assert.That(val.HasValue, Is.True);
+            Assert.True(val.HasValue);
             var hash = (LiquidHash)val.Value;
-            Assert.That(hash.ContainsKey("test"), Is.True);
-            Assert.That(hash.ContainsKey("test2"), Is.True);
-            Assert.That(hash["test"].Value, Is.EqualTo(LiquidNumeric.Create(1)));
-            Assert.That(hash["test2"].Value, Is.EqualTo(LiquidString.Create("TEST")));
+            Assert.True(hash.ContainsKey("test"));
+            Assert.True(hash.ContainsKey("test2"));
+            Assert.Equal(LiquidNumeric.Create(1), hash["test"].Value);
+            Assert.Equal(LiquidString.Create("TEST"), hash["test2"].Value);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Convert_IDictionary_Values_To_Hash_Via_Key_ToString_WHen_Conflicting()
         {
             var dict = new Dictionary<Object, Object> { { "3", "three" }, {3, "THREE" } };
             var val = _converter.Convert(dict);
-            Assert.That(val.HasValue, Is.True);
+            Assert.True(val.HasValue);
             var hash = (LiquidHash)val.Value;
-            Assert.That(hash.Keys.Count, Is.EqualTo(1));
-            Assert.That(hash.ContainsKey("3"), Is.True);
-            Assert.That(hash["3"].Value, Is.EqualTo(LiquidString.Create("THREE")));
+            Assert.Equal(1, hash.Keys.Count);
+            Assert.True(hash.ContainsKey("3"));
+            Assert.Equal(LiquidString.Create("THREE"), hash["3"].Value);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Convert_IList_Values()
         {
             var arr = new List<Object> {"Test", 123, null };
             var val = _converter.Convert(arr);
-            Assert.That(val.HasValue, Is.True);
+            Assert.True(val.HasValue);
             var coll = (LiquidCollection) val.Value;
-            Assert.That(coll.Count, Is.EqualTo(3));
-            Assert.That(coll[0].Value, Is.EqualTo(LiquidString.Create("Test")));
-            Assert.That(coll[1].Value, Is.EqualTo(LiquidNumeric.Create(123)));
-            Assert.That(coll[2].HasValue, Is.False);
+            Assert.Equal(3, coll.Count);
+            Assert.Equal(LiquidString.Create("Test"), coll[0].Value);
+            Assert.Equal(LiquidNumeric.Create(123), coll[1].Value);
+            Assert.False(coll[2].HasValue);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Convert_An_Object()
         {
             // Act
             var testClass = new TestClass{FieLd1="aaa", Field1 = "bbb", IntField1=3, ObjField1="my obj"};
             var result = _converter.Convert(testClass);
 
-            Assert.That(result.HasValue);
+            Assert.True(result.HasValue);
             var objAsHash = (LiquidHash) result.Value;
 
             // Assert
-            Assert.That(objAsHash.ContainsKey("field1"));
-            Assert.That(objAsHash.Keys.Count, Is.EqualTo(3));
-            Assert.That(objAsHash["field1"].Value, Is.EqualTo(LiquidString.Create(testClass.FieLd1)));
-            Assert.That(objAsHash["intfield1"].Value, Is.EqualTo(LiquidNumeric.Create(testClass.IntField1)));
-            Assert.That(objAsHash["objfield1"].Value, Is.EqualTo(LiquidString.Create((String) testClass.ObjField1)));
+            Assert.True(objAsHash.ContainsKey("field1"));
+            Assert.Equal(3, objAsHash.Keys.Count);
+            Assert.Equal(LiquidString.Create(testClass.FieLd1), objAsHash["field1"].Value);
+            Assert.Equal(LiquidNumeric.Create(testClass.IntField1), objAsHash["intfield1"].Value);
+            Assert.Equal(LiquidString.Create((String) testClass.ObjField1), objAsHash["objfield1"].Value);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Convert_A_Nested_Object()
         {
             // Act
@@ -207,18 +206,18 @@ namespace Liquid.NET.Tests.Utils
 
             var result = _converter.Convert(testClass);
 
-            Assert.That(result.HasValue);
+            Assert.True(result.HasValue);
             var objAsHash = (LiquidHash)result.Value;
 
             // Assert
-            Assert.That(objAsHash["objfield1"].Value, Is.InstanceOf<LiquidHash>());
+            Assert.IsType<LiquidHash>(objAsHash["objfield1"].Value);
             var foundNestedObject = (LiquidHash) objAsHash["objfield1"].Value;
-            Assert.That(foundNestedObject.ContainsKey("intfield1"));
-            Assert.That(foundNestedObject.ContainsKey("intfield1"));
+            Assert.True(foundNestedObject.ContainsKey("intfield1"));
+            Assert.True(foundNestedObject.ContainsKey("intfield1"));
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Convert_An_Object_With_Null_Field()
         {
             // Act
@@ -226,14 +225,14 @@ namespace Liquid.NET.Tests.Utils
 
             var result = _converter.Convert(testClass);
 
-            Assert.That(result.HasValue);
+            Assert.True(result.HasValue);
             var objAsHash = (LiquidHash)result.Value;
 
             // Assert
-            Assert.That(objAsHash["objfield1"].HasValue, Is.False);
+            Assert.False(objAsHash["objfield1"].HasValue);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Rename_A_Field()
         {
             // Act
@@ -241,15 +240,15 @@ namespace Liquid.NET.Tests.Utils
 
             var result = _converter.Convert(testClass);
 
-            Assert.That(result.HasValue);
+            Assert.True(result.HasValue);
             var objAsHash = (LiquidHash)result.Value;
 
             // Assert
-            Assert.That(objAsHash["somethingelse"].HasValue);
-            Assert.That(objAsHash["somethingelse"].Value, Is.EqualTo(LiquidString.Create("renamed")));
+            Assert.True(objAsHash["somethingelse"].HasValue);
+            Assert.Equal(LiquidString.Create("renamed"), objAsHash["somethingelse"].Value);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Ignore_A_Field()
         {
             // Act
@@ -257,17 +256,17 @@ namespace Liquid.NET.Tests.Utils
 
             var result = _converter.Convert(testClass);
 
-            Assert.That(result.HasValue);
+            Assert.True(result.HasValue);
             var objAsHash = (LiquidHash)result.Value;
 
             // Assert
-            Assert.That(objAsHash.ContainsKey("ignored"), Is.False);
-            Assert.That(objAsHash.ContainsKey("ok"), Is.True);
+            Assert.False(objAsHash.ContainsKey("ignored"));
+            Assert.True(objAsHash.ContainsKey("ok"));
         }
 
-        [Test]
-        [TestCase(null)]
-        [TestCase("test")]
+        [Theory]
+        [InlineData(null)]
+        [InlineData("test")]
         public void It_Should_Ignore_A_Null_Field_When_IgnoreIfNull(String fieldValue)
         {
             // Act
@@ -275,14 +274,14 @@ namespace Liquid.NET.Tests.Utils
 
             var result = _converter.Convert(testClass);
 
-            Assert.That(result.HasValue);
+            Assert.True(result.HasValue);
             var objAsHash = (LiquidHash)result.Value;
 
             // Assert
-            Assert.That(objAsHash.ContainsKey("notnull"), Is.EqualTo(fieldValue != null));
+            Assert.Equal(fieldValue != null, objAsHash.ContainsKey("notnull"));
             if (objAsHash.ContainsKey("notnull"))
             {
-                Assert.That(objAsHash.Value, Is.EqualTo(fieldValue.ToLiquid()));
+                Assert.Equal(fieldValue.ToLiquid(), objAsHash.Value);
             }
         }
 

@@ -1,15 +1,15 @@
 ﻿using System;
 using Liquid.NET.Constants;
 using Liquid.NET.Utils;
-using NUnit.Framework;
+using Xunit;
 
 namespace Liquid.NET.Tests.Filters.Strings
 {
-    [TestFixture]
+    
     public class PluralizeFilterTests
     {
-        [Test]
-        [TestCase(1.2, "things")]
+        [Theory]
+        [InlineData(1.2, "things")]
         public void It_Should_Pluralize_A_Decimal_Number(decimal input, String expected)
         {
             // Arrange
@@ -18,14 +18,15 @@ namespace Liquid.NET.Tests.Filters.Strings
             var result = RenderingHelper.RenderTemplate("Result : {{ input | pluralize: 'thing', 'things' }}", ctx);
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : "+ expected));
+            Assert.Equal("Result : "+ expected, result);
 
         }
 
-        [TestCase(2, "things")]
-        [TestCase(1, "thing")]
-        [TestCase(1, "thing")]
-        [TestCase(0, "things")]
+        [Theory]
+        [InlineData(2, "things")]
+        [InlineData(1, "thing")]
+        [InlineData(1, "thing")]
+        [InlineData(0, "things")]
         public void It_Should_Pluralize_An_Integerr(int input, String expected)
         {
             // Arrange
@@ -34,16 +35,17 @@ namespace Liquid.NET.Tests.Filters.Strings
             var result = RenderingHelper.RenderTemplate("Result : {{ input | pluralize: 'thing', 'things' }}", ctx);
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : " + expected));
+            Assert.Equal("Result : " + expected, result);
 
         }
-        [Test]
-        [TestCase("2", "things")]
-        [TestCase("1", "thing")]
-        [TestCase("1", "thing")]
-        [TestCase("1.2", "things")]
-        [TestCase("0", "things")]
-        [TestCase("z", "things")] // I  think this is what should happen...?
+
+        [Theory]
+        [InlineData("2", "things")]
+        [InlineData("1", "thing")]
+        [InlineData("1", "thing")]
+        [InlineData("1.2", "things")]
+        [InlineData("0", "things")]
+        [InlineData("z", "things")] // I  think this is what should happen...?
         public void It_Should_Pluralize_A_String(String input, String expected)
         {
             // Arrange
@@ -52,11 +54,11 @@ namespace Liquid.NET.Tests.Filters.Strings
             var result = RenderingHelper.RenderTemplate("Result : {{ input | pluralize: 'thing', 'things' }}", ctx);
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : " + expected));
+            Assert.Equal("Result : " + expected, result);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Return_The_String_When_Insufficient_Args()
         {
             // Arrange
@@ -65,11 +67,11 @@ namespace Liquid.NET.Tests.Filters.Strings
             var result = RenderingHelper.RenderTemplate("Result : {{ input | pluralize }}", ctx);
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : 1" ));
+            Assert.Equal("Result : 1" , result);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Ignore_Missing_Plural()
         {
             // Arrange
@@ -78,11 +80,11 @@ namespace Liquid.NET.Tests.Filters.Strings
             var result = RenderingHelper.RenderTemplate("Result : {{input}} {{ input | pluralize: 'thing' }}", ctx);
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : 1 thing"));
+            Assert.Equal("Result : 1 thing", result);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Return_Zero_When_Null()
         {
             // Arrange
@@ -91,7 +93,7 @@ namespace Liquid.NET.Tests.Filters.Strings
             var result = RenderingHelper.RenderTemplate("Result : {{ input | default: 0 }} {{ input | pluralize: 'thing', 'things' }}", ctx);
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : 0 things"));
+            Assert.Equal("Result : 0 things", result);
 
         } 
 

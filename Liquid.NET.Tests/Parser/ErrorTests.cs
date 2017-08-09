@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using NUnit.Framework;
+using Xunit;
 
 namespace Liquid.NET.Tests.Parser
 {
-    [TestFixture]
+    
     public class ErrorTests
     {
-        [Test]
-        [TestCase(@"TEST: {{ ""test,test"" | split: }} DONE",
+        [Theory]
+        [InlineData(@"TEST: {{ ""test,test"" | split: }} DONE",
             @"Liquid error: missing arguments after colon in filter 'split'")]
         public void It_Should_Handle_Invalid_Filters(String input, String expected)
         {
@@ -21,11 +21,11 @@ namespace Liquid.NET.Tests.Parser
             // Act
             template.Render(ctx);
             var err = errors.FirstOrDefault(x => x.ToString().Contains(expected));
-            Assert.That(err, Is.Not.Null);
+            Assert.NotNull(err);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Save_Errors()
         {
             // Arrange
@@ -34,11 +34,11 @@ namespace Liquid.NET.Tests.Parser
             
             // Act
             CreateRenderer(errors, erroneousTemplate);
-            Assert.That(errors.Count, Is.EqualTo(1));
+            Assert.Equal(1, errors.Count);
         }
 
 
-        [Test]
+        [Fact]
         public void It_Should_Check_For_A_Missing_Colon()
         {
             // Act
@@ -52,9 +52,8 @@ namespace Liquid.NET.Tests.Parser
             //catch (LiquidParserException ex)
             //{
             // Assert
-            Assert.That(templateResult.HasParsingErrors, Is.True);
-            Assert.That(templateResult.ParsingErrors[0].Message,
-                Does.Contain("Liquid error: missing colon before args "));
+            Assert.True(templateResult.HasParsingErrors);
+            Assert.Contains("Liquid error: missing colon before args ", templateResult.ParsingErrors[0].Message);
             //}
         }
 

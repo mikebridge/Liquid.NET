@@ -1,35 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
 using Liquid.NET.Constants;
-using NUnit.Framework;
+using Xunit;
 
 namespace Liquid.NET.Tests.Expressions
 {
-    [TestFixture]
+    
     public class ContainsExpressionTests
     {
-        [Test]
-        [TestCase("\"hello\"", "'el'", "TRUE")]
-        [TestCase("\"hello\"", "'e'", "TRUE")]
-        [TestCase("\"hello\"", "'X'", "FALSE")]
+        [Theory]
+        [InlineData("\"hello\"", "'el'", "TRUE")]
+        [InlineData("\"hello\"", "'e'", "TRUE")]
+        [InlineData("\"hello\"", "'X'", "FALSE")]
         public void It_Should_Determine_If_A_String_Contains_A_Substring(String val, String contains, String expected)
         {
             // Act
             var result = RenderingHelper.RenderTemplate("{%if "+val+" contains "+contains+" %}TRUE{% else %}FALSE{% endif %}");
 
             // Assert
-            Assert.That(result, Is.EqualTo(expected));
+            Assert.Equal(expected, result);
 
         }
 
-        [Test]
-        [TestCase("1", "FALSE")]
-        [TestCase("\'1\'", "TRUE")]
-        [TestCase("\'X\'", "FALSE")]
-        [TestCase("2", "TRUE")]
-        [TestCase("\'2\'", "FALSE")]
-        [TestCase("true", "TRUE")]
-        [TestCase("ZZZ", "FALSE")]
+        [Theory]
+        [InlineData("1", "FALSE")]
+        [InlineData("\'1\'", "TRUE")]
+        [InlineData("\'X\'", "FALSE")]
+        [InlineData("2", "TRUE")]
+        [InlineData("\'2\'", "FALSE")]
+        [InlineData("true", "TRUE")]
+        [InlineData("ZZZ", "FALSE")]
         public void It_Should_Determine_If_An_Array_Contains_An_Element(String contains, String expected)
         {
             // Arrange
@@ -40,15 +40,15 @@ namespace Liquid.NET.Tests.Expressions
             var result = RenderingHelper.RenderTemplate("{%if array contains " + contains + " %}TRUE{% else %}FALSE{% endif %}", ctx);
 
             // Assert
-            Assert.That(result, Is.EqualTo(expected));
+            Assert.Equal(expected, result);
 
         }
 
-        [Test]
-        [TestCase("1", "FALSE")]
-        [TestCase("\"one\"", "TRUE")]
-        [TestCase("2", "FALSE")]
-        [TestCase("\'two\'", "TRUE")]
+        [Theory]
+        [InlineData("1", "FALSE")]
+        [InlineData("\"one\"", "TRUE")]
+        [InlineData("2", "FALSE")]
+        [InlineData("\'two\'", "TRUE")]
         public void It_Should_Determine_If_An_Dictionary_Contains_A_KEy(String contains, String expected)
         {
             // Arrange
@@ -59,12 +59,12 @@ namespace Liquid.NET.Tests.Expressions
             var result = RenderingHelper.RenderTemplate("{%if dict contains " + contains + " %}TRUE{% else %}FALSE{% endif %}", ctx);
 
             // Assert
-            Assert.That(result, Is.EqualTo(expected));
+            Assert.Equal(expected, result);
 
         }
 
 
-        [Test]
+        [Fact]
         public void It_Should_Not_Work_For_A_Numeric_Value()
         {
             // Arrange
@@ -75,7 +75,7 @@ namespace Liquid.NET.Tests.Expressions
             var result = RenderingHelper.RenderTemplate("{%if 3 contains 3 %}TRUE{% else %}FALSE{% endif %}");
 
             // Assert
-            Assert.That(result, Does.Contain("FALSE")); // TODO: SHould this be an error?
+            Assert.Contains("FALSE", result); // TODO: SHould this be an error?
         }
 
         public LiquidCollection CreateArray()

@@ -1,22 +1,22 @@
 ﻿using System;
-using NUnit.Framework;
+using Xunit;
 
 namespace Liquid.NET.Tests.Filters.Strings
 {
-    [TestFixture]
+    
     public class TruncateFilterTests
     {
-        [Test]
-        [TestCase("The cat came back the very next day", 10, "The cat...")]
-        [TestCase("", 10, "")]
-        [TestCase("abc", 0, "")]
-        [TestCase("abc", 2, "ab")]
-        [TestCase("abc", 3, "abc")]
-        [TestCase("abc", 4, "abc")]
-        [TestCase("abcd", 1, "a")]
-        [TestCase("abcd", 2, "ab")]
-        [TestCase("abcd", 3, "abc")]
-        [TestCase("abcd", 4, "a...")]
+        [Theory]
+        [InlineData("The cat came back the very next day", 10, "The cat...")]
+        [InlineData("", 10, "")]
+        [InlineData("abc", 0, "")]
+        [InlineData("abc", 2, "ab")]
+        [InlineData("abc", 3, "abc")]
+        [InlineData("abc", 4, "abc")]
+        [InlineData("abcd", 1, "a")]
+        [InlineData("abcd", 2, "ab")]
+        [InlineData("abcd", 3, "abc")]
+        [InlineData("abcd", 4, "a...")]
         public void It_Should_Truncate_Strings(String original, int length, String expected)
         {
             // Arrange
@@ -24,11 +24,11 @@ namespace Liquid.NET.Tests.Filters.Strings
             // Act
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : " + expected));
+            Assert.Equal("Result : " + expected, result);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Use_Something_Other_Than_Ellipses()
         {
             // Arrange
@@ -36,7 +36,7 @@ namespace Liquid.NET.Tests.Filters.Strings
             // Act
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : I thought!!!"));
+            Assert.Equal("Result : I thought!!!", result);
 
         }
 

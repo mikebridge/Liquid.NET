@@ -1,12 +1,12 @@
 ﻿using System;
-using NUnit.Framework;
+using Xunit;
 
 namespace Liquid.NET.Tests.Filters.Strings
 {
-    [TestFixture]
+    
     public class TruncateWordsFilterTests
     {
-        [Test]
+        [Fact]
         public void It_Should_Truncate_By_Word()
         {
             // Arrange
@@ -16,10 +16,10 @@ namespace Liquid.NET.Tests.Filters.Strings
             var result = RenderingHelper.RenderTemplate(tmpl);
 
             // Assert
-            Assert.That(result, Is.EqualTo("The cat came back..."));
+            Assert.Equal("The cat came back...", result);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Add_Something_Other_Than_Ellipses()
         {
             // Arrange
@@ -29,10 +29,10 @@ namespace Liquid.NET.Tests.Filters.Strings
             var result = RenderingHelper.RenderTemplate(tmpl);
 
             // Assert
-            Assert.That(result, Is.EqualTo("The cat came back!!!"));
+            Assert.Equal("The cat came back!!!", result);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Not_Add_Ellipses_With_Fewer_Words()
         {
             // Arrange
@@ -42,10 +42,10 @@ namespace Liquid.NET.Tests.Filters.Strings
             var result = RenderingHelper.RenderTemplate(tmpl);
 
             // Assert
-            Assert.That(result, Is.EqualTo("The"));
+            Assert.Equal("The", result);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Have_A_Default()
         {
             // Arrange
@@ -55,10 +55,10 @@ namespace Liquid.NET.Tests.Filters.Strings
             var result = RenderingHelper.RenderTemplate(tmpl);
 
             // Assert
-            Assert.That(result, Is.EqualTo("The"));
+            Assert.Equal("The", result);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Not_Count_Blank_Words()
         {
             // Arrange
@@ -68,7 +68,7 @@ namespace Liquid.NET.Tests.Filters.Strings
             var result = RenderingHelper.RenderTemplate(tmpl);
 
             // Assert
-            Assert.That(result, Is.EqualTo("The cat came back..."));
+            Assert.Equal("The cat came back...", result);
         }
 
     }

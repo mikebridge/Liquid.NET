@@ -1,20 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Antlr4.Runtime;
 using Liquid.NET.Constants;
 using Liquid.NET.Expressions;
 using Liquid.NET.Symbols;
 using Liquid.NET.Tags;
 using Liquid.NET.Utils;
-using NUnit.Framework;
+using Xunit;
 
 namespace Liquid.NET.Tests
 {
-    [TestFixture]
+    
     public class LiquidASTGeneratorTests
     {
-        [Test]
+        [Fact]
         public void It_Should_Parse_An_Object_Expression()
         {
             // Arrange
@@ -25,7 +24,7 @@ namespace Liquid.NET.Tests
             var liquidExpressions = FindNodesWithType(ast, typeof (LiquidExpressionTree));
             Logger.Log("There are " + ast.RootNode.Children.Count+" Nodes");
             Logger.Log("It is " + ast.RootNode.Children[0].Data);
-            Assert.That(liquidExpressions.Count(), Is.EqualTo(1));
+            Assert.Equal(1, liquidExpressions.Count());
         }
 
         private static LiquidAST CreateAST(string template)
@@ -37,7 +36,7 @@ namespace Liquid.NET.Tests
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Parse_An_Object_Expression_With_A_Variable()
         {
             // Arrange
@@ -47,12 +46,12 @@ namespace Liquid.NET.Tests
 
             var liquidExpressions = FindNodesWithType(ast, typeof(LiquidExpressionTree));
             Logger.Log("There are " + ast.RootNode.Children.Count + " Nodes");
-            Assert.That(liquidExpressions.Count(), Is.EqualTo(1));
+            Assert.Equal(1, liquidExpressions.Count());
 
         }
 
 
-        [Test]
+        [Fact]
         public void It_Should_Parse_An_Object_Expression_With_An_Propertied_Variable()
         {
             // Arrange
@@ -62,13 +61,13 @@ namespace Liquid.NET.Tests
 
             var liquidExpressions = FindNodesWithType(ast, typeof(LiquidExpressionTree));
             Logger.Log("There are " + ast.RootNode.Children.Count + " Nodes");
-            Assert.That(liquidExpressions.Count(), Is.EqualTo(1));
+            Assert.Equal(1, liquidExpressions.Count());
 
         }
 
 
 
-        [Test]
+        [Fact]
         public void It_Should_Find_A_Filter()
         {
             // Arrange
@@ -76,15 +75,15 @@ namespace Liquid.NET.Tests
 
             // Assert
             var liquidExpressions = FindNodesWithType(ast, typeof(LiquidExpressionTree)).FirstOrDefault();
-            Assert.That(liquidExpressions, Is.Not.Null);
+            Assert.NotNull(liquidExpressions);
             // ReSharper disable once PossibleNullReferenceException
             var liquidExpression = ((LiquidExpressionTree)liquidExpressions.Data);
 
-            Assert.That(liquidExpression.ExpressionTree.Data.FilterSymbols.Count, Is.EqualTo(1));
+            Assert.Equal(1, liquidExpression.ExpressionTree.Data.FilterSymbols.Count);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Find_A_Filter_Argument()
         {
             // Arrange
@@ -92,15 +91,15 @@ namespace Liquid.NET.Tests
 
             // Assert
             var liquidExpressions = FindNodesWithType(ast, typeof (LiquidExpressionTree)).FirstOrDefault();
-            Assert.That(liquidExpressions, Is.Not.Null);
+            Assert.NotNull(liquidExpressions);
             // ReSharper disable once PossibleNullReferenceException
             var liquidExpression = (LiquidExpressionTree) liquidExpressions.Data;
             // ReSharper disable once PossibleNullReferenceException
-            Assert.That(liquidExpression.ExpressionTree.Data.FilterSymbols.FirstOrDefault().Args.Count, Is.EqualTo(1));
+            Assert.Equal(1, liquidExpression.ExpressionTree.Data.FilterSymbols.FirstOrDefault().Args.Count);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Can_Find_Two_Object_Expressions()
         {
             // Arrange
@@ -109,11 +108,10 @@ namespace Liquid.NET.Tests
             // Assert
             var liquidExpressions = FindNodesWithType(ast, typeof(LiquidExpressionTree));
 
-            Assert.That(liquidExpressions.Count(), Is.EqualTo(2));
-            //Assert.That(generator.GetNonEmptyStackErrors(), Is.Empty);
+            Assert.Equal(2, liquidExpressions.Count());
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Capture_The_Raw_Text()
         {
             // Arrange
@@ -121,11 +119,11 @@ namespace Liquid.NET.Tests
 
             // Assert
             var liquidExpressions = FindNodesWithType(ast, typeof(RawBlockTag));
-            Assert.That(liquidExpressions.Count(), Is.EqualTo(2));
+            Assert.Equal(2, liquidExpressions.Count());
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Find_An_If_Tag()
         {
             // Arrange
@@ -133,13 +131,13 @@ namespace Liquid.NET.Tests
 
             // Assert
             var tagExpressions = FindNodesWithType(ast, typeof(IfThenElseBlockTag));
-            Assert.That(tagExpressions.Count(), Is.EqualTo(1));
-            //Assert.That(liquidExpressions, Is.Not.Null);
-            //Assert.That(((LiquidExpression)liquidExpressions.Data).FilterSymbols.Count(), Is.EqualTo(1));
+            Assert.Equal(1, tagExpressions.Count());
+            //Assert.NotNull(liquidExpressions);
+            //Assert.Equal(1, ((LiquidExpression)liquidExpressions.Data).FilterSymbols.Count());
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Find_An_If_Tag_With_ElsIfs_And_Else()
         {
             // Arrange
@@ -147,13 +145,13 @@ namespace Liquid.NET.Tests
 
             // Assert
             var tagExpressions = FindNodesWithType(ast, typeof(IfThenElseBlockTag));
-            Assert.That(tagExpressions.Count(), Is.EqualTo(1));
-            //Assert.That(liquidExpressions, Is.Not.Null);
-            //Assert.That(((LiquidExpression)liquidExpressions.Data).FilterSymbols.Count(), Is.EqualTo(1));
+            Assert.Equal(1, tagExpressions.Count());
+            //Assert.NotNull(liquidExpressions);
+            //Assert.Equal(1, ((LiquidExpression)liquidExpressions.Data).FilterSymbols.Count());
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Find_An_Object_Expression_Inside_A_Block_ElsIfs_And_Else()
         {
             // Arrange
@@ -164,10 +162,10 @@ namespace Liquid.NET.Tests
             var liquidExpressions = FindWhere(ifThenElseTag.IfElseClauses[0].LiquidBlock.Children, typeof(LiquidExpressionTree));
             
             // Assert
-            Assert.That(liquidExpressions.Count(), Is.EqualTo(1));
+            Assert.Equal(1, liquidExpressions.Count());
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Nest_Expressions_Inside_Else()
         {
             // Arrange
@@ -180,17 +178,17 @@ namespace Liquid.NET.Tests
             var liquidExpressions = FindWhere(blockTags, typeof(IfThenElseBlockTag));
 
             // Assert
-            Assert.That(liquidExpressions.Count(), Is.EqualTo(1));
+            Assert.Equal(1, liquidExpressions.Count());
 
         }
 
-        public static void StartVisiting(IASTVisitor visitor, TreeNode<IASTNode> rootNode)
+        private static void StartVisiting(IASTVisitor visitor, TreeNode<IASTNode> rootNode)
         {
             rootNode.Data.Accept(visitor);
             rootNode.Children.ForEach(child => StartVisiting(visitor, child));
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Group_Expressions_In_Parens()
         {
             // Arrange
@@ -204,32 +202,31 @@ namespace Liquid.NET.Tests
             var tagExpressions = FindNodesWithType(ast, typeof(IfThenElseBlockTag)).ToList();
             var ifThenElseTag = (IfThenElseBlockTag) tagExpressions[0].Data;
 
-            Assert.That(tagExpressions.Count, Is.EqualTo(1));
-            //Assert.That(ifThenElseTag.IfElseClauses[0].RootNode.Data, Is.TypeOf<AndExpression>());            
-            //TODO: TextMessageWriter otu the tree
-            //Assert.That(ifThenElseTag.IfElseClauses[0].RootNode[0].Data, Is.TypeOf<AndExpression>());
+            Assert.Equal(1, tagExpressions.Count);
+            //Assert.IsType<AndExpression>(ifThenElseTag.IfElseClauses[0].RootNode.Data);            
+            //Assert.IsType<AndExpression>(ifThenElseTag.IfElseClauses[0].RootNode[0].Data);
             var ifTagSymbol = ifThenElseTag.IfElseClauses[0];
-            //Assert.That(ifTagSymbol.RootNode.Data, Is.TypeOf<AndExpression>());
+            //Assert.IsType<AndExpression>(ifTagSymbol.RootNode.Data);
             var expressionSymbolTree = ifTagSymbol.LiquidExpressionTree;
-            Assert.That(expressionSymbolTree.Data.Expression, Is.TypeOf<AndExpression>());
-            Assert.That(expressionSymbolTree.Children.Count, Is.EqualTo(2));
-            Assert.That(expressionSymbolTree[0].Data.Expression, Is.TypeOf<LiquidBoolean>());
-            Assert.That(expressionSymbolTree[1].Data.Expression, Is.TypeOf<GroupedExpression>());
-            Assert.That(expressionSymbolTree[1].Children.Count, Is.EqualTo(1));
-            Assert.That(expressionSymbolTree[1][0].Data.Expression, Is.TypeOf<OrExpression>());
-            Assert.That(expressionSymbolTree[1][0][0].Data.Expression, Is.TypeOf<LiquidBoolean>());
-            Assert.That(expressionSymbolTree[1][0][1].Data.Expression, Is.TypeOf<LiquidBoolean>());
-            //Assert.That(ifThenElseTag.IfElseClauses[0].LiquidExpression[2].Data, Is.TypeOf<GroupedExpression>());
+            Assert.IsType<AndExpression>(expressionSymbolTree.Data.Expression);
+            Assert.Equal(2, expressionSymbolTree.Children.Count);
+            Assert.IsType<LiquidBoolean>(expressionSymbolTree[0].Data.Expression);
+            Assert.IsType<GroupedExpression>(expressionSymbolTree[1].Data.Expression);
+            Assert.Equal(1, expressionSymbolTree[1].Children.Count);
+            Assert.IsType<OrExpression>(expressionSymbolTree[1][0].Data.Expression);
+            Assert.IsType<LiquidBoolean>(expressionSymbolTree[1][0][0].Data.Expression);
+            Assert.IsType<LiquidBoolean>(expressionSymbolTree[1][0][1].Data.Expression);
+            //Assert.IsType<GroupedExpression>(ifThenElseTag.IfElseClauses[0].LiquidExpression[2].Data);
             
-            //Assert.That(liquidExpressions, Is.Not.Null);
-            //Assert.That(((LiquidExpression)liquidExpressions.Data).FilterSymbols.Count(), Is.EqualTo(1));
+            //Assert.NotNull(liquidExpressions);
+            //Assert.Equal(1, ((LiquidExpression)liquidExpressions.Data).FilterSymbols.Count());
 
         }
 
-        [Test]
-        [TestCase("{{ a[b[c[d][e]][f][g[h]]] }}")]
-        [TestCase("{{ a[b][c] }}")]
-        [TestCase("{{ a[b] }}")]
+        [Theory]
+        [InlineData("{{ a[b[c[d][e]][f][g[h]]] }}")]
+        [InlineData("{{ a[b][c] }}")]
+        [InlineData("{{ a[b] }}")]
         public void It_Should_Parse_An_Indexed_Object_Reference(String tmpl)
         {
             // Arrange
@@ -239,17 +236,16 @@ namespace Liquid.NET.Tests
 
             var liquidExpressions = FindNodesWithType(ast, typeof(LiquidExpressionTree));
             
-            Assert.That(liquidExpressions, Is.Not.Null);
+            Assert.NotNull(liquidExpressions);
 
             //Logger.Log("There are " + ast.RootNode.Children.Count + " Nodes");
             //Logger.Log("It is " + ast.RootNode.Children[0].Data);
-            //Assert.That(liquidExpressions.Count(), Is.EqualTo(1));
-            //Assert.That(generator.GetNonEmptyStackErrors(), Is.Empty);
-            Assert.That(liquidExpressions.Count(), Is.EqualTo(1));
+            //Assert.Equal(1, liquidExpressions.Count());
+            Assert.Equal(1, liquidExpressions.Count());
             //String result = VariableReferenceTreeBuilderTests.VariableReferenceTreePrinter.Print(liquidExpressions);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Parse_A_Regular_Variable()
         {
             String input = @"{{ v | plus: v }}";
@@ -261,20 +257,20 @@ namespace Liquid.NET.Tests
                 .WithAllFilters()).Result;
         
             // Assert
-            Assert.That(result.Trim(), Is.EqualTo("6"));
+            Assert.Equal("6", result.Trim());
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Generate_One_Error() // bug
         {
             // Arrange
             var templateResult = LiquidTemplate.Create("This tag delimiter is not terminated: {% .");
 
             // Assert
-            Assert.That(templateResult.ParsingErrors.Count, Is.EqualTo(1));
+            Assert.Equal(1, templateResult.ParsingErrors.Count);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Generate_An_AST_Even_When_Parsing_Errors_Exist()
         {
             // Arrange
@@ -283,16 +279,16 @@ namespace Liquid.NET.Tests
                                                        "Some more text");
             String error = String.Join(",", templateResult.ParsingErrors.Select(x => x.Message));
 
-            Assert.That(error, Does.Contain("Missing '}}'"));
-            Assert.That(templateResult.LiquidTemplate, Is.Not.Null);
+            Assert.Contains("Missing '}}'", error);
+            Assert.NotNull(templateResult.LiquidTemplate);
 
             // Act
             var result = templateResult.LiquidTemplate.Render(ctx);
 
             // Assert
             //Console.WriteLine(result.Result);
-            Assert.That(result.Result, Does.Contain("This filter is not terminated"));
-            //Assert.That(result.Result, Does.Contain("Some more text")); // this seems to terminate here...
+            Assert.Contains("This filter is not terminated", result.Result);
+            //Assert.Contains("Some more text", result.Result); // this seems to terminate here...
 
 
         }

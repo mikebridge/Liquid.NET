@@ -1,12 +1,12 @@
 ﻿using System;
-using NUnit.Framework;
+using Xunit;
 
 namespace Liquid.NET.Tests.Tags
 {
-    [TestFixture]
+    
     public class IfChangedBlockTagTests
     {
-        [Test]
+        [Fact]
         public void It_Should_Render_If_Changed()
         {
             // Arrange
@@ -17,11 +17,11 @@ namespace Liquid.NET.Tests.Tags
             String result = template.LiquidTemplate.Render(ctx).Result;
 
             // Assert
-            Assert.That(result, Is.EqualTo("onetwothree"));
+            Assert.Equal("onetwothree", result);
 
         }
 
-        [Test]
+        [Fact]
         public void Two_Tags_Should_Not_Conflict()
         {
             // Arrange
@@ -32,7 +32,7 @@ namespace Liquid.NET.Tests.Tags
             String result = template.LiquidTemplate.Render(ctx).Result;
 
             // Assert
-            Assert.That(result, Is.EqualTo("twotwo"));
+            Assert.Equal("twotwo", result);
 
         }
 

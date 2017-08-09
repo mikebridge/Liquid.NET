@@ -2,14 +2,14 @@
 using Liquid.NET.Constants;
 using Liquid.NET.Expressions;
 using Liquid.NET.Utils;
-using NUnit.Framework;
+using Xunit;
 
 namespace Liquid.NET.Tests.Expressions
 {
-    [TestFixture]
+    
     public class NotExpressionTests
     {
-        [Test]
+        [Fact]
         public void It_Should_Negate_An_Argument()
         {
             // Arrange
@@ -20,11 +20,11 @@ namespace Liquid.NET.Tests.Expressions
             var result = expr.Eval(new TemplateContext(), new List<Option<ILiquidValue>>{boolTrue}).SuccessValue<LiquidBoolean>();
 
             // Assert
-            Assert.That(result.Value, Is.False);
+            Assert.False((bool) result.Value);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Not_Accept_Two_Arguments()
         {
             // Arrange
@@ -38,7 +38,7 @@ namespace Liquid.NET.Tests.Expressions
                 new LiquidBoolean(false),
             });
 
-            Assert.That(result.IsError);
+            Assert.True(result.IsError);
         }
 
     }

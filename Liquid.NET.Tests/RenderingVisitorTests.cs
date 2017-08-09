@@ -1,13 +1,13 @@
 ﻿using System;
 using Liquid.NET.Tags;
-using NUnit.Framework;
+using Xunit;
 
 namespace Liquid.NET.Tests
 {
-    [TestFixture]
+    
     public class RenderingVisitorTests
     {
-        [Test]
+        [Fact]
         public void It_Should_Render_A_Raw_Text_Node()
         {
             // Arrange
@@ -23,12 +23,12 @@ namespace Liquid.NET.Tests
             renderingVisitor.Visit(rawTextNode);
 
             // Assert
-            Assert.That(result, Is.EqualTo(blocktext));
+            Assert.Equal(blocktext, result);
 
         }
 
 
-        [Test]
+        [Fact]
         //[ExpectedException(typeof(InvalidOperationException))]
         public void It_Should_Throw_An_Exception_When_No_Accumulator()
         {
@@ -37,7 +37,7 @@ namespace Liquid.NET.Tests
             var rawTextNode = new RawBlockTag("HELLO");
 
             // Act
-            Assert.That(() => renderingVisitor.Visit(rawTextNode), Throws.TypeOf<InvalidOperationException>());
+            Assert.Throws<InvalidOperationException>(() => renderingVisitor.Visit(rawTextNode));
           
         }
 

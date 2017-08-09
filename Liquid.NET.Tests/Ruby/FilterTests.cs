@@ -16,48 +16,48 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Liquid.NET.Constants;
-using NUnit.Framework;
+using Xunit;
 
 namespace Liquid.NET.Tests.Ruby
 {
-    [TestFixture]
+    
     public class FilterTests {
 
-        [Test]
-        [TestCase(@"{{ ""1"" | divided_by: ""0"" }}", @"", @"Liquid error: divided by 0")]
-        [TestCase(@"{{ ""x"" | divided_by: ""1"" }}", @"", @"0")]
-        [TestCase(@"{{ null | plus: ""1"" }}", @"", @"1")]
-        [TestCase(@"{% assign v = null %}{{ null | plus: v }}", @"", @"0")]
-        [TestCase(@"{% assign v = null %}{{ v | plus: 10 }}", @"", @"10")]
-        [TestCase(@"{% assign v = null %}{{ v | minus: 10 }}", @"", @"-10")]
-        [TestCase(@"{% assign v = null %}{{ v | divided_by: 10 }}", @"", @"0")]
-        [TestCase(@"{% assign v = null %}{{ v | times: 10 }}", @"", @"0")]
-        [TestCase(@"{% assign v = null %}{{ 1 | plus: v }}", @"", @"1")]
-        [TestCase(@"{{ null | minus: ""1"" }}", @"", @"-1")]
-        [TestCase(@"{% assign v = null %}{{ null | minus: v }}", @"", @"0")]
-        [TestCase(@"{% assign v = null %}{{ 1 | minus: v }}", @"", @"1")]
-        [TestCase(@"{{ null | divided_by: ""1"" }}", @"", @"0")]
-        [TestCase(@"{% assign v = null %}{{ null | divided_by: v }}", @"", @"Liquid error: divided by 0")]
-        [TestCase(@"{% assign v = null %}{{ 1 | divided_by: v }}", @"", @"Liquid error: divided by 0")]
-        [TestCase(@"{{ null | times: ""1"" }}", @"", @"0")]
-        [TestCase(@"{% assign v = null %}{{ null | times: v }}", @"", @"0")]
-        [TestCase(@"{% assign v = null %}{{ 1 | times: v }}", @"", @"0")]
-        [TestCase(@"{{ null | ceil }}", @"", @"0")]
-        [TestCase(@"{{ null | floor }}", @"", @"0")]
-        [TestCase(@"{{ null | round: 2 }}", @"", @"0.0")]
-        [TestCase(@"{{ null | modulo: 2 }}", @"", @"0")]
-        [TestCase(@"{{ null | append: ""test"" }}", @"", @"test")]
-        [TestCase(@"{{ ""2"" | plus: ""3""}}", @"", @"5")]
-        [TestCase(@"{{ """" | split: ""|"" | default: ""EMPTY""}}", @"", @"EMPTY")]
-        [TestCase(@"{% assign v-1 = ""hyphen"" %}{{v-1}}", @"", @"hyphen")]
-        [TestCase(@"{{ ""1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21"" | truncatewords }}", @"", @"1 2 3 4 5 6 7 8 9 10 11 12 13 14 15...")]
-        [TestCase(@"{{ """" | prepend: x }}", @"", @"")]
-        [TestCase(@"{{ """" | append: x }}", @"", @"")]
-        [TestCase(@"{{ nil | default: ""NIL TEST"" }}", @"", @"NIL TEST")]
-        [TestCase(@"{{ """" | default: ""ES TEST"" }}", @"", @"ES TEST")]
-        [TestCase(@"{{ nil | map: ""test"" }}", @"", @"")]
-        [TestCase(@"{% assign myarray = ""1,2,3,4"" |split: "","" %}{{ myarray.x }}", @"", @"")]
-        [TestCase(@"{% assign myarray = ""1,2,3,4"" |split: "","" %}{{ myarray[x] }}", @"", @"")]
+        [Theory]
+        [InlineData(@"{{ ""1"" | divided_by: ""0"" }}", @"", @"Liquid error: divided by 0")]
+        [InlineData(@"{{ ""x"" | divided_by: ""1"" }}", @"", @"0")]
+        [InlineData(@"{{ null | plus: ""1"" }}", @"", @"1")]
+        [InlineData(@"{% assign v = null %}{{ null | plus: v }}", @"", @"0")]
+        [InlineData(@"{% assign v = null %}{{ v | plus: 10 }}", @"", @"10")]
+        [InlineData(@"{% assign v = null %}{{ v | minus: 10 }}", @"", @"-10")]
+        [InlineData(@"{% assign v = null %}{{ v | divided_by: 10 }}", @"", @"0")]
+        [InlineData(@"{% assign v = null %}{{ v | times: 10 }}", @"", @"0")]
+        [InlineData(@"{% assign v = null %}{{ 1 | plus: v }}", @"", @"1")]
+        [InlineData(@"{{ null | minus: ""1"" }}", @"", @"-1")]
+        [InlineData(@"{% assign v = null %}{{ null | minus: v }}", @"", @"0")]
+        [InlineData(@"{% assign v = null %}{{ 1 | minus: v }}", @"", @"1")]
+        [InlineData(@"{{ null | divided_by: ""1"" }}", @"", @"0")]
+        [InlineData(@"{% assign v = null %}{{ null | divided_by: v }}", @"", @"Liquid error: divided by 0")]
+        [InlineData(@"{% assign v = null %}{{ 1 | divided_by: v }}", @"", @"Liquid error: divided by 0")]
+        [InlineData(@"{{ null | times: ""1"" }}", @"", @"0")]
+        [InlineData(@"{% assign v = null %}{{ null | times: v }}", @"", @"0")]
+        [InlineData(@"{% assign v = null %}{{ 1 | times: v }}", @"", @"0")]
+        [InlineData(@"{{ null | ceil }}", @"", @"0")]
+        [InlineData(@"{{ null | floor }}", @"", @"0")]
+        [InlineData(@"{{ null | round: 2 }}", @"", @"0.0")]
+        [InlineData(@"{{ null | modulo: 2 }}", @"", @"0")]
+        [InlineData(@"{{ null | append: ""test"" }}", @"", @"test")]
+        [InlineData(@"{{ ""2"" | plus: ""3""}}", @"", @"5")]
+        [InlineData(@"{{ """" | split: ""|"" | default: ""EMPTY""}}", @"", @"EMPTY")]
+        [InlineData(@"{% assign v-1 = ""hyphen"" %}{{v-1}}", @"", @"hyphen")]
+        [InlineData(@"{{ ""1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21"" | truncatewords }}", @"", @"1 2 3 4 5 6 7 8 9 10 11 12 13 14 15...")]
+        [InlineData(@"{{ """" | prepend: x }}", @"", @"")]
+        [InlineData(@"{{ """" | append: x }}", @"", @"")]
+        [InlineData(@"{{ nil | default: ""NIL TEST"" }}", @"", @"NIL TEST")]
+        [InlineData(@"{{ """" | default: ""ES TEST"" }}", @"", @"ES TEST")]
+        [InlineData(@"{{ nil | map: ""test"" }}", @"", @"")]
+        [InlineData(@"{% assign myarray = ""1,2,3,4"" |split: "","" %}{{ myarray.x }}", @"", @"")]
+        [InlineData(@"{% assign myarray = ""1,2,3,4"" |split: "","" %}{{ myarray[x] }}", @"", @"")]
         public void It_Should_Match_Ruby_Output(String input, String assigns, String expected) {
 
             // Arrange
@@ -75,7 +75,7 @@ namespace Liquid.NET.Tests.Ruby
             String result = template.LiquidTemplate.Render(ctx).Result;
         
             // Assert
-            Assert.That(result.Trim(), Is.EqualTo(expected));
+            Assert.Equal(expected, result.Trim());
         }
 
         

@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using NUnit.Framework;
+using Xunit;
 
 namespace Liquid.NET.Tests
 {
-    [TestFixture]
+    
     public class LiquidParsingResultTests
     {
-        [Test]
+        [Fact]
         public void It_Should_Call_An_Error_Function()
         {
             // Arrange
@@ -19,7 +19,7 @@ namespace Liquid.NET.Tests
             parsingResult.OnParsingError(heardErrors.Add);
 
             // Assert
-            Assert.That(heardErrors.Any());
+            Assert.True(heardErrors.Any());
 
         }
 

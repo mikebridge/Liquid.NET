@@ -1,12 +1,12 @@
 ﻿using System;
-using NUnit.Framework;
+using Xunit;
 
 namespace Liquid.NET.Tests.Tags
 {
-    [TestFixture]
+    
     public class CommentBlockTagTests
     {
-        [Test]
+        [Fact]
         public void It_Should_Remove_The_Commented_Text()
         {
             // Arrange
@@ -15,34 +15,34 @@ namespace Liquid.NET.Tests.Tags
             String result = RenderingHelper.RenderTemplate(tmpl);
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : "));
+            Assert.Equal("Result : ", result);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Remove_Nested_Comments()
         {
             // Arrange
             String result = RenderingHelper.RenderTemplate("Result : {% comment %} This is {% comment %} nested comment {% endcomment %} {% endcomment %}");
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : "));
+            Assert.Equal("Result : ", result);
 
         }
 
 
-        [Test]
+        [Fact]
         public void It_Should_Not_Remove_Text_Between_Two_Comments()
         {
             // Arrange
             String result = RenderingHelper.RenderTemplate("Result : {% comment %} comment 1 {% endcomment %}OK{% comment %} comment 2{% endcomment %}");
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : OK"));
+            Assert.Equal("Result : OK", result);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Remove_Tags_And_Filters()
         {
             // Arrange
@@ -51,7 +51,7 @@ namespace Liquid.NET.Tests.Tags
             String result = RenderingHelper.RenderTemplate(tmpl);
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : "));
+            Assert.Equal("Result : ", result);
 
         }
 

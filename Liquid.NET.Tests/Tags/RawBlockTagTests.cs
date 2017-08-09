@@ -1,12 +1,12 @@
 ﻿using System;
-using NUnit.Framework;
+using Xunit;
 
 namespace Liquid.NET.Tests.Tags
 {
-    [TestFixture]
+    
     public class RawBlockTagTests
     {
-        [Test]
+        [Fact]
         public void It_Should_Not_Format_The_Raw_Text()
         {
             // Arrange
@@ -15,11 +15,11 @@ namespace Liquid.NET.Tests.Tags
             String result = RenderingHelper.RenderTemplate(tmpl);
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : This is a comment"));
+            Assert.Equal("Result : This is a comment", result);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Render_Nested_Raw_Text()
         {
             // Arrange
@@ -27,23 +27,23 @@ namespace Liquid.NET.Tests.Tags
             String result = RenderingHelper.RenderTemplate("Result : {% raw %}" + raw + "{% endraw %}");
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : "+ raw));
+            Assert.Equal("Result : "+ raw, result);
 
         }
 
 
-        [Test]
+        [Fact]
         public void It_Should_Not_Escape_Text_Between_Two_Raw_Areas()
         {
             // Arrange
             String result = RenderingHelper.RenderTemplate("Result : {% raw %}raw 1{% endraw %}{% if true %}HELLO{% endif %}{% raw %}raw 2{% endraw %}");
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : raw 1HELLOraw 2"));
+            Assert.Equal("Result : raw 1HELLOraw 2", result);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Escape_Tags_And_Filters()
         {
             // Arrange
@@ -53,7 +53,7 @@ namespace Liquid.NET.Tests.Tags
             String result = RenderingHelper.RenderTemplate(tmpl);
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : "+txt));
+            Assert.Equal("Result : "+txt, result);
 
         }
 

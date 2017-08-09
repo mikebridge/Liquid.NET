@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using Liquid.NET.Constants;
 using Liquid.NET.Filters.Array;
-using NUnit.Framework;
+using Xunit;
 
 namespace Liquid.NET.Tests.Filters.Array
 {
-    [TestFixture]
+    
     public class SortFilterTests
     {
-        [Test]
+        [Fact]
         public void It_Should_Sort_An_Array_By_StringValues()
         {
             // Arrange
@@ -27,12 +27,12 @@ namespace Liquid.NET.Tests.Filters.Array
             var resultStrings = result.SuccessValue<LiquidCollection>().Select(ValueCaster.RenderAsString);
             
             // Assert
-            Assert.That(resultStrings, Is.EqualTo(new List<String>{"123", "456.0", "a string", "false"}));
+            Assert.Equal(new List<String>{"123", "456.0", "a string", "false"}, resultStrings);
 
         }
 
 
-        [Test]
+        [Fact]
         public void It_Should_Sort_Dictionaries_By_Field()
         {
             // Arrange
@@ -42,13 +42,13 @@ namespace Liquid.NET.Tests.Filters.Array
             var result = sizeFilter.Apply(new TemplateContext(), CreateObjList());
 
             // Assert
-            Assert.That(IdAt(result.SuccessValue<LiquidCollection>(), 0, "field1").Value, Is.EqualTo("Aa"));
-            Assert.That(IdAt(result.SuccessValue<LiquidCollection>(), 1, "field1").Value, Is.EqualTo("ab"));
-            Assert.That(IdAt(result.SuccessValue<LiquidCollection>(), 2, "field1").Value, Is.EqualTo("b"));
-            Assert.That(IdAt(result.SuccessValue<LiquidCollection>(), 3, "field1").Value, Is.EqualTo("Z"));
+            Assert.Equal("Aa", IdAt(result.SuccessValue<LiquidCollection>(), 0, "field1").Value);
+            Assert.Equal("ab", IdAt(result.SuccessValue<LiquidCollection>(), 1, "field1").Value);
+            Assert.Equal("b", IdAt(result.SuccessValue<LiquidCollection>(), 2, "field1").Value);
+            Assert.Equal("Z", IdAt(result.SuccessValue<LiquidCollection>(), 3, "field1").Value);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Sort_Dictionaries_By_Field_From_Template()
         {
             // Arrange            
@@ -59,10 +59,10 @@ namespace Liquid.NET.Tests.Filters.Array
             var result = RenderingHelper.RenderTemplate("Result : {% assign x = arr | sort: \"field1\" %}{{ x | map: \"field1\" }}", ctx);
 
             // Assert            
-            Assert.That(result, Is.EqualTo("Result : AaabbZ"));
+            Assert.Equal("Result : AaabbZ", result);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Ignore_Dictionaries_With_Missing_Fields()
         {
             // Arrange            
@@ -73,10 +73,10 @@ namespace Liquid.NET.Tests.Filters.Array
             var result = RenderingHelper.RenderTemplate("Result : {% assign x = arr | sort: \"test\" %}{{ x | map: \"id\" }}", ctx);
 
             // Assert            
-            Assert.That(result, Is.EqualTo("Result : 1234"));
+            Assert.Equal("Result : 1234", result);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Error_With_Dictionaries_With_Missing_Fields_When_Errors_On()
         {
             // Arrange            
@@ -89,7 +89,7 @@ namespace Liquid.NET.Tests.Filters.Array
             var result = template.LiquidTemplate.Render(ctx);
 
             // Assert            
-            Assert.That(result.Result, Does.Contain("an array element is missing the field \'test\'"));
+            Assert.Contains("an array element is missing the field \'test\'", result.Result);
         }
 
 

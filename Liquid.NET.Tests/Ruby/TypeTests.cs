@@ -16,23 +16,23 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Liquid.NET.Constants;
-using NUnit.Framework;
+using Xunit;
 
 namespace Liquid.NET.Tests.Ruby
 {
-    [TestFixture]
+    
     public class TypeTests {
 
-        [Test]
-        [TestCase(@"", @"")]
-        [TestCase(@"{% assign myarray = """" |split: "","" %}{{ myarray[0] }}", @"")]
-        [TestCase(@"{% assign myarray = ""1,2,3,4"" |split: "","" %}{{ myarray[-2] }}", @"3")]
-        [TestCase(@"{% assign myarray = ""1,2,3,4"" |split: "","" %}{{ myarray[-10] }}", @"")]
-        [TestCase(@"{% assign myarray = ""1,2,3,4"" |split: "","" %}{{ myarray.size }}", @"4")]
-        [TestCase(@"{% assign myarray = """" |split: "","" %}{{ myarray.first }}", @"")]
-        [TestCase(@"{% assign myarray = """" |split: "","" %}{{ myarray.last }}", @"")]
-        [TestCase(@"{{ myarray.first }}", @"")]
-        [TestCase(@"{{ myarray.last }}", @"")]
+        [Theory]
+        [InlineData(@"", @"")]
+        [InlineData(@"{% assign myarray = """" |split: "","" %}{{ myarray[0] }}", @"")]
+        [InlineData(@"{% assign myarray = ""1,2,3,4"" |split: "","" %}{{ myarray[-2] }}", @"3")]
+        [InlineData(@"{% assign myarray = ""1,2,3,4"" |split: "","" %}{{ myarray[-10] }}", @"")]
+        [InlineData(@"{% assign myarray = ""1,2,3,4"" |split: "","" %}{{ myarray.size }}", @"4")]
+        [InlineData(@"{% assign myarray = """" |split: "","" %}{{ myarray.first }}", @"")]
+        [InlineData(@"{% assign myarray = """" |split: "","" %}{{ myarray.last }}", @"")]
+        [InlineData(@"{{ myarray.first }}", @"")]
+        [InlineData(@"{{ myarray.last }}", @"")]
         public void It_Should_Match_Ruby_Output(String input, String expected) {
 
             // Arrange
@@ -43,7 +43,7 @@ namespace Liquid.NET.Tests.Ruby
             String result = template.LiquidTemplate.Render(ctx).Result;
         
             // Assert
-            Assert.That(result, Is.EqualTo(expected));
+            Assert.Equal(expected, result);
         }
 
         

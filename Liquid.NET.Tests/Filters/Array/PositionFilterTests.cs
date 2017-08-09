@@ -1,14 +1,14 @@
 ﻿using System.Collections.Generic;
 using Liquid.NET.Constants;
 using Liquid.NET.Filters.Array;
-using NUnit.Framework;
+using Xunit;
 
 namespace Liquid.NET.Tests.Filters.Array
 {
-    [TestFixture]
+    
     public class PositionFilterTests
     {
-        [Test]
+        [Fact]
         public void It_Should_Return_An_Element_At_Position_0()
         {
             // Arrange
@@ -25,7 +25,7 @@ namespace Liquid.NET.Tests.Filters.Array
             var result = filter.Apply(new TemplateContext(), liquidCollection).SuccessValue<LiquidString>();
 
             // Assert
-            Assert.That(result, Is.EqualTo(liquidCollection[0]));
+            Assert.Equal(liquidCollection[0], result);
         }
     }
 }

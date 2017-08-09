@@ -3,14 +3,14 @@ using System.Numerics;
 using System.Reflection;
 using Liquid.NET.Constants;
 using Liquid.NET.Utils;
-using NUnit.Framework;
+using Xunit;
 
 namespace Liquid.NET.Tests.Constants
 {
-    [TestFixture]
+    
     public class ValueCasterTests
     {
-        [Test]
+        [Fact]
         public void It_Should_Cast_A_Number_To_A_String()
         {
             // Arrange
@@ -22,11 +22,11 @@ namespace Liquid.NET.Tests.Constants
                 .StringVal;
 
             // Assert
-            Assert.That(stringliteral, Is.EqualTo("123.45"));
+            Assert.Equal("123.45", stringliteral);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Can_Cast_With_Generics()
         {
             // Arrange
@@ -38,11 +38,11 @@ namespace Liquid.NET.Tests.Constants
                 .StringVal;
 
             // Assert
-            Assert.That(stringliteral, Is.EqualTo("123.45"));
+            Assert.Equal("123.45", stringliteral);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Can_Cast_With_Generics_Via_Reflection()
         {
             // Arrange
@@ -55,11 +55,11 @@ namespace Liquid.NET.Tests.Constants
             var stringLiteral = castResult.SuccessValue<LiquidString>();
 
             // Assert
-            Assert.That(stringLiteral.Value, Is.EqualTo("123.45"));
+            Assert.Equal("123.45", stringLiteral.Value);
 
         }
 
-//        [Test]
+//        [Fact]
 //        public void It_Should_Format_An_Array_Like_Json()
 //        {
 //            // Arrange
@@ -71,11 +71,11 @@ namespace Liquid.NET.Tests.Constants
 //                .StringVal;
 //
 //            // Assert
-//            Assert.That(stringliteral, Is.EqualTo("[ 123.4, 5 ]"));
+//            Assert.Equal("[ 123.4, 5 ]", stringliteral);
 //
 //        }
 
-        [Test]
+        [Fact]
         public void It_Should_Format_An_Array_By_Concatenating_Each_Elements_STring_Value()
         {
             // Arrange
@@ -87,11 +87,11 @@ namespace Liquid.NET.Tests.Constants
                 .StringVal;
 
             // Assert
-            Assert.That(stringliteral, Is.EqualTo("abc"));
+            Assert.Equal("abc", stringliteral);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Return_The_Same_Object_If_Src_And_Dest_Are_Arrays()
         {
             // Arrange
@@ -101,10 +101,10 @@ namespace Liquid.NET.Tests.Constants
             var result = ValueCaster.Cast<LiquidCollection, LiquidCollection>(original).SuccessValue<LiquidCollection>();
 
             // Assert
-            Assert.That(result, Is.EqualTo(original));
+            Assert.Equal(original, result);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Return_The_Same_Object_If_Src_And_Dest_Are_Strings()
         {
             // Arrange
@@ -114,10 +114,10 @@ namespace Liquid.NET.Tests.Constants
             var result = ValueCaster.Cast<LiquidString, LiquidString>(original).SuccessValue<LiquidString>();
 
             // Assert
-            Assert.That(result, Is.EqualTo(original));
+            Assert.Equal(original, result);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Return_The_Same_Object_If_Dest_Is_An_ExpressionConstant()
         {
             // Arrange
@@ -127,11 +127,11 @@ namespace Liquid.NET.Tests.Constants
             var result = ValueCaster.Cast<LiquidCollection, LiquidValue>(original).SuccessValue<LiquidCollection>();
 
             // Assert
-            Assert.That(result, Is.EqualTo(original));
+            Assert.Equal(original, result);
         }
 
 
-        [Test]
+        [Fact]
         public void It_Should_Handle_Casting_A_Null_Value()
         {
             // Arrange
@@ -140,16 +140,16 @@ namespace Liquid.NET.Tests.Constants
             // Act
             var result = ValueCaster.Cast<LiquidString, LiquidNumeric>(original);
 
-            Assert.That(result.IsSuccess, Is.True);
+            Assert.True(result.IsSuccess);
 
             // Assert
-            //Assert.That(result.SuccessValue<LiquidNumeric>().IntValue, Is.EqualTo(0));
-            Assert.That(result.IsSuccess, Is.True);
-            Assert.That(result.SuccessOption<ILiquidValue>().HasValue, Is.False);
+            //Assert.Equal(0, result.SuccessValue<LiquidNumeric>().IntValue);
+            Assert.True(result.IsSuccess);
+            Assert.False(result.SuccessOption<ILiquidValue>().HasValue);
 
         }
 
-//        [Test]
+//        [Fact]
 //        public void It_Should_Format_A_Number_Without_Extra_Zeroes()
 //        {
 //            // Arrange
@@ -159,19 +159,19 @@ namespace Liquid.NET.Tests.Constants
 //            var stringliteral = ValueCaster.RenderAsString((ILiquidValue) num);
 //               
 //            // Assert
-//            Assert.That(stringliteral, Is.EqualTo("123.00"));
+//            Assert.Equal("123.00", stringliteral);
 //
 //        }
 
 
-        [Test]
-        [TestCase(123.0, 123)]
-        [TestCase(123.45, 123)]
-        [TestCase(123.5, 124)]
-        [TestCase(124.5, 125)]
-        [TestCase(-124.5, -125)]
-        [TestCase(-123.5, -124)]
-        [TestCase(0, 0)]
+        [Theory]
+        [InlineData(123.0, 123)]
+        [InlineData(123.45, 123)]
+        [InlineData(123.5, 124)]
+        [InlineData(124.5, 125)]
+        [InlineData(-124.5, -125)]
+        [InlineData(-123.5, -124)]
+        [InlineData(0, 0)]
         public void It_Should_Convert_To_An_Int_Using_Away_From_Zero(decimal input, int expected)
         {
             
@@ -179,18 +179,18 @@ namespace Liquid.NET.Tests.Constants
             var result = ValueCaster.ConvertToInt(input);
 
             // Assert
-            Assert.That(result, Is.EqualTo(expected));
+            Assert.Equal(expected, result);
 
         }
 
-        [Test]
-        [TestCase(123.0, 123L)]
-        [TestCase(123.45, 123L)]
-        [TestCase(123.5, 124L)]
-        [TestCase(124.5, 125L)]
-        [TestCase(-124.5, -125L)]
-        [TestCase(-123.5, -124L)]
-        [TestCase(0, 0L)]
+        [Theory]
+        [InlineData(123.0, 123L)]
+        [InlineData(123.45, 123L)]
+        [InlineData(123.5, 124L)]
+        [InlineData(124.5, 125L)]
+        [InlineData(-124.5, -125L)]
+        [InlineData(-123.5, -124L)]
+        [InlineData(0, 0L)]
         public void It_Should_Convert_To_A_Long_Using_Away_From_Zero(decimal input, long expected)
         {
 
@@ -198,11 +198,11 @@ namespace Liquid.NET.Tests.Constants
             var result = ValueCaster.ConvertToLong(input);
 
             // Assert
-            Assert.That(result, Is.EqualTo(expected));
+            Assert.Equal(expected, result);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Convert_Null_To_Numeric_Zero()
         {
 
@@ -211,12 +211,12 @@ namespace Liquid.NET.Tests.Constants
             var numericResult = result.SuccessValue<LiquidNumeric>();
 
             // Assert
-            Assert.That(numericResult.IsInt, Is.True);
-            Assert.That(numericResult.IntValue, Is.EqualTo(0));
+            Assert.True(numericResult.IsInt);
+            Assert.Equal(0, numericResult.IntValue);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Convert_Null_To_EmptyString()
         {
 
@@ -225,12 +225,12 @@ namespace Liquid.NET.Tests.Constants
             var stringResult = result.SuccessValue<LiquidString>();
 
             // Assert
-            Assert.That(stringResult.StringVal, Is.EqualTo(""));
+            Assert.Equal("", stringResult.StringVal);
 
         }
 
 
-//        [Test]
+//        [Fact]
 //        public void It_Should_Cast_A_String_To_An_Array_Of_Strings()
 //        {
 //            // Arrange
@@ -238,16 +238,16 @@ namespace Liquid.NET.Tests.Constants
 //
 //            // Act
 //            var arrayResult = ValueCaster.Cast<LiquidString, LiquidCollection>(str);
-//            Assert.That(arrayResult.IsError, Is.False);
+//            Assert.False(arrayResult.IsError);
 //
 //            // Assert
 //            var arrValue = arrayResult.SuccessValue<LiquidCollection>().ArrValue;
-//            Assert.That(arrValue.Count, Is.EqualTo(5));
-//            Assert.That(String.Join(",", arrValue.Select(x =>  ((LiquidString) x.Value).StringVal)), Is.EqualTo("H,e,l,l,o"));
+//            Assert.Equal(5, arrValue.Count);
+//            Assert.Equal("H,e,l,l,o", String.Join(",", arrValue.Select(x =>  ((LiquidString) x.Value).StringVal)));
 //
 //        }
 
-        [Test]
+        [Fact]
         public void It_Should_Cast_A_String_To_An_Array_Of_One_String()
         {
             // Arrange
@@ -255,16 +255,16 @@ namespace Liquid.NET.Tests.Constants
 
             // Act
             var arrayResult = ValueCaster.Cast<LiquidString, LiquidCollection>(str);
-            Assert.That(arrayResult.IsError, Is.False);
+            Assert.False(arrayResult.IsError);
 
             // Assert
             var arrValue = arrayResult.SuccessValue<LiquidCollection>();
-            Assert.That(arrValue.Count, Is.EqualTo(1));
-            Assert.That(arrValue[0].Value, Is.EqualTo("Hello"));
+            Assert.Equal(1, arrValue.Count);
+            Assert.Equal("Hello", arrValue[0].Value.ToString());
 
         }
 
-        [Test]
+        [Fact]
         // SEE: https://github.com/Shopify/liquid/wiki/Liquid-for-Designers
         public void It_Should_Cast_KV_Pairs_In_A_Dictionary_To_An_Array_Of_Arrays_with_Two_Elements()
         {
@@ -282,12 +282,12 @@ namespace Liquid.NET.Tests.Constants
 
             // Assert
 
-            Assert.That(result.Count, Is.EqualTo(4));
+            Assert.Equal(4, result.Count);
 
         }
 
 
-        [Test]
+        [Fact]
         public void It_Should_Not_Quote_Numerics_In_Json_Dict()
         {
             // Arrange
@@ -306,11 +306,11 @@ namespace Liquid.NET.Tests.Constants
             var result = RenderingHelper.RenderTemplate("Result : {{ dict1 }}", ctx);
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : { \"one\" : 1, \"two\" : 2, \"three\" : 3.0, \"four\" : 4 }"));
+            Assert.Equal("Result : { \"one\" : 1, \"two\" : 2, \"three\" : 3.0, \"four\" : 4 }", result);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Recursively_Render_Dictionaries_in_Json()
         {
             // Arrange     
@@ -330,11 +330,11 @@ namespace Liquid.NET.Tests.Constants
             var result = RenderingHelper.RenderTemplate("Result : {{ dict1 }}", ctx);
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : { \"one\" : 1, \"two\" : { \"abc\" : \"def\" } }"));
+            Assert.Equal("Result : { \"one\" : 1, \"two\" : { \"abc\" : \"def\" } }", result);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Render_A_Null_In_A_Dictionary()
         {
             // Arrange     
@@ -356,130 +356,129 @@ namespace Liquid.NET.Tests.Constants
             var result = RenderingHelper.RenderTemplate("Result : {{ dict1 }}", ctx);
 
             // Assert
-            Assert.That(result,
-                Is.EqualTo("Result : { \"one\" : null, \"two\" : { \"abc\" : \"def\", \"ghi\" : null } }"));
+            Assert.Equal("Result : { \"one\" : null, \"two\" : { \"abc\" : \"def\", \"ghi\" : null } }", result);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Cast_Null_To_None()
         {
             var result = ValueCaster.Cast<LiquidString, LiquidNumeric>(null);
-            Assert.That(result.IsSuccess, Is.True);
-            Assert.That(result.SuccessResult.HasValue, Is.False);
+            Assert.True(result.IsSuccess);
+            Assert.False(result.SuccessResult.HasValue);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_ConvertFromNull()
         {
             var result = ValueCaster.ConvertFromNull<LiquidCollection>();
-            Assert.That(result.IsSuccess, Is.True);
-            Assert.That(result.SuccessResult.HasValue, Is.False);
+            Assert.True(result.IsSuccess);
+            Assert.False(result.SuccessResult.HasValue);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Convert_Num()
         {
             var result = ValueCaster.Cast<LiquidNumeric, LiquidString>(LiquidNumeric.Create(1));
-            Assert.That(result.IsSuccess, Is.True);
-            Assert.That(result.SuccessResult.HasValue, Is.True);
+            Assert.True(result.IsSuccess);
+            Assert.True(result.SuccessResult.HasValue);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Convert_An_Array()
         {
             var result = ValueCaster.Cast<LiquidCollection, LiquidString>(new LiquidCollection{LiquidString.Create("test")});
-            Assert.That(result.IsSuccess, Is.True);
-            Assert.That(result.SuccessResult.HasValue, Is.True);
-            Assert.That(result.SuccessValue<LiquidString>().StringVal, Is.EqualTo("test"));
+            Assert.True(result.IsSuccess);
+            Assert.True(result.SuccessResult.HasValue);
+            Assert.Equal("test", result.SuccessValue<LiquidString>().StringVal);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Convert_A_Date_To_A_Numeric()
         {
             var date = new DateTime(2015, 10, 29, 10, 11, 12);
             var result = ValueCaster.Cast<LiquidDate, LiquidNumeric>(new LiquidDate(date));
-            Assert.That(result.IsSuccess, Is.True);
-            Assert.That(result.SuccessResult.HasValue, Is.True);
+            Assert.True(result.IsSuccess);
+            Assert.True(result.SuccessResult.HasValue);
             // ReSharper disable once PossibleInvalidOperationException
-            Assert.That(result.SuccessValue<LiquidNumeric>().LongValue, Is.EqualTo(date.Ticks));
+            Assert.Equal(date.Ticks, result.SuccessValue<LiquidNumeric>().LongValue);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Convert_A_Null_Date_To_0L()
         {
             var result = ValueCaster.Cast<LiquidDate, LiquidNumeric>(new LiquidDate(null));
-            Assert.That(result.IsSuccess, Is.True);
-            Assert.That(result.SuccessResult.HasValue, Is.True);
+            Assert.True(result.IsSuccess);
+            Assert.True(result.SuccessResult.HasValue);
             // ReSharper disable once PossibleInvalidOperationException
-            Assert.That(result.SuccessValue<LiquidNumeric>().LongValue, Is.EqualTo(0L));
+            Assert.Equal(0L, result.SuccessValue<LiquidNumeric>().LongValue);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Convert_A_Numeric_To_A_Date()
         {
             var date = new DateTime(2015,10,29,10,11,12);
             var result = ValueCaster.Cast<LiquidNumeric, LiquidDate>(LiquidNumeric.Create(date.Ticks));
-            Assert.That(result.IsSuccess, Is.True);
-            Assert.That(result.SuccessResult.HasValue, Is.True);
+            Assert.True(result.IsSuccess);
+            Assert.True(result.SuccessResult.HasValue);
             // ReSharper disable once PossibleInvalidOperationException
-            Assert.That(result.SuccessValue<LiquidDate>().DateTimeValue.Value, Is.EqualTo(date));
+            Assert.Equal(date, result.SuccessValue<LiquidDate>().DateTimeValue.Value);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Cast_Numeric_To_Numeric()
         {
             var result = ValueCaster.Cast<LiquidNumeric, LiquidNumeric>(LiquidNumeric.Create(1));
-            Assert.That(result.IsSuccess, Is.True);
-            Assert.That(result.SuccessResult.HasValue, Is.True);
+            Assert.True(result.IsSuccess);
+            Assert.True(result.SuccessResult.HasValue);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Not_Cast_Dict_To_Numeric()
         {
             var result = ValueCaster.Cast<LiquidHash, LiquidNumeric>(new LiquidHash());
-            Assert.That(result.IsSuccess, Is.False);
+            Assert.False(result.IsSuccess);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Not_Cast_Array_To_Numeric()
         {
             // Arrange
             var result = ValueCaster.Cast<LiquidCollection, LiquidNumeric>(new LiquidCollection { LiquidString.Create("test") });
-            Assert.That(result.IsSuccess, Is.False);
+            Assert.False(result.IsSuccess);
         }
 
-        [Test]
+        [Fact]
         public void It_Renders_Null_As_Empty()
         {
             // Arrange
             var result = ValueCaster.RenderAsString((ILiquidValue) null);
-            Assert.That(result, Is.EqualTo(""));
+            Assert.Equal("", result);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Cast_Nil_To_0_In_A_Filter() // integration
         {
             // Act
             var result = RenderingHelper.RenderTemplate("Result : {{ x | plus: 1 }}");
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : 1"));
+            Assert.Equal("Result : 1", result);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Cast_Undefined_To_0_In_A_Filter_Arg() // integration
         {
             // Act
             var result = RenderingHelper.RenderTemplate("Result : {{ 3 | plus: x }}");
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : 3"));
+            Assert.Equal("Result : 3", result);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Cast_Nil_To_0_In_A_Filter_Arg() // integration
         {
             // Act
@@ -487,7 +486,7 @@ namespace Liquid.NET.Tests.Constants
             var result = RenderingHelper.RenderTemplate("{% assign x = nil %}Result : {{ 3 | plus: x }}");
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : 3"));
+            Assert.Equal("Result : 3", result);
 
         }
 

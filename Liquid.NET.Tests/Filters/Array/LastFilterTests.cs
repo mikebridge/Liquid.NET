@@ -1,14 +1,14 @@
 ﻿using System.Collections.Generic;
 using Liquid.NET.Constants;
 using Liquid.NET.Filters.Array;
-using NUnit.Framework;
+using Xunit;
 
 namespace Liquid.NET.Tests.Filters.Array
 {
-    [TestFixture]
+    
     public class LastFilterTests
     {
-        [Test]
+        [Fact]
         public void It_Should_Return_The_Last_Element()
         {
             // Arrange
@@ -24,11 +24,11 @@ namespace Liquid.NET.Tests.Filters.Array
             var result = filter.Apply(new TemplateContext(), liquidCollection).SuccessValue<LiquidBoolean>();
 
             // Assert
-            Assert.That(result, Is.EqualTo(liquidCollection[liquidCollection.Count - 1]));
+            Assert.Equal(liquidCollection[liquidCollection.Count - 1], result);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Return_The_Last_Char_Of_A_String()
         {
             // Arrange
@@ -38,11 +38,11 @@ namespace Liquid.NET.Tests.Filters.Array
             var result = filter.Apply(new TemplateContext(), LiquidString.Create("Hello World")).SuccessValue<LiquidString>();
 
             // Assert
-            Assert.That(result.StringVal, Is.EqualTo("d"));
+            Assert.Equal("d", result.StringVal);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Return_An_Error_If_Array_Is_Empty() // TODO: Check if this is the case
         {
             // Arrange
@@ -53,11 +53,11 @@ namespace Liquid.NET.Tests.Filters.Array
             var result = filter.Apply(new TemplateContext(), liquidCollection);
 
             // Assert
-            Assert.That(result.IsError, Is.True);
+            Assert.True(result.IsError);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Return_An_Error_If_String_Is_Empty() // TODO: Check if this is the case
         {
             // Arrange
@@ -67,11 +67,11 @@ namespace Liquid.NET.Tests.Filters.Array
             var result = filter.Apply(new TemplateContext(), LiquidString.Create(""));
 
             // Assert
-            Assert.That(result.IsError, Is.True);
+            Assert.True(result.IsError);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Return_An_Error_If_String_Is_Null() // TODO: Check if this is the case
         {
             // Arrange
@@ -81,11 +81,11 @@ namespace Liquid.NET.Tests.Filters.Array
             var result = filter.Apply(new TemplateContext(), LiquidString.Create(null));
 
             // Assert
-            Assert.That(result.IsError, Is.True);
+            Assert.True(result.IsError);
 
         }
 
-//        [Test]
+//        [Fact]
 //        public void It_Should_Return_An_Error_If_Array_Is_Null() // TODO: Check if this is the case
 //        {
 //            // Arrange
@@ -95,7 +95,7 @@ namespace Liquid.NET.Tests.Filters.Array
 //            var result = filter.Apply(new LiquidCollection(new Option<ILiquidValue>(null)));
 //
 //            // Assert
-//            Assert.That(result.IsError, Is.True);
+//            Assert.True(result.IsError);
 //
 //        }
     }

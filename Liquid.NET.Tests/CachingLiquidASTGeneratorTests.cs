@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using NUnit.Framework;
+using Xunit;
 
 namespace Liquid.NET.Tests
 {
-    [TestFixture]
+    
     public class CachingLiquidASTGeneratorTests
     {
-        [Test]
+        [Fact]
         public void It_Should_Cache_A_Template()
         {
             // Arrange
@@ -20,12 +20,12 @@ namespace Liquid.NET.Tests
             var result2 = cachingGenerator.Generate(tmpl);
 
             // Assert
-            Assert.That(result1, Is.Not.Null);
-            Assert.That(result2, Is.Not.Null);
-            Assert.That(mockGenerator.Calls, Is.EqualTo(1));
+            Assert.NotNull(result1);
+            Assert.NotNull(result2);
+            Assert.Equal(1, mockGenerator.Calls);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Not_Cache_Dissimilar_Templates()
         {
             // Arrange
@@ -38,12 +38,12 @@ namespace Liquid.NET.Tests
             var result2 = cachingGenerator.Generate(tmpl + "2");
 
             // Assert
-            Assert.That(result1, Is.Not.Null);
-            Assert.That(result2, Is.Not.Null);
-            Assert.That(mockGenerator.Calls, Is.EqualTo(2));
+            Assert.NotNull(result1);
+            Assert.NotNull(result2);
+            Assert.Equal(2, mockGenerator.Calls);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Not_Cache_Erroring_Templates()
         {
             // Arrange
@@ -56,13 +56,13 @@ namespace Liquid.NET.Tests
             var result2 = cachingGenerator.Generate(tmpl, err => { });
 
             // Assert
-            Assert.That(result1, Is.Not.Null);
-            Assert.That(result2, Is.Not.Null);
-            Assert.That(mockGenerator.Calls, Is.EqualTo(2));
+            Assert.NotNull(result1);
+            Assert.NotNull(result2);
+            Assert.Equal(2, mockGenerator.Calls);
         }
 
 
-        [Test]
+        [Fact]
         public void It_Should_Cache_A_Template_Across_Objects()
         {
             // Arrange
@@ -76,7 +76,7 @@ namespace Liquid.NET.Tests
             cachingGenerator2.Generate(tmpl);
 
             // Assert
-            Assert.That(mockGenerator.Calls, Is.EqualTo(1));
+            Assert.Equal(1, mockGenerator.Calls);
         }
 
 

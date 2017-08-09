@@ -5,15 +5,15 @@ using Liquid.NET.Symbols;
 using Liquid.NET.Tags;
 using Liquid.NET.Tests.Ruby;
 using Liquid.NET.Utils;
-using NUnit.Framework;
+using Xunit;
 
 namespace Liquid.NET.Tests.Tags
 {
-    [TestFixture]
+    
     public class CycleTagTests
     {
 
-        [Test]
+        [Fact]
         public void It_Should_Find_Elements_In_Its_Array()
         {
             // Arrange
@@ -23,11 +23,11 @@ namespace Liquid.NET.Tests.Tags
             cycleTag.CycleList.Add(new TreeNode<LiquidExpression>(new LiquidExpression { Expression = LiquidString.Create("C") }));
 
             // Assert
-            Assert.That(((LiquidString) cycleTag.ElementAt(0).Data.Expression).StringVal, Is.EqualTo("A"));
-            Assert.That(((LiquidString) cycleTag.ElementAt(1).Data.Expression).StringVal, Is.EqualTo("B"));
+            Assert.Equal("A", ((LiquidString) cycleTag.ElementAt(0).Data.Expression).StringVal);
+            Assert.Equal("B", ((LiquidString) cycleTag.ElementAt(1).Data.Expression).StringVal);
       }
 
-        [Test]
+        [Fact]
         public void It_Should_Cycle_Through_Strings()
         {
             // Arrange
@@ -40,11 +40,11 @@ namespace Liquid.NET.Tests.Tags
             String result = template.LiquidTemplate.Render(ctx).Result;
 
             // Assert
-            Assert.That(result.TrimEnd(), Is.EqualTo("Result : ITEM:odd ITEM:even ITEM:odd ITEM:even"));
+            Assert.Equal("Result : ITEM:odd ITEM:even ITEM:odd ITEM:even", result.TrimEnd());
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Cycle_Through_Booleans()
         {
             // Arrange
@@ -57,11 +57,11 @@ namespace Liquid.NET.Tests.Tags
             String result = template.LiquidTemplate.Render(ctx).Result;
 
             // Assert
-            Assert.That(result.TrimEnd(), Is.EqualTo("Result : ITEM:true ITEM:false ITEM:true ITEM:false"));
+            Assert.Equal("Result : ITEM:true ITEM:false ITEM:true ITEM:false", result.TrimEnd());
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Cycle_Through_Nil()
         {
             // Arrange
@@ -74,7 +74,7 @@ namespace Liquid.NET.Tests.Tags
             String result = template.LiquidTemplate.Render(ctx).Result;
 
             // Assert
-            Assert.That(result.TrimEnd(), Is.EqualTo("Result : ITEM: ITEM: ITEM: ITEM:"));
+            Assert.Equal("Result : ITEM: ITEM: ITEM: ITEM:", result.TrimEnd());
 
         }
 
@@ -83,7 +83,7 @@ namespace Liquid.NET.Tests.Tags
         /// Test of group behaviour described at 
         /// https://docs.shopify.com/themes/liquid-documentation/tags/iteration-tags#cycle
         /// </summary>
-        [Test]
+        [Fact]
         public void It_Should_Maintain_State_For_Cycle_Groups_With_The_Same_Name_And_Keys()
         {
             // Arrange
@@ -96,11 +96,11 @@ namespace Liquid.NET.Tests.Tags
             String result = template.LiquidTemplate.Render(ctx).Result;
 
             // Assert
-            Assert.That(result.TrimEnd(), Is.EqualTo("Result : 12312312"));
+            Assert.Equal("Result : 12312312", result.TrimEnd());
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Cycle_Through_Strings_In_Different_Groups()
         {
             TemplateContext ctx = new TemplateContext();
@@ -112,11 +112,11 @@ namespace Liquid.NET.Tests.Tags
             String result = template.LiquidTemplate.Render(ctx).Result;
 
             // Assert
-            Assert.That(result.TrimEnd(), Is.EqualTo("Result : 12311231"));
+            Assert.Equal("Result : 12311231", result.TrimEnd());
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Cycle_Through_Variables()
         {
             TemplateContext ctx = new TemplateContext();
@@ -131,11 +131,11 @@ namespace Liquid.NET.Tests.Tags
             String result = template.LiquidTemplate.Render(ctx).Result;
 
             // Assert
-            Assert.That(result.TrimEnd(), Is.EqualTo("Result : ONETWOfalse9"));
+            Assert.Equal("Result : ONETWOfalse9", result.TrimEnd());
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Cycle_Through_Vars_And_Non_Vars()
         {
             TemplateContext ctx = new TemplateContext();
@@ -150,11 +150,11 @@ namespace Liquid.NET.Tests.Tags
             String result = template.LiquidTemplate.Render(ctx).Result;
 
             // Assert
-            Assert.That(result.TrimEnd(), Is.EqualTo("Result : ONETWOfalse9"));
+            Assert.Equal("Result : ONETWOfalse9", result.TrimEnd());
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Allow_A_Var_In_Cycle_Group()
         {
             TemplateContext ctx = new TemplateContext();
@@ -169,15 +169,15 @@ namespace Liquid.NET.Tests.Tags
             String result = template.LiquidTemplate.Render(ctx).Result;
 
             // Assert
-            Assert.That(result.TrimEnd(), Is.EqualTo("Result : ONETWOfalse9"));
+            Assert.Equal("Result : ONETWOfalse9", result.TrimEnd());
 
         }
 
 
-        [Test]
-        [TestCase(@"{%cycle var1: ""one"", ""two"" %} {%cycle var2: ""one"", ""two"" %} {%cycle var1: ""one"", ""two"" %} {%cycle var2: ""one"", ""two"" %} {%cycle var1: ""one"", ""two"" %} {%cycle var2: ""one"", ""two"" %}", @"{""var1"":1,""var2"":2}", @"one one two two one one")]
-        [TestCase(@"{%cycle 1,2%} {%cycle 1,2%} {%cycle 1,2%} {%cycle 1,2,3%} {%cycle 1,2,3%} {%cycle 1,2,3%} {%cycle 1,2,3%}", @"{}", @"1 2 1 1 2 3 1")]
-        [TestCase(@"{%cycle 1: ""one"", ""two"" %} {%cycle 2: ""one"", ""two"" %} {%cycle 1: ""one"", ""two"" %} {%cycle 2: ""one"", ""two"" %} {%cycle 1: ""one"", ""two"" %} {%cycle 2: ""one"", ""two"" %}", @"{}", @"one one two two one one")]
+        [Theory]
+        [InlineData(@"{%cycle var1: ""one"", ""two"" %} {%cycle var2: ""one"", ""two"" %} {%cycle var1: ""one"", ""two"" %} {%cycle var2: ""one"", ""two"" %} {%cycle var1: ""one"", ""two"" %} {%cycle var2: ""one"", ""two"" %}", @"{""var1"":1,""var2"":2}", @"one one two two one one")]
+        [InlineData(@"{%cycle 1,2%} {%cycle 1,2%} {%cycle 1,2%} {%cycle 1,2,3%} {%cycle 1,2,3%} {%cycle 1,2,3%} {%cycle 1,2,3%}", @"{}", @"1 2 1 1 2 3 1")]
+        [InlineData(@"{%cycle 1: ""one"", ""two"" %} {%cycle 2: ""one"", ""two"" %} {%cycle 1: ""one"", ""two"" %} {%cycle 2: ""one"", ""two"" %} {%cycle 1: ""one"", ""two"" %} {%cycle 2: ""one"", ""two"" %}", @"{}", @"one one two two one one")]
         public void It_Should_Cycle_Through_Groups(String input, String assigns, String expected) {
 
             // Arrange
@@ -195,7 +195,7 @@ namespace Liquid.NET.Tests.Tags
             String result = template.LiquidTemplate.Render(ctx).Result;
         
             // Assert
-            Assert.That(result.Trim(), Is.EqualTo(expected));
+            Assert.Equal(expected, result.Trim());
         }
 
 

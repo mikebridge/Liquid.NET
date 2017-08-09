@@ -1,13 +1,13 @@
 ﻿using System;
-using NUnit.Framework;
+using Xunit;
 
 namespace Liquid.NET.Tests.Filters.Strings
 {
-    [TestFixture]
+    
     public class SplitFilterTests
     {
 
-        [Test]
+        [Fact]
         public void It_Should_Split_A_String()
         {
             // Arrange
@@ -18,11 +18,11 @@ namespace Liquid.NET.Tests.Filters.Strings
             Logger.Log(result);
 
             // Assert            
-            //Assert.That(result, Is.EqualTo(@"[ ""Uses"", ""cheat"", ""codes,"", ""calls"", ""the"", ""game"", ""boring."" ]"));
-            Assert.That(result, Is.EqualTo(@"Usescheatcodes,callsthegameboring."));
+            //Assert.Equal(@"[ ""Uses"", ""cheat"", ""codes,"", ""calls"", ""the"", ""game"", ""boring."" ]", result);
+            Assert.Equal(@"Usescheatcodes,callsthegameboring.", result);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Split_A_String_Inside_A_Tag() 
         {        
             // Arrange
@@ -33,12 +33,12 @@ namespace Liquid.NET.Tests.Filters.Strings
             Logger.Log(result);
 
             // Assert            
-            //Assert.That(result, Is.EqualTo(@"[ ""Uses"", ""cheat"", ""codes,"", ""calls"", ""the"", ""game"", ""boring."" ]"));
-            Assert.That(result, Is.EqualTo(@"Usescheatcodes,callsthegameboring."));
+            //Assert.Equal(@"[ ""Uses"", ""cheat"", ""codes,"", ""calls"", ""the"", ""game"", ""boring."" ]", result);
+            Assert.Equal(@"Usescheatcodes,callsthegameboring.", result);
         
         }
 
-        [Test]
+        [Fact]
         // SEE: https://docs.shopify.com/themes/liquid-documentation/filters/string-filters#split
         public void It_Should_Replicate_The_Shopify_Documentation()
         {
@@ -63,7 +63,7 @@ Uses cheat codes, calls the game boring. ";
             var result = RenderingHelper.RenderTemplate(tmpl);
 
             // Assert            
-            Assert.That(result, Is.EqualTo(expected));
+            Assert.Equal(expected, result);
 
         }
     }

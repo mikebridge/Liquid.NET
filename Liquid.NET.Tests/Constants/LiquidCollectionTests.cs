@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 using Liquid.NET.Constants;
-using NUnit.Framework;
+using Xunit;
 
 namespace Liquid.NET.Tests.Constants
 {
-    [TestFixture]
+    
     public class LiquidCollectionTests
     {
-        [Test]
+        [Fact]
         public void It_Should_Dereference_An_Array_Element()
         {
 
@@ -21,10 +21,10 @@ namespace Liquid.NET.Tests.Constants
 
             // Assert
             var valueAt = liquidCollection.ValueAt(0);
-            Assert.That(valueAt.Value, Is.EqualTo("a string"));
+            Assert.Equal("a string", valueAt.Value.ToString());
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Access_Size_Property_Of_An_Array()
         {
             // Arrange
@@ -42,10 +42,10 @@ namespace Liquid.NET.Tests.Constants
 
             // Assert
           
-            Assert.That(result, Is.EqualTo("Result : 4" ));
+            Assert.Equal("Result : 4" , result);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Save_Meta_Data()
         {
             // Arrange
@@ -57,63 +57,63 @@ namespace Liquid.NET.Tests.Constants
             liquidCollection.MetaData["test"] = expected;
 
             // Assert
-            Assert.That(liquidCollection.MetaData.ContainsKey("test"));
-            Assert.That(liquidCollection.MetaData["test"], Is.EqualTo(expected));
+            Assert.True(liquidCollection.MetaData.ContainsKey("test"));
+            Assert.Equal(expected, liquidCollection.MetaData["test"]);
             
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Clear_An_Array()
         {
             var liquidCollection = new LiquidCollection{LiquidString.Create("test")};
             liquidCollection.Clear();
-            Assert.That(liquidCollection.Count, Is.EqualTo(0));
+            Assert.Equal(0, liquidCollection.Count);
         }
 
 
-        [Test]
+        [Fact]
         public void It_Should_Remove_An_Element_From_An_Array()
         {
             var liquidCollection = new LiquidCollection { LiquidString.Create("test") };
             liquidCollection.Remove(LiquidString.Create("test"));
-            Assert.That(liquidCollection.Count, Is.EqualTo(0));
+            Assert.Equal(0, liquidCollection.Count);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Remove_An_Element_At_An_Index_In_An_Array()
         {
             var liquidCollection = new LiquidCollection { LiquidString.Create("test") };
             liquidCollection.RemoveAt(0);
-            Assert.That(liquidCollection.Count, Is.EqualTo(0));
+            Assert.Equal(0, liquidCollection.Count);
         }
-        [Test]
+        [Fact]
         public void It_Should_Find_An_Element_By_Value()
         {
             var liquidCollection = new LiquidCollection { LiquidString.Create("test") };
             var index = liquidCollection.IndexOf(LiquidString.Create("test"));
-            Assert.That(index, Is.EqualTo(0));
+            Assert.Equal(0, index);
         }
-        [Test]
+        [Fact]
         public void It_Should_Insert_An_Element()
         {
             var liquidCollection = new LiquidCollection { LiquidString.Create("test") };
             liquidCollection.Insert(0,LiquidString.Create("test 1"));
-            Assert.That(liquidCollection.IndexOf(LiquidString.Create("test 1")), Is.EqualTo(0));
+            Assert.Equal(0, liquidCollection.IndexOf(LiquidString.Create("test 1")));
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Cast_A_Null_Element_To_None()
         {
             var liquidCollection = new LiquidCollection { null };
-            Assert.That(liquidCollection.Count, Is.EqualTo(1));
+            Assert.Equal(1, liquidCollection.Count);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Set_An_Element()
         {
             var liquidCollection = new LiquidCollection { LiquidString.Create("test") };
             liquidCollection[0] = LiquidString.Create("test 1");
-            Assert.That(liquidCollection.IndexOf(LiquidString.Create("test 1")), Is.EqualTo(0));
+            Assert.Equal(0, liquidCollection.IndexOf(LiquidString.Create("test 1")));
         }
     }
 }

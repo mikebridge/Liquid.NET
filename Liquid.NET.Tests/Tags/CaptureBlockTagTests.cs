@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using Liquid.NET.Constants;
-using NUnit.Framework;
+using Xunit;
 
 namespace Liquid.NET.Tests.Tags
 {
-    [TestFixture]
+    
     public class CaptureBlockTagTests
     {
-        [Test]
+        [Fact]
         public void It_Should_Put_A_Block_In_A_Variable()
         {
             // Arrange
@@ -19,11 +19,11 @@ namespace Liquid.NET.Tests.Tags
             String result = template.LiquidTemplate.Render(ctx).Result;
 
             // Assert
-            Assert.That(result, Is.EqualTo("Captured: Result: TEST"));
+            Assert.Equal("Captured: Result: TEST", result);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Assign_A_Cycle_To_A_Capture()
         {
             // Arrange
@@ -38,7 +38,7 @@ namespace Liquid.NET.Tests.Tags
             Logger.Log(result);
 
             // Assert
-            Assert.That(result.TrimEnd(), Is.EqualTo("Result : odd even odd even"));
+            Assert.Equal("Result : odd even odd even", result.TrimEnd());
 
         }
 

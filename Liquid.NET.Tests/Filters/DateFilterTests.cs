@@ -1,19 +1,19 @@
 ﻿using System;
 using Liquid.NET.Constants;
-using NUnit.Framework;
+using Xunit;
 
 namespace Liquid.NET.Tests.Filters
 {
     /// <summary>
     /// See:  See: http://www.ruby-doc.org/core/Time.html#method-i-strftime
     /// </summary>
-    [TestFixture]   
+       
     public class DateFilterTests
     {
-        [Test]
-        [TestCase("%y", "15")]
-        [TestCase("%B", "March")]
-        [TestCase("%m/%d/%Y", "03/30/2015")]
+        [Theory]
+        [InlineData("%y", "15")]
+        [InlineData("%B", "March")]
+        [InlineData("%m/%d/%Y", "03/30/2015")]
         public void It_Should_Format_A_Date(String format, string expected)
         {
             // Arrange
@@ -24,10 +24,10 @@ namespace Liquid.NET.Tests.Filters
             var result = RenderingHelper.RenderTemplate("Result : {{ mydate | date: \""+format+"\" }}", ctx);
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : "+expected));
+            Assert.Equal("Result : "+expected, result);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Ignore_An_Empty_Date()
         {
             // Arrange
@@ -37,11 +37,11 @@ namespace Liquid.NET.Tests.Filters
             var result = RenderingHelper.RenderTemplate("Result : {{ mydate | date: \"%y\" }}", ctx);
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : "));
+            Assert.Equal("Result : ", result);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Ignore_A_Missing_DateValue()
         {
             // Arrange
@@ -51,11 +51,11 @@ namespace Liquid.NET.Tests.Filters
             var result = RenderingHelper.RenderTemplate("Result : {{ mydate | date: \"%y\" }}", ctx);
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : "));
+            Assert.Equal("Result : ", result);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Return_The_Default_When_No_Format()
         {
             // Arrange
@@ -67,11 +67,11 @@ namespace Liquid.NET.Tests.Filters
             var result = RenderingHelper.RenderTemplate("Result : {{ mydate | date }}", ctx);
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : 08/19/2015"));
+            Assert.Equal("Result : 08/19/2015", result);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Not_Fail_When_Format_Is_Invalid()
         {
             // Arrange
@@ -83,12 +83,12 @@ namespace Liquid.NET.Tests.Filters
             var result = RenderingHelper.RenderTemplate("Result : {{ mydate | date : \"%V\" }}", ctx);
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : %V"));
+            Assert.Equal("Result : %V", result);
 
         }
 
 
-        [Test]
+        [Fact]
         public void It_Should_Format_With_Hour_Day_Month_Minute_Meridian_Second()
         {
             // Arrange
@@ -102,7 +102,7 @@ namespace Liquid.NET.Tests.Filters
 
             // Assert
             Logger.Log(result);
-            Assert.That(result.Trim(), Is.EqualTo("Result: " + resultString));
+            Assert.Equal("Result: " + resultString, result.Trim());
         }
 
     }

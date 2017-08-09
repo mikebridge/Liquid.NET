@@ -4,14 +4,14 @@ using System.Globalization;
 using System.Threading;
 using Liquid.NET.Constants;
 using Liquid.NET.Tests.Helpers;
-using NUnit.Framework;
+using Xunit;
 
 namespace Liquid.NET.Tests.Filters
 {
-    [TestFixture]
+    
     public class DebugFilterTests
     {
-        [Test]
+        [Fact]
         public void It_Should_Display_Debugging_Info_For_A_Variable()
         {
             // Arrange
@@ -27,14 +27,14 @@ namespace Liquid.NET.Tests.Filters
             var result = RenderingHelper.RenderTemplate("Result : {{ mydate | debug }}", ctx);
 
             // Assert
-            Assert.That(result, Does.Contain("\"metadata\" : { \"hello\" : \"test\" }"));
-            Assert.That(result, Does.Contain("\"value\" : \"03/30/2015 23:01:12\""));
-            Assert.That(result, Does.Contain("\"type\" : \"date"));
-            Assert.That(result, Is.EqualTo("Result : { \"metadata\" : { \"hello\" : \"test\" }, \"value\" : \"03/30/2015 23:01:12\", \"type\" : \"date\" }"));
+            Assert.Contains("\"metadata\" : { \"hello\" : \"test\" }", result);
+            Assert.Contains("\"value\" : \"03/30/2015 23:01:12\"", result);
+            Assert.Contains("\"type\" : \"date", result);
+            Assert.Equal("Result : { \"metadata\" : { \"hello\" : \"test\" }, \"value\" : \"03/30/2015 23:01:12\", \"type\" : \"date\" }", result);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Include_The_Included_FileName_WhenAssigned()
         {
             // Arrange
@@ -49,11 +49,11 @@ namespace Liquid.NET.Tests.Filters
             Logger.Log(result);
 
             // Assert
-            Assert.That(result, Does.Contain("{ \"assigned\" : \"test\""));
+            Assert.Contains("{ \"assigned\" : \"test\"", result);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Include_The_Included_FileName_When_Reassigned()
         {
             // Arrange
@@ -73,7 +73,7 @@ namespace Liquid.NET.Tests.Filters
 
             // Assert
             //Assert.That(result, Does.Contain("{ \"assigned\" : \"test\""));
-            Assert.That(result, Does.Contain("{ \"reassigned\" : \"test2\""));
+            Assert.Contains("{ \"reassigned\" : \"test2\"", result);
 
         }
 

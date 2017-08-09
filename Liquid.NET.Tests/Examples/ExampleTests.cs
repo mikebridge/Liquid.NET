@@ -5,17 +5,17 @@ using System.Linq;
 using Liquid.NET.Constants;
 using Liquid.NET.Filters;
 using Liquid.NET.Utils;
-using NUnit.Framework;
+using Xunit;
 
 namespace Liquid.NET.Tests.Examples
 {
     /// <summary>
     /// Examples in the Wiki
     /// </summary>
-    [TestFixture]
+    
     public class ExampleTests
     {
-        [Test]
+        [Fact]
         public void Test_Simple_Template()
         {
             ITemplateContext ctx = new TemplateContext();
@@ -24,11 +24,11 @@ namespace Liquid.NET.Tests.Examples
 
             var parsingResult = LiquidTemplate.Create("<div>{{myvariable}}</div>");
 
-            Assert.That(parsingResult.LiquidTemplate.Render(ctx).Result, Is.EqualTo("<div>Hello World</div>"));
+            Assert.Equal("<div>Hello World</div>", parsingResult.LiquidTemplate.Render(ctx).Result);
 
         }
 
-        [Test]
+        [Fact]
         public void Test_Simple_Collection()
         {
             ITemplateContext ctx = new TemplateContext();
@@ -42,11 +42,11 @@ namespace Liquid.NET.Tests.Examples
 
             var parsingResult = LiquidTemplate.Create("<ul>{% for item in items %}<li>{{item}}</li>{% endfor %}</ul>");
 
-            Assert.That(parsingResult.LiquidTemplate.Render(ctx).Result, Is.EqualTo("<ul><li>2</li><li>4</li><li>6</li></ul>"));
+            Assert.Equal("<ul><li>2</li><li>4</li><li>6</li></ul>", parsingResult.LiquidTemplate.Render(ctx).Result);
 
         }
 
-        [Test]
+        [Fact]
         public void Test_Simple_Hash()
         {
             ITemplateContext ctx = new TemplateContext();
@@ -64,11 +64,11 @@ namespace Liquid.NET.Tests.Examples
 
             var parsingResult = LiquidTemplate.Create("You said '{{ greeting.address }} {{ greeting.name.first }} {{ greeting.name.last }}'");
 
-            Assert.That(parsingResult.LiquidTemplate.Render(ctx).Result, Is.EqualTo("You said 'Hello Tobias Lütke'"));
+            Assert.Equal("You said 'Hello Tobias Lütke'", parsingResult.LiquidTemplate.Render(ctx).Result);
 
         }
 
-        [Test]
+        [Fact]
         public void Test_Filter()
         {
             ITemplateContext ctx = new TemplateContext()
@@ -78,19 +78,19 @@ namespace Liquid.NET.Tests.Examples
 
             var parsingResult = LiquidTemplate.Create("{{ resultcount }} {{ resultcount | pluralize: 'item', 'items' }} were found for '{{searchterm | downcase}}'.");
 
-            Assert.That(parsingResult.LiquidTemplate.Render(ctx).Result, Is.EqualTo("42 items were found for 'mixedcase'."));
+            Assert.Equal("42 items were found for 'mixedcase'.", parsingResult.LiquidTemplate.Render(ctx).Result);
 
         }
 
-        [Test]
+        [Fact]
         public void Test_Parsing_Error()
         {
             var parsingResult = LiquidTemplate.Create("This filter delimiter is not terminated: {{ myfilter");            
             String error = String.Join(",", parsingResult.ParsingErrors.Select(x => x.ToString()));
-            Assert.That(error, Does.Contain("line 1:52 at <EOF>: Missing '}}'"));            
+            Assert.Contains("line 1:52 at <EOF>: Missing '}}'", error);            
         }
 
-        [Test]
+        [Fact]
         public void Test_Rendering_Error()
         {
             ITemplateContext ctx = new TemplateContext().WithAllFilters();
@@ -99,10 +99,10 @@ namespace Liquid.NET.Tests.Examples
             String error = String.Join(",", renderingResult.RenderingErrors.Select(x => x.Message));
             //Console.WriteLine("The ERROR was : " + error);
             //Console.WriteLine("The RESULT was : " + renderingResult.Result);
-            Assert.That(error, Does.Contain("Liquid error: divided by 0"));
+            Assert.Contains("Liquid error: divided by 0", error);
         }
 
-        [Test]
+        [Fact]
         public void Poco_Object_Should_Be_Serialized()
         {
             ITemplateContext ctx = new TemplateContext()
@@ -120,7 +120,7 @@ namespace Liquid.NET.Tests.Examples
             var parsingResult = LiquidTemplate.Create("Poco Result: {{ poco }}");
             var renderingResult = parsingResult.LiquidTemplate.Render(ctx);
 
-            Assert.That(renderingResult.Result, Does.Contain(@"Poco Result: { ""mystringfield"" : ""A string field"", ""mynullableintfield"" : 123, ""myrenamedfield"" : ""Some Other Field"", ""nestedpoco"" : { ""mystringfield"" : ""Nested Poco"", ""mynullableintfield"" : null, ""myrenamedfield"" : null } }"));
+            Assert.Contains(@"Poco Result: { ""mystringfield"" : ""A string field"", ""mynullableintfield"" : 123, ""myrenamedfield"" : ""Some Other Field"", ""nestedpoco"" : { ""mystringfield"" : ""Nested Poco"", ""mynullableintfield"" : null, ""myrenamedfield"" : null } }", renderingResult.Result);
         }
 
         public class MyPoco
@@ -153,7 +153,7 @@ namespace Liquid.NET.Tests.Examples
             }
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Render_In_Upper_Case()
         {
             // Arrange
@@ -165,10 +165,10 @@ namespace Liquid.NET.Tests.Examples
             var renderingResult = parsingResult.LiquidTemplate.Render(ctx);
            
             // Assert
-            Assert.That(renderingResult.Result, Is.EqualTo("Result : TEST"));
+            Assert.Equal("Result : TEST", renderingResult.Result);
         }
 
-        [Test]
+        [Fact]
         public void Test_Introductory_Example()
         {
             // create a template context that knows about the standard filters,
@@ -199,11 +199,11 @@ namespace Liquid.NET.Tests.Examples
                 return;
             }
 
-            Assert.That(renderingResult.Result, Is.EqualTo("<div>Hello World</div>"));
+            Assert.Equal("<div>Hello World</div>", renderingResult.Result);
 
         }
 
-        [Test]
+        [Fact]
         public void Test_Introductory_Example_With_Syntactic_Sugar()
         {
             // create a place to accumulate parsing and rendering errors.
@@ -215,7 +215,7 @@ namespace Liquid.NET.Tests.Examples
                 .LiquidTemplate;
 
             // [add code here to handle the parsing errors, return]
-            Assert.That(errors.Any(), Is.False);
+            Assert.False(errors.Any());
 
             var ctx = new TemplateContext()
                 .WithAllFilters()
@@ -229,14 +229,14 @@ namespace Liquid.NET.Tests.Examples
                 .Result;
 
             // [add code here to handle the parsing and rendering errors]
-            Assert.That(errors.Any(), Is.False);
+            Assert.False(errors.Any());
 
             Console.WriteLine(result);
-            Assert.That(result, Is.EqualTo("<div>Hello World</div>"));
+            Assert.Equal("<div>Hello World</div>", result);
 
         }
 
-//        [Test]
+//        [Fact]
 //        public void It_Should_Throw_An_Error()
 //        {
 //            LiquidHash hash = new LiquidHash();

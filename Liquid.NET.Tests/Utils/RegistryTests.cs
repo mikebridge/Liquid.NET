@@ -1,21 +1,20 @@
 ﻿using System;
 using Liquid.NET.Utils;
-using NUnit.Framework;
+using Xunit;
 
 namespace Liquid.NET.Tests.Utils
 {
-    [TestFixture]
+    
     public class RegistryTests
     {
-        private Registry<String> _registry;
+        private readonly Registry<String> _registry;
             
-        [SetUp]
-        public void Setup()
+        public RegistryTests()
         {
             _registry = new Registry<String>();
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Save_A_Type()
         {
             // Arrange
@@ -26,11 +25,11 @@ namespace Liquid.NET.Tests.Utils
             Type type = _registry.Find(key);
 
             // Assert
-            Assert.That(type.Name, Is.EqualTo("String"));
+            Assert.Equal("String", type.Name);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Deregister_A_Type()
         {
             // Arrange
@@ -42,12 +41,12 @@ namespace Liquid.NET.Tests.Utils
             Type type = _registry.Find(key);
 
             // Assert
-            Assert.That(type, Is.Null);
+            Assert.Null(type);
 
         }
 
 
-        [Test]
+        [Fact]
         public void It_Should_Override_A_Type()
         {
             // Arrange
@@ -59,7 +58,7 @@ namespace Liquid.NET.Tests.Utils
             registry.Register<int>(key);
 
             // Assert
-            Assert.That(registry.Find(key).Name, Is.EqualTo("Int32"));
+            Assert.Equal("Int32", registry.Find(key).Name);
 
         }
 

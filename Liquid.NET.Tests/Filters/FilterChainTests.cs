@@ -5,14 +5,14 @@ using Liquid.NET.Constants;
 using Liquid.NET.Filters;
 using Liquid.NET.Filters.Math;
 using Liquid.NET.Filters.Strings;
-using NUnit.Framework;
+using Xunit;
 
 namespace Liquid.NET.Tests.Filters
 {
-    [TestFixture]
+    
     public class FilterChainTests
     {
-        [Test]
+        [Fact]
         public void It_Should_Cast_MisMatched_Filters()
         {
             // Arrange
@@ -26,12 +26,13 @@ namespace Liquid.NET.Tests.Filters
             var castedFilters = FilterChain.InterpolateCastFilters(filters).ToList();
 
             // Assert
-            Assert.That(castedFilters.Count, Is.EqualTo(3));
-            Assert.That(castedFilters[1], Is.TypeOf(typeof(CastFilter<LiquidString, LiquidNumeric>)));
+            Assert.Equal(3, castedFilters.Count);
+            //Assert.That(castedFilters[1], Is.TypeOf(typeof(CastFilter<LiquidString, LiquidNumeric>)));
+            Assert.IsType< CastFilter<LiquidString, LiquidNumeric>>(castedFilters[1]);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Compose_Functions_Together()
         {
             // Arrange
@@ -44,11 +45,11 @@ namespace Liquid.NET.Tests.Filters
             var result = compositeFilterFn(LiquidString.Create("test123")).SuccessValue<LiquidString>();
 
             // Assert
-            Assert.That(result.Value, Is.EqualTo("TEST"));
+            Assert.Equal("TEST", result.Value);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Allow_An_Int_Variable()
         {
             // Arrange
@@ -61,10 +62,10 @@ namespace Liquid.NET.Tests.Filters
             Logger.Log(result);
 
             // Assert
-            Assert.That(result, Is.EqualTo("4"));
+            Assert.Equal("4", result);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Allow_A_Variable_With_Index()
         {
             // Arrange
@@ -78,10 +79,10 @@ namespace Liquid.NET.Tests.Filters
             Logger.Log(result);
 
             // Assert
-            Assert.That(result, Is.EqualTo("34"));
+            Assert.Equal("34", result);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Allow_A_Variable_With_Int_Index()
         {
             // Arrange
@@ -96,10 +97,10 @@ namespace Liquid.NET.Tests.Filters
             Logger.Log(result);
 
             // Assert
-            Assert.That(result, Is.EqualTo("34"));
+            Assert.Equal("34", result);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Parse_Two_Filter_Arguments()
         {
             // Arrange
@@ -119,12 +120,12 @@ namespace Liquid.NET.Tests.Filters
             Logger.Log(result);
 
             // Assert
-            Assert.That(result, Is.EqualTo("1 22 23"));
+            Assert.Equal("1 22 23", result);
         }
 
-        [Test]
-        [TestCase("{{ 1 | mockfilter: bar.foo, 'X' }}", "1 22 X")]
-        [TestCase("{{ 1 | mockfilter: 'X', bar.foo }}", "1 X 22")]
+        [Theory]
+        [InlineData("{{ 1 | mockfilter: bar.foo, 'X' }}", "1 22 X")]
+        [InlineData("{{ 1 | mockfilter: 'X', bar.foo }}", "1 X 22")]
         public void It_Should_Parse_A_Variable_And_A_Value(String liquid, String expected)
         {
             // Arrange
@@ -144,11 +145,11 @@ namespace Liquid.NET.Tests.Filters
             Logger.Log(result);
 
             // Assert
-            Assert.That(result, Is.EqualTo(expected));
+            Assert.Equal(expected, result);
         }
 
 
-        [Test]
+        [Fact]
         public void It_Should_Allow_A_Variable()
         {
             // Arrange
@@ -162,11 +163,11 @@ namespace Liquid.NET.Tests.Filters
             Logger.Log(result);
 
             // Assert
-            Assert.That(result, Is.EqualTo("HELLO WORLD"));
+            Assert.Equal("HELLO WORLD", result);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Lookup_An_Array_With_Int_Index()
         {
             // Arrange
@@ -180,11 +181,11 @@ namespace Liquid.NET.Tests.Filters
             Logger.Log(result);
 
             // Assert
-            Assert.That(result, Is.EqualTo("HELLO WORLD"));
+            Assert.Equal("HELLO WORLD", result);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Lookup_An_Array_In_A_Dictionary()
         {
             // Arrange
@@ -199,7 +200,7 @@ namespace Liquid.NET.Tests.Filters
             Logger.Log(result);
 
             // Assert
-            Assert.That(result, Is.EqualTo("HELLO WORLD"));
+            Assert.Equal("HELLO WORLD", result);
 
         }
 

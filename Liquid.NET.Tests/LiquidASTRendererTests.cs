@@ -4,26 +4,25 @@ using Liquid.NET.Symbols;
 using Liquid.NET.Tags;
 using Liquid.NET.Tests.Filters.Array;
 using Liquid.NET.Utils;
-using NUnit.Framework;
+using Xunit;
 
 namespace Liquid.NET.Tests
 {
-    [TestFixture]
+    
     public class LiquidASTRendererTests
     {
-        private LiquidASTGenerator _generator;
+        private readonly LiquidASTGenerator _generator;
 
-        [SetUp]
-        public void SetUp()
+        public LiquidASTRendererTests()
         {
             _generator = new LiquidASTGenerator();
         }
 
-        [Test]
-        [TestCase("\"hello\"", "hello")]
-        [TestCase("'hello'", "hello")]
-        [TestCase("123", "123")]
-        [TestCase("true", "true")]
+        [Theory]
+        [InlineData("\"hello\"", "hello")]
+        [InlineData("'hello'", "hello")]
+        [InlineData("123", "123")]
+        [InlineData("true", "true")]
         public void It_Should_Render_Simple_Literals(String literal, String expected)
         {
             // Arrange
@@ -32,13 +31,13 @@ namespace Liquid.NET.Tests
             // Act
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : "+expected));
+            Assert.Equal("Result : "+expected, result);
 
         }
 
 
 
-        [Test]
+        [Fact]
         public void It_Should_Parse_An_AST()
         {
             // Arrange
@@ -51,17 +50,17 @@ namespace Liquid.NET.Tests
             String result = Render(ctx, ast);
 
             // Assert
-            Assert.That(result, Is.EqualTo(helloWorld));
+            Assert.Equal(helloWorld, result);
 
         }
 
 
-        [Test]
-        [TestCase("hello", "hello", "equal")]
-        [TestCase("hello", "hello2", "not equal")]
-        [TestCase("hello", null, "not equal")]
-        [TestCase(null, "hello", "not equal")]
-        [TestCase(null, null, "equal")]
+        [Theory]
+        [InlineData("hello", "hello", "equal")]
+        [InlineData("hello", "hello2", "not equal")]
+        [InlineData("hello", null, "not equal")]
+        [InlineData(null, "hello", "not equal")]
+        [InlineData(null, null, "equal")]
         public void It_Should_Compare_Two_Equal_Strings(String str1, String str2, String expected)
         {
             // Arrange
@@ -70,32 +69,32 @@ namespace Liquid.NET.Tests
            
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : " + expected));
+            Assert.Equal("Result : " + expected, result);
 
         }
 
-        [Test]
-        [TestCase("true", "and", "true", "TRUE")]
-        [TestCase("false", "and", "true", "FALSE")]
-        [TestCase("true", "and", "false", "FALSE")]
-        [TestCase("false", "and", "false", "FALSE")]
-        [TestCase("\"test\"==\"test\"", "and", "true", "TRUE")]
-        [TestCase("\"test\"==\"zzz\"", "and", "true", "FALSE")]
-        [TestCase("true", "or", "true", "TRUE")]
-        [TestCase("false", "or", "true", "TRUE")]
-        [TestCase("true", "or", "false", "TRUE")]
-        [TestCase("false", "or", "false", "FALSE")]
+        [Theory]
+        [InlineData("true", "and", "true", "TRUE")]
+        [InlineData("false", "and", "true", "FALSE")]
+        [InlineData("true", "and", "false", "FALSE")]
+        [InlineData("false", "and", "false", "FALSE")]
+        [InlineData("\"test\"==\"test\"", "and", "true", "TRUE")]
+        [InlineData("\"test\"==\"zzz\"", "and", "true", "FALSE")]
+        [InlineData("true", "or", "true", "TRUE")]
+        [InlineData("false", "or", "true", "TRUE")]
+        [InlineData("true", "or", "false", "TRUE")]
+        [InlineData("false", "or", "false", "FALSE")]
         public void It_Should_AndOr_Two_Expressions(String str1, String op, String str2, String expected)
         {
             // Arrange
             String result = GenerateAndRender("Result : {% if " + str1 + " " + op + " " + str2 + " %}TRUE{% else %}FALSE{% endif %}");
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : " + expected));
+            Assert.Equal("Result : " + expected, result);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Resolve_A_Variable_In_An_Expression()
         {
             // Arrange
@@ -107,22 +106,22 @@ namespace Liquid.NET.Tests
             //String result = Render(templateContext, ast);
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : OK"));
+            Assert.Equal("Result : OK", result);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Eval_An_Undefine_Variable_In_An_IfExpression_As_False()
         {
             // Arrange
             String result = GenerateAndRender("Result : {% if myUndefinedVar %}OK{% else %}NOT OK{% endif %}");
             
             // Assert
-            Assert.That(result, Is.EqualTo("Result : NOT OK"));
+            Assert.Equal("Result : NOT OK", result);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Render_A_Defined_Variable_In_A_LiquidExpression()
         {
             // Arrange
@@ -132,26 +131,26 @@ namespace Liquid.NET.Tests
             String result = GenerateAndRender("Result : {{ myVar }}", templateContext);
  
             // Assert
-            Assert.That(result, Is.EqualTo("Result : " + val));
+            Assert.Equal("Result : " + val, result);
 
         }
 
    
-        [Test]
+        [Fact]
         public void It_Should_Not_Render_An_Undefined_Variable_In_A_LiquidExpression()
         {
             // Arrange
             String result = GenerateAndRender("Result : {{ myUndefinedVar }}");
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : "));
+            Assert.Equal("Result : ", result);
 
         }
 
-        [Test]
-        [TestCase("true and false", "FALSE")]
-        [TestCase("true and (false or true)", "TRUE")]
-        [TestCase("(true and false) or false", "FALSE")]
+        [Theory]
+        [InlineData("true and false", "FALSE")]
+        [InlineData("true and (false or true)", "TRUE")]
+        [InlineData("(true and false) or false", "FALSE")]
         public void It_Should_Group_Expressions(String expr, String expected)
         {
             // Arrange
@@ -160,11 +159,11 @@ namespace Liquid.NET.Tests
 
             Logger.Log("result is " + result);
             // Assert
-            Assert.That(result, Is.EqualTo("Result : " + expected));
+            Assert.Equal("Result : " + expected, result);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Evaluate_A_Filter_Inside_A_Tag()
         {
             // Arrange
@@ -176,11 +175,11 @@ namespace Liquid.NET.Tests
             Logger.Log("result is " + result);
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : TRUE"));
+            Assert.Equal("Result : TRUE", result);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Evaluate_An_Index_Inside_A_Tag()
         {
             // Arrange
@@ -192,11 +191,11 @@ namespace Liquid.NET.Tests
             Logger.Log("result is " + result);
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : TRUE"));
+            Assert.Equal("Result : TRUE", result);
 
         }
 
-//        [Test]
+//        [Fact]
 //        public void It_Should_Render_A_Dictionary()
 //        {
 //            // Arrange
@@ -213,12 +212,12 @@ namespace Liquid.NET.Tests
 //            // Act
 //
 //            // Assert
-//            Assert.That(result, Is.EqualTo("Result : { \"test1\" : \"test element\" }"));
+//            Assert.Equal("Result : { \"test1\" : \"test element\" }", result);
 //
 //
 //        }
 
-        [Test]
+        [Fact]
         public void It_Should_Render_A_Dictionary_Element()
         {
             // Arrange
@@ -230,11 +229,11 @@ namespace Liquid.NET.Tests
             String result = GenerateAndRender("Result : {{ mydict.test1 }}", templateContext);
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : test element"));
+            Assert.Equal("Result : test element", result);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Render_A_Nested_Dictionary_Element()
         {
             // Arrange
@@ -250,11 +249,11 @@ namespace Liquid.NET.Tests
             String result = GenerateAndRender("Result : {{ mydict.test.test1.test2 }}", templateContext);
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : test element"));
+            Assert.Equal("Result : test element", result);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Return_Nothing_When_Nested_Dictionaries_Pipe_Into_Each_Other_But_Have_Missing_Key()
         {
             // Arrange
@@ -271,11 +270,11 @@ namespace Liquid.NET.Tests
             String result = GenerateAndRender("Result : {{ mydict.zzz.test1.test2 }}", templateContext);
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : "));
+            Assert.Equal("Result : ", result);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Render_An_Array_In_A_Dictionary()
         {
             // Arrange
@@ -291,11 +290,11 @@ namespace Liquid.NET.Tests
             // Act
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : aaa"));
+            Assert.Equal("Result : aaa", result);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Render_An_Array()
         {
             // Arrange
@@ -307,12 +306,12 @@ namespace Liquid.NET.Tests
             String result = GenerateAndRender("Result : {{ myarray }}", templateContext);
 
             // Assert
-            //Assert.That(result, Is.EqualTo("Result : [ \"aaa\", 123 ]"));
-            Assert.That(result, Is.EqualTo("Result : aaa123.0"));
+            //Assert.Equal("Result : [ \"aaa\", 123 ]", result);
+            Assert.Equal("Result : aaa123.0", result);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Render_An_Array_Element()
         {
             // Arrange
@@ -325,11 +324,11 @@ namespace Liquid.NET.Tests
             String result = GenerateAndRender("Result : {{ myarray[1] }}", templateContext);
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : 123.0"));
+            Assert.Equal("Result : 123.0", result);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Render_An_Array_Element_From_A_Nested_Index()
         {
             // Arrange
@@ -344,11 +343,11 @@ namespace Liquid.NET.Tests
             String result = GenerateAndRender("Result : {{ myarray[indexes[1]] }}", templateContext);
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : bbb"));
+            Assert.Equal("Result : bbb", result);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Render_An_Array_Element_From_A_Variable_in_A_Nested_Element_In_a_Tag()
         {
             // Arrange
@@ -369,11 +368,11 @@ namespace Liquid.NET.Tests
             
             Logger.Log(result);
             // Assert
-            Assert.That(result, Is.EqualTo("Result : first is TRUE"));
+            Assert.Equal("Result : first is TRUE", result);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Render_An_Array_Element_From_A_Crazy_Chain_of_Nested_Indexes()
         {
             // Arrange
@@ -393,11 +392,11 @@ namespace Liquid.NET.Tests
             String result = GenerateAndRender("Result : {{ arrayofstr[array2[0][0][arrayofnums[arrayofnums[1]]]] }}", templateContext);
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : bbb"));
+            Assert.Equal("Result : bbb", result);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Return_Empty_When_Invalid_Index()
         {
             // Arrange
@@ -410,11 +409,11 @@ namespace Liquid.NET.Tests
             String result = GenerateAndRender("Result : {{ arrayofnums[4] }}", templateContext);
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : "));
+            Assert.Equal("Result : ", result);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Return_Empty_When_Index_Is_Empty()
         {
             // Arrange
@@ -427,11 +426,11 @@ namespace Liquid.NET.Tests
             String result = GenerateAndRender("Result : {{ arrayofnums[4][arrayofnums[4]] }}", templateContext);
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : "));
+            Assert.Equal("Result : ", result);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Return_An_Error_If_A_Number_Is_Treated_Like_An_Array()
         {
             // Arrange
@@ -445,7 +444,7 @@ namespace Liquid.NET.Tests
             String result = GenerateAndRender("Result : {{ arrayofnums[4][numeric[4]] }}", templateContext);
 
             // Assert
-            Assert.That(result, Does.Contain("cannot apply an index to a numeric."));
+            Assert.Contains("cannot apply an index to a numeric.", result);
 
         }
 
@@ -469,7 +468,7 @@ namespace Liquid.NET.Tests
             return result;
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Not_Parse_Matching_Text_Off_Island()
         {
             // Arrange
@@ -479,11 +478,11 @@ namespace Liquid.NET.Tests
             Logger.Log("result is " + result);
 
             // Assert
-            Assert.That(result, Is.EqualTo("123 : HELLO"));
+            Assert.Equal("123 : HELLO", result);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Allow_Tags_To_Span_Lines()
         {
             // Arrange
@@ -509,7 +508,7 @@ namespace Liquid.NET.Tests
             Logger.Log("result is " + result);
 
             // Assert
-            Assert.That(result, Is.EqualTo("Title 1Title 2Title 3Title 4"));
+            Assert.Equal("Title 1Title 2Title 3Title 4", result);
 
         }
         private string GenerateAndRender(string template, ITemplateContext ctx = null)

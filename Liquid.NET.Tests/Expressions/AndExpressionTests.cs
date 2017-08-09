@@ -3,18 +3,18 @@ using System.Collections.Generic;
 using Liquid.NET.Constants;
 using Liquid.NET.Expressions;
 using Liquid.NET.Utils;
-using NUnit.Framework;
+using Xunit;
 
 namespace Liquid.NET.Tests.Expressions
 {
-    [TestFixture]
+    
     public class AndExpressionTests
     {
-        [Test]
-        [TestCase(true, true, true)]
-        [TestCase(false, true, false)]
-        [TestCase(false, false, true)]
-        [TestCase(false, false, false)]
+        [Theory]
+        [InlineData(true, true, true)]
+        [InlineData(false, true, false)]
+        [InlineData(false, false, true)]
+        [InlineData(false, false, false)]
         public void It_Should_AND_Two_Arguments(bool expected, bool expr1, bool expr2)
         {
             // Arrange
@@ -29,10 +29,10 @@ namespace Liquid.NET.Tests.Expressions
             }).SuccessValue<LiquidBoolean>().BoolValue;
 
             // Assert
-            Assert.That(result, Is.EqualTo(expected));
+            Assert.Equal(expected, result);
         }
 
-        [Test]
+        [Fact]
         //[ExpectedException(typeof(Exception))]
         public void It_Should_Not_Accept_Three_Arguments()
         {
@@ -42,12 +42,12 @@ namespace Liquid.NET.Tests.Expressions
 
             // Act
             // ReSharper disable once UnusedVariable
-            Assert.That(() => expr.Eval(new TemplateContext(), new List<Option<ILiquidValue>>
+            Assert.Throws<Exception>(() => expr.Eval(new TemplateContext(), new List<Option<ILiquidValue>>
             {
                 new LiquidBoolean(true),
                 new LiquidBoolean(false),
                 new LiquidBoolean(false)
-            }), Throws.TypeOf<Exception>());
+            }));
         }
 
     }

@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using Liquid.NET.Constants;
 using Liquid.NET.Filters.Array;
 using Liquid.NET.Utils;
-using NUnit.Framework;
+using Xunit;
 
 namespace Liquid.NET.Tests.Filters.Array
 {
-    [TestFixture]
+    
     public class SizeFilterTests
     {
-        [Test]
+        [Fact]
         public void It_Should_Measure_The_Size_Of_An_Array()
         {
             // Arrange
@@ -27,11 +27,11 @@ namespace Liquid.NET.Tests.Filters.Array
             var result = filter.Apply(new TemplateContext(), liquidCollection).SuccessValue<LiquidNumeric>();
 
             // Assert
-            Assert.That(result.Value, Is.EqualTo(4));
+            Assert.Equal(4, result.Value);
 
         }
 
-        [Test]
+        [Fact]
         public void An_Array_With_No_Value_Should_Have_Zero_Length()
         {
             // Arrange
@@ -42,11 +42,11 @@ namespace Liquid.NET.Tests.Filters.Array
             var result = filter.Apply(new TemplateContext(), liquidCollection).SuccessValue<LiquidNumeric>();
 
             // Assert
-            Assert.That(result.Value, Is.EqualTo(0));
+            Assert.Equal(0, result.Value);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Measure_The_Size_Of_A_Dictionary()
         {
             // Arrange
@@ -62,11 +62,11 @@ namespace Liquid.NET.Tests.Filters.Array
             var result = sizeFilter.Apply(new TemplateContext(), dictValue).SuccessValue<LiquidNumeric>();
 
             // Assert
-            Assert.That(result.Value, Is.EqualTo(3));
+            Assert.Equal(3, result.Value);
 
         }
 
-        [Test]
+        [Fact]
         public void A_Dict_With_No_Value_Should_Have_Zero_Length()
         {
             // Arrange
@@ -77,11 +77,11 @@ namespace Liquid.NET.Tests.Filters.Array
             var result = filter.Apply(new TemplateContext(), dictValue).SuccessValue<LiquidNumeric>();
 
             // Assert
-            Assert.That(result.Value, Is.EqualTo(0));
+            Assert.Equal(0, result.Value);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Measure_The_Size_Of_A_String()
         {
             // Arrange
@@ -92,11 +92,11 @@ namespace Liquid.NET.Tests.Filters.Array
             var result = filter.Apply(new TemplateContext(), strVal).SuccessValue<LiquidNumeric>();
 
             // Assert
-            Assert.That(result.Value, Is.EqualTo(strVal.StringVal.Length));
+            Assert.Equal(strVal.StringVal.Length, result.Value);
 
         }
 
-        [Test]
+        [Fact]
         public void A_String_With_No_Value_Should_Have_Zero_Length()
         {
             // Arrange
@@ -107,11 +107,11 @@ namespace Liquid.NET.Tests.Filters.Array
             var result = filter.Apply(new TemplateContext(), strVal).SuccessValue<LiquidNumeric>();
 
             // Assert
-            Assert.That(result.Value, Is.EqualTo(0));
+            Assert.Equal(0, result.Value);
 
         }
 
-        [Test]
+        [Fact]
         public void An_Undefined_Value_Should_Have_Zero_Length()
         {
             // Arrange
@@ -121,11 +121,11 @@ namespace Liquid.NET.Tests.Filters.Array
             var result = filter.ApplyToNil(new TemplateContext()).SuccessValue<LiquidNumeric>();
 
             // Assert
-            Assert.That(result.Value, Is.EqualTo(0));
+            Assert.Equal(0, result.Value);
 
         }
 
-        [Test]
+        [Fact]
         public void A_Generator_Value_Should_Return_The_Size()
         {
             // Arrange
@@ -136,7 +136,7 @@ namespace Liquid.NET.Tests.Filters.Array
             var result = filter.Apply(new TemplateContext(), strVal).SuccessValue<LiquidNumeric>();
 
             // Assert
-            Assert.That(result.Value, Is.EqualTo(8));
+            Assert.Equal(8, result.Value);
 
         }
 

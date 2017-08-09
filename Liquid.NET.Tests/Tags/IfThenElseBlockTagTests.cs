@@ -1,78 +1,78 @@
 ﻿using System;
 using System.Collections.Generic;
 using Liquid.NET.Constants;
-using NUnit.Framework;
+using Xunit;
 
 namespace Liquid.NET.Tests.Tags
 {
-    [TestFixture]
+    
     public class IfThenElseBlockTagTests
     {
-        [Test]
+        [Fact]
         public void It_Should_Render_If_True()
         {
             // Act
             var result = RenderingHelper.RenderTemplate("Result : {% if true %}OK{% endif %}");
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : OK"));
+            Assert.Equal("Result : OK", result);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Render_If_False()
         {
             // Act
             var result = RenderingHelper.RenderTemplate("Result : {% if false %}OK{% endif %}");
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : "));
+            Assert.Equal("Result : ", result);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Render_Else()
         {
             // Act
             var result = RenderingHelper.RenderTemplate("Result : {% if false %}OK{% else %}Else{% endif %}");
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : Else"));
+            Assert.Equal("Result : Else", result);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Render_Elsif()
         {
             // Act
             var result = RenderingHelper.RenderTemplate("Result : {% if false %}OK{% elsif true %}Else If{% else %}Else{% endif %}");
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : Else If"));
+            Assert.Equal("Result : Else If", result);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Render_Second_Elsif()
         {
             // Act
             var result = RenderingHelper.RenderTemplate("Result : {% if false %}OK{% elsif false %}Else If{% elsif true %}second else{% else %}Else{% endif %}");
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : second else"));
+            Assert.Equal("Result : second else", result);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Render_Nested_If_Statements()
         {
             // Act
             var result = RenderingHelper.RenderTemplate("Result : {% if true %}OK{% if false %}NOT OK{% endif %}{% if true %}OK{% endif %}{% endif %}");
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : OKOK"));
+            Assert.Equal("Result : OKOK", result);
         }
 
       
         /// <summary>
         /// https://github.com/mikebridge/Liquid.NET/wiki/Differences/
         /// </summary>
-        [Test]
+        [Fact]
         public void It_Should_Group_Expressions_With_Parentheses()
         {
             // Arrange
@@ -82,14 +82,14 @@ namespace Liquid.NET.Tests.Tags
             var result = RenderingHelper.RenderTemplate(str);
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result #1 is true"));
+            Assert.Equal("Result #1 is true", result);
 
         }
 
         /// <summary>
         /// https://github.com/mikebridge/Liquid.NET/wiki/Differences/
         /// </summary>
-        [Test]
+        [Fact]
         public void It_Should_Allow_Not_To_Be_Used()
         {
             // Arrange
@@ -100,7 +100,7 @@ namespace Liquid.NET.Tests.Tags
             var result = RenderingHelper.RenderTemplate(str);
 
             // Assert
-            Assert.That(result, Is.EqualTo(txt));
+            Assert.Equal(txt, result);
 
         }
 
@@ -108,7 +108,7 @@ namespace Liquid.NET.Tests.Tags
         /// <summary>
         /// https://github.com/Shopify/liquid/wiki/Liquid-for-Designers
         /// </summary>
-        [Test]
+        [Fact]
         public void It_Should_Test_An_Array_Against_NotEmpty()
         {
             // Arrange
@@ -121,11 +121,11 @@ namespace Liquid.NET.Tests.Tags
             var result = RenderingHelper.RenderTemplate(str, ctx );
 
             // Assert
-            Assert.That(result, Is.EqualTo(""));
+            Assert.Equal("", result);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Test_An_Array_Against_Empty()
         {
             // Arrange
@@ -138,11 +138,11 @@ namespace Liquid.NET.Tests.Tags
             var result = RenderingHelper.RenderTemplate(str, ctx);
 
             // Assert
-            Assert.That(result, Is.EqualTo("This is empty"));
+            Assert.Equal("This is empty", result);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Test_Value_Against_Blank()
         {
             // Arrange
@@ -155,7 +155,7 @@ namespace Liquid.NET.Tests.Tags
             var result = RenderingHelper.RenderTemplate(str, ctx);
 
             // Assert
-            Assert.That(result, Is.EqualTo("This is empty"));
+            Assert.Equal("This is empty", result);
 
         }
 

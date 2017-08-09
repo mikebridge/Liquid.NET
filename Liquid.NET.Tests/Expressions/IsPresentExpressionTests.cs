@@ -3,25 +3,25 @@ using System.Collections.Generic;
 using Liquid.NET.Constants;
 using Liquid.NET.Expressions;
 using Liquid.NET.Utils;
-using NUnit.Framework;
+using Xunit;
 
 namespace Liquid.NET.Tests.Expressions
 {
-    [TestFixture]
+    
     public class IsPresentExpressionTests
     {
-        [Test]
-        [TestCase("\"\"", "==", false)]
-        [TestCase("\"x\"", "==", true)]
-        [TestCase("x", "==", false)] 
-        [TestCase("0", "==", true)]
-        [TestCase("-1", "==", true)]
-        [TestCase("\"  \"", "==", false)]
-        [TestCase("null", "==", false)]
-        [TestCase("null", "!=", true)]
-        [TestCase("\"\"", "!=", true)]
-        [TestCase("\" \"", "!=", true)]
-        [TestCase("0", "!=", false)]
+        [Theory]
+        [InlineData("\"\"", "==", false)]
+        [InlineData("\"x\"", "==", true)]
+        [InlineData("x", "==", false)] 
+        [InlineData("0", "==", true)]
+        [InlineData("-1", "==", true)]
+        [InlineData("\"  \"", "==", false)]
+        [InlineData("null", "==", false)]
+        [InlineData("null", "!=", true)]
+        [InlineData("\"\"", "!=", true)]
+        [InlineData("\" \"", "!=", true)]
+        [InlineData("0", "!=", false)]
         public void It_Should_Test_That_A_Value_Is_Present(String val, String op, bool expected)
         {
             // Arrange
@@ -33,19 +33,19 @@ namespace Liquid.NET.Tests.Expressions
             var result = RenderingHelper.RenderTemplate(tmpl);
             Logger.Log("Value is " + result);
             // Assert
-            Assert.That(result, Is.EqualTo("Result : " + expectedStr));
+            Assert.Equal("Result : " + expectedStr, result);
 
                 
         }
 
-        [Test]
-        [TestCase("\"\"", false)]
-        [TestCase("\"x\"",  true)]
-        [TestCase("x",  false)]
-        [TestCase("0",  true)]
-        [TestCase("-1", true)]
-        [TestCase("\"  \"",  false)]
-        [TestCase("null",  false)]
+        [Theory]
+        [InlineData("\"\"", false)]
+        [InlineData("\"x\"",  true)]
+        [InlineData("x",  false)]
+        [InlineData("0",  true)]
+        [InlineData("-1", true)]
+        [InlineData("\"  \"",  false)]
+        [InlineData("null",  false)]
         public void It_Should_Test_That_Present_With_Question_Mark_Is_Alias(String val, bool expected)
         {
             // Arrange
@@ -57,12 +57,12 @@ namespace Liquid.NET.Tests.Expressions
             var result = RenderingHelper.RenderTemplate(tmpl);
             Logger.Log("Value is " + result);
             // Assert
-            Assert.That(result, Is.EqualTo("Result : " + expectedStr));
+            Assert.Equal("Result : " + expectedStr, result);
 
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Return_True_If_A_Dictionary_Value_Is_Present()
         {
             // Arrange
@@ -79,11 +79,11 @@ namespace Liquid.NET.Tests.Expressions
 
             // Assert
             Logger.Log("Value is " + result);
-            Assert.That(result, Is.EqualTo("Result : PRESENT"));
+            Assert.Equal("Result : PRESENT", result);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Return_False_If_A_Dictionary_Value_Is_Empty()
         {
             // Arrange
@@ -98,11 +98,11 @@ namespace Liquid.NET.Tests.Expressions
 
             // Assert
             Logger.Log("Value is " + result);
-            Assert.That(result, Is.EqualTo("Result : NOT PRESENT"));
+            Assert.Equal("Result : NOT PRESENT", result);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Not_Accept_Two_Args()
         {
             // Arrange
@@ -114,7 +114,7 @@ namespace Liquid.NET.Tests.Expressions
                 new LiquidBoolean(true),
                 new LiquidBoolean(false)
             });
-            Assert.That(result.IsError);
+            Assert.True(result.IsError);
 
         }
 

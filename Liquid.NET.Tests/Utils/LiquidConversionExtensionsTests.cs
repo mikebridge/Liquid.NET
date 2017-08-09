@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Linq;
 using Liquid.NET.Utils;
-using NUnit.Framework;
+using Xunit;
 
 namespace Liquid.NET.Tests.Utils
 {
-    [TestFixture]
+    
     public class LiquidConversionExtensionsTests
     {
-        [Test]
+        [Fact]
         public void It_Should_Extend_An_Object()
         {
             // Arrange
@@ -19,14 +19,14 @@ namespace Liquid.NET.Tests.Utils
 
             // Act
             var parserResult = LiquidTemplate.Create("Hello {{ test.ok }}");
-            Assert.That(parserResult.HasParsingErrors, Is.False);
+            Assert.False(parserResult.HasParsingErrors);
             var renderingResult = parserResult.LiquidTemplate.Render(templateContext);
-            Assert.That(renderingResult.HasParsingErrors, Is.False);
+            Assert.False(renderingResult.HasParsingErrors);
             Console.WriteLine(String.Join(",", renderingResult.RenderingErrors.Select(x => x.Message)));
-            Assert.That(renderingResult.HasRenderingErrors, Is.False);
+            Assert.False(renderingResult.HasRenderingErrors);
 
             // Assert
-            Assert.That(renderingResult.Result, Is.EqualTo("Hello To Liquid"));
+            Assert.Equal("Hello To Liquid", renderingResult.Result);
 
         }
     }

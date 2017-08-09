@@ -1,59 +1,60 @@
 ﻿using System;
 using System.Globalization;
 using Liquid.NET.Utils;
-using NUnit.Framework;
+using Xunit;
 
 namespace Liquid.NET.Tests.Utils
 {
-    [TestFixture]
+    
     public class StrFTimeTests
     {
         //[SetCulture("en-GB")]
-        [TestCase("%a", ExpectedResult = "Sun")]
-        [TestCase("%A", ExpectedResult = "Sunday")]
-        [TestCase("%b", ExpectedResult = "Jan")]
-        [TestCase("%B", ExpectedResult = "January")]
-        [TestCase("%^B", ExpectedResult = "JANUARY")]
-        [TestCase("%^_10B", ExpectedResult = "   JANUARY")]
-        [TestCase("%_^10B", ExpectedResult = "   JANUARY")]
-        [TestCase("%c", ExpectedResult = "Sun Jan 08 14:32:14 2012")]
-        [TestCase("%d", ExpectedResult = "08")]
-        [TestCase("%-d", ExpectedResult = "8")]
-        [TestCase("%e", ExpectedResult = " 8")]
-        [TestCase("%H", ExpectedResult = "14")]
-        [TestCase("%I", ExpectedResult = "02")]
-        [TestCase("%j", ExpectedResult = "008")]
-        [TestCase("%m", ExpectedResult = "01")]
-        [TestCase("%-m", ExpectedResult = "1")]
-        [TestCase("%_m", ExpectedResult = " 1")]
-        [TestCase("%_3m", ExpectedResult = "  1")]
-        [TestCase("%_10m", ExpectedResult = "         1")]
-        [TestCase("%010m", ExpectedResult = "0000000001")]
-        [TestCase("%M", ExpectedResult = "32")]
-        [TestCase("%p", ExpectedResult = "PM")]
-        [TestCase("%S", ExpectedResult = "14")]
-        [TestCase("%U", ExpectedResult = "02")]
-        [TestCase("%-U", ExpectedResult = "2")]
-        [TestCase("%W", ExpectedResult = "01")]
-        [TestCase("%w", ExpectedResult = "0")]
-        [TestCase("%x", ExpectedResult = "08/01/2012")]
-        [TestCase("%X", ExpectedResult = "14:32:14")]
-        [TestCase("%y", ExpectedResult = "12")]
-        [TestCase("%Y", ExpectedResult = "2012")]
-        [TestCase("%_2Y", ExpectedResult = "2012")]
-        [TestCase("%", ExpectedResult = "%")]
+        [Theory]
+        [InlineData("%a", "Sun")]
+        [InlineData("%A", "Sunday")]
+        [InlineData("%b", "Jan")]
+        [InlineData("%B", "January")]
+        [InlineData("%^B", "JANUARY")]
+        [InlineData("%^_10B", "   JANUARY")]
+        [InlineData("%_^10B", "   JANUARY")]
+        [InlineData("%c", "Sun Jan 08 14:32:14 2012")]
+        [InlineData("%d", "08")]
+        [InlineData("%-d", "8")]
+        [InlineData("%e", " 8")]
+        [InlineData("%H", "14")]
+        [InlineData("%I", "02")]
+        [InlineData("%j", "008")]
+        [InlineData("%m", "01")]
+        [InlineData("%-m", "1")]
+        [InlineData("%_m", " 1")]
+        [InlineData("%_3m", "  1")]
+        [InlineData("%_10m", "         1")]
+        [InlineData("%010m", "0000000001")]
+        [InlineData("%M", "32")]
+        [InlineData("%p", "PM")]
+        [InlineData("%S", "14")]
+        [InlineData("%U", "02")]
+        [InlineData("%-U", "2")]
+        [InlineData("%W", "01")]
+        [InlineData("%w", "0")]
+        [InlineData("%x", "08/01/2012")]
+        [InlineData("%X", "14:32:14")]
+        [InlineData("%y", "12")]
+        [InlineData("%Y", "2012")]
+        [InlineData("%_2Y", "2012")]
+        [InlineData("%", "%")]
         public string The_Date_Should_Be_Formatted_With_StrFTime(string format, string expected)
         {
             CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en-GB");
             return new DateTime(2012, 1, 8, 14, 32, 14).ToStrFTime(format);
         }
 
-        [Test]
+        [Fact]
         public void The_Time_Zone_Should_Be_Formatted_With_StrFTime()
         {
             var now = DateTimeOffset.Now;
             string timeZoneOffset = now.ToString("zzz");
-            Assert.That(now.DateTime.ToStrFTime("%Z"), Is.EqualTo(timeZoneOffset));
+            Assert.Equal(timeZoneOffset, now.DateTime.ToStrFTime("%Z"));
         }
     }
 }

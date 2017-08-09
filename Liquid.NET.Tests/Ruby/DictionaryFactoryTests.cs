@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using Liquid.NET.Constants;
 using Liquid.NET.Utils;
-using NUnit.Framework;
+using Xunit;
 
 namespace Liquid.NET.Tests.Ruby
 {
-    [TestFixture]
+    
     public class DictionaryFactoryTests
     {
-        [Test]
+        [Fact]
         public void It_Should_Convert_An_Array()
         {
             // Arrange
@@ -22,15 +22,17 @@ namespace Liquid.NET.Tests.Ruby
 
             // Assert
             //Logger.Log(result.ToString());
-            Assert.That(result.HasValue);
-            Assert.That(result.Value, Is.TypeOf<LiquidCollection>());
-            
-            Assert.That(((LiquidCollection) result.Value).Select(x => x.Value.Value), Is.EquivalentTo(new List<int> {1,2,3}));            
+            Assert.True(result.HasValue);
+            Assert.IsType<LiquidCollection>(result.Value);
+
+            //Assert.That(((LiquidCollection) result.Value).Select(x => x.Value.Value), Is.EquivalentTo(new List<int> {1,2,3}));            
+            Assert.Equal(((LiquidCollection)result.Value).Select(x => Convert.ToInt32(x.Value.Value)), 
+                                                                 new List<int> { 1, 2, 3 });
 
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Convert_A_Dictionary_Containing_An_Array()
         {
             // Arrange
@@ -43,10 +45,11 @@ namespace Liquid.NET.Tests.Ruby
             //Logger.Log(result);
             
 
-            Assert.That(result[0].Item1, Is.EqualTo("array"));
-            Assert.That(result[0].Item2.Value, Is.TypeOf<LiquidCollection>());
+            Assert.Equal("array", result[0].Item1);
+            Assert.IsType<LiquidCollection>(result[0].Item2.Value);
             var array = (LiquidCollection)result[0].Item2.Value;
-            Assert.That(array.Select(x => x.Value.Value), Is.EquivalentTo(new List<int> {1,2,3}));
+            //Assert.That(array.Select(x => x.Value.Value), Is.EquivalentTo(new List<int> {1,2,3}));
+            Assert.Equal(array.Select(x => Convert.ToInt32(x.Value.Value)), new List<int> { 1, 2, 3 });
 
 
         }

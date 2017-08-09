@@ -1,17 +1,18 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Liquid.NET.Constants;
-using NUnit.Framework;
+using Xunit;
 
 namespace Liquid.NET.Tests.Constants
 {
-    [TestFixture]
+    
     public class LiquidRangeTests
     {
-        [Test]
-        [TestCase(3, 7, new []{3,4,5,6,7})]
-        [TestCase(7, 3, new[] { 7,6,5,4,3 })]
-        [TestCase(0, 0, new [] { 0 })]
+        [Theory]
+        [InlineData(3, 7, new []{3,4,5,6,7})]
+        [InlineData(7, 3, new[] { 7,6,5,4,3 })]
+        [InlineData(0, 0, new [] { 0 })]
         public void It_Should_Generate_Some_Values(int start, int end, int[] expected )
         {
             // Arrange
@@ -21,11 +22,11 @@ namespace Liquid.NET.Tests.Constants
             var result = generatorValue.AsEnumerable();
 
             // Assert
-            Assert.That(result.Select(x => x.Value), Is.EqualTo(expected.ToList()));
+            Assert.Equal(expected.ToList(), result.Select(x => Convert.ToInt32(x.Value)));
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Generate_Some_Values_Descending()
         {
             // Arrange
@@ -35,29 +36,29 @@ namespace Liquid.NET.Tests.Constants
             var result = generatorValue.AsEnumerable();
 
             // Assert
-            Assert.That(result.Select(x => x.Value), Is.EqualTo(new List<int> { 5,4,3,2 }));
+            Assert.Equal(new List<int> { 5,4,3,2 }, result.Select(x => Convert.ToInt32(x.Value)));
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Determine_The_Length_Of_a_Generator()
         {
             // Arrange
             var generatorValue = new LiquidRange(LiquidNumeric.Create(2), LiquidNumeric.Create(5));
 
             // Assert
-            Assert.That(generatorValue.Length, Is.EqualTo(4));
+            Assert.Equal(4, generatorValue.Length);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Determine_The_Length_Of_a_Descending_Generator()
         {
             // Arrange
             var generatorValue = new LiquidRange(LiquidNumeric.Create(5), LiquidNumeric.Create(2));
             
             // Assert
-            Assert.That(generatorValue.Length, Is.EqualTo(4));
+            Assert.Equal(4, generatorValue.Length);
 
         }
 

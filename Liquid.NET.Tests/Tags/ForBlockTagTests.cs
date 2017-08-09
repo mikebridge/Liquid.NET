@@ -4,14 +4,14 @@ using System.Linq;
 using Liquid.NET.Constants;
 using Liquid.NET.Tests.Ruby;
 using Liquid.NET.Utils;
-using NUnit.Framework;
+using Xunit;
 
 namespace Liquid.NET.Tests.Tags
 {
-    [TestFixture]
+    
     public class ForBlockTagTests
     {
-        [Test]
+        [Fact]
         public void It_Should_Iterate_Through_A_Collection()
         {
             // Arrange
@@ -24,10 +24,10 @@ namespace Liquid.NET.Tests.Tags
             String result = template.LiquidTemplate.Render(ctx).Result;
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : <li>a string</li><li>123</li><li>456.0</li><li>false</li>"));
+            Assert.Equal("Result : <li>a string</li><li>123</li><li>456.0</li><li>false</li>", result);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Iterate_Through_A_Collection_Backward()
         {
             // Arrange
@@ -40,10 +40,10 @@ namespace Liquid.NET.Tests.Tags
             String result = template.LiquidTemplate.Render(ctx).Result;
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : <li>false</li><li>456.0</li><li>123</li><li>a string</li>"));
+            Assert.Equal("Result : <li>false</li><li>456.0</li><li>123</li><li>a string</li>", result);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Iterate_Through_A_Collection_Offset()
         {
             // Arrange
@@ -56,10 +56,10 @@ namespace Liquid.NET.Tests.Tags
             String result = template.LiquidTemplate.Render(ctx).Result;
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : <li>456.0</li><li>false</li>"));
+            Assert.Equal("Result : <li>456.0</li><li>false</li>", result);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Iterate_Through_A_Collection_Limited()
         {
             // Arrange
@@ -72,11 +72,11 @@ namespace Liquid.NET.Tests.Tags
             String result = template.LiquidTemplate.Render(ctx).Result;
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : <li>a string</li><li>123</li>"));
+            Assert.Equal("Result : <li>a string</li><li>123</li>", result);
         }
 
 
-        [Test]
+        [Fact]
         public void It_Should_Iterate_Through_A_Collection_Limit_Offset()
         {
             // Arrange
@@ -89,10 +89,10 @@ namespace Liquid.NET.Tests.Tags
             String result = template.LiquidTemplate.Render(ctx).Result;
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : <li>456.0</li>"));
+            Assert.Equal("Result : <li>456.0</li>", result);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Not_Fail_If_Length_Off_End_Of_Array()
         {
             // Arrange
@@ -105,10 +105,10 @@ namespace Liquid.NET.Tests.Tags
             String result = template.LiquidTemplate.Render(ctx).Result;
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : <li>456.0</li><li>false</li>"));
+            Assert.Equal("Result : <li>456.0</li><li>false</li>", result);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Not_Fail_If_Offset_Off_End_Of_Array()
         {
             // Arrange
@@ -121,10 +121,10 @@ namespace Liquid.NET.Tests.Tags
             String result = template.LiquidTemplate.Render(ctx).Result;
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : "));
+            Assert.Equal("Result : ", result);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Allow_Variables_In_Args()
         {
             // Arrange
@@ -145,10 +145,10 @@ namespace Liquid.NET.Tests.Tags
             String result = template.LiquidTemplate.Render(ctx).Result;
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : 34"));
+            Assert.Equal("Result : 34", result);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Not_Let_Local_Variable_Outside_Scope()
         {
             // Arrange
@@ -161,10 +161,10 @@ namespace Liquid.NET.Tests.Tags
             String result = template.LiquidTemplate.Render(ctx).Result;
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : Inside: a string Inside: 123 Inside: 456.0 Inside: false Outside: ")); // undefined is blank.
+            Assert.Equal("Result : Inside: a string Inside: 123 Inside: 456.0 Inside: false Outside: ", result); // undefined is blank.
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Iterate_Through_A_Nested_Collection()
         {
             // Arrange
@@ -192,10 +192,10 @@ namespace Liquid.NET.Tests.Tags
 
             // Assert
             String row = "<tr><td>0</td><td>1</td><td>2</td></tr>";
-            Assert.That(result, Is.EqualTo("Result : "+row + row + row));
+            Assert.Equal("Result : "+row + row + row, result);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Iterate_Through_An_Array_Inside_An_Array()
         {
             // Arrange
@@ -209,11 +209,11 @@ namespace Liquid.NET.Tests.Tags
             String result = template.LiquidTemplate.Render(ctx).Result;
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : <li>a string</li><li>123</li><li>456.0</li><li>false</li>"));
+            Assert.Equal("Result : <li>a string</li><li>123</li><li>456.0</li><li>false</li>", result);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Iterate_Through_A_String()
         {
             // Arrange
@@ -224,15 +224,15 @@ namespace Liquid.NET.Tests.Tags
             String result = template.LiquidTemplate.Render(new TemplateContext()).Result;
 
             // Assert
-            //Assert.That(result, Is.EqualTo("Result : <li>H</li><li>e</li><li>l</li><li>l</li><li>o</li>"));
-            Assert.That(result, Is.EqualTo("Result : <li>Hello</li>"));
+            //Assert.Equal("Result : <li>H</li><li>e</li><li>l</li><li>l</li><li>o</li>", result);
+            Assert.Equal("Result : <li>Hello</li>", result);
 
         }
 
 
 
-        [Test]
-        [TestCase("(0..3)","0123")]
+        [Theory]
+        [InlineData("(0..3)","0123")]
         public void It_Should_Iterate_Through_A_Generator(String generator, String expected)
         {
             // Arrange
@@ -242,12 +242,12 @@ namespace Liquid.NET.Tests.Tags
             String result = template.LiquidTemplate.Render(new TemplateContext()).Result;
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : " + expected));
+            Assert.Equal("Result : " + expected, result);
 
         }
 
 
-        [Test]
+        [Fact]
         public void It_Should_Iterate_Through_A_Generator_With_Vars()
         {
             // Arrange
@@ -260,13 +260,13 @@ namespace Liquid.NET.Tests.Tags
             String result = template.LiquidTemplate.Render(ctx).Result;
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : 10111213"));
+            Assert.Equal("Result : 10111213", result);
 
         }
 
 
 
-        [Test]
+        [Fact]
         public void It_Should_Iterate_Through_A_Generator_Backwards_With_Vars()
         {
             // Arrange
@@ -279,11 +279,11 @@ namespace Liquid.NET.Tests.Tags
             String result = template.LiquidTemplate.Render(ctx).Result;
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : 543"));
+            Assert.Equal("Result : 543", result);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Find_The_Parent_Loop()
         {
             
@@ -297,12 +297,11 @@ namespace Liquid.NET.Tests.Tags
             String result = template.LiquidTemplate.Render(ctx).Result;
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : 1.1 1.2 1.3 2.1 2.2 2.3"));
+            Assert.Equal("Result : 1.1 1.2 1.3 2.1 2.2 2.3", result);
 
         }
 
-        [Test]
-        [Ignore("Can't do this yet")]
+        [Fact(Skip="Can't do this yet")]
         public void It_Can_Use_Reserved_Words()
         {
             // Arrange
@@ -315,11 +314,11 @@ namespace Liquid.NET.Tests.Tags
             String result = template.LiquidTemplate.Render(new TemplateContext()).Result;
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : <li>e</li><li>l</li><li>l</li>"));
+            Assert.Equal("Result : <li>e</li><li>l</li><li>l</li>", result);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Print_Loop_Variables_From_A_String()
         {
 
@@ -334,10 +333,10 @@ namespace Liquid.NET.Tests.Tags
             String result = template.LiquidTemplate.Render(ctx).Result;
             Logger.Log(result);
             // Assert
-            Assert.That(result.Trim(), Is.EqualTo(@"val-string-1-1-0-1-0-true-true-test string"));
+            Assert.Equal(@"val-string-1-1-0-1-0-true-true-test string", result.Trim());
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Allow_Logic_on_For_Loop()
         {
 
@@ -352,7 +351,7 @@ namespace Liquid.NET.Tests.Tags
             String result = template.LiquidTemplate.Render(ctx).Result;
             Logger.Log(result);
             // Assert
-            Assert.That(result.Trim(), Is.EqualTo(@"oddevenoddeven"));
+            Assert.Equal(@"oddevenoddeven", result.Trim());
         }
 
 
@@ -366,14 +365,14 @@ namespace Liquid.NET.Tests.Tags
         /// forloop.first       # => is this the first iteration?
         /// forloop.last        # => is this the last iteration?
         /// </summary>
-        [Test]
-        [TestCase("forloop.first", "", "true false false false")]
-        [TestCase("forloop.index", "", "1 2 3 4")]
-        [TestCase("forloop.index0", "", "0 1 2 3")]
-        [TestCase("forloop.rindex", "", "4 3 2 1")]
-        [TestCase("forloop.rindex0", "", "3 2 1 0")]
-        [TestCase("forloop.last", "", "false false false true")]
-        [TestCase("forloop.length", "", "4 4 4 4")]
+        [Theory]
+        [InlineData("forloop.first", "", "true false false false")]
+        [InlineData("forloop.index", "", "1 2 3 4")]
+        [InlineData("forloop.index0", "", "0 1 2 3")]
+        [InlineData("forloop.rindex", "", "4 3 2 1")]
+        [InlineData("forloop.rindex0", "", "3 2 1 0")]
+        [InlineData("forloop.last", "", "false false false true")]
+        [InlineData("forloop.length", "", "4 4 4 4")]
 
         public void It_Should_Insert_ForLoop_First(String varname, String parms, String expected)
         {
@@ -387,14 +386,14 @@ namespace Liquid.NET.Tests.Tags
             Logger.Log(result);
 
             // Assert
-            Assert.That(result.Trim(), Is.EqualTo("Result : " + expected));
+            Assert.Equal("Result : " + expected, result.Trim());
 
         }
 
-        [Test]
-        [TestCase("(dict.start .. dict.end)")]
-        [TestCase("(dict.start..5)")]
-        [TestCase("(1..dict.end)")]
+        [Theory]
+        [InlineData("(dict.start .. dict.end)")]
+        [InlineData("(dict.start..5)")]
+        [InlineData("(1..dict.end)")]
         public void It_Should_Iterate_Through_A_Generator_From_A_Dictionary(String generator)
         {
             // Arrange
@@ -410,16 +409,16 @@ namespace Liquid.NET.Tests.Tags
             String result = template.LiquidTemplate.Render(ctx).Result;
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : 12345"));
+            Assert.Equal("Result : 12345", result);
 
         }
 
 
-        [Test]
-        [TestCase("one : ONE")]
-        [TestCase("two : TWO")]
-        [TestCase("three : THREE")]
-        [TestCase("four : FOUR")]
+        [Theory]
+        [InlineData("one : ONE")]
+        [InlineData("two : TWO")]
+        [InlineData("three : THREE")]
+        [InlineData("four : FOUR")]
         public void It_Should_Iterate_Through_A_Dictionary(String expected)
         {
             // SEE: https://github.com/Shopify/liquid/wiki/Liquid-for-Designers
@@ -443,11 +442,11 @@ namespace Liquid.NET.Tests.Tags
             String result = template.LiquidTemplate.Render(ctx).Result;
 
             // Assert
-            Assert.That(result, Does.Contain(expected));
+            Assert.Contains(expected, result);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Break_Out_Of_A_Loop()
         {
             // Arrange
@@ -457,10 +456,10 @@ namespace Liquid.NET.Tests.Tags
             var result = RenderingHelper.RenderTemplate(tmpl);
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : loop1loop2loop"));
+            Assert.Equal("Result : loop1loop2loop", result);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Skip_Part_Of_A_Loop()
         {
             // Arrange
@@ -470,10 +469,10 @@ namespace Liquid.NET.Tests.Tags
             var result = RenderingHelper.RenderTemplate(tmpl);
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : loop1loop2looploop"));
+            Assert.Equal("Result : loop1loop2looploop", result);
         }
 
-        [Test]
+        [Fact]
         // SEE: https://github.com/Shopify/liquid/commit/410cce97407735b02dc265ba60a893efe7c1165e
         public void It_Should_Use_Else_When_For_Loop_Has_Empty_Array()
         {
@@ -489,27 +488,27 @@ namespace Liquid.NET.Tests.Tags
             String result = template.LiquidTemplate.Render(ctx).Result;
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : "+emptystr));
+            Assert.Equal("Result : "+emptystr, result);
 
         }
 
-        [Test]
-        [TestCase("\'\'", "char:")]
-        //[TestCase("\'abc\'", "char:a char:b char:c ")]// these don't work this way
-        [TestCase("\'abc\'", "char:abc")]
+        [Theory]
+        [InlineData("\'\'", "char:")]
+        //[InlineData("\'abc\'", "char:a char:b char:c ")]// these don't work this way
+        [InlineData("\'abc\'", "char:abc")]
         public void It_Should_Iterate_Over_A_Strings_Characters(String str, String expected)
         {
-            //[TestCase(@"{% for char in characters %}I WILL NOT BE OUTPUT{% endfor %}", @"{""characters"":""""}", @"")]
+            //[InlineData(@"{% for char in characters %}I WILL NOT BE OUTPUT{% endfor %}", @"{""characters"":""""}", @"")]
             TemplateContext ctx = new TemplateContext();
             var template = LiquidTemplate.Create(@"{% for char in "+str+" %}char:{{char}}{% endfor %}");
             // Act
             String result = template.LiquidTemplate.Render(ctx).Result;
 
             // Assert
-            Assert.That(result, Is.EqualTo(expected));
+            Assert.Equal(expected, result);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Remove_The_Upper_For_Limit()
         {
             // Arrange
@@ -535,7 +534,7 @@ namespace Liquid.NET.Tests.Tags
             String result = template.LiquidTemplate.Render(ctx).Result;
 
             // Assert
-            Assert.That(result, Does.Contain("<li>100</li>"));
+            Assert.Contains("<li>100</li>", result);
         }
 
         private static string GetForLoop(string txt)

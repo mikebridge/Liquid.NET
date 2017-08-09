@@ -1,62 +1,62 @@
-﻿using NUnit.Framework;
+﻿using Xunit;
 
 namespace Liquid.NET.Tests.Filters.Strings
 {
-    [TestFixture]
+    
     public class UpCaseFilterTests
     {
-        [Test]
+        [Fact]
         public void It_Should_Put_A_String_In_Upper_Case()
         {
             // Arrange
             var result = RenderingHelper.RenderTemplate("Result : {{ \"test\" | upcase }}");
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : TEST"));
+            Assert.Equal("Result : TEST", result);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Not_Fail_For_Nil()
         {
             // Arrange
             var result = RenderingHelper.RenderTemplate("Result : {{  nil | upcase }}");
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : "));
+            Assert.Equal("Result : ", result);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Not_Fail_For_Numerics()
         {
             // Arrange
             var result = RenderingHelper.RenderTemplate("Result : {{ 1 | upcase }}");
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : 1"));
+            Assert.Equal("Result : 1", result);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Put_A_Bool_In_Upper_Case()
         {
             // Arrange
             var result = RenderingHelper.RenderTemplate("Result : {{ true | upcase }}");
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : TRUE"));
+            Assert.Equal("Result : TRUE", result);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Ignore_An_Extra_Arg()
         {
             // Arrange
             var result = RenderingHelper.RenderTemplate("Result : {{ \"Test\" | upcase: true }}");
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : TEST"));
+            Assert.Equal("Result : TEST", result);
 
         }
 

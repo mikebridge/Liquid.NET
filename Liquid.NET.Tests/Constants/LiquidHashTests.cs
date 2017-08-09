@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using Liquid.NET.Constants;
 using Liquid.NET.Utils;
-using NUnit.Framework;
+using Xunit;
 
 namespace Liquid.NET.Tests.Constants
 {
-    [TestFixture]
+    
     public class LiquidHashTests
     {
-        [Test]        
+        [Fact]        
         public void It_Should_Dereference_A_LiquidHash()
         {
 
@@ -23,10 +23,10 @@ namespace Liquid.NET.Tests.Constants
             };
 
             // Assert
-            Assert.That(dictValue.ValueAt("string1").Value, Is.EqualTo("a string"));
+            Assert.Equal("a string", dictValue.ValueAt("string1").Value.ToString());
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Dereference_A_Nested_Hash()
         {
 
@@ -50,21 +50,21 @@ namespace Liquid.NET.Tests.Constants
             var result = RenderingHelper.RenderTemplate("Result : {{dict1.dict2.dict3.str}}->{% if dict1.dict2.dict3.str == \"Dict 2\" %}Dict2{% elseif dict1.dict2.dict3.str == \"Dict 3\" %}Dict3{%endif%}", ctx);
 
             // Assert
-            Assert.That(result, Is.EqualTo("Result : Dict 3->Dict3"));
+            Assert.Equal("Result : Dict 3->Dict3", result);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Fail_When_Dereferencing_A_Missing_Property()
         {
             // Arrange
             LiquidHash dictValue = new LiquidHash();
 
             // Assert
-            Assert.That(dictValue.ValueAt("string1").HasValue, Is.False);
+            Assert.False(dictValue.ValueAt("string1").HasValue);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Initialize_The_LiquidHash_With_OptionSyntax()
         {
             // Arrange
@@ -75,11 +75,11 @@ namespace Liquid.NET.Tests.Constants
             };
 
             // Assert
-            Assert.That(dict.ValueAt("key1").Value, Is.EqualTo(LiquidString.Create("test 1")));
+            Assert.Equal(LiquidString.Create("test 1"), dict.ValueAt("key1").Value);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Initialize_The_LiquidHash_With_IExpressionConstant()
         {
             // Arrange
@@ -91,112 +91,112 @@ namespace Liquid.NET.Tests.Constants
 
 
             // Assert
-            Assert.That(dict.ValueAt("key1").Value, Is.EqualTo(LiquidString.Create("test 1")));
+            Assert.Equal(LiquidString.Create("test 1"), dict.ValueAt("key1").Value);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Implement_IDictionaryFunctions()
         {
             var dict = new LiquidHash();
-            Assert.That(dict.IsReadOnly, Is.False);
-            Assert.That(dict.GetEnumerator(), Is.Not.Null);
+            Assert.False(dict.IsReadOnly);
+            Assert.NotNull(dict.GetEnumerator());
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Set_A_Value()
         {
             var dict = new LiquidHash();
             dict["key"] = new Some<ILiquidValue>(LiquidString.Create("test"));
-            Assert.That(dict["key"].Value, Is.EqualTo(LiquidString.Create("test")));
+            Assert.Equal(LiquidString.Create("test"), dict["key"].Value);
         }
 
 
-        [Test]
+        [Fact]
         public void It_Should_Set_A_Value_Via_Key_Value_Pair()
         {
             var val = new Some<ILiquidValue>(LiquidString.Create("test"));           
             var kvp = new KeyValuePair<String,Option<ILiquidValue>>("key", val);
             var dict = new LiquidHash {kvp};
-            Assert.That(dict["key"].Value, Is.EqualTo(LiquidString.Create("test")));
+            Assert.Equal(LiquidString.Create("test"), dict["key"].Value);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Convert_Null_To_None()
         {
             var kvp = new KeyValuePair<String, Option<ILiquidValue>>("key", null);
             var dict = new LiquidHash {kvp};
-            Assert.That(dict["key"].HasValue, Is.False);
+            Assert.False(dict["key"].HasValue);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Add_A_Value()
         {
             var dict = new LiquidHash();
             dict.Add("key", LiquidString.Create("test"));
-            Assert.That(dict["key"].Value, Is.EqualTo(LiquidString.Create("test")));
+            Assert.Equal(LiquidString.Create("test"), dict["key"].Value);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Clear_Values()
         {
             var dict = new LiquidHash {{"key", LiquidString.Create("test")}};
             dict.Clear();
-            Assert.That(dict.Count, Is.EqualTo(0));
+            Assert.Equal(0, dict.Count);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Remove_A_Value()
         {
             var dict = new LiquidHash { { "key", LiquidString.Create("test") } };
             dict.Remove("key");
-            Assert.That(dict.Count, Is.EqualTo(0));
+            Assert.Equal(0, dict.Count);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Copy_Values()
         {
             var dict = new LiquidHash { { "key", LiquidString.Create("test") } };
             var x = new KeyValuePair<string, Option<ILiquidValue>>[1];
             dict.CopyTo(x, 0);
-            Assert.That(x.Length, Is.EqualTo(1));
+            Assert.Equal(1, x.Length);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Know_If_A_Value_Is_Contained()
         {
             var val = new Some<ILiquidValue>(LiquidString.Create("test"));
             var kvp = new KeyValuePair<String, Option<ILiquidValue>>("key", val);
             var dict = new LiquidHash { kvp };
 
-            Assert.That(dict.Contains(kvp));
+            Assert.True(dict.Contains(kvp));
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Retrieve_Values()
         {
             var dict = new LiquidHash {{"key", LiquidString.Create("test")}};
-            Assert.That(dict.Values.Count, Is.EqualTo(1));
+            Assert.Equal(1, dict.Values.Count);
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Remove_Values()
         {
 
             var dict = new LiquidHash { { "key", LiquidString.Create("test") } };
             dict.Remove("key");
-            Assert.That(dict.Values.Any(), Is.False);
+            Assert.False(dict.Values.Any());
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Try_To_Retrieve_Values()
         {
             var dict = new LiquidHash { { "key", LiquidString.Create("test") } };
             Option<ILiquidValue> opt;
             bool success = dict.TryGetValue("key", out opt);
-            Assert.That(success, Is.True);
+            Assert.True(success);
             // ReSharper disable once PossibleNullReferenceException
-            Assert.That(((LiquidString) opt.Value).StringVal, Is.EqualTo("test"));
+            Assert.Equal("test", ((LiquidString) opt.Value).StringVal);
         }
 
     }

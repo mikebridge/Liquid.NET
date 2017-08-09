@@ -1,15 +1,15 @@
 ﻿using System;
 using Liquid.NET.Constants;
 using Liquid.NET.Expressions;
-using NUnit.Framework;
+using Xunit;
 
 namespace Liquid.NET.Tests
 {
-    [TestFixture]
+    
     public class VariableReferenceTreeBuilderTests
     {
 
-        [Test]
+        [Fact]
         public void It_Should_Create_A_Variable_Reference()
         {
             // Arrange
@@ -22,13 +22,13 @@ namespace Liquid.NET.Tests
             Logger.Log("RESULT: " + VariableReferenceTreePrinter.Print(builder.Result));
 
             // Assert
-            Assert.That(builder.Result.Value, Is.TypeOf<VariableReference>());
+            Assert.IsType<VariableReference>(builder.Result.Value);
             var varReference = (VariableReference) builder.Result.Value;
-            Assert.That(varReference.Name, Is.EqualTo("test"));
+            Assert.Equal("test", varReference.Name);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Create_A_Variable_With_An_Index()
         {
             // Arrange
@@ -49,11 +49,11 @@ namespace Liquid.NET.Tests
             String result = VariableReferenceTreePrinter.Print(builder.Result);
 
             // Assert
-            Assert.That(result, Is.EqualTo("test[idx]"));
+            Assert.Equal("test[idx]", result);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Create_A_Variable_With_Two_Indexes()
         {
             // Arrange
@@ -84,11 +84,11 @@ namespace Liquid.NET.Tests
             String result = VariableReferenceTreePrinter.Print(builder.Result);
 
             // Assert
-            Assert.That(result, Is.EqualTo("test[idx1][idx2]"));
+            Assert.Equal("test[idx1][idx2]", result);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Create_A_Variable_With_Nested_Indexes()
         {
             // Arrange
@@ -118,11 +118,11 @@ namespace Liquid.NET.Tests
             String result = VariableReferenceTreePrinter.Print(builder.Result);
 
             // Assert
-            Assert.That(result, Is.EqualTo("test[idx1[idx2]]"));
+            Assert.Equal("test[idx1[idx2]]", result);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Create_A_Variable_With_Numeric_Indices()
         {
             // Arrange
@@ -152,11 +152,11 @@ namespace Liquid.NET.Tests
             String result = VariableReferenceTreePrinter.Print(builder.Result);
 
             // Assert
-            Assert.That(result, Is.EqualTo("test[3[5]]"));
+            Assert.Equal("test[3[5]]", result);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Create_A_Variable_With_String_Indices()
         {
             // Arrange
@@ -180,11 +180,11 @@ namespace Liquid.NET.Tests
             String result = VariableReferenceTreePrinter.Print(builder.Result);
 
             // Assert
-            Assert.That(result, Is.EqualTo("test[\"test1\"]"));
+            Assert.Equal("test[\"test1\"]", result);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Pare()
         {
             // Arrange
@@ -208,11 +208,11 @@ namespace Liquid.NET.Tests
             String result = VariableReferenceTreePrinter.Print(builder.Result);
 
             // Assert
-            Assert.That(result, Is.EqualTo("test[\"test1\"]"));
+            Assert.Equal("test[\"test1\"]", result);
 
         }
 
-        [Test]
+        [Fact]
         public void It_Should_Create_A_Variable_With_Very_Nested_Indexes()
         {
             // Arrange
@@ -263,14 +263,14 @@ namespace Liquid.NET.Tests
             String result = VariableReferenceTreePrinter.Print(builder.Result);
 
             // Assert
-            Assert.That(result, Is.EqualTo("a[b[c][d]][e]"));
-            //            Assert.That(builder.Result.Value, Is.TypeOf<VariableReference>());
+            Assert.Equal("a[b[c][d]][e]", result);
+            //            Assert.IsType<VariableReference>(builder.Result.Value);
             //            var node = (VariableReferenceTree)builder.Result.Value;
             //            var varReferenceValue = (VariableReference)node.Value;
             //            var varReferenceIndex = (VariableReference)node.IndexExpression;
             //
-            //            Assert.That(varReferenceValue.Name, Is.EqualTo("test"));
-            //            Assert.That(varReferenceIndex.Name, Is.EqualTo("idx1"));
+            //            Assert.Equal("test", varReferenceValue.Name);
+            //            Assert.Equal("idx1", varReferenceIndex.Name);
 
         }
 

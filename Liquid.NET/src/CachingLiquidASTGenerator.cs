@@ -15,11 +15,18 @@ namespace Liquid.NET
     {
         private readonly ILiquidASTGenerator _generator;
         private readonly TimeSpan _slidingExpiration;
+        private static IMemoryCache _cache;
+
+        static CachingLiquidASTGenerator()
+        {
+            _cache = new MemoryCache(new MemoryCacheOptions());
+        }
 
         public CachingLiquidASTGenerator(ILiquidASTGenerator generator, int slidingExpirationSeconds = 300)
         {
              _slidingExpiration = TimeSpan.FromSeconds(slidingExpirationSeconds);
             _generator = generator;
+            
         }
 
         private String CacheKey(String str)
@@ -48,11 +55,11 @@ namespace Liquid.NET
 
             String hash = CacheKey(template);
             //ObjectCache cache = MemoryCache.Default;
-            MemoryCache cache = new MemoryCache(new MemoryCacheOptions());
+            
 
             //var liquidAST = cache[hash] as LiquidAST;
             LiquidAST liquidAST;
-            bool found = cache.TryGetValue(hash, out liquidAST);
+            bool found = _cache.TryGetValue(hash, out liquidAST);
             if (!found)
             {
                 //CacheItemPolicy policy = new CacheItemPolicy
@@ -67,7 +74,7 @@ namespace Liquid.NET
                 
                 if (!errors.Any() && liquidAST != null)
                 {
-                    cache.Set(hash, liquidAST, cacheEntryOptions);
+                    _cache.Set(hash, liquidAST, cacheEntryOptions);
                 }
             }
             return liquidAST;

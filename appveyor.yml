@@ -35,7 +35,7 @@
   - DIR %USERPROFILE%\.nuget\packages\xunit.runner.console
   - set OpenCover=%USERPROFILE%\.nuget\packages\OpenCover\4.6.519\tools\OpenCover.Console.exe
   - set OpenCoverTarget=%UserProfile%\.nuget\packages\xunit.runner.console\2.3.0-beta3-build3705\tools\net452\xunit.console.x86.exe
-  - '"%OpenCover%" -register:user -target:"%USERPROFILE%\.nuget\packages\xunit.runner.console\2.3.0-beta3-build3705\tools\net452\xunit.console.x86.exe" -targetargs:""".\Liquid.NET.Tests\bin\Debug\netcoreapp1.1\Liquid.NET.Tests.dll"" /noshadow" -excludebyattribute:*.ExcludeFromCodeCoverage* -filter:"+[Liquid.NET]* -[Liquid.NET]Liquid.NET.Tests.*" -returntargetcode -output:.\Liquid.NET.coverage.xml'
+  - '"%OpenCover%" -register:user -target:"%OpenCoverTarget%" -targetargs:""".\Liquid.NET.Tests\bin\Debug\netcoreapp1.1\Liquid.NET.Tests.dll"" -noshadow" -excludebyattribute:*.ExcludeFromCodeCoverage* -filter:"+[Liquid.NET]* -[Liquid.NET]Liquid.NET.Tests.*" -returntargetcode -output:.\Liquid.NET.coverage.xml'
   - "SET PATH=C:\\Python34;C:\\Python34\\Scripts;%PATH%"
   - pip install codecov
   - codecov -f "Liquid.NET.coverage.xml"

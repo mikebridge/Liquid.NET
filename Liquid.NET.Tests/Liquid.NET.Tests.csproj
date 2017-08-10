@@ -5,7 +5,7 @@
     <DebugType>Full</DebugType>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.CSharp" Version="4.5.0-preview2-25610-02" />
+    <PackageReference Include="Microsoft.CSharp" Version="4.4.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.5.0-preview-20170810-02" />
     <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
     <PackageReference Include="OpenCover" Version="4.6.519" />

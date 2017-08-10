@@ -25,7 +25,6 @@ namespace Liquid.NET.Tests.Ruby
 
         [Theory]
         [InlineData(@"{% if "" "" != empty %}NOT EMPTY{% else %}EMPTY{% endif %}", @"", @"NOT EMPTY")]
-        [InlineData(@"{% if "" "" != empty %}NOT EMPTY{% else %}EMPTY{% endif %}", @"", @"NOT EMPTY")]
         //[InlineData(@"{% if null != empty %}NOT EMPTY{% else %}EMPTY{% endif %}", @"", @"NOT EMPTY")]
         [InlineData(@"{% assign myarray = ""1,2,3,4"" |split: "","" %}{% for item in myarray %}{% capture thecycle %}{% cycle 'odd', 'even' %}{% endcapture %}{{ thecycle }}{% endfor %}", @"", @"oddevenoddeven")]
         public void It_Should_Match_Ruby_Output(String input, String assigns, String expected) {

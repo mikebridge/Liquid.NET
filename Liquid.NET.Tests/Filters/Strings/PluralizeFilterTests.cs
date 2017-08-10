@@ -25,7 +25,6 @@ namespace Liquid.NET.Tests.Filters.Strings
         [Theory]
         [InlineData(2, "things")]
         [InlineData(1, "thing")]
-        [InlineData(1, "thing")]
         [InlineData(0, "things")]
         public void It_Should_Pluralize_An_Integerr(int input, String expected)
         {
@@ -41,7 +40,6 @@ namespace Liquid.NET.Tests.Filters.Strings
 
         [Theory]
         [InlineData("2", "things")]
-        [InlineData("1", "thing")]
         [InlineData("1", "thing")]
         [InlineData("1.2", "things")]
         [InlineData("0", "things")]

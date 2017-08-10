@@ -231,7 +231,7 @@ namespace Liquid.NET.Tests.Examples
             // [add code here to handle the parsing and rendering errors]
             Assert.False(errors.Any());
 
-            Console.WriteLine(result);
+            //Console.WriteLine(result);
             Assert.Equal("<div>Hello World</div>", result);
 
         }

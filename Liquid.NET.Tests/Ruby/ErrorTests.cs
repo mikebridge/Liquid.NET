@@ -37,7 +37,6 @@ namespace Liquid.NET.Tests.Ruby
         [InlineData(@"{% if myundefined == true %}TRUE{% else %}FALSE{% endif %}", @"FALSE")]
         [InlineData(@"{% if myundefined == false %}TRUE{% else %}FALSE{% endif %}", @"FALSE")]
         [InlineData(@"{% if myundefined %}TRUE{% else %}FALSE{% endif %}", @"FALSE")]
-        [InlineData(@"{% if myundefined %}TRUE{% else %}FALSE{% endif %}", @"FALSE")]
         [InlineData(@"{% if myundefined == null %}TRUE{% else %}FALSE{% endif %}", @"TRUE")]
         [InlineData(@"{% if ""myundefined"" == null %}TRUE{% else %}FALSE{% endif %}", @"FALSE")]
         [InlineData(@"{% assign x = """" %}{% if x == null %}TRUE{% else %}FALSE{% endif %}", @"FALSE")]

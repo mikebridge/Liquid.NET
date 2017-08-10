@@ -24,7 +24,7 @@ namespace Liquid.NET.Tests.Constants
             // Act
             var template = LiquidTemplate.Create("Result : {{ " + varname + " }}");
             var result = template.LiquidTemplate.Render(ctx);
-            Console.WriteLine(result);
+            //Console.WriteLine(result);
 
             // Assert
             Assert.Equal("Result : ERROR: " + missingVar + " is undefined", result.Result);
@@ -102,7 +102,7 @@ namespace Liquid.NET.Tests.Constants
         public void It_Should_Not_Display_An_Error_When_Dereferencing_Missing_Value(String varname)
         {
             // Arrange
-            Console.WriteLine(varname);
+            //Console.WriteLine(varname);
             TemplateContext ctx = new TemplateContext();
             ctx.DefineLocalVariable("e", new LiquidCollection());
             ctx.DefineLocalVariable("d", new LiquidHash());

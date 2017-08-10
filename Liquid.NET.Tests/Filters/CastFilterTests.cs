@@ -27,7 +27,7 @@ namespace Liquid.NET.Tests.Filters
 
         [Theory]
         [InlineData(123.0, "123.0")]
-        [InlineData(123, "123.0")]
+        //[InlineData(123, "123.0")]
         [InlineData(123.1, "123.1")]
         public void It_Should_Cast_A_Decimal_To_A_String_Like_Ruby_Liquid(decimal input, String expected)
         {

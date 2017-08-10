@@ -16,7 +16,6 @@ namespace Liquid.NET.Tests.Constants
         [InlineData("-2", "456.0")]
         [InlineData("-4", "a string")]
         [InlineData("-5", "")]
-        [InlineData("4", "")]
         [InlineData("-30", "")]
         public void It_Should_Look_Up_ArrayValues(String index, String expected)
         {

@@ -31,6 +31,7 @@
   test_script:
   - ECHO %USERPROFILE%
   - DIR %USERPROFILE%\.nuget\packages
+  - DIR %USERPROFILE%\.nuget\packages\opencover
   - DIR %USERPROFILE%\.nuget\packages\xunit.runner.console
   - set OpenCover=%USERPROFILE%\.nuget\packages\OpenCover\4.6.519\tools\OpenCover.Console.exe
   - set OpenCoverTarget=%UserProfile%\.nuget\packages\xunit.runner.console\2.3.0-beta3-build3705\tools\net452\xunit.console.x86.exe

@@ -1,6 +1,10 @@
 # configuration for "master" branch
 # build in Debug mode and Test
 
+# SEE: https://anotherlookontech.wordpress.com/2016/10/12/integrate-net-core-appveyor-opencover-and-codecov/
+$OPENCOVER = $ENV:USERPROFILE + '\.nuget\packages\OpenCover\4.6.519\tools\OpenCover.Console.exe'
+#$target = '-target:C:\Program Files\dotnet\dotnet.exe'
+
 -
   branches:
     only:
@@ -24,7 +28,7 @@
   - nuget restore
 
   test_script:
-  - .\packages\OpenCover.4.6.519\tools\OpenCover.Console.exe -register:user -target:"%xunit20%\xunit.console.x86.exe" -targetargs:""".\Liquid.NET.Tests\bin\Debug\Liquid.NET.Tests.dll"" /noshadow" -excludebyattribute:*.ExcludeFromCodeCoverage* -filter:"+[Liquid.NET]* -[Liquid.NET]Liquid.NET.Tests.*" -returntargetcode -output:.\Liquid.NET.coverage.xml
+  - $OPENCOVER -register:user -target:"%xunit20%\xunit.console.x86.exe" -targetargs:""".\Liquid.NET.Tests\bin\Debug\netcoreapp1.1\Liquid.NET.Tests.dll"" /noshadow" -excludebyattribute:*.ExcludeFromCodeCoverage* -filter:"+[Liquid.NET]* -[Liquid.NET]Liquid.NET.Tests.*" -returntargetcode -output:.\Liquid.NET.coverage.xml
   - "SET PATH=C:\\Python34;C:\\Python34\\Scripts;%PATH%"
   - pip install codecov
   - codecov -f "Liquid.NET.coverage.xml"

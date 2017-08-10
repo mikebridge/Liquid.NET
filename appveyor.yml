@@ -6,8 +6,10 @@
     only:
     - master
 
+  image: Visual Studio 2017
+
   environment:
-    release_version: '0.9.6'
+    release_version: '0.9.7'
 
   version: $(release_version).{build}
 
@@ -45,8 +47,10 @@
     only:
     - release
 
+  image: Visual Studio 2017
+
   environment:
-    release_version: '0.9.6'
+    release_version: '0.9.7'
 
   version: $(release_version).{build}
   configuration: Release

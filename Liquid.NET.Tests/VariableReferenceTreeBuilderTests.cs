@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Reflection;
 using Liquid.NET.Constants;
 using Liquid.NET.Expressions;
 using Xunit;
+using Xunit.Sdk;
 
 namespace Liquid.NET.Tests
 {
@@ -237,23 +239,23 @@ namespace Liquid.NET.Tests
             builder.EndVariable();
 
             builder.EndIndex(); // ]
-            Logger.Log("1) " + VariableReferenceTreePrinter.Print(builder.Result));
+            //Logger.Log("1) " + VariableReferenceTreePrinter.Print(builder.Result));
             builder.StartIndex(); // [
-            Logger.Log("2) " + VariableReferenceTreePrinter.Print(builder.Result));
+            //Logger.Log("2) " + VariableReferenceTreePrinter.Print(builder.Result));
             builder.StartVariable();
-            Logger.Log("3) " + VariableReferenceTreePrinter.Print(builder.Result));
+            //Logger.Log("3) " + VariableReferenceTreePrinter.Print(builder.Result));
             builder.AddVarName("d"); // d
             builder.EndVariable();
-            Logger.Log("4) " + VariableReferenceTreePrinter.Print(builder.Result));
+            //Logger.Log("4) " + VariableReferenceTreePrinter.Print(builder.Result));
 
             builder.EndIndex(); // ]
-            Logger.Log("5) " + VariableReferenceTreePrinter.Print(builder.Result));
+            //Logger.Log("5) " + VariableReferenceTreePrinter.Print(builder.Result));
             builder.EndIndex(); // ]
-            Logger.Log("6) " + VariableReferenceTreePrinter.Print(builder.Result));
+            //Logger.Log("6) " + VariableReferenceTreePrinter.Print(builder.Result));
             builder.StartIndex(); // [
-            Logger.Log("7) " + VariableReferenceTreePrinter.Print(builder.Result));
+            //Logger.Log("7) " + VariableReferenceTreePrinter.Print(builder.Result));
             builder.StartVariable();
-            Logger.Log("8) " + VariableReferenceTreePrinter.Print(builder.Result));
+            //Logger.Log("8) " + VariableReferenceTreePrinter.Print(builder.Result));
             builder.AddVarName("e");
             builder.EndVariable();
             builder.EndIndex(); // ]
@@ -282,7 +284,32 @@ namespace Liquid.NET.Tests
                 {
                     return "";
                 }
-                return AsString((dynamic) ex);
+                //return AsString((dynamic) ex);
+                var typeInfo = ex.GetType().GetTypeInfo();
+                if (typeInfo.IsAssignableFrom(typeof(VariableReferenceTree)))
+                {
+                    return AsString(ex as VariableReferenceTree);
+                }
+                else if (typeInfo.IsAssignableFrom(typeof(LiquidNumeric)) ||
+                         typeInfo.IsAssignableFrom(typeof(IntLiquidNumeric)))
+
+                {
+                    return AsString(ex as LiquidNumeric);
+                }
+                else if (typeInfo.IsAssignableFrom(typeof(LiquidString)))
+                {
+                    return AsString(ex as LiquidString);
+                }
+
+                else if (typeInfo.IsAssignableFrom(typeof(VariableReference)))
+                {
+                    return AsString(ex as VariableReference);
+                }
+                else
+                {
+                    return AsString(ex);
+                }
+
             }
 
             private static String AsString(VariableReferenceTree tree)
@@ -308,7 +335,7 @@ namespace Liquid.NET.Tests
 
             private static String AsString(IExpressionDescription ex)
             {
-                return "Unknown " + ex;
+                return "Unknown " + ex + "[" + ex.GetType().GetTypeInfo().ToString() + "]";
             }
 
             private static String AsString(VariableReference varref)

@@ -38,19 +38,33 @@ namespace Liquid.NET.Tests.Ruby
 
         public static IList<Tuple<String, Option<ILiquidValue>>> TransformRoots(JObject obj)
         {
-            return obj.Properties().Select(p => new Tuple<String, Option<ILiquidValue>>(p.Name, Transform((dynamic)p.Value))).ToList();            
+            // MB: Refactored to remove dynamic
+            return obj.Properties().Select(p => new Tuple<String, Option<ILiquidValue>>(p.Name, Transform(p.Value))).ToList();
+            
         }
 
-        public static Option<ILiquidValue> Transform(Object obj)
+        public static Option<ILiquidValue> Transform(JToken obj)
         {
-            throw new Exception("Don't know how to transform a "+ obj.GetType()+  " yet:" + obj);
+            if (obj.Type.Equals(JTokenType.Array))
+            {
+                return Transform(obj as JArray);
+            } else if (obj.Type.Equals(JTokenType.Object))
+            {
+                return Transform(obj as JObject);
+            }
+            else
+            {
+                return Transform(obj as JValue);
+            }
+            //throw new Exception("Don't know how to transform a "+ obj.GetType()+  " yet:" + obj);
         }
 
         public static Option<ILiquidValue> Transform(JArray arr)
         {
             var result = new LiquidCollection();
-            var list = arr.Select(el => (Option<ILiquidValue>) Transform((dynamic) el));
-//                .Cast<Option<ILiquidValue>>();
+            // MB: Refactored to remove dynamic
+            var list = arr.Select(el => (Option<ILiquidValue>)Transform(el));
+            //                .Cast<Option<ILiquidValue>>();
             foreach (var item in list)
             {
                 //result.Add(Option<ILiquidValue>.Create(item));
@@ -62,7 +76,9 @@ namespace Liquid.NET.Tests.Ruby
         public static Option<ILiquidValue> Transform(JObject obj)
         {
             var result =new LiquidHash();
-            var dict = obj.Properties().ToDictionary(k => k.Name, v => (Option<ILiquidValue>) Transform((dynamic)v.Value));
+
+            // MB: Refactored to remove dynamic
+            var dict = obj.Properties().ToDictionary(k => k.Name, v => (Option<ILiquidValue>)Transform(v.Value));
             foreach (var kvp in dict)
             {
                 result.Add(kvp);

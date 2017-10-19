@@ -130,6 +130,15 @@ namespace Liquid.NET.Utils
                 var val = obj as IDictionary;
                 return CreateHash(val);
             }
+
+            if (IsGuid(obj))
+            {
+                var val = obj as Guid?;
+                if (val.HasValue)
+                {
+                    return LiquidString.Create(val.Value.ToString("D"));
+                }
+            }
             return null;
         }
 
@@ -172,6 +181,10 @@ namespace Liquid.NET.Utils
             return value is IList;
         }
 
+        private bool IsGuid(Object value)
+        {
+            return value is Guid;
+        }
         // http://stackoverflow.com/questions/1130698/checking-if-an-object-is-a-number-in-c-sharp#answer-1130705
         private bool IsInt32Like(object value)
         {

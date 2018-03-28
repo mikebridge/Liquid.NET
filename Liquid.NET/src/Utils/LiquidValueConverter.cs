@@ -10,6 +10,8 @@ namespace Liquid.NET.Utils
 {
     public class LiquidValueConverter
     {
+        public static readonly BindingFlags PublicInstancePropertiesWithAGetter = BindingFlags.Public | BindingFlags.Instance | BindingFlags.GetProperty;
+
         public Option<ILiquidValue> Convert(Object obj)
         {
             if (ReferenceEquals(obj, null))
@@ -36,7 +38,7 @@ namespace Liquid.NET.Utils
         {
             var newHash = new LiquidHash();
             var kvps = obj.GetType()
-                .GetProperties()
+                .GetProperties(PublicInstancePropertiesWithAGetter)
                 .Where(property => !(property.GetCustomAttributes<LiquidIgnoreAttribute>().Any() 
                      || (property.GetCustomAttributes<LiquidIgnoreIfNullAttribute>().Any() 
                         && ReferenceEquals(property.GetGetMethod().Invoke(obj, null), null))))

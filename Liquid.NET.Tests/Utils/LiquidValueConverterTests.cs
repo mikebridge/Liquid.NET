@@ -198,6 +198,21 @@ namespace Liquid.NET.Tests.Utils
         }
 
         [Fact]
+        public void It_Should_Ignore_Static_Properties()
+        {
+            ClassWithStaticProperty.StaticField1 = "aaa";
+            var testClass = new ClassWithStaticProperty { Field1 = "bbb" };
+
+            var result = _converter.Convert(testClass);
+            Assert.True(result.HasValue);
+            var objAsHash = (LiquidHash)result.Value;
+
+            Assert.Equal(1, objAsHash.Keys.Count);
+            Assert.True(objAsHash.ContainsKey("field1"));
+            Assert.Equal(LiquidString.Create(testClass.Field1), objAsHash["field1"].Value);
+        }
+
+        [Fact]
         public void It_Should_Convert_A_Nested_Object()
         {
             // Act
@@ -310,5 +325,10 @@ namespace Liquid.NET.Tests.Utils
 
         }
 
+        public class ClassWithStaticProperty
+        {
+            public String Field1 { get; set; }
+            public static String StaticField1 { get; set; }
+        }
     }
 }

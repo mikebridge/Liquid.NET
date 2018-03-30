@@ -13,7 +13,7 @@
   image: Visual Studio 2017
 
   environment:
-    release_version: '0.9.7'
+    release_version: '0.10.0'
 
   version: $(release_version).{build}
 

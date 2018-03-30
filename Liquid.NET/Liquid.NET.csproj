@@ -1,11 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp1.1;net462</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net452</TargetFrameworks>
     <Copyright>Mike Bridge</Copyright>
     <PackageProjectUrl>https://github.com/mikebridge/Liquid.NET</PackageProjectUrl>
     <RepositoryUrl>http://mikebridge.github.io/Liquid.NET/</RepositoryUrl>
-    <Version>0.9.7</Version>
+    <Version>0.10.0</Version>
     <!-- SEE: https://github.com/OpenCover/opencover/issues/601 -->
     <DebugType>full</DebugType>
   </PropertyGroup>

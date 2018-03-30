@@ -13,7 +13,7 @@
   image: Visual Studio 2017
 
   environment:
-    release_version: '0.9.7'
+    release_version: '0.10.0'
 
   version: $(release_version).{build}
 
@@ -35,7 +35,7 @@
   - set OpenCoverTarget="dotnet.exe"
   - set ReportGenerator=%UserProfile%\.nuget\packages\reportgenerator\2.5.10\tools\ReportGenerator.exe
   #- set OpenCoverTargetArgs=test .\Liquid.NET.Tests\Liquid.NET.Tests.csproj --configuration Debug --framework netcoreapp1.1
-  - set OpenCoverTargetArgs=test .\Liquid.NET.Tests\Liquid.NET.Tests.csproj --configuration Debug --framework net462
+  - set OpenCoverTargetArgs=test .\Liquid.NET.Tests\Liquid.NET.Tests.csproj --configuration Debug --framework net452
   #- '"%OpenCover%" -register:user -target:"%OpenCoverTarget%" -targetargs:"%OpenCoverTargetArgs%" -searchdirs:.\Liquid.NET.Tests\bin\Debug\net462 -excludebyattribute:*.ExcludeFromCodeCoverage* -filter:"+[Liquid.NET]* -[Liquid.NET]Liquid.NET.Tests.*" -returntargetcode -oldstyle -output:.\Liquid.NET.coverage.xml'
   - '"%OpenCover%" -register:user -target:"%OpenCoverTarget%" -targetargs:"%OpenCoverTargetArgs%" -searchdirs:.\Liquid.NET.Tests\bin\Debug\netcoreapp1.1 -excludebyattribute:*.ExcludeFromCodeCoverage* -filter:"+[Liquid.NET]* -[Liquid.NET]Liquid.NET.Tests.*" -returntargetcode -oldstyle -output:.\Liquid.NET.coverage.xml'
   - "SET PATH=C:\\Python34;C:\\Python34\\Scripts;%PATH%"

@@ -67,7 +67,7 @@ namespace Liquid.NET.Tests.Constants
         {
             var liquidCollection = new LiquidCollection{LiquidString.Create("test")};
             liquidCollection.Clear();
-            Assert.Equal(0, liquidCollection.Count);
+            Assert.Empty(liquidCollection);
         }
 
 
@@ -76,7 +76,7 @@ namespace Liquid.NET.Tests.Constants
         {
             var liquidCollection = new LiquidCollection { LiquidString.Create("test") };
             liquidCollection.Remove(LiquidString.Create("test"));
-            Assert.Equal(0, liquidCollection.Count);
+            Assert.Empty(liquidCollection);
         }
 
         [Fact]
@@ -84,7 +84,7 @@ namespace Liquid.NET.Tests.Constants
         {
             var liquidCollection = new LiquidCollection { LiquidString.Create("test") };
             liquidCollection.RemoveAt(0);
-            Assert.Equal(0, liquidCollection.Count);
+            Assert.Empty(liquidCollection);
         }
         [Fact]
         public void It_Should_Find_An_Element_By_Value()
@@ -105,7 +105,7 @@ namespace Liquid.NET.Tests.Constants
         public void It_Should_Cast_A_Null_Element_To_None()
         {
             var liquidCollection = new LiquidCollection { null };
-            Assert.Equal(1, liquidCollection.Count);
+            Assert.Single(liquidCollection);
         }
 
         [Fact]

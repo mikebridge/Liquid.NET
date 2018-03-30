@@ -259,7 +259,7 @@ namespace Liquid.NET.Tests.Constants
 
             // Assert
             var arrValue = arrayResult.SuccessValue<LiquidCollection>();
-            Assert.Equal(1, arrValue.Count);
+            Assert.Single(arrValue);
             Assert.Equal("Hello", arrValue[0].Value.ToString());
 
         }

@@ -43,10 +43,10 @@ namespace Liquid.NET.Tests.Utils
         [InlineData("%Y", "2012")]
         [InlineData("%_2Y", "2012")]
         [InlineData("%", "%")]
-        public string The_Date_Should_Be_Formatted_With_StrFTime(string format, string expected)
+        public void The_Date_Should_Be_Formatted_With_StrFTime(string format, string expected)
         {
             CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en-GB");
-            return new DateTime(2012, 1, 8, 14, 32, 14).ToStrFTime(format);
+            Assert.Equal(expected, new DateTime(2012, 1, 8, 14, 32, 14).ToStrFTime(format));
         }
 
         [Fact]

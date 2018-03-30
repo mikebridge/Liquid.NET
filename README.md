@@ -10,5 +10,7 @@ the [Liquid.NET Wiki](https://github.com/mikebridge/Liquid.NET/wiki).
 
 Start from zero with the [Quick Start](https://github.com/mikebridge/Liquid.NET/wiki/Quick-Start) wiki page.
 
+Liquid.NET targets `netstandard2.0` and `net452`.
+
 *Liquid.NET is an independent project and I am not affiliated in any way with Shopify.*
 

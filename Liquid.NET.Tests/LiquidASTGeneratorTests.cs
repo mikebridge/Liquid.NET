@@ -24,7 +24,7 @@ namespace Liquid.NET.Tests
             var liquidExpressions = FindNodesWithType(ast, typeof (LiquidExpressionTree));
             Logger.Log("There are " + ast.RootNode.Children.Count+" Nodes");
             Logger.Log("It is " + ast.RootNode.Children[0].Data);
-            Assert.Equal(1, liquidExpressions.Count());
+            Assert.Single(liquidExpressions);
         }
 
         private static LiquidAST CreateAST(string template)
@@ -46,7 +46,7 @@ namespace Liquid.NET.Tests
 
             var liquidExpressions = FindNodesWithType(ast, typeof(LiquidExpressionTree));
             Logger.Log("There are " + ast.RootNode.Children.Count + " Nodes");
-            Assert.Equal(1, liquidExpressions.Count());
+            Assert.Single(liquidExpressions);
 
         }
 
@@ -61,7 +61,7 @@ namespace Liquid.NET.Tests
 
             var liquidExpressions = FindNodesWithType(ast, typeof(LiquidExpressionTree));
             Logger.Log("There are " + ast.RootNode.Children.Count + " Nodes");
-            Assert.Equal(1, liquidExpressions.Count());
+            Assert.Single(liquidExpressions);
 
         }
 
@@ -131,7 +131,7 @@ namespace Liquid.NET.Tests
 
             // Assert
             var tagExpressions = FindNodesWithType(ast, typeof(IfThenElseBlockTag));
-            Assert.Equal(1, tagExpressions.Count());
+            Assert.Single(tagExpressions);
             //Assert.NotNull(liquidExpressions);
             //Assert.Equal(1, ((LiquidExpression)liquidExpressions.Data).FilterSymbols.Count());
 
@@ -145,7 +145,7 @@ namespace Liquid.NET.Tests
 
             // Assert
             var tagExpressions = FindNodesWithType(ast, typeof(IfThenElseBlockTag));
-            Assert.Equal(1, tagExpressions.Count());
+            Assert.Single(tagExpressions);
             //Assert.NotNull(liquidExpressions);
             //Assert.Equal(1, ((LiquidExpression)liquidExpressions.Data).FilterSymbols.Count());
 
@@ -162,7 +162,7 @@ namespace Liquid.NET.Tests
             var liquidExpressions = FindWhere(ifThenElseTag.IfElseClauses[0].LiquidBlock.Children, typeof(LiquidExpressionTree));
             
             // Assert
-            Assert.Equal(1, liquidExpressions.Count());
+            Assert.Single(liquidExpressions);
         }
 
         [Fact]
@@ -178,7 +178,7 @@ namespace Liquid.NET.Tests
             var liquidExpressions = FindWhere(blockTags, typeof(IfThenElseBlockTag));
 
             // Assert
-            Assert.Equal(1, liquidExpressions.Count());
+            Assert.Single(liquidExpressions);
 
         }
 
@@ -202,7 +202,7 @@ namespace Liquid.NET.Tests
             var tagExpressions = FindNodesWithType(ast, typeof(IfThenElseBlockTag)).ToList();
             var ifThenElseTag = (IfThenElseBlockTag) tagExpressions[0].Data;
 
-            Assert.Equal(1, tagExpressions.Count);
+            Assert.Single(tagExpressions);
             //Assert.IsType<AndExpression>(ifThenElseTag.IfElseClauses[0].RootNode.Data);            
             //Assert.IsType<AndExpression>(ifThenElseTag.IfElseClauses[0].RootNode[0].Data);
             var ifTagSymbol = ifThenElseTag.IfElseClauses[0];
@@ -212,7 +212,7 @@ namespace Liquid.NET.Tests
             Assert.Equal(2, expressionSymbolTree.Children.Count);
             Assert.IsType<LiquidBoolean>(expressionSymbolTree[0].Data.Expression);
             Assert.IsType<GroupedExpression>(expressionSymbolTree[1].Data.Expression);
-            Assert.Equal(1, expressionSymbolTree[1].Children.Count);
+            Assert.Single(expressionSymbolTree[1].Children);
             Assert.IsType<OrExpression>(expressionSymbolTree[1][0].Data.Expression);
             Assert.IsType<LiquidBoolean>(expressionSymbolTree[1][0][0].Data.Expression);
             Assert.IsType<LiquidBoolean>(expressionSymbolTree[1][0][1].Data.Expression);
@@ -241,7 +241,7 @@ namespace Liquid.NET.Tests
             //Logger.Log("There are " + ast.RootNode.Children.Count + " Nodes");
             //Logger.Log("It is " + ast.RootNode.Children[0].Data);
             //Assert.Equal(1, liquidExpressions.Count());
-            Assert.Equal(1, liquidExpressions.Count());
+            Assert.Single(liquidExpressions);
             //String result = VariableReferenceTreeBuilderTests.VariableReferenceTreePrinter.Print(liquidExpressions);
         }
 

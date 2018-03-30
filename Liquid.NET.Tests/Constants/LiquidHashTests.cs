@@ -142,7 +142,7 @@ namespace Liquid.NET.Tests.Constants
         {
             var dict = new LiquidHash {{"key", LiquidString.Create("test")}};
             dict.Clear();
-            Assert.Equal(0, dict.Count);
+            Assert.Empty(dict);
         }
 
         [Fact]
@@ -150,7 +150,7 @@ namespace Liquid.NET.Tests.Constants
         {
             var dict = new LiquidHash { { "key", LiquidString.Create("test") } };
             dict.Remove("key");
-            Assert.Equal(0, dict.Count);
+            Assert.Empty(dict);
         }
 
         [Fact]
@@ -159,7 +159,7 @@ namespace Liquid.NET.Tests.Constants
             var dict = new LiquidHash { { "key", LiquidString.Create("test") } };
             var x = new KeyValuePair<string, Option<ILiquidValue>>[1];
             dict.CopyTo(x, 0);
-            Assert.Equal(1, x.Length);
+            Assert.Single(x);
         }
 
         [Fact]
@@ -169,7 +169,7 @@ namespace Liquid.NET.Tests.Constants
             var kvp = new KeyValuePair<String, Option<ILiquidValue>>("key", val);
             var dict = new LiquidHash { kvp };
 
-            Assert.True(dict.Contains(kvp));
+            Assert.Contains(kvp, dict);
         }
 
         [Fact]

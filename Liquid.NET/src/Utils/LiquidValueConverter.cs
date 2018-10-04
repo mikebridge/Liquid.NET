@@ -132,6 +132,21 @@ namespace Liquid.NET.Utils
                 var val = obj as IDictionary;
                 return CreateHash(val);
             }
+
+            if (IsGuid(obj))
+            {
+                var val = obj as Guid?;
+                if (val.HasValue)
+                {
+                    return LiquidString.Create(val.Value.ToString("D"));
+                }
+            }
+
+            if (IsEnum(obj))
+            {
+                return LiquidString.Create(Enum.GetName(obj.GetType(), obj));
+            }
+
             return null;
         }
 
@@ -172,6 +187,16 @@ namespace Liquid.NET.Utils
         private bool IsList(Object value)
         {
             return value is IList;
+        }
+
+        private bool IsGuid(Object value)
+        {
+            return value is Guid;
+        }
+
+        public bool IsEnum(Object value)
+        {
+            return value is Enum;
         }
 
         // http://stackoverflow.com/questions/1130698/checking-if-an-object-is-a-number-in-c-sharp#answer-1130705

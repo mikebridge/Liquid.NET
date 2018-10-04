@@ -124,6 +124,29 @@ namespace Liquid.NET.Tests.Utils
         }
 
         [Fact]
+        public void It_Should_Convert_Guid_To_LiquidString()
+        {
+            var guid = Guid.NewGuid();
+            var val = _converter.Convert(guid);
+
+            Assert.True(val.HasValue);
+            Assert.IsType<LiquidString>(val.Value);
+            Assert.Equal(LiquidString.Create(guid.ToString("D")), val.Value);
+        }
+
+        enum TestEnum { One, Two, Three }
+        [Fact]
+        public void It_Should_Convert_Enum_To_LiquidString()
+        {
+            var testEnum = TestEnum.One;
+            var val = _converter.Convert(testEnum);
+
+            Assert.True(val.HasValue);
+            Assert.IsType<LiquidString>(val.Value);
+            Assert.Equal(LiquidString.Create(Enum.GetName(testEnum.GetType(), testEnum)), val.Value);
+        }
+
+        [Fact]
         public void It_Should_Convert_Generic_List_To_Collection()
         {
             var list = new List<Object>();

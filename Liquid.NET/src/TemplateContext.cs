@@ -263,12 +263,19 @@ namespace Liquid.NET
             _options.ErrorWhenValueMissing = true;
             return this;
         }
+
+        public ITemplateContext ErrorWhenVariableMissing()
+        {
+            _options.ErrorWhenVariableMissing = true;
+            return this;
+        }
     }
 
     public class LiquidOptions
     {
         public bool NoForLimit { get; internal set; }
         public bool ErrorWhenValueMissing { get; set; }
+        public bool ErrorWhenVariableMissing { get; set; }
     }
 
 }

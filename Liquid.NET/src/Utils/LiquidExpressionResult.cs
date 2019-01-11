@@ -27,6 +27,18 @@ namespace Liquid.NET.Utils
             }
         }
 
+        public static LiquidExpressionResult MissingOrNone(ITemplateContext ctx, String varname)
+        {
+            if (ctx.Options.ErrorWhenVariableMissing)
+            {
+                return Error(SymbolTable.NotFoundError(varname));
+            }
+            else
+            {
+                return Success(new None<ILiquidValue>());
+            }
+        }
+
         public LiquidExpressionResult WhenError(Action<LiquidError> fn)
         {
             if (IsLeft)

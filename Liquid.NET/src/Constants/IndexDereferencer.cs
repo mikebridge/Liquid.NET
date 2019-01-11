@@ -42,7 +42,7 @@ namespace Liquid.NET.Constants
 
         private LiquidExpressionResult DoLookup(ITemplateContext ctx, LiquidCollection liquidCollection, ILiquidValue indexProperty)
         {
-            bool errorOnEmpty = ctx.Options.ErrorWhenValueMissing && liquidCollection.Count == 0;
+            bool errorOnEmpty = ctx.Options.ErrorWhenVariableMissing && liquidCollection.Count == 0;
 
                             
 
@@ -75,7 +75,7 @@ namespace Liquid.NET.Constants
 
                 if (!success)
                 {
-                    if (ctx.Options.ErrorWhenValueMissing)
+                    if (ctx.Options.ErrorWhenVariableMissing)
                     {
                         return LiquidExpressionResult.Error("invalid index: '" + propertyNameString + "'");
                     }
@@ -103,6 +103,11 @@ namespace Liquid.NET.Constants
             }
             var result = liquidCollection.ValueAt(index);
 
+            if (!result.HasValue)
+            {
+                return LiquidExpressionResult.ErrorOrNone(ctx, propertyNameString);
+            }
+
             return LiquidExpressionResult.Success(result);
         }
 
@@ -115,15 +120,22 @@ namespace Liquid.NET.Constants
                 return LiquidExpressionResult.Success(LiquidNumeric.Create(liquidHash.Keys.Count));
             }
 
-            var valueAt = liquidHash.ValueAt(indexProperty.Value.ToString());
-            if (valueAt.HasValue)
+            var key = indexProperty.Value.ToString();
+            if (liquidHash.ContainsKey(key))
             {
-                return LiquidExpressionResult.Success(valueAt);
+                var value = liquidHash[key];
+                if (value.HasValue)
+                {
+                    return LiquidExpressionResult.Success(value);
+                }
+                else
+                {
+                    return LiquidExpressionResult.ErrorOrNone(ctx, indexProperty.ToString());
+                }
             }
             else
             {
-                return LiquidExpressionResult.ErrorOrNone(ctx, indexProperty.ToString());
-
+                return LiquidExpressionResult.MissingOrNone(ctx, indexProperty.ToString());
             }
         }
 
@@ -152,7 +164,7 @@ namespace Liquid.NET.Constants
                 
                 if (numericIndexProperty == null)
                 {                  
-                    return ctx.Options.ErrorWhenValueMissing ? 
+                    return ctx.Options.ErrorWhenVariableMissing ? 
                         LiquidExpressionResult.Error("invalid string index: '" + propertyNameString + "'") : 
                         LiquidExpressionResult.Success(new None<ILiquidValue>());
                 }
@@ -167,7 +179,14 @@ namespace Liquid.NET.Constants
                 //return LiquidExpressionResult.Error("Empty string: " + propertyNameString);
                 return LiquidExpressionResult.Success(new None<ILiquidValue>()); // not an error in Ruby liquid.
             }
-            return LiquidExpressionResult.Success(CollectionIndexer.ValueAt(strValues, index));
+
+            var result = CollectionIndexer.ValueAt(strValues, index);
+            if (!result.HasValue)
+            {
+                return LiquidExpressionResult.ErrorOrNone(ctx, propertyNameString);
+            }
+
+            return LiquidExpressionResult.Success(result);
 
         }
 

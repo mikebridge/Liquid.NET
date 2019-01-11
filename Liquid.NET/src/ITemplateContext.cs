@@ -24,6 +24,8 @@ namespace Liquid.NET
         ITemplateContext WithNoForLimit();
         ITemplateContext WithASTGenerator(Func<string, Action<LiquidError>, LiquidAST> astGeneratorFunc);
 
+        ITemplateContext ErrorWhenValueMissing();
+        ITemplateContext ErrorWhenVariableMissing();
 
         IFileSystem FileSystem { get; }
         IDictionary<String, Object> Registers { get; }
